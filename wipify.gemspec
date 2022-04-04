@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "lib/wipify/version"
 
 Gem::Specification.new do |spec|
@@ -23,4 +25,14 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency "rails", ">= 7.0.2.3"
+
+  spec.add_development_dependency "pry-rails"
+  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "rubocop-rails_config"
+  spec.add_development_dependency "rubocop-minitest"
+  spec.add_development_dependency "rubocop-performance"
+  spec.add_development_dependency "rubocop-rails"
+  spec.add_development_dependency "rubocop-rake"
+  spec.add_development_dependency "guard-rubocop"
+  spec.add_development_dependency "guard-slimlint"
 end
