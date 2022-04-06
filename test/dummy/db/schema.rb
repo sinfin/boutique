@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_04_110239) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_04_111017) do
   create_table "wipify_line_items", force: :cascade do |t|
     t.integer "wipify_order_id", null: false
     t.integer "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "wipify_product_variant_id", null: false
     t.index ["wipify_order_id"], name: "index_wipify_line_items_on_wipify_order_id"
+    t.index ["wipify_product_variant_id"], name: "index_wipify_line_items_on_wipify_product_variant_id"
   end
 
   create_table "wipify_orders", force: :cascade do |t|
@@ -34,5 +36,24 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_04_110239) do
     t.index ["number"], name: "index_wipify_orders_on_number"
   end
 
-  add_foreign_key "wipify_line_items", "aukceaukci_orders"
+  create_table "wipify_product_variants", force: :cascade do |t|
+    t.integer "wipify_product_id", null: false
+    t.string "title"
+    t.integer "price", null: false
+    t.boolean "master", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["master"], name: "index_wipify_product_variants_on_master", where: "master = true"
+    t.index ["wipify_product_id"], name: "index_wipify_product_variants_on_wipify_product_id"
+  end
+
+  create_table "wipify_products", force: :cascade do |t|
+    t.string "title", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "wipify_line_items", "wipify_orders"
+  add_foreign_key "wipify_line_items", "wipify_product_variants"
+  add_foreign_key "wipify_product_variants", "wipify_products"
 end
