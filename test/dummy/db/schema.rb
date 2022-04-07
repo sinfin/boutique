@@ -11,19 +11,22 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "wipify_line_items", force: :cascade do |t|
-    t.integer "wipify_order_id", null: false
+    t.bigint "wipify_order_id", null: false
     t.integer "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "wipify_product_variant_id", null: false
+    t.bigint "wipify_product_variant_id", null: false
     t.index ["wipify_order_id"], name: "index_wipify_line_items_on_wipify_order_id"
     t.index ["wipify_product_variant_id"], name: "index_wipify_line_items_on_wipify_product_variant_id"
   end
 
   create_table "wipify_orders", force: :cascade do |t|
     t.string "customer_type"
-    t.integer "customer_id"
+    t.bigint "customer_id"
     t.integer "base_number"
     t.string "number"
     t.string "email"
@@ -37,8 +40,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "wipify_shipping_method_id"
-    t.integer "wipify_payment_method_id"
+    t.bigint "wipify_shipping_method_id"
+    t.bigint "wipify_payment_method_id"
     t.index ["customer_type", "customer_id"], name: "index_wipify_orders_on_customer"
     t.index ["number"], name: "index_wipify_orders_on_number"
     t.index ["wipify_payment_method_id"], name: "index_wipify_orders_on_wipify_payment_method_id"
@@ -55,17 +58,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_wipify_payment_methods_on_position"
-    t.index ["published"], name: "index_wipify_payment_methods_on_published", where: "published = true"
+    t.index ["published"], name: "index_wipify_payment_methods_on_published", where: "(published = true)"
   end
 
   create_table "wipify_product_variants", force: :cascade do |t|
-    t.integer "wipify_product_id", null: false
+    t.bigint "wipify_product_id", null: false
     t.string "title"
     t.integer "price", null: false
     t.boolean "master", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["master"], name: "index_wipify_product_variants_on_master", where: "master = true"
+    t.index ["master"], name: "index_wipify_product_variants_on_master", where: "(master = true)"
     t.index ["wipify_product_id"], name: "index_wipify_product_variants_on_wipify_product_id"
   end
 
@@ -85,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_wipify_shipping_methods_on_position"
-    t.index ["published"], name: "index_wipify_shipping_methods_on_published", where: "published = true"
+    t.index ["published"], name: "index_wipify_shipping_methods_on_published", where: "(published = true)"
   end
 
   add_foreign_key "wipify_line_items", "wipify_orders"
