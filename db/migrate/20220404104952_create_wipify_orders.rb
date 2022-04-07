@@ -20,5 +20,7 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+
+    create_sequence :wipify_orders_base_number_seq
   end
 end

@@ -33,6 +33,10 @@ class Wipify::Order < ApplicationRecord
 
     event :confirm do
       transitions from: :pending, to: :confirmed
+
+      before do
+        set_numbers
+      end
     end
 
     event :pay do
@@ -56,4 +60,19 @@ class Wipify::Order < ApplicationRecord
       before { self.cancelled_at = nil }
     end
   end
+
+  private
+    def set_numbers
+      return if base_number.present?
+
+      year_prefix = Time.zone.now.year.to_s.last(2)
+      self.base_number = get_next_base_number
+
+      # format: 2200001, 2200002 ... 2309998, 2309999
+      self.number = year_prefix + base_number.to_s.rjust(5, "0")
+    end
+
+    def get_next_base_number
+      ActiveRecord::Base.nextval("wipify_orders_base_number_seq")
+    end
 end

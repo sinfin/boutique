@@ -11,6 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
+  create_sequence "wipify_orders_base_number_seq"
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
