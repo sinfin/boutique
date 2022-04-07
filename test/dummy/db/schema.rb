@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_04_111017) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
   create_table "wipify_line_items", force: :cascade do |t|
     t.integer "wipify_order_id", null: false
     t.integer "price"
@@ -32,8 +32,25 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_04_111017) do
     t.integer "total_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "wipify_shipping_method_id"
+    t.integer "wipify_payment_method_id"
     t.index ["customer_type", "customer_id"], name: "index_wipify_orders_on_customer"
     t.index ["number"], name: "index_wipify_orders_on_number"
+    t.index ["wipify_payment_method_id"], name: "index_wipify_orders_on_wipify_payment_method_id"
+    t.index ["wipify_shipping_method_id"], name: "index_wipify_orders_on_wipify_shipping_method_id"
+  end
+
+  create_table "wipify_payment_methods", force: :cascade do |t|
+    t.string "title"
+    t.string "type"
+    t.text "description"
+    t.string "price"
+    t.integer "position"
+    t.boolean "published", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_wipify_payment_methods_on_position"
+    t.index ["published"], name: "index_wipify_payment_methods_on_published", where: "published = true"
   end
 
   create_table "wipify_product_variants", force: :cascade do |t|
@@ -53,7 +70,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_04_111017) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "wipify_shipping_methods", force: :cascade do |t|
+    t.string "title"
+    t.string "type"
+    t.text "description"
+    t.string "price"
+    t.integer "position"
+    t.boolean "published", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_wipify_shipping_methods_on_position"
+    t.index ["published"], name: "index_wipify_shipping_methods_on_published", where: "published = true"
+  end
+
   add_foreign_key "wipify_line_items", "wipify_orders"
   add_foreign_key "wipify_line_items", "wipify_product_variants"
+  add_foreign_key "wipify_orders", "wipify_payment_methods"
+  add_foreign_key "wipify_orders", "wipify_shipping_methods"
   add_foreign_key "wipify_product_variants", "wipify_products"
 end
