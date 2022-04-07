@@ -27,9 +27,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
     t.integer "base_number"
     t.string "number"
     t.string "email"
+    t.string "aasm_state", default: "pending"
     t.integer "line_items_count", default: 0
     t.integer "line_items_price"
     t.integer "total_price"
+    t.datetime "confirmed_at"
+    t.datetime "paid_at"
+    t.datetime "dispatched_at"
+    t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "wipify_shipping_method_id"

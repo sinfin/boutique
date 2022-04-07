@@ -8,9 +8,15 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
       t.integer :base_number
       t.string  :number, index: true
       t.string  :email
+      t.string  :aasm_state, default: "pending"
       t.integer :line_items_count, default: 0
       t.integer :line_items_price
       t.integer :total_price
+
+      t.datetime :confirmed_at
+      t.datetime :paid_at
+      t.datetime :dispatched_at
+      t.datetime :cancelled_at
 
       t.timestamps
     end
