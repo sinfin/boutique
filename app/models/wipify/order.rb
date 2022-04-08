@@ -22,6 +22,8 @@ class Wipify::Order < ApplicationRecord
                         dependent: :destroy,
                         inverse_of: :order
 
+  validates :email, presence: true
+
   aasm timestamps: true do
     state :pending, initial: true
     state :confirmed, color: "red"
@@ -37,14 +39,26 @@ class Wipify::Order < ApplicationRecord
       before do
         set_numbers
       end
+
+      after_commit do
+        Wipify::OrderMailer.confirmed(self).deliver_later
+      end
     end
 
     event :pay do
       transitions from: :confirmed, to: :paid
+
+      after_commit do
+        Wipify::OrderMailer.paid(self).deliver_later
+      end
     end
 
     event :dispatch do
       transitions from: :paid, to: :dispatched
+
+      after_commit do
+        Wipify::OrderMailer.dispatched(self).deliver_later
+      end
     end
 
     event :cancel do
