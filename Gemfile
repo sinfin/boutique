@@ -6,9 +6,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # Specify your gem's dependencies in wipify.gemspec.
 gemspec
 
-gem "sqlite3"
-
 gem "sprockets-rails"
 
-# Start debugger with binding.b [https://github.com/ruby/debug]
-# gem "debug", ">= 1.0.0"
+group :test do
+  gem "minitest", "~> 5.14.4"
+  gem "factory_bot"
+end
+
+group :development do
+  gem "puma", "< 6"
+end
