@@ -14,3 +14,13 @@ class Wipify::Product < ApplicationRecord
                                      class_name: "Wipify::ProductVariant",
                                      foreign_key: :wipify_product_id
 end
+
+# == Schema Information
+#
+# Table name: wipify_products
+#
+#  id         :bigint(8)        not null, primary key
+#  title      :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#

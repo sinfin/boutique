@@ -1,5 +1,30 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: wipify_orders
+#
+#  id                        :bigint           not null, primary key
+#  customer_type             :string
+#  customer_id               :bigint
+#  base_number               :integer
+#  number                    :string
+#  email                     :string
+#  aasm_state                :string           default("pending")
+#  line_items_count          :integer          default(0)
+#  line_items_price          :integer
+#  shipping_method_price     :integer
+#  payment_method_price      :integer
+#  total_price               :integer
+#  confirmed_at              :datetime
+#  paid_at                   :datetime
+#  dispatched_at             :datetime
+#  cancelled_at              :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  wipify_shipping_method_id :bigint
+#  wipify_payment_method_id  :bigint
+#
 require "test_helper"
 
 class Wipify::OrderTest < ActiveSupport::TestCase

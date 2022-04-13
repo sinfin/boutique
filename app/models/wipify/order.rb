@@ -127,3 +127,41 @@ class Wipify::Order < ApplicationRecord
       self.total_price = total_price
     end
 end
+
+# == Schema Information
+#
+# Table name: wipify_orders
+#
+#  id                        :bigint(8)        not null, primary key
+#  customer_type             :string
+#  customer_id               :bigint(8)
+#  base_number               :integer
+#  number                    :string
+#  email                     :string
+#  aasm_state                :string           default("pending")
+#  line_items_count          :integer          default(0)
+#  line_items_price          :integer
+#  shipping_method_price     :integer
+#  payment_method_price      :integer
+#  total_price               :integer
+#  confirmed_at              :datetime
+#  paid_at                   :datetime
+#  dispatched_at             :datetime
+#  cancelled_at              :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  wipify_shipping_method_id :bigint(8)
+#  wipify_payment_method_id  :bigint(8)
+#
+# Indexes
+#
+#  index_wipify_orders_on_customer                   (customer_type,customer_id)
+#  index_wipify_orders_on_number                     (number)
+#  index_wipify_orders_on_wipify_payment_method_id   (wipify_payment_method_id)
+#  index_wipify_orders_on_wipify_shipping_method_id  (wipify_shipping_method_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (wipify_payment_method_id => wipify_payment_methods.id)
+#  fk_rails_...  (wipify_shipping_method_id => wipify_shipping_methods.id)
+#

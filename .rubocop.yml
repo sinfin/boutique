@@ -16,9 +16,6 @@ AllCops:
     - 'test/dummy/db/schema.rb'
     - 'test/dummy/public/**/*'
 
-Rails:
-  Enabled: true
-
 Layout/LineLength:
   Max: 120
 

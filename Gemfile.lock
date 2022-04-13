@@ -81,6 +81,9 @@ GEM
     after_commit_everywhere (1.2.0)
       activerecord (>= 4.2)
       activesupport
+    annotate (3.2.0)
+      activerecord (>= 3.2, < 8.0)
+      rake (>= 10.4, < 14.0)
     ar-sequence (0.2.1)
       activerecord
     ast (2.4.2)
@@ -263,6 +266,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  annotate
   factory_bot
   guard-rubocop
   guard-slimlint
