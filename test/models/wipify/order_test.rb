@@ -6,7 +6,7 @@ class Wipify::OrderTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   test "revert_cancelation event returns order to correct state" do
-    order = create(:wipify_order)
+    order = create(:wipify_order, :ready_to_be_confirmed)
 
     {
       confirm: "confirmed",
@@ -27,13 +27,23 @@ class Wipify::OrderTest < ActiveSupport::TestCase
   end
 
   test "confirm" do
-    order = create(:wipify_order)
+    order = create(:wipify_order, :ready_to_be_confirmed)
+
+    assert_nil order.read_attribute(:line_items_price)
+    assert_nil order.read_attribute(:shipping_method_price)
+    assert_nil order.read_attribute(:payment_method_price)
+    assert_nil order.read_attribute(:total_price)
 
     assert_difference("ActionMailer::Base.deliveries.size", 1) do
       perform_enqueued_jobs do
         order.confirm!
       end
     end
+
+    assert order.read_attribute(:line_items_price)
+    assert order.read_attribute(:shipping_method_price)
+    assert order.read_attribute(:payment_method_price)
+    assert order.read_attribute(:total_price)
   end
 
   test "pay" do
@@ -61,7 +71,7 @@ class Wipify::OrderTest < ActiveSupport::TestCase
     Wipify::Order.connection.execute("ALTER SEQUENCE wipify_orders_base_number_seq RESTART;")
 
     travel_to Time.zone.local(2022, 1, 1)
-    order = create(:wipify_order)
+    order = create(:wipify_order, :ready_to_be_confirmed)
     assert_nil order.number
 
     order.confirm!
