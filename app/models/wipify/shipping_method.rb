@@ -8,6 +8,6 @@ class Wipify::ShippingMethod < ApplicationRecord
                     inverse_of: :shipping_method
 
   validates :title,
-          :price,
-          presence: true
+            :price,
+            presence: true
 end

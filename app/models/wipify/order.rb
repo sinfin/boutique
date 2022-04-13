@@ -17,12 +17,21 @@ class Wipify::Order < ApplicationRecord
                               inverse_of: :orders,
                               optional: true
 
-  has_many :line_items, class_name: "Wipify::LineItem",
+  has_many :line_items, -> { ordered },
+                        class_name: "Wipify::LineItem",
                         foreign_key: :wipify_order_id,
+                        counter_cache: :line_items_count,
                         dependent: :destroy,
                         inverse_of: :order
 
-  validates :email, presence: true
+  validates :email,
+            :base_number,
+            :number,
+            :line_items,
+            :payment_method,
+            :shipping_method,
+            presence: true,
+            unless: :pending?
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -38,6 +47,7 @@ class Wipify::Order < ApplicationRecord
 
       before do
         set_numbers
+        set_prices
       end
 
       after_commit do
@@ -75,6 +85,26 @@ class Wipify::Order < ApplicationRecord
     end
   end
 
+  def line_items_price
+    super || line_items.sum(&:price)
+  end
+
+  def shipping_method_price
+    super || shipping_method.try(:price)
+  end
+
+  def payment_method_price
+    super || payment_method.try(:price)
+  end
+
+  def total_price
+    super || [
+      line_items_price,
+      shipping_method_price.to_i,
+      payment_method_price.to_i,
+    ].sum
+  end
+
   private
     def set_numbers
       return if base_number.present?
@@ -88,5 +118,12 @@ class Wipify::Order < ApplicationRecord
 
     def get_next_base_number
       ActiveRecord::Base.nextval("wipify_orders_base_number_seq")
+    end
+
+    def set_prices
+      self.line_items_price = line_items_price
+      self.payment_method_price = payment_method_price.to_i
+      self.shipping_method_price = shipping_method_price.to_i
+      self.total_price = total_price
     end
 end

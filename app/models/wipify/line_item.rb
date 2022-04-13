@@ -7,6 +7,11 @@ class Wipify::LineItem < ApplicationRecord
                      counter_cache: :line_items_count
 
   belongs_to :product_variant, class_name: "Wipify::ProductVariant",
-                               foreign_key: :thing_id,
-                               inverse_of: :product_variant
+                               foreign_key: :wipify_product_variant_id
+
+  scope :ordered, -> { order(id: :desc) }
+
+  def price
+    super || product_variant.price
+  end
 end

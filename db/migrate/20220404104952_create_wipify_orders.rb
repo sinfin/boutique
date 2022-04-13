@@ -11,6 +11,8 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
       t.string  :aasm_state, default: "pending"
       t.integer :line_items_count, default: 0
       t.integer :line_items_price
+      t.integer :shipping_method_price
+      t.integer :payment_method_price
       t.integer :total_price
 
       t.datetime :confirmed_at

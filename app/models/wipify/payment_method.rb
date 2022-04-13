@@ -6,4 +6,8 @@ class Wipify::PaymentMethod < ApplicationRecord
                     foreign_key: :wipify_payment_method_id,
                     dependent: :nullify,
                     inverse_of: :payment_method
+
+  validates :title,
+            :price,
+            presence: true
 end

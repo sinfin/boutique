@@ -35,6 +35,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
     t.string "aasm_state", default: "pending"
     t.integer "line_items_count", default: 0
     t.integer "line_items_price"
+    t.integer "shipping_method_price"
+    t.integer "payment_method_price"
     t.integer "total_price"
     t.datetime "confirmed_at"
     t.datetime "paid_at"
