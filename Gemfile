@@ -15,4 +15,6 @@ end
 
 group :development do
   gem "puma", "< 6"
+
+  gem "faker", require: false
 end

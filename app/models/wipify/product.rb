@@ -13,6 +13,10 @@ class Wipify::Product < ApplicationRecord
   has_many :variants_without_master, -> { where(master: false) },
                                      class_name: "Wipify::ProductVariant",
                                      foreign_key: :wipify_product_id
+
+  validates :title,
+            :master_variant,
+            presence: true
 end
 
 # == Schema Information

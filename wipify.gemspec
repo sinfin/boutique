@@ -40,4 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rubocop"
   spec.add_development_dependency "guard-slimlint"
   spec.add_development_dependency "annotate"
+  spec.add_development_dependency "slim"
 end
