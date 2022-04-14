@@ -17,6 +17,10 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
       t.integer :payment_method_price
       t.integer :total_price
 
+      t.belongs_to :primary_address, index: false
+      t.belongs_to :secondary_address, index: false
+      t.boolean    :use_secondary_address, default: false
+
       t.datetime :confirmed_at
       t.datetime :paid_at
       t.datetime :dispatched_at

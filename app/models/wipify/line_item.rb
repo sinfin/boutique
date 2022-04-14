@@ -21,6 +21,10 @@ class Wipify::LineItem < ApplicationRecord
   def unit_price
     super || product_variant.price
   end
+
+  def imprint_unit_price!
+    update!(unit_price:)
+  end
 end
 
 # == Schema Information

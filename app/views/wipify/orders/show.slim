@@ -1,0 +1,16 @@
+h1 Cart
+
+- if current_order.present?
+  ul
+    - current_order.line_items.each do |line_item|
+      li
+        = line_item.product_variant.product.title
+        br
+        = "#{line_item.amount}x - #{line_item.price}$"
+
+    li
+      strong = "Total: #{current_order.total_price}$"
+
+  a href=edit_order_path Continue
+- else
+  strong is empty

@@ -1,20 +1,10 @@
-- if current_order.present?
-  h1 Cart
-  ul
-    - current_order.line_items.each do |line_item|
-      li
-        = line_item.product_variant.product.title
-        br
-        = "#{line_item.amount}x - #{line_item.price}$"
-
-    li
-      strong = "Total: #{current_order.total_price}$"
-
 h1 Home
+
+a href=wipify.order_path Cart
 
 - @products.each do |product|
   = form_for("", url: wipify.add_order_path) do |f|
     = f.hidden_field :product_variant_id, value: product.master_variant.id
-    h2 = product.title
+    h2 = "#{product.title} - #{product.master_variant.price}$"
     = f.number_field :amount, value: "1"
     = f.submit "Buy"

@@ -2,6 +2,7 @@
 
 class Wipify::Order < ApplicationRecord
   include AASM
+  include Folio::HasAddresses
 
   belongs_to :customer, polymorphic: true,
                         inverse_of: :order,
@@ -28,10 +29,14 @@ class Wipify::Order < ApplicationRecord
             :base_number,
             :number,
             :line_items,
-            :payment_method,
-            :shipping_method,
+            # :payment_method,
+            # :shipping_method,
             presence: true,
             unless: :pending?
+
+  validates :primary_address,
+            presence: true,
+            if: :requires_address_and_not_pending?
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -47,7 +52,7 @@ class Wipify::Order < ApplicationRecord
 
       before do
         set_numbers
-        set_prices
+        imprint_prices
       end
 
       after_commit do
@@ -134,11 +139,21 @@ class Wipify::Order < ApplicationRecord
       ActiveRecord::Base.nextval("wipify_orders_base_number_seq")
     end
 
-    def set_prices
+    def imprint_prices
+      line_items.each { |li| li.imprint_unit_price! }
+
       self.line_items_price = line_items_price
       self.payment_method_price = payment_method_price.to_i
       self.shipping_method_price = shipping_method_price.to_i
       self.total_price = total_price
+    end
+
+    def requires_address?
+      true
+    end
+
+    def requires_address_and_not_pending?
+      requires_address? && !pending?
     end
 end
 
@@ -159,6 +174,9 @@ end
 #  shipping_method_price     :integer
 #  payment_method_price      :integer
 #  total_price               :integer
+#  primary_address_id        :bigint(8)
+#  secondary_address_id      :bigint(8)
+#  use_secondary_address     :boolean          default(FALSE)
 #  confirmed_at              :datetime
 #  paid_at                   :datetime
 #  dispatched_at             :datetime

@@ -496,6 +496,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.integer "shipping_method_price"
     t.integer "payment_method_price"
     t.integer "total_price"
+    t.bigint "primary_address_id"
+    t.bigint "secondary_address_id"
+    t.boolean "use_secondary_address", default: false
     t.datetime "confirmed_at"
     t.datetime "paid_at"
     t.datetime "dispatched_at"
