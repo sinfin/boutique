@@ -105,6 +105,20 @@ class Wipify::Order < ApplicationRecord
     ].sum
   end
 
+  def add_line_item(product_variant, amount: 1)
+    Wipify::Order.transaction do
+      if line_item = line_items.all.find { |li| li.wipify_product_variant_id == product_variant.id }
+        line_item.amount += amount
+        line_item.save!
+      else
+        line_items.build(product_variant: product_variant,
+                         amount: amount)
+      end
+
+      save!
+    end
+  end
+
   private
     def set_numbers
       return if base_number.present?

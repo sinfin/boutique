@@ -18,7 +18,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
 
   create_table "wipify_line_items", force: :cascade do |t|
     t.bigint "wipify_order_id", null: false
-    t.integer "price"
+    t.integer "amount", default: 1
+    t.integer "unit_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "wipify_product_variant_id", null: false

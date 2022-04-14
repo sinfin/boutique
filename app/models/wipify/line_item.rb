@@ -11,7 +11,14 @@ class Wipify::LineItem < ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
+  validates :amount,
+            numericality: { greater_than_or_equal_to: 1 }
+
   def price
+    amount * unit_price
+  end
+
+  def unit_price
     super || product_variant.price
   end
 end
@@ -22,7 +29,8 @@ end
 #
 #  id                        :bigint(8)        not null, primary key
 #  wipify_order_id           :bigint(8)        not null
-#  price                     :integer
+#  amount                    :integer          default(1)
+#  unit_price                :integer
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  wipify_product_variant_id :bigint(8)        not null
