@@ -3,6 +3,9 @@
 require "wipify/version"
 require "wipify/engine"
 
+require "aasm"
+require "ar-sequence"
+require "slim"
+
 module Wipify
-  # Your code goes here...
 end

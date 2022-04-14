@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "after_commit_everywhere", "~> 1.0"
   spec.add_dependency "pg", "~> 1.2"
   spec.add_dependency "ar-sequence"
+  spec.add_dependency "slim"
 
   spec.add_development_dependency "pry-rails"
   spec.add_development_dependency "rubocop"
@@ -40,5 +41,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rubocop"
   spec.add_development_dependency "guard-slimlint"
   spec.add_development_dependency "annotate"
-  spec.add_development_dependency "slim"
 end
