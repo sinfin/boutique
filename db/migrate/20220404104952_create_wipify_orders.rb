@@ -5,6 +5,8 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
     create_table :wipify_orders do |t|
       t.belongs_to :customer, polymorphic: true
 
+      t.string :web_session_id, index: true
+
       t.integer :base_number
       t.string  :number, index: true
       t.string  :email

@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
   create_table "wipify_orders", force: :cascade do |t|
     t.string "customer_type"
     t.bigint "customer_id"
+    t.string "web_session_id"
     t.integer "base_number"
     t.string "number"
     t.string "email"
@@ -48,6 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_06_152021) do
     t.bigint "wipify_payment_method_id"
     t.index ["customer_type", "customer_id"], name: "index_wipify_orders_on_customer"
     t.index ["number"], name: "index_wipify_orders_on_number"
+    t.index ["web_session_id"], name: "index_wipify_orders_on_web_session_id"
     t.index ["wipify_payment_method_id"], name: "index_wipify_orders_on_wipify_payment_method_id"
     t.index ["wipify_shipping_method_id"], name: "index_wipify_orders_on_wipify_shipping_method_id"
   end

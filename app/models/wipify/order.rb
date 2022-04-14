@@ -135,6 +135,7 @@ end
 #  id                        :bigint(8)        not null, primary key
 #  customer_type             :string
 #  customer_id               :bigint(8)
+#  web_session_id            :string
 #  base_number               :integer
 #  number                    :string
 #  email                     :string
@@ -157,6 +158,7 @@ end
 #
 #  index_wipify_orders_on_customer                   (customer_type,customer_id)
 #  index_wipify_orders_on_number                     (number)
+#  index_wipify_orders_on_web_session_id             (web_session_id)
 #  index_wipify_orders_on_wipify_payment_method_id   (wipify_payment_method_id)
 #  index_wipify_orders_on_wipify_shipping_method_id  (wipify_shipping_method_id)
 #

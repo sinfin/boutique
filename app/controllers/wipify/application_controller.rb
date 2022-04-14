@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-module Wipify
-  class ApplicationController < ActionController::Base
-  end
+class Wipify::ApplicationController < ActionController::Base
+  include Wipify::ApplicationControllerBase
 end
