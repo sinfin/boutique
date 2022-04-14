@@ -8,6 +8,9 @@ gemspec
 
 gem "sprockets-rails"
 
+gem "folio", github: "sinfin/folio", branch: "petr/dragonfly-libvips-multi-site-rails-7"
+# gem "folio", path: "../folio"
+
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "factory_bot"

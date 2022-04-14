@@ -111,8 +111,8 @@ class Wipify::Order < ApplicationRecord
         line_item.amount += amount
         line_item.save!
       else
-        line_items.build(product_variant: product_variant,
-                         amount: amount)
+        line_items.build(product_variant:,
+                         amount:)
       end
 
       save!
