@@ -41,7 +41,23 @@ class Wipify::OrdersController < Wipify::ApplicationController
 
   private
     def order_params
-      params.require(:order).permit(:email)
+      params.require(:order).permit(:email,
+                                    *addresses_strong_params)
+    end
+
+    def addresses_strong_params
+      base = %i[id
+                name
+                address_line_1
+                city
+                zip
+                country_code]
+
+      [
+        :use_secondary_address,
+        primary_address_attributes: base,
+        secondary_address_attributes: base,
+      ]
     end
 
     def redirect_if_current_order_is_empty

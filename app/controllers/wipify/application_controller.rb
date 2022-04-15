@@ -10,6 +10,10 @@ class Wipify::ApplicationController < ActionController::Base
 
   before_action :init_session
 
+  def default_url_options
+    {}
+  end
+
   private
     def init_session
       session[:init] = true if session.empty?

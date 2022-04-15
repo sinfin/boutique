@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative Folio::Engine.root.join("test/factories")
+
 FactoryBot.define do
   factory :wipify_product, class: "Wipify::Product" do
     title { "Product title" }
@@ -30,6 +32,7 @@ FactoryBot.define do
       email { "order@email.email" }
       line_items_count { 1 }
 
+      association :primary_address, factory: :wipify_folio_primary_address
       association :payment_method, factory: :wipify_payment_method
       association :shipping_method, factory: :wipify_shipping_method
     end
@@ -82,5 +85,13 @@ FactoryBot.define do
     title { "ShippingMethod title" }
     price { 0 }
     published { true }
+  end
+
+  factory :wipify_folio_primary_address, class: "Folio::Address::Primary" do
+    name { "name" }
+    address_line_1 { "address_line_1" }
+    city { "city" }
+    zip { "12345" }
+    country_code { "US" }
   end
 end
