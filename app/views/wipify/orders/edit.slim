@@ -1,5 +1,9 @@
-= simple_form_for(current_order, method: :post, \
+.container
+  h1 Finalize your order
+
+  = simple_form_for(current_order, method: :post, \
                                  url: confirm_order_path) do |f|
 
-  = f.input :email
-  = f.button :submit, "Pay"
+    = f.input :email
+
+    = f.button :submit, "Pay"

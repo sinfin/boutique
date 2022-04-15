@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class Wipify::ApplicationController < ActionController::Base
+  layout "folio/application"
+
+  include Folio::ApplicationControllerBase
   include Wipify::ApplicationControllerBase
+
+  helper Folio::Engine.helpers
 
   before_action :init_session
 

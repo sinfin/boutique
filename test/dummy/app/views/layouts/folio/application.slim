@@ -1,0 +1,16 @@
+doctype html
+html[
+  lang=I18n.locale
+]
+  head
+    = render partial: 'layouts/folio/head'
+    = render partial: 'layouts/folio/favicon'
+
+  body
+    = yield :publishable_hint
+
+    .w-layout-main
+      = yield
+
+    - if Rails.application.config.folio_users
+      == cell('folio/devise/modal')

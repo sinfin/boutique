@@ -12,8 +12,24 @@ def destroy_all(klass)
   puts "Destroyed #{klass}"
 end
 
+def force_destroy(klass)
+  puts "Destroying #{klass}"
+  klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+  puts "Destroyed #{klass}"
+end
+
 destroy_all Wipify::Order
 destroy_all Wipify::Product
+force_destroy Folio::Site
+
+puts "Creating Folio::Site"
+Folio::Site.create!(title: "todo.shop",
+                    domain: "todo.shop",
+                    locale: "en",
+                    locales: ["en"],
+                    email: "info@todo.shop",
+                    phone: "+420 123 456 789")
+puts "Created Folio::Site"
 
 puts "Creating Wipify::Product & variants"
 
