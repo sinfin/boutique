@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-
-class Wipify::ShippingMethod < ApplicationRecord
+class Wipify::ShippingMethod < Wipify::ApplicationRecord
   has_many :orders, class_name: "Wipify::Order",
                     foreign_key: :wipify_shipping_method_id,
                     dependent: :nullify,
@@ -29,5 +28,5 @@ end
 # Indexes
 #
 #  index_wipify_shipping_methods_on_position   (position)
-#  index_wipify_shipping_methods_on_published  (published) WHERE (published = true)
+#  index_wipify_shipping_methods_on_published  (published)
 #

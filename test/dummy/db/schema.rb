@@ -524,7 +524,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_wipify_payment_methods_on_position"
-    t.index ["published"], name: "index_wipify_payment_methods_on_published", where: "(published = true)"
+    t.index ["published"], name: "index_wipify_payment_methods_on_published"
   end
 
   create_table "wipify_product_variants", force: :cascade do |t|
@@ -534,14 +534,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.boolean "master", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["master"], name: "index_wipify_product_variants_on_master", where: "(master = true)"
+    t.index ["master"], name: "index_wipify_product_variants_on_master", where: "master"
     t.index ["wipify_product_id"], name: "index_wipify_product_variants_on_wipify_product_id"
   end
 
   create_table "wipify_products", force: :cascade do |t|
     t.string "title", null: false
+    t.string "slug", null: false
+    t.boolean "published", default: false
+    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["published"], name: "index_wipify_products_on_published"
+    t.index ["published_at"], name: "index_wipify_products_on_published_at"
+    t.index ["slug"], name: "index_wipify_products_on_slug"
   end
 
   create_table "wipify_shipping_methods", force: :cascade do |t|
@@ -554,7 +560,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_wipify_shipping_methods_on_position"
-    t.index ["published"], name: "index_wipify_shipping_methods_on_published", where: "(published = true)"
+    t.index ["published"], name: "index_wipify_shipping_methods_on_published"
   end
 
   add_foreign_key "wipify_line_items", "wipify_orders"

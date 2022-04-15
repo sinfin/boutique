@@ -9,7 +9,7 @@ class CreateWipifyProductVariants < ActiveRecord::Migration[7.0]
 
       t.integer :price, null: false
 
-      t.boolean :master, default: false, index: { where: "master = true" }
+      t.boolean :master, default: false, index: { where: "master" }
 
       t.timestamps
     end

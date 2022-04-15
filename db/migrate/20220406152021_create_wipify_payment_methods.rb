@@ -9,11 +9,14 @@ class CreateWipifyPaymentMethods < ActiveRecord::Migration[7.0]
 
       t.string :price
 
-      t.integer :position, index: true
-      t.boolean :published, default: false, index: { where: "published = true" }
+      t.integer :position
+      t.boolean :published, default: false
 
       t.timestamps
     end
+
+    add_index :wipify_payment_methods, :position
+    add_index :wipify_payment_methods, :published
 
     add_belongs_to :wipify_orders, :wipify_payment_method, foreign_key: true
   end

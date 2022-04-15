@@ -5,10 +5,10 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
     create_table :wipify_orders do |t|
       t.belongs_to :customer, polymorphic: true
 
-      t.string :web_session_id, index: true
+      t.string :web_session_id
 
       t.integer :base_number
-      t.string  :number, index: true
+      t.string  :number
       t.string  :email
       t.string  :aasm_state, default: "pending"
       t.integer :line_items_count, default: 0
@@ -28,6 +28,9 @@ class CreateWipifyOrders < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+
+    add_index :wipify_orders, :web_session_id
+    add_index :wipify_orders, :number
 
     create_sequence :wipify_orders_base_number_seq
   end

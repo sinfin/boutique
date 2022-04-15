@@ -2,6 +2,6 @@
 
 class HomeController < ApplicationController
   def index
-    @products = Wipify::Product.all
+    @products = Wipify::Product.published
   end
 end

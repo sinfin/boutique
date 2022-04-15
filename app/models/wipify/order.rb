@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Wipify::Order < ApplicationRecord
+class Wipify::Order < Wipify::ApplicationRecord
   include AASM
   include Folio::HasAddresses
 

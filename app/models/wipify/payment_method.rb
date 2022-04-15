@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-
-class Wipify::PaymentMethod < ApplicationRecord
+class Wipify::PaymentMethod < Wipify::ApplicationRecord
   has_many :orders, class_name: "Wipify::Order",
                     foreign_key: :wipify_payment_method_id,
                     dependent: :nullify,
@@ -29,5 +28,5 @@ end
 # Indexes
 #
 #  index_wipify_payment_methods_on_position   (position)
-#  index_wipify_payment_methods_on_published  (published) WHERE (published = true)
+#  index_wipify_payment_methods_on_published  (published)
 #

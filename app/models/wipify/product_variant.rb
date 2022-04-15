@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Wipify::ProductVariant < ApplicationRecord
+class Wipify::ProductVariant < Wipify::ApplicationRecord
   belongs_to :product, class_name: "Wipify::Product",
                        foreign_key: :wipify_product_id,
                        inverse_of: :variants
@@ -23,7 +23,7 @@ end
 #
 # Indexes
 #
-#  index_wipify_product_variants_on_master             (master) WHERE (master = true)
+#  index_wipify_product_variants_on_master             (master) WHERE master
 #  index_wipify_product_variants_on_wipify_product_id  (wipify_product_id)
 #
 # Foreign Keys

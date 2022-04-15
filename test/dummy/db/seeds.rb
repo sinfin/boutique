@@ -34,7 +34,9 @@ puts "Created Folio::Site"
 puts "Creating Wipify::Product & variants"
 
 4.times do
-  product = Wipify::Product.new(title: Faker::Commerce.product_name)
+  product = Wipify::Product.new(title: Faker::Commerce.product_name,
+                                published: true,
+                                published_at: 1.minute.ago)
   product.build_master_variant(price: Faker::Commerce.price(range: 1..100))
   product.save!
 
