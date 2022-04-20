@@ -2,8 +2,8 @@
 
 class ApplicationController < ActionController::Base
   include Folio::ApplicationControllerBase
-  include Wipify::ApplicationControllerBase
+  include Boutique::ApplicationControllerBase
 
   helper Folio::Engine.helpers
-  helper Wipify::Engine.helpers
+  helper Boutique::Engine.helpers
 end

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: "home#index"
 
   mount Folio::Engine => "/"
-  mount Wipify::Engine => "/"
+  mount Boutique::Engine => "/"
 
   if Rails.application.config.folio_users
     devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"

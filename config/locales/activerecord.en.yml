@@ -2,6 +2,6 @@
 en:
   activerecord:
     models:
-      wipify/order:
+      boutique/order:
         one: Order
         other: Orders

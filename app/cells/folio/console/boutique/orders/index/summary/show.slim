@@ -1,0 +1,13 @@
+aside.f-c-b-orders-index-summary.small
+  .f-c-b-orders-index-summary__outer
+    .f-c-b-orders-index-summary__inner
+      .row
+        .col
+          strong
+            = l(model[:date], format: :as_date)
+
+          span.mx-2.d-inline-block |
+
+          = t('.text', count: orders.size, \
+                       total: price(total_price), \
+                       average: price(average_price))

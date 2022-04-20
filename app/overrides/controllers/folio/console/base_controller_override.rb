@@ -2,5 +2,5 @@
 
 Folio::Console::BaseController.class_eval do
   helper Folio::Engine.helpers
-  helper Wipify::Engine.helpers
+  helper Boutique::Engine.helpers
 end

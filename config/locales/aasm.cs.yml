@@ -2,7 +2,7 @@
 cs:
   activerecord:
     attributes:
-      wipify/order:
+      boutique/order:
         aasm_state/pending: Nepotvrzená
         aasm_state/confirmed: Nezaplacená
         aasm_state/paid: Zaplacená
@@ -10,7 +10,7 @@ cs:
         aasm_state/cancelled: Stornovaná
 
     events:
-      wipify/order:
+      boutique/order:
         confirm: Potvrdit
         pay: Označit za zaplacenou
         dispatch: Označit za vyřízenou

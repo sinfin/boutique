@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
-  create_sequence "wipify_orders_base_number_seq"
+  create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,96 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.index ["placement_version"], name: "index_audits_on_placement_version"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "boutique_line_items", force: :cascade do |t|
+    t.bigint "boutique_order_id", null: false
+    t.integer "amount", default: 1
+    t.integer "unit_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "boutique_product_variant_id", null: false
+    t.index ["boutique_order_id"], name: "index_boutique_line_items_on_boutique_order_id"
+    t.index ["boutique_product_variant_id"], name: "index_boutique_line_items_on_boutique_product_variant_id"
+  end
+
+  create_table "boutique_orders", force: :cascade do |t|
+    t.bigint "folio_user_id"
+    t.string "web_session_id"
+    t.integer "base_number"
+    t.string "number"
+    t.string "email"
+    t.string "aasm_state", default: "pending"
+    t.integer "line_items_count", default: 0
+    t.integer "line_items_price"
+    t.integer "shipping_method_price"
+    t.integer "payment_method_price"
+    t.integer "total_price"
+    t.bigint "primary_address_id"
+    t.bigint "secondary_address_id"
+    t.boolean "use_secondary_address", default: false
+    t.datetime "confirmed_at"
+    t.datetime "paid_at"
+    t.datetime "dispatched_at"
+    t.datetime "cancelled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "boutique_shipping_method_id"
+    t.bigint "boutique_payment_method_id"
+    t.index ["boutique_payment_method_id"], name: "index_boutique_orders_on_boutique_payment_method_id"
+    t.index ["boutique_shipping_method_id"], name: "index_boutique_orders_on_boutique_shipping_method_id"
+    t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
+    t.index ["number"], name: "index_boutique_orders_on_number"
+    t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
+  end
+
+  create_table "boutique_payment_methods", force: :cascade do |t|
+    t.string "title"
+    t.string "type"
+    t.text "description"
+    t.string "price"
+    t.integer "position"
+    t.boolean "published", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_boutique_payment_methods_on_position"
+    t.index ["published"], name: "index_boutique_payment_methods_on_published"
+  end
+
+  create_table "boutique_product_variants", force: :cascade do |t|
+    t.bigint "boutique_product_id", null: false
+    t.string "title"
+    t.integer "price", null: false
+    t.boolean "master", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"
+    t.index ["master"], name: "index_boutique_product_variants_on_master", where: "master"
+  end
+
+  create_table "boutique_products", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.boolean "published", default: false
+    t.datetime "published_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["published"], name: "index_boutique_products_on_published"
+    t.index ["published_at"], name: "index_boutique_products_on_published_at"
+    t.index ["slug"], name: "index_boutique_products_on_slug"
+  end
+
+  create_table "boutique_shipping_methods", force: :cascade do |t|
+    t.string "title"
+    t.string "type"
+    t.text "description"
+    t.string "price"
+    t.integer "position"
+    t.boolean "published", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_boutique_shipping_methods_on_position"
+    t.index ["published"], name: "index_boutique_shipping_methods_on_published"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -472,100 +562,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "wipify_line_items", force: :cascade do |t|
-    t.bigint "wipify_order_id", null: false
-    t.integer "amount", default: 1
-    t.integer "unit_price"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "wipify_product_variant_id", null: false
-    t.index ["wipify_order_id"], name: "index_wipify_line_items_on_wipify_order_id"
-    t.index ["wipify_product_variant_id"], name: "index_wipify_line_items_on_wipify_product_variant_id"
-  end
-
-  create_table "wipify_orders", force: :cascade do |t|
-    t.bigint "folio_user_id"
-    t.string "web_session_id"
-    t.integer "base_number"
-    t.string "number"
-    t.string "email"
-    t.string "aasm_state", default: "pending"
-    t.integer "line_items_count", default: 0
-    t.integer "line_items_price"
-    t.integer "shipping_method_price"
-    t.integer "payment_method_price"
-    t.integer "total_price"
-    t.bigint "primary_address_id"
-    t.bigint "secondary_address_id"
-    t.boolean "use_secondary_address", default: false
-    t.datetime "confirmed_at"
-    t.datetime "paid_at"
-    t.datetime "dispatched_at"
-    t.datetime "cancelled_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "wipify_shipping_method_id"
-    t.bigint "wipify_payment_method_id"
-    t.index ["folio_user_id"], name: "index_wipify_orders_on_folio_user_id"
-    t.index ["number"], name: "index_wipify_orders_on_number"
-    t.index ["web_session_id"], name: "index_wipify_orders_on_web_session_id"
-    t.index ["wipify_payment_method_id"], name: "index_wipify_orders_on_wipify_payment_method_id"
-    t.index ["wipify_shipping_method_id"], name: "index_wipify_orders_on_wipify_shipping_method_id"
-  end
-
-  create_table "wipify_payment_methods", force: :cascade do |t|
-    t.string "title"
-    t.string "type"
-    t.text "description"
-    t.string "price"
-    t.integer "position"
-    t.boolean "published", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["position"], name: "index_wipify_payment_methods_on_position"
-    t.index ["published"], name: "index_wipify_payment_methods_on_published"
-  end
-
-  create_table "wipify_product_variants", force: :cascade do |t|
-    t.bigint "wipify_product_id", null: false
-    t.string "title"
-    t.integer "price", null: false
-    t.boolean "master", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["master"], name: "index_wipify_product_variants_on_master", where: "master"
-    t.index ["wipify_product_id"], name: "index_wipify_product_variants_on_wipify_product_id"
-  end
-
-  create_table "wipify_products", force: :cascade do |t|
-    t.string "title", null: false
-    t.string "slug", null: false
-    t.boolean "published", default: false
-    t.datetime "published_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["published"], name: "index_wipify_products_on_published"
-    t.index ["published_at"], name: "index_wipify_products_on_published_at"
-    t.index ["slug"], name: "index_wipify_products_on_slug"
-  end
-
-  create_table "wipify_shipping_methods", force: :cascade do |t|
-    t.string "title"
-    t.string "type"
-    t.text "description"
-    t.string "price"
-    t.integer "position"
-    t.boolean "published", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["position"], name: "index_wipify_shipping_methods_on_position"
-    t.index ["published"], name: "index_wipify_shipping_methods_on_published"
-  end
-
-  add_foreign_key "wipify_line_items", "wipify_orders"
-  add_foreign_key "wipify_line_items", "wipify_product_variants"
-  add_foreign_key "wipify_orders", "folio_users"
-  add_foreign_key "wipify_orders", "wipify_payment_methods"
-  add_foreign_key "wipify_orders", "wipify_shipping_methods"
-  add_foreign_key "wipify_product_variants", "wipify_products"
+  add_foreign_key "boutique_line_items", "boutique_orders"
+  add_foreign_key "boutique_line_items", "boutique_product_variants"
+  add_foreign_key "boutique_orders", "boutique_payment_methods"
+  add_foreign_key "boutique_orders", "boutique_shipping_methods"
+  add_foreign_key "boutique_orders", "folio_users"
+  add_foreign_key "boutique_product_variants", "boutique_products"
 end

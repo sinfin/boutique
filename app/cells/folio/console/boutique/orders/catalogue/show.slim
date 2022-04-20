@@ -1,0 +1,23 @@
+.f-c-b-orders-catalogue
+  = catalogue(model, before_lambda: options[:before_lambda])
+    ruby:
+      attribute(:number)
+      attribute(:email)
+
+      attribute(:shipping_method) do
+        record.shipping_method.try(:title)
+      end
+      attribute(:payment_method) do
+        record.payment_method.try(:title)
+      end
+
+      attribute(:price) do
+        price(record.total_price)
+      end
+
+      state
+
+      date :confirmed_at
+      date :paid_at
+
+      actions :show, :edit

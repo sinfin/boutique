@@ -8,17 +8,17 @@ default: &default
 
 development:
   <<: *default
-  database: wipify_development
+  database: boutique_development
 
 test:
   <<: *default
-  database: wipify_test_<%= (branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`.chomp).empty? ? 'default' : branch.gsub(/\W/, '_') %>
+  database: boutique_test_<%= (branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`.chomp).empty? ? 'default' : branch.gsub(/\W/, '_') %>
   pool: 2
 
 staging:
   <<: *default
-  database: wipify_staging
+  database: boutique_staging
 
 production:
   <<: *default
-  database: wipify_production
+  database: boutique_production

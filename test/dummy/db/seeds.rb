@@ -18,24 +18,24 @@ def force_destroy(klass)
   puts "Destroyed #{klass}"
 end
 
-destroy_all Wipify::Order
-destroy_all Wipify::Product
+destroy_all Boutique::Order
+destroy_all Boutique::Product
 destroy_all Folio::User
 force_destroy Folio::Site
 
 puts "Creating Folio::Site"
-Folio::Site.create!(title: "todo.shop",
-                    domain: "todo.shop",
+Folio::Site.create!(title: "Boutique Shop",
+                    domain: "boutique.shop",
                     locale: "en",
                     locales: ["en"],
                     email: "info@todo.shop",
                     phone: "+420 123 456 789")
 puts "Created Folio::Site"
 
-puts "Creating Wipify::Product & variants"
+puts "Creating products & variants"
 
 4.times do
-  product = Wipify::Product.new(title: Faker::Commerce.product_name,
+  product = Boutique::Product.new(title: Faker::Commerce.product_name,
                                 published: true,
                                 published_at: 1.minute.ago)
   product.build_master_variant(price: Faker::Commerce.price(range: 1..100))
@@ -44,4 +44,4 @@ puts "Creating Wipify::Product & variants"
   print "."
 end
 
-puts "\nCreated Wipify::Product & variants"
+puts "\nCreated products & variants"

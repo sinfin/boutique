@@ -2,7 +2,7 @@
 cs:
   activerecord:
     attributes:
-      wipify/order:
+      boutique/order:
         items: Předměty
         price: Cena
         number: Číslo
@@ -16,7 +16,7 @@ cs:
         payment_method: Platba
 
     models:
-      wipify/order:
+      boutique/order:
         one: Objednávka
         few: Objednávky
         other: Objednávek

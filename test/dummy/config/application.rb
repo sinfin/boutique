@@ -9,7 +9,7 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 require "folio"
-require "wipify"
+require "boutique"
 
 module Dummy
   class Application < Rails::Application
@@ -23,7 +23,7 @@ module Dummy
 
     overrides = [
       Folio::Engine.root.join("app/overrides").to_s,
-      Wipify::Engine.root.join("app/overrides").to_s,
+      Boutique::Engine.root.join("app/overrides").to_s,
       Rails.root.join("app/overrides").to_s,
     ]
 

@@ -1,10 +1,10 @@
 .container
   h1 Home
 
-  a href=wipify.order_path Cart
+  a href=boutique.order_path Cart
 
   - @products.each do |product|
-    = form_for("", url: wipify.add_order_path) do |f|
+    = form_for("", url: boutique.add_order_path) do |f|
       = f.hidden_field :product_variant_id, value: product.master_variant.id
       h2 = "#{product.title} - #{product.master_variant.price}$"
       = f.number_field :amount, value: "1"

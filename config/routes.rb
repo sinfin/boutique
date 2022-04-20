@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Wipify::Engine.routes.draw do
+Boutique::Engine.routes.draw do
   resource :order, only: %i[show edit update] do
     post :add
     post :confirm
@@ -10,7 +10,7 @@ end
 
 Folio::Engine.routes.draw do
   namespace :console do
-    scope module: :wipify do
+    scope module: :boutique do
       resources :orders, only: %i[index show edit update]
     end
   end

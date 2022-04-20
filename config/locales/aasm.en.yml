@@ -2,7 +2,7 @@
 en:
   activerecord:
     attributes:
-      wipify/order:
+      boutique/order:
         aasm_state/pending: Pending
         aasm_state/confirmed: Unpaid
         aasm_state/paid: Paid

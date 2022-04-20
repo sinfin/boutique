@@ -71,7 +71,7 @@ GIT
 PATH
   remote: .
   specs:
-    wipify (0.1.0)
+    boutique (0.1.0)
       aasm (~> 5.2)
       after_commit_everywhere (~> 1.0)
       ar-sequence
@@ -590,6 +590,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate
+  boutique!
   capybara (~> 2.13)
   cells
   cells-rails!
@@ -609,7 +610,6 @@ DEPENDENCIES
   rubocop-rails_config
   rubocop-rake
   sprockets-rails
-  wipify!
 
 BUNDLED WITH
    2.3.10
