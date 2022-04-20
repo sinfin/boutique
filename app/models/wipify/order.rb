@@ -25,6 +25,11 @@ class Wipify::Order < Wipify::ApplicationRecord
                         dependent: :destroy,
                         inverse_of: :order
 
+  scope :ordered, -> { order(base_number: :desc, id: :desc) }
+  scope :except_pending, -> { where.not(aasm_state: "pending") }
+
+  scope :by_state, -> (state) { where(aasm_state: state) }
+
   validates :email,
             :base_number,
             :number,
@@ -88,6 +93,14 @@ class Wipify::Order < Wipify::ApplicationRecord
 
       before { self.cancelled_at = nil }
     end
+  end
+
+
+  def to_label
+    [
+      number,
+      customer.try(:full_name) || email
+    ].compact.join(" - ")
   end
 
   def line_items_price

@@ -1,0 +1,21 @@
+= index_header
+
+ruby:
+  bl = -> (item, collection, i) do
+    prev = collection[i - 1]
+    if prev.blank? || prev.new_record?
+      return
+    else
+      prev_day = prev.confirmed_at.try(:day)
+      day = item.confirmed_at.try(:day)
+      return if day.blank? || prev.blank?
+      return if day == prev_day
+      cell('folio/console/wipify/orders/index/summary',
+           scope: @orders_scope,
+           date: item.confirmed_at).show.try(:html_safe)
+    end
+  end
+
+== cell('folio/console/wipify/orders/catalogue',
+        @orders,
+        before_lambda: bl)

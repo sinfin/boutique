@@ -1,0 +1,11 @@
+= show_header @order
+
+.row
+  .col-lg-4
+    = show_for @order do |s|
+      = s.attribute(:created_at)
+      = s.attribute(:confirmed_at, if_blank: "–")
+      = s.attribute(:paid_at, if_blank: "–")
+
+      - if s.object.cancelled_at.present?
+        = s.attribute(:cancelled_at)

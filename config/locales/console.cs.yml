@@ -1,0 +1,9 @@
+---
+cs:
+  folio:
+    console:
+      wipify:
+        orders:
+          index:
+            summary:
+              text: Objednáno <strong>%{count}</strong> objednávek za <strong>%{total}</strong> v ∅ ceně %{average}.

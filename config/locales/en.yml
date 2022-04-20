@@ -1,0 +1,5 @@
+---
+en:
+  time:
+    formats:
+      as_date: "%-d. %-m. %Y"

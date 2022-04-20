@@ -1,0 +1,10 @@
+---
+en:
+  activerecord:
+    attributes:
+      wipify/order:
+        aasm_state/pending: Pending
+        aasm_state/confirmed: Unpaid
+        aasm_state/paid: Paid
+        aasm_state/dispatched: Dispatched
+        aasm_state/cancelled: Cancelled

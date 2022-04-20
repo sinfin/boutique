@@ -1,0 +1,22 @@
+---
+cs:
+  activerecord:
+    attributes:
+      wipify/order:
+        items: Předměty
+        price: Cena
+        number: Číslo
+        line_items_price: Cena položek
+        total_price: Cena celkem
+        created_at: Vytvořeno
+        confirmed_at: Objednáno
+        paid_at: Zaplaceno
+        dispatched_at: Odesláno
+        shipping_method: Způsob dopravy
+        payment_method: Platba
+
+    models:
+      wipify/order:
+        one: Objednávka
+        few: Objednávky
+        other: Objednávek

@@ -1,6 +1,14 @@
 GIT
+  remote: https://github.com/sinfin/cells-rails.git
+  revision: 78a09e6f71e1912abf42f1e0f2026b9571a3d024
+  specs:
+    cells-rails (0.1.4)
+      actionpack (>= 5.0)
+      cells (>= 4.1.6, < 5.0.0)
+
+GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 0276c68bc15ec49becccf8b42ff21a4550595561
+  revision: d541b423a78c33ed7f9d8226d77e17518b400c4d
   branch: petr/dragonfly-libvips-multi-site-rails-7
   specs:
     folio (0.1.0)
@@ -159,13 +167,13 @@ GEM
     audited (5.0.2)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.576.0)
+    aws-partitions (1.578.0)
     aws-sdk-core (3.130.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.55.0)
+    aws-sdk-kms (1.56.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.113.0)
@@ -183,6 +191,21 @@ GEM
       railties (>= 5.0)
     builder (3.2.4)
     cancancan (3.3.0)
+    capybara (2.18.0)
+      addressable
+      mini_mime (>= 0.1.3)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (>= 2.0, < 4.0)
+    cells (4.1.7)
+      declarative-builder (< 0.2.0)
+      declarative-option (< 0.2.0)
+      tilt (>= 1.4, < 3)
+      uber (< 0.2.0)
+    cells-slim (0.0.6)
+      cells (>= 4.0.1, < 6.0.0)
+      slim (~> 3.0)
     chronic (0.10.2)
     cocoon (1.2.15)
     coderay (1.1.3)
@@ -205,6 +228,9 @@ GEM
     crass (1.0.6)
     css_parser (1.11.0)
       addressable
+    declarative-builder (0.1.0)
+      declarative-option (< 0.2.0)
+    declarative-option (0.1.0)
     devise (4.8.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -348,7 +374,7 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.3-x86_64-linux)
+    nokogiri (1.13.4-x86_64-linux)
       racc (~> 1.4)
     notiffany (0.1.3)
       nenv (~> 0.1)
@@ -383,7 +409,7 @@ GEM
     pagy (5.10.1)
       activesupport
     parallel (1.22.1)
-    parser (3.1.1.0)
+    parser (3.1.2.0)
       ast (~> 2.4.1)
     pg (1.3.5)
     pg_search (2.3.2)
@@ -447,12 +473,12 @@ GEM
     recaptcha (4.13.1)
       json
     redis (4.6.0)
-    regexp_parser (2.2.1)
+    regexp_parser (2.3.0)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
     rexml (3.2.5)
-    rubocop (1.26.1)
+    rubocop (1.27.0)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -461,9 +487,9 @@ GEM
       rubocop-ast (>= 1.16.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.16.0)
+    rubocop-ast (1.17.0)
       parser (>= 3.1.1.0)
-    rubocop-minitest (0.18.0)
+    rubocop-minitest (0.19.1)
       rubocop (>= 0.90, < 2.0)
     rubocop-packaging (0.5.1)
       rubocop (>= 0.89, < 2.0)
@@ -474,7 +500,7 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.7.0, < 2.0)
-    rubocop-rails_config (1.9.1)
+    rubocop-rails_config (1.9.2)
       railties (>= 5.0)
       rubocop (>= 1.25.1)
       rubocop-ast (>= 1.0.1)
@@ -502,7 +528,7 @@ GEM
     show_for (0.8.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
-    sidekiq (6.4.1)
+    sidekiq (6.4.2)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -516,9 +542,9 @@ GEM
     sitemap_generator (6.2.1)
       builder (~> 3.0)
     sixarm_ruby_unaccent (1.2.0)
-    slim (4.1.0)
+    slim (3.0.9)
       temple (>= 0.7.6, < 0.9)
-      tilt (>= 2.0.6, < 2.1)
+      tilt (>= 1.3.3, < 2.1)
     slim_lint (0.22.1)
       rubocop (>= 0.78.0)
       slim (>= 3.0, < 5.0)
@@ -543,6 +569,7 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    uber (0.1.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (2.1.0)
@@ -554,6 +581,8 @@ GEM
     websocket-extensions (0.1.5)
     whenever (1.0.0)
       chronic (>= 0.6.3)
+    xpath (3.2.0)
+      nokogiri (~> 1.8)
     zeitwerk (2.5.4)
 
 PLATFORMS
@@ -561,6 +590,10 @@ PLATFORMS
 
 DEPENDENCIES
   annotate
+  capybara (~> 2.13)
+  cells
+  cells-rails!
+  cells-slim (= 0.0.6)
   factory_bot
   faker
   folio!

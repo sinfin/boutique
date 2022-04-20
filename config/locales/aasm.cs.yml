@@ -1,0 +1,18 @@
+---
+cs:
+  activerecord:
+    attributes:
+      wipify/order:
+        aasm_state/pending: Nepotvrzená
+        aasm_state/confirmed: Nezaplacená
+        aasm_state/paid: Zaplacená
+        aasm_state/dispatched: Vyřízeno
+        aasm_state/cancelled: Stornovaná
+
+    events:
+      wipify/order:
+        confirm: Potvrdit
+        pay: Označit za zaplacenou
+        dispatch: Označit za vyřízenou
+        cancel: Stornovat
+        revert_cancelation: Vrátit storno
