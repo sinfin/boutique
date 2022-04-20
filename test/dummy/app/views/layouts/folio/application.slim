@@ -7,7 +7,9 @@ html[
     = render partial: 'layouts/folio/favicon'
 
   body
+    == cell('dummy/ui/header')
+
     = yield :publishable_hint
 
-    .b-layout-main
+    .d-layout-main
       = yield
