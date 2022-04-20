@@ -25,6 +25,7 @@ FactoryBot.define do
 
   factory :boutique_order, class: "Boutique::Order" do
     transient do
+      digital { false }
       line_items_count { 0 }
     end
 
@@ -35,9 +36,14 @@ FactoryBot.define do
 
       line_items_count { 1 }
 
-      association :primary_address, factory: :boutique_folio_primary_address
       association :payment_method, factory: :boutique_payment_method
       association :shipping_method, factory: :boutique_shipping_method
+
+      before(:create) do |order, evaluator|
+        if order.primary_address.nil? && !evaluator.digital
+          order.primary_address = build(:boutique_folio_primary_address)
+        end
+      end
     end
 
     trait :confirmed do
@@ -59,7 +65,9 @@ FactoryBot.define do
     before(:create) do |order, evaluator|
       if order.line_items.empty?
         evaluator.line_items_count.times do
-          order.line_items << build(:boutique_line_item)
+          li = build(:boutique_line_item)
+          li.product_variant.update_column(:digital, true) if evaluator.digital
+          order.line_items << li
         end
       end
     end

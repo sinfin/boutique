@@ -13,7 +13,8 @@
           .col = f.input :first_name, required: true
           .col = f.input :last_name, required: true
 
-        .b-orders-edit__addresses-fields
-          == cell('boutique/addresses/fields', f)
+        - unless current_order.digital?
+          .b-orders-edit__addresses-fields
+            == cell('boutique/addresses/fields', f)
 
         = f.button :submit, "Pay"

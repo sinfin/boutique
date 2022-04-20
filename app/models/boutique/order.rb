@@ -138,6 +138,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  def digital?
+    line_items.all?(&:digital?)
+  end
+
   private
     def set_numbers
       return if base_number.present?
@@ -163,7 +167,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def requires_address?
-      true
+      !digital?
     end
 
     def requires_address_and_not_pending?
@@ -181,6 +185,8 @@ end
 #  base_number                 :integer
 #  number                      :string
 #  email                       :string
+#  first_name                  :string
+#  last_name                   :string
 #  aasm_state                  :string           default("pending")
 #  line_items_count            :integer          default(0)
 #  line_items_price            :integer

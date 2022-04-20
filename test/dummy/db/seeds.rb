@@ -34,11 +34,16 @@ puts "Created Folio::Site"
 
 puts "Creating products & variants"
 
-4.times do
+4.times do |i|
   product = Boutique::Product.new(title: Faker::Commerce.product_name,
                                 published: true,
                                 published_at: 1.minute.ago)
-  product.build_master_variant(price: Faker::Commerce.price(range: 1..100))
+
+  digital = i.even?
+  product.title += " DIGITAL" if digital
+
+  product.build_master_variant(price: Faker::Commerce.price(range: 1..100),
+                               digital: digital)
   product.save!
 
   print "."
