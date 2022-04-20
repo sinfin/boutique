@@ -3,7 +3,7 @@
 class CreateWipifyOrders < ActiveRecord::Migration[7.0]
   def change
     create_table :wipify_orders do |t|
-      t.belongs_to :customer, polymorphic: true
+      t.belongs_to :folio_user, foreign_key: true
 
       t.string :web_session_id
 

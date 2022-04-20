@@ -11,6 +11,3 @@ html[
 
     .w-layout-main
       = yield
-
-    - if Rails.application.config.folio_users
-      == cell('folio/devise/modal')

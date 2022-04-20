@@ -5,8 +5,8 @@
 # Table name: wipify_orders
 #
 #  id                        :bigint           not null, primary key
-#  customer_type             :string
-#  customer_id               :bigint
+#  user_type             :string
+#  user_id               :bigint
 #  base_number               :integer
 #  number                    :string
 #  email                     :string

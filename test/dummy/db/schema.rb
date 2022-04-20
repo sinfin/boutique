@@ -484,8 +484,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
   end
 
   create_table "wipify_orders", force: :cascade do |t|
-    t.string "customer_type"
-    t.bigint "customer_id"
+    t.bigint "folio_user_id"
     t.string "web_session_id"
     t.integer "base_number"
     t.string "number"
@@ -507,7 +506,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.datetime "updated_at", null: false
     t.bigint "wipify_shipping_method_id"
     t.bigint "wipify_payment_method_id"
-    t.index ["customer_type", "customer_id"], name: "index_wipify_orders_on_customer"
+    t.index ["folio_user_id"], name: "index_wipify_orders_on_folio_user_id"
     t.index ["number"], name: "index_wipify_orders_on_number"
     t.index ["web_session_id"], name: "index_wipify_orders_on_web_session_id"
     t.index ["wipify_payment_method_id"], name: "index_wipify_orders_on_wipify_payment_method_id"
@@ -565,6 +564,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
 
   add_foreign_key "wipify_line_items", "wipify_orders"
   add_foreign_key "wipify_line_items", "wipify_product_variants"
+  add_foreign_key "wipify_orders", "folio_users"
   add_foreign_key "wipify_orders", "wipify_payment_methods"
   add_foreign_key "wipify_orders", "wipify_shipping_methods"
   add_foreign_key "wipify_product_variants", "wipify_products"

@@ -4,9 +4,10 @@ class Wipify::Order < Wipify::ApplicationRecord
   include AASM
   include Folio::HasAddresses
 
-  belongs_to :customer, polymorphic: true,
-                        inverse_of: :order,
-                        optional: true
+  belongs_to :user, class_name: "Folio::User",
+                    foreign_key: :folio_user_id,
+                    inverse_of: :orders,
+                    optional: true
 
   belongs_to :shipping_method, class_name: "Wipify::ShippingMethod",
                                foreign_key: :wipify_shipping_method_id,
@@ -99,7 +100,7 @@ class Wipify::Order < Wipify::ApplicationRecord
   def to_label
     [
       number,
-      customer.try(:full_name) || email
+      user.try(:full_name) || email
     ].compact.join(" - ")
   end
 
@@ -175,8 +176,7 @@ end
 # Table name: wipify_orders
 #
 #  id                        :bigint(8)        not null, primary key
-#  customer_type             :string
-#  customer_id               :bigint(8)
+#  folio_user_id             :bigint(8)
 #  web_session_id            :string
 #  base_number               :integer
 #  number                    :string
@@ -201,7 +201,7 @@ end
 #
 # Indexes
 #
-#  index_wipify_orders_on_customer                   (customer_type,customer_id)
+#  index_wipify_orders_on_folio_user_id              (folio_user_id)
 #  index_wipify_orders_on_number                     (number)
 #  index_wipify_orders_on_web_session_id             (web_session_id)
 #  index_wipify_orders_on_wipify_payment_method_id   (wipify_payment_method_id)
@@ -209,6 +209,7 @@ end
 #
 # Foreign Keys
 #
+#  fk_rails_...  (folio_user_id => folio_users.id)
 #  fk_rails_...  (wipify_payment_method_id => wipify_payment_methods.id)
 #  fk_rails_...  (wipify_shipping_method_id => wipify_shipping_methods.id)
 #

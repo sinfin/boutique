@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   mount Folio::Engine => "/"
   mount Wipify::Engine => "/"
 
+  if Rails.application.config.folio_users
+    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+    devise_for :users, class_name: "Folio::User",
+                       omniauth_providers: Rails.application.config.folio_users_omniauth_providers
+  end
+
   get "/400", to: "errors#page400", via: :allr
   get "/404", to: "errors#page404", via: :all
   get "/422", to: "errors#page422", via: :all

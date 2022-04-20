@@ -20,6 +20,7 @@ end
 
 destroy_all Wipify::Order
 destroy_all Wipify::Product
+destroy_all Folio::User
 force_destroy Folio::Site
 
 puts "Creating Folio::Site"
