@@ -1,3 +1,4 @@
+//= link folio_manifest.js
 //= link wipify_manifest.js
 
 //= link_tree ../images
