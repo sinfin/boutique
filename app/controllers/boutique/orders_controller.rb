@@ -42,6 +42,8 @@ class Boutique::OrdersController < Boutique::ApplicationController
   private
     def order_params
       params.require(:order).permit(:email,
+                                    :first_name,
+                                    :last_name,
                                     *addresses_strong_params)
     end
 

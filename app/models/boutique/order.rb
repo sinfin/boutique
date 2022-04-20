@@ -32,11 +32,11 @@ class Boutique::Order < Boutique::ApplicationRecord
   scope :by_state, -> (state) { where(aasm_state: state) }
 
   validates :email,
+            :first_name,
+            :last_name,
             :base_number,
             :number,
             :line_items,
-            # :payment_method,
-            # :shipping_method,
             presence: true,
             unless: :pending?
 

@@ -30,6 +30,9 @@ FactoryBot.define do
 
     trait :ready_to_be_confirmed do
       email { "order@email.email" }
+      first_name { "John" }
+      last_name { "Doe" }
+
       line_items_count { 1 }
 
       association :primary_address, factory: :boutique_folio_primary_address

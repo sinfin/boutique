@@ -9,7 +9,11 @@ class CreateBoutiqueOrders < ActiveRecord::Migration[7.0]
 
       t.integer :base_number
       t.string  :number
+
       t.string  :email
+      t.string  :first_name
+      t.string  :last_name
+
       t.string  :aasm_state, default: "pending"
       t.integer :line_items_count, default: 0
       t.integer :line_items_price

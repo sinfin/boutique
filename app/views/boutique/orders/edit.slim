@@ -7,7 +7,11 @@
       = simple_form_for(current_order, method: :post, \
                                      url: confirm_order_path) do |f|
 
-        = f.input :email
+        = f.input :email, required: true
+
+        .row
+          .col = f.input :first_name, required: true
+          .col = f.input :last_name, required: true
 
         .b-orders-edit__addresses-fields
           == cell('boutique/addresses/fields', f)
