@@ -1,9 +1,15 @@
 .container
   h1 Finalize your order
 
-  = simple_form_for(current_order, method: :post, \
-                                 url: confirm_order_path) do |f|
+  .row
+    .col-lg-8
 
-    = f.input :email
+      = simple_form_for(current_order, method: :post, \
+                                     url: confirm_order_path) do |f|
 
-    = f.button :submit, "Pay"
+        = f.input :email
+
+        .b-orders-edit__addresses-fields
+          == cell('boutique/addresses/fields', f)
+
+        = f.button :submit, "Pay"

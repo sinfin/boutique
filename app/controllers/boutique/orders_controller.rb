@@ -48,6 +48,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     def addresses_strong_params
       base = %i[id
                 name
+                company_name
                 address_line_1
                 city
                 zip

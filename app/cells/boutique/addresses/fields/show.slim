@@ -1,0 +1,33 @@
+.b-addresses-fields
+  = html_safe_fields_for model, :primary_address, build: true do |g|
+    = g.input :address_line_1
+
+    .row
+      .col-sm-7
+        = g.input :city
+      .col-sm-5
+        = g.input :zip
+
+    = g.input :country_code, priority: country_code_priority
+
+    = g.input :identification_number
+    = g.input :vat_identification_number
+
+    hr
+
+  = model.input :use_secondary_address
+
+  = html_safe_fields_for model, :secondary_address, build: true do |g|
+    = g.input :name
+
+    = g.input :company_name
+
+    = g.input :address_line_1
+
+    .row
+      .col-sm-7
+        = g.input :city
+      .col-sm-5
+        = g.input :zip
+
+    = g.input :country_code, priority: country_code_priority
