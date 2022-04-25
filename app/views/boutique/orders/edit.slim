@@ -13,7 +13,7 @@
           .col = f.input :first_name, required: true
           .col = f.input :last_name, required: true
 
-        - unless current_order.digital?
+        - unless current_order.digital_only?
           .b-orders-edit__addresses-fields
             == cell('boutique/addresses/fields', f)
 

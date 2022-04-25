@@ -11,7 +11,7 @@ class CreateBoutiqueProductVariants < ActiveRecord::Migration[7.0]
 
       t.boolean :master, default: false, index: { where: "master" }
 
-      t.boolean :digital, default: false
+      t.boolean :digital_only, default: false
 
       t.timestamps
     end

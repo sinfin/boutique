@@ -25,7 +25,7 @@ FactoryBot.define do
 
   factory :boutique_order, class: "Boutique::Order" do
     transient do
-      digital { false }
+      digital_only { false }
       line_items_count { 0 }
     end
 
@@ -40,7 +40,7 @@ FactoryBot.define do
       association :shipping_method, factory: :boutique_shipping_method
 
       before(:create) do |order, evaluator|
-        if order.primary_address.nil? && !evaluator.digital
+        if order.primary_address.nil? && !evaluator.digital_only
           order.primary_address = build(:boutique_folio_primary_address)
         end
       end
@@ -66,7 +66,7 @@ FactoryBot.define do
       if order.line_items.empty?
         evaluator.line_items_count.times do
           li = build(:boutique_line_item)
-          li.product_variant.update_column(:digital, true) if evaluator.digital
+          li.product_variant.update_column(:digital_only, true) if evaluator.digital_only
           order.line_items << li
         end
       end

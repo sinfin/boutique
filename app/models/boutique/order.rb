@@ -138,8 +138,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
-  def digital?
-    line_items.all?(&:digital?)
+  def digital_only?
+    line_items.all?(&:digital_only?)
   end
 
   private
@@ -167,7 +167,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def requires_address?
-      !digital?
+      !digital_only?
     end
 
     def requires_address_and_not_pending?

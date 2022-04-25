@@ -5,7 +5,7 @@
     ul
       - current_order.line_items.each do |line_item|
         li
-          = line_item.product_variant.product.title
+          = line_item.product_variant.title
           br
           = "#{line_item.amount}x - #{line_item.price}$"
 

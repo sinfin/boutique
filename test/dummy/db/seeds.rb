@@ -33,20 +33,22 @@ Folio::Site.create!(title: "Boutique Shop",
 puts "Created Folio::Site"
 
 puts "Creating products & variants"
-
-4.times do |i|
+4.times do
   product = Boutique::Product.new(title: Faker::Commerce.product_name,
-                                published: true,
-                                published_at: 1.minute.ago)
-
-  digital = i.even?
-  product.title += " DIGITAL" if digital
-
-  product.build_master_variant(price: Faker::Commerce.price(range: 1..100),
-                               digital: digital)
+                                  published: true,
+                                  published_at: 1.minute.ago)
+  price = (rand * 10).round * 100 - 1
+  product.build_master_variant(title: "#{product.title} – Print + Digital",
+                               price: price + 300,
+                               digital_only: false)
+  product.variants.build(title: "#{product.title} – Print",
+                         price: price + 200,
+                         digital_only: false)
+  product.variants.build(title: "#{product.title} – Digital",
+                         price:,
+                         digital_only: true)
   product.save!
 
   print "."
 end
-
 puts "\nCreated products & variants"

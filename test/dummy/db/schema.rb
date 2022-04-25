@@ -104,7 +104,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.string "title"
     t.integer "price", null: false
     t.boolean "master", default: false
-    t.boolean "digital", default: false
+    t.boolean "digital_only", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"

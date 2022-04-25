@@ -18,7 +18,7 @@ end
 #  title               :string
 #  price               :integer          not null
 #  master              :boolean          default(FALSE)
-#  digital             :boolean          default(FALSE)
+#  digital_only        :boolean          default(FALSE)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #

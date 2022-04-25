@@ -82,13 +82,13 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal "2300002", order.number
   end
 
-  test "digital order shouldn't validate address" do
+  test "digital_only order shouldn't validate address" do
     order = create(:boutique_order, :ready_to_be_confirmed)
 
     assert order.primary_address.present?
     assert order.valid?
 
-    order = create(:boutique_order, :ready_to_be_confirmed, digital: true)
+    order = create(:boutique_order, :ready_to_be_confirmed, digital_only: true)
 
     assert_not order.primary_address.present?
     assert order.valid?
