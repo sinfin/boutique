@@ -9,9 +9,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     create_current_order if current_order.nil?
 
-    current_order.add_line_item(product_variant, amount: amount || 1)
+    current_order.add_line_item!(product_variant, amount: amount || 1)
 
-    redirect_to action: :show
+    redirect_to redirect_options_after_line_item_added
   end
 
   def show
@@ -64,6 +64,20 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def redirect_if_current_order_is_empty
-      redirect_to action: :show if current_order.nil?
+      if current_order.nil?
+        if Rails.application.config.boutique_using_cart
+          redirect_to action: :show
+        else
+          redirect_back fallback_location: main_app.root_url
+        end
+      end
+    end
+
+    def redirect_options_after_line_item_added
+      if Rails.application.config.boutique_using_cart
+        { action: :show }
+      else
+        { action: :edit }
+      end
     end
 end

@@ -124,14 +124,25 @@ class Boutique::Order < Boutique::ApplicationRecord
     ].sum
   end
 
-  def add_line_item(product_variant, amount: 1)
+  def add_line_item!(product_variant, amount: 1)
     Boutique::Order.transaction do
-      if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
-        line_item.amount += amount
-        line_item.save!
+      if ::Rails.application.config.boutique_using_cart
+        if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
+          line_item.amount += amount
+          line_item.save!
+        else
+          line_items.build(product_variant:,
+                           amount:)
+        end
       else
-        line_items.build(product_variant:,
-                         amount:)
+        # TODO: add line item count validation
+        if line_item = line_items.first
+          line_item.update!(product_variant:,
+                            amount:)
+        else
+          line_items.build(product_variant:,
+                           amount:)
+        end
       end
 
       save!

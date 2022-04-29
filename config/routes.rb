@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 Boutique::Engine.routes.draw do
-  resource :order, only: %i[show edit update] do
+  order_actions = %i[edit update]
+  order_actions += %i[show] if Rails.application.config.boutique_using_cart
+
+  resource :order, only: order_actions do
     post :add
     post :confirm
     get :thank_you, path: "/thank_you/:id"
