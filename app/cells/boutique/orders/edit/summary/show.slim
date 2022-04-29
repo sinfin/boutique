@@ -1,0 +1,10 @@
+.b-orders-edit-summary
+  - line_items.each do |line_item|
+    .b-orders-edit-summary__line-item
+      = image(line_item.cover_placement, THUMB_SIZE)
+
+      .mt-2 = line_item.to_label
+
+  .b-orders-edit-summary__total-price
+    .font-weight-bold
+      = price(model.total_price)

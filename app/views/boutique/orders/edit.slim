@@ -3,9 +3,8 @@
 
   .row
     .col-lg-8
-
       = simple_form_for(current_order, method: :post, \
-                                     url: confirm_order_path) do |f|
+                                       url: confirm_order_path) do |f|
 
         = f.input :email, required: true
 
@@ -18,3 +17,6 @@
             == cell('boutique/addresses/fields', f)
 
         = f.button :submit, "Pay"
+
+    .col-lg-4
+      == cell('boutique/orders/edit/sidebar', current_order)

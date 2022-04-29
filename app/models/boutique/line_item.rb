@@ -15,7 +15,16 @@ class Boutique::LineItem < Boutique::ApplicationRecord
             numericality: { greater_than_or_equal_to: 1 }
 
   delegate :digital_only?,
+           :product,
            to: :product_variant
+
+  delegate :cover,
+           :cover_placement,
+           to: :product
+
+  def to_label
+    product_variant.title
+  end
 
   def price
     amount * unit_price
