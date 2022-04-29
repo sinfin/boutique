@@ -65,7 +65,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     def redirect_if_current_order_is_empty
       if current_order.nil?
-        if Rails.application.config.boutique_using_cart
+        if Boutique.using_cart
           redirect_to action: :show
         else
           redirect_back fallback_location: main_app.root_url
@@ -74,7 +74,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def redirect_options_after_line_item_added
-      if Rails.application.config.boutique_using_cart
+      if Boutique.using_cart
         { action: :show }
       else
         { action: :edit }

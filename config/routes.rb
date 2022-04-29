@@ -2,7 +2,7 @@
 
 Boutique::Engine.routes.draw do
   order_actions = %i[edit update]
-  order_actions += %i[show] if Rails.application.config.boutique_using_cart
+  order_actions += %i[show] if Boutique.using_cart
 
   resource :order, only: order_actions do
     post :add

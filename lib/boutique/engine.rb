@@ -9,7 +9,5 @@ module Boutique
       g.javascripts false
       g.helper false
     end
-
-    config.boutique_using_cart = true
   end
 end
