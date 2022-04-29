@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Boutique::Product < Boutique::ApplicationRecord
+  include Folio::HasAttachments
   include Folio::FriendlyId
   include Folio::Publishable::WithDate
 
@@ -20,6 +21,23 @@ class Boutique::Product < Boutique::ApplicationRecord
   validates :title,
             :master_variant,
             presence: true
+
+  def self.pregenerated_thumbnails
+    h = {
+      "Folio::FilePlacement::Cover" => [],
+    }
+
+    [
+      Boutique::Orders::Edit::SummaryCell::THUMB_SIZE,
+    ].uniq.each do |size|
+      h["Folio::FilePlacement::Cover"] << size
+      h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
+    end
+
+    h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
+
+    h
+  end
 end
 
 # == Schema Information

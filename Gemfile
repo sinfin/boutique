@@ -11,6 +11,8 @@ gem "sprockets-rails"
 gem "folio", github: "sinfin/folio", branch: "petr/dragonfly-libvips-multi-site-rails-7"
 # gem "folio", path: "../folio"
 
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+
 gem "cells"
 gem "cells-slim", "0.0.6"
 gem "cells-rails", github: "sinfin/cells-rails"
