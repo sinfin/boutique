@@ -12,8 +12,6 @@ cs:
         confirmed_at: Objednáno
         paid_at: Zaplaceno
         dispatched_at: Odesláno
-        shipping_method: Způsob dopravy
-        payment_method: Platba
 
     models:
       boutique/order:

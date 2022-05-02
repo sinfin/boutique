@@ -23,9 +23,6 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
     end
 
     def folio_console_collection_includes
-      [
-        :shipping_method,
-        :payment_method,
-      ]
+      []
     end
 end

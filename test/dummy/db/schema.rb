@@ -65,8 +65,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
     t.string "aasm_state", default: "pending"
     t.integer "line_items_count", default: 0
     t.integer "line_items_price"
-    t.integer "shipping_method_price"
-    t.integer "payment_method_price"
     t.integer "total_price"
     t.bigint "primary_address_id"
     t.bigint "secondary_address_id"
@@ -77,26 +75,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "boutique_shipping_method_id"
-    t.bigint "boutique_payment_method_id"
-    t.index ["boutique_payment_method_id"], name: "index_boutique_orders_on_boutique_payment_method_id"
-    t.index ["boutique_shipping_method_id"], name: "index_boutique_orders_on_boutique_shipping_method_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
-  end
-
-  create_table "boutique_payment_methods", force: :cascade do |t|
-    t.string "title"
-    t.string "type"
-    t.text "description"
-    t.string "price"
-    t.integer "position"
-    t.boolean "published", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["position"], name: "index_boutique_payment_methods_on_position"
-    t.index ["published"], name: "index_boutique_payment_methods_on_published"
   end
 
   create_table "boutique_payments", force: :cascade do |t|
@@ -134,19 +115,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["slug"], name: "index_boutique_products_on_slug"
-  end
-
-  create_table "boutique_shipping_methods", force: :cascade do |t|
-    t.string "title"
-    t.string "type"
-    t.text "description"
-    t.string "price"
-    t.integer "position"
-    t.boolean "published", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["position"], name: "index_boutique_shipping_methods_on_position"
-    t.index ["published"], name: "index_boutique_shipping_methods_on_published"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -580,8 +548,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
 
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
-  add_foreign_key "boutique_orders", "boutique_payment_methods"
-  add_foreign_key "boutique_orders", "boutique_shipping_methods"
   add_foreign_key "boutique_orders", "folio_users"
   add_foreign_key "boutique_payments", "boutique_orders"
   add_foreign_key "boutique_product_variants", "boutique_products"

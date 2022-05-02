@@ -12,12 +12,12 @@ FactoryBot.define do
 
     before(:create) do |product, evaluator|
       product.master_variant = build(:boutique_product_variant, price: evaluator.price,
-                                                              master: true)
+                                                                master: true)
     end
   end
 
   factory :boutique_product_variant, class: "Boutique::ProductVariant" do
-    # association :product, factory: :boutique_product
+    association :product, factory: :boutique_product
 
     title { "ProductVariant title" }
     price { 99 }
@@ -35,9 +35,6 @@ FactoryBot.define do
       last_name { "Doe" }
 
       line_items_count { 1 }
-
-      association :payment_method, factory: :boutique_payment_method
-      association :shipping_method, factory: :boutique_shipping_method
 
       before(:create) do |order, evaluator|
         if order.primary_address.nil? && !evaluator.digital_only
@@ -83,19 +80,6 @@ FactoryBot.define do
     after(:build) do |line_item, evaluator|
       line_item.product_variant ||= evaluator.product.master_variant
     end
-  end
-
-
-  factory :boutique_payment_method, class: "Boutique::PaymentMethod" do
-    title { "PaymentMethod title" }
-    price { 0 }
-    published { true }
-  end
-
-  factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do
-    title { "ShippingMethod title" }
-    price { 0 }
-    published { true }
   end
 
   factory :boutique_folio_primary_address, class: "Folio::Address::Primary" do

@@ -9,16 +9,6 @@ class Boutique::Order < Boutique::ApplicationRecord
                     inverse_of: :orders,
                     optional: true
 
-  belongs_to :shipping_method, class_name: "Boutique::ShippingMethod",
-                               foreign_key: :boutique_shipping_method_id,
-                               inverse_of: :orders,
-                               optional: true
-
-  belongs_to :payment_method, class_name: "Boutique::PaymentMethod",
-                              foreign_key: :boutique_payment_method_id,
-                              inverse_of: :orders,
-                              optional: true
-
   has_many :line_items, -> { ordered },
                         class_name: "Boutique::LineItem",
                         foreign_key: :boutique_order_id,
@@ -114,19 +104,9 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || line_items.sum(&:price)
   end
 
-  def shipping_method_price
-    super || shipping_method.try(:price)
-  end
-
-  def payment_method_price
-    super || payment_method.try(:price)
-  end
-
   def total_price
     super || [
       line_items_price,
-      shipping_method_price.to_i,
-      payment_method_price.to_i,
     ].sum
   end
 
@@ -178,8 +158,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       line_items.each { |li| li.imprint_unit_price! }
 
       self.line_items_price = line_items_price
-      self.payment_method_price = payment_method_price.to_i
-      self.shipping_method_price = shipping_method_price.to_i
       self.total_price = total_price
     end
 
@@ -196,43 +174,35 @@ end
 #
 # Table name: boutique_orders
 #
-#  id                          :bigint(8)        not null, primary key
-#  folio_user_id               :bigint(8)
-#  web_session_id              :string
-#  base_number                 :integer
-#  number                      :string
-#  email                       :string
-#  first_name                  :string
-#  last_name                   :string
-#  aasm_state                  :string           default("pending")
-#  line_items_count            :integer          default(0)
-#  line_items_price            :integer
-#  shipping_method_price       :integer
-#  payment_method_price        :integer
-#  total_price                 :integer
-#  primary_address_id          :bigint(8)
-#  secondary_address_id        :bigint(8)
-#  use_secondary_address       :boolean          default(FALSE)
-#  confirmed_at                :datetime
-#  paid_at                     :datetime
-#  dispatched_at               :datetime
-#  cancelled_at                :datetime
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  boutique_shipping_method_id :bigint(8)
-#  boutique_payment_method_id  :bigint(8)
+#  id                    :bigint(8)        not null, primary key
+#  folio_user_id         :bigint(8)
+#  web_session_id        :string
+#  base_number           :integer
+#  number                :string
+#  email                 :string
+#  first_name            :string
+#  last_name             :string
+#  aasm_state            :string           default("pending")
+#  line_items_count      :integer          default(0)
+#  line_items_price      :integer
+#  total_price           :integer
+#  primary_address_id    :bigint(8)
+#  secondary_address_id  :bigint(8)
+#  use_secondary_address :boolean          default(FALSE)
+#  confirmed_at          :datetime
+#  paid_at               :datetime
+#  dispatched_at         :datetime
+#  cancelled_at          :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 # Indexes
 #
-#  index_boutique_orders_on_boutique_payment_method_id   (boutique_payment_method_id)
-#  index_boutique_orders_on_boutique_shipping_method_id  (boutique_shipping_method_id)
-#  index_boutique_orders_on_folio_user_id                (folio_user_id)
-#  index_boutique_orders_on_number                       (number)
-#  index_boutique_orders_on_web_session_id               (web_session_id)
+#  index_boutique_orders_on_folio_user_id   (folio_user_id)
+#  index_boutique_orders_on_number          (number)
+#  index_boutique_orders_on_web_session_id  (web_session_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (boutique_payment_method_id => boutique_payment_methods.id)
-#  fk_rails_...  (boutique_shipping_method_id => boutique_shipping_methods.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
 #

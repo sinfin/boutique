@@ -4,13 +4,6 @@
       attribute(:number)
       attribute(:email)
 
-      attribute(:shipping_method) do
-        record.shipping_method.try(:title)
-      end
-      attribute(:payment_method) do
-        record.payment_method.try(:title)
-      end
-
       attribute(:price) do
         price(record.total_price)
       end
