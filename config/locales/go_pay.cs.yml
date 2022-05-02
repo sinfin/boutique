@@ -1,0 +1,11 @@
+---
+en:
+  boutique:
+    go_pay:
+      payment_method:
+        PAYMENT_CARD: Platba kartou
+        BANK_ACCOUNT: Bankovní převod
+        APPLE_PAY: Apple Pay
+        GPAY: Google Pay
+        PAYPAL: Paypal
+        BITCOIN: Bitcoin

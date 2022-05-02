@@ -1,0 +1,11 @@
+---
+en:
+  boutique:
+    go_pay:
+      payment_method:
+        PAYMENT_CARD: Payment card
+        BANK_ACCOUNT: Bank account
+        APPLE_PAY: Apple Pay
+        GPAY: Google Pay
+        PAYPAL: Paypal
+        BITCOIN: Bitcoin

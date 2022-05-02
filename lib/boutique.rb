@@ -7,6 +7,8 @@ require "aasm"
 require "ar-sequence"
 require "slim"
 
+require "gopay"
+
 module Boutique
   class << self
     attr_accessor :using_cart

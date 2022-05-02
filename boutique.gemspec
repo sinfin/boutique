@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "pg", "~> 1.2"
   spec.add_dependency "ar-sequence"
   spec.add_dependency "slim"
+  spec.add_dependency "gopay-ruby"
 
   spec.add_development_dependency "pry-rails"
   spec.add_development_dependency "rubocop"

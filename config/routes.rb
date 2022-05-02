@@ -9,6 +9,11 @@ Boutique::Engine.routes.draw do
     post :confirm
     get :thank_you, path: "/thank_you/:id"
   end
+
+  resource :go_pay, only: [] do
+    get :comeback
+    get :notify
+  end
 end
 
 Folio::Engine.routes.draw do

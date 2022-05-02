@@ -84,6 +84,7 @@ PATH
       aasm (~> 5.2)
       after_commit_everywhere (~> 1.0)
       ar-sequence
+      gopay-ruby
       pg (~> 1.2)
       rails (>= 7.0.2.3)
       slim
@@ -255,6 +256,8 @@ GEM
     digest (3.1.0)
     discard (1.2.1)
       activerecord (>= 4.2, < 8)
+    domain_name (0.5.20190701)
+      unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
@@ -310,6 +313,8 @@ GEM
       multi_json (>= 1.11.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    gopay-ruby (0.4.1)
+      rest-client (~> 2.1.0)
     guard (2.18.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -330,6 +335,9 @@ GEM
       slim_lint (~> 0.15)
     hashie (5.0.0)
     htmlentities (4.3.4)
+    http-accept (1.7.0)
+    http-cookie (1.0.4)
+      domain_name (~> 0.5)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     i18n_data (0.16.0)
@@ -379,6 +387,7 @@ GEM
       digest
       net-protocol
       timeout
+    netrc (0.11.0)
     nio4r (2.5.8)
     nokogiri (1.13.4-x86_64-linux)
       racc (~> 1.4)
@@ -483,6 +492,11 @@ GEM
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.2.5)
     rubocop (1.27.0)
       parallel (~> 1.10)
@@ -578,6 +592,9 @@ GEM
     uber (0.1.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8.1)
     unicode-display_width (2.1.0)
     unicode_utils (1.4.0)
     warden (1.2.9)
