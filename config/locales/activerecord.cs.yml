@@ -6,6 +6,7 @@ cs:
         items: Předměty
         price: Cena
         number: Číslo
+        line_items: Položky
         line_items_price: Cena položek
         total_price: Cena celkem
         created_at: Vytvořeno
