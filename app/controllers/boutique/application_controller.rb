@@ -7,6 +7,7 @@ class Boutique::ApplicationController < ActionController::Base
   include Boutique::ApplicationControllerBase
 
   helper Folio::Engine.helpers
+  helper Boutique::Engine.helpers
 
   before_action :init_session
 

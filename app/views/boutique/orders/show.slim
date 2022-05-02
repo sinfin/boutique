@@ -7,10 +7,10 @@
         li
           = line_item.product_variant.title
           br
-          = "#{line_item.amount}x - #{line_item.price}$"
+          = "#{line_item.amount}x - #{price(line_item.price)}"
 
       li
-        strong = "Total: #{current_order.total_price}$"
+        strong = "Total: #{price(current_order.total_price)}"
 
     a href=edit_order_path Continue
   - else

@@ -43,8 +43,8 @@ end
 puts "Creating Folio::Site"
 Folio::Site.create!(title: "Boutique Shop",
                     domain: "boutique.shop",
-                    locale: "en",
-                    locales: ["en"],
+                    locale: "cs",
+                    locales: ["cs", "en"],
                     email: "info@todo.shop",
                     phone: "+420 123 456 789")
 puts "Created Folio::Site"

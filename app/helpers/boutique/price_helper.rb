@@ -3,8 +3,7 @@
 module Boutique::PriceHelper
   include ActionView::Helpers::NumberHelper
 
-  # TODO: use config variable for currency
-  def price(n, currency: "$")
+  def price(n, currency: "Kč")
     number_to_currency(n, unit: currency,
                           precision: 0,
                           delimiter: " ")
