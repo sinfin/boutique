@@ -369,6 +369,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     minitest (5.14.4)
+    mocha (1.14.0)
     multi_exiftool (0.17.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -625,6 +626,7 @@ DEPENDENCIES
   guard-rubocop
   guard-slimlint
   minitest (~> 5.14.4)
+  mocha (~> 1.14.0)
   pry-rails
   puma (< 6)
   rubocop

@@ -19,3 +19,5 @@ class ActiveSupport::TestCase
 
   parallelize
 end
+
+require "mocha/minitest"

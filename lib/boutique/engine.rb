@@ -9,5 +9,9 @@ module Boutique
       g.javascripts false
       g.helper false
     end
+
+    initializer :append_boutique_assets_paths do |app|
+      app.config.assets.paths << self.root.join("app/cells")
+    end
   end
 end

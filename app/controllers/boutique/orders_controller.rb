@@ -29,10 +29,17 @@ class Boutique::OrdersController < Boutique::ApplicationController
   def confirm
     current_order.assign_attributes(order_params)
 
-    if current_order.confirm!
-      redirect_to action: :thank_you, id: current_order.number
-    else
-      render :edit
+    current_order.transaction do
+      if current_order.confirm!
+        gp_payment = Boutique::GoPay::Api.new.create_payment(current_order, controller: self,
+                                                                            payment_method: params[:payment_method])
+        current_order.payments.create!(remote_id: gp_payment["id"],
+                                       payment_method: gp_payment["payment_instrument"])
+
+        redirect_to gp_payment["gw_url"], allow_other_host: true
+      else
+        render :edit
+      end
     end
   end
 

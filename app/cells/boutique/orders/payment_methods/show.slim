@@ -1,0 +1,10 @@
+.b-orders-payment-methods
+  input.b-orders-payment-methods__hidden-method[
+    type="hidden"
+    name="payment_method"
+    value="PAYMENT_CARD"
+  ]
+
+  .b-orders-payment-methods__btns
+    - payment_methods.each_with_index do |method, i|
+      = payment_button(f, method, i)

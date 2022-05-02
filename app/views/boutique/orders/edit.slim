@@ -16,7 +16,7 @@
           .b-orders-edit__addresses-fields
             == cell('boutique/addresses/fields', f)
 
-        = f.button :submit, "Pay"
+        == cell('boutique/orders/payment_methods', f)
 
     .col-lg-4
       == cell('boutique/orders/edit/sidebar', current_order)

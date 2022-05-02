@@ -16,3 +16,5 @@
 //= require folio/devise
 //= require folio/lazyload
 //= require folio/lightbox
+
+//= require boutique/orders/payment_methods/payment_methods

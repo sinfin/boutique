@@ -50,17 +50,20 @@ class Boutique::OrdersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to order_url
 
     create_order_with_current_session_id
+    go_pay_api_call_mock
 
     params = {
       order: {
+        first_name: "John",
+        last_name: "Doe",
         email: "test-1@test.test",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash
       }
     }
 
     post confirm_order_url, params: params
-    assert_redirected_to thank_you_order_url(id: @order.reload.number)
-    assert @order.confirmed?
+    assert_redirected_to "https://test.gopay.com"
+    assert @order.reload.confirmed?
     assert @order.primary_address.present?
   end
 
@@ -69,5 +72,17 @@ class Boutique::OrdersControllerTest < ActionDispatch::IntegrationTest
       product = create(:boutique_product)
       post add_order_url, params: { product_variant_id: product.master_variant.id }
       @order = Boutique::Order.find_by(web_session_id: session.id.public_id)
+    end
+
+    def go_pay_api_call_mock
+      result = {
+        "id" => 123,
+        "payment_instrument" => "PAYMENT_CARD",
+        "gw_url" => "https://test.gopay.com",
+      }
+
+      Boutique::GoPay::Api.any_instance
+                          .expects(:create_payment)
+                          .returns(result)
     end
 end
