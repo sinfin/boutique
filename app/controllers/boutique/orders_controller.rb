@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Boutique::OrdersController < Boutique::ApplicationController
-  before_action :redirect_if_current_order_is_empty, except: %i[add show thank_you]
+  before_action :redirect_if_current_order_is_empty, except: %i[add show thank_you failure]
 
   def add
     product_variant = Boutique::ProductVariant.find(params.require(:product_variant_id))
@@ -44,6 +44,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def thank_you
+  end
+
+  def failure
   end
 
   private

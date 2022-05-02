@@ -2,6 +2,10 @@
 en:
   boutique:
     go_pay:
+      comeback:
+        success: Payment successful
+        failure: Payment failure
+
       payment_method:
         PAYMENT_CARD: Payment card
         BANK_ACCOUNT: Bank account

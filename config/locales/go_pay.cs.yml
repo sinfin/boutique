@@ -1,7 +1,11 @@
 ---
-en:
+cs:
   boutique:
     go_pay:
+      comeback:
+        success: Platba proběhla úspěšně
+        failure: Platba selhala
+
       payment_method:
         PAYMENT_CARD: Platba kartou
         BANK_ACCOUNT: Bankovní převod

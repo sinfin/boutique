@@ -102,7 +102,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
   create_table "boutique_payments", force: :cascade do |t|
     t.bigint "boutique_order_id", null: false
     t.bigint "remote_id"
-    t.string "aasm_state", default: "created"
+    t.string "aasm_state", default: "pending"
     t.string "payment_method"
     t.datetime "paid_at"
     t.datetime "cancelled_at"

@@ -20,4 +20,12 @@ class ActiveSupport::TestCase
   parallelize
 end
 
+class Boutique::ControllerTest < ActionDispatch::IntegrationTest
+  include Boutique::Engine.routes.url_helpers
+
+  def setup
+    create(:folio_site)
+  end
+end
+
 require "mocha/minitest"

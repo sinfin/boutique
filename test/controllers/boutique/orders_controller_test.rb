@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class Boutique::OrdersControllerTest < ActionDispatch::IntegrationTest
-  include Boutique::Engine.routes.url_helpers
-
-  setup do
-    create(:folio_site)
-  end
-
+class Boutique::OrdersControllerTest < Boutique::ControllerTest
   test "add" do
     product = create(:boutique_product)
 

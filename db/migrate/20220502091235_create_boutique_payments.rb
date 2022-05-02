@@ -6,7 +6,7 @@ class CreateBoutiquePayments < ActiveRecord::Migration[7.0]
       t.belongs_to :boutique_order, null: false, foreign_key: true
 
       t.bigint :remote_id
-      t.string :aasm_state, default: "created"
+      t.string :aasm_state, default: "pending"
       t.string :payment_method
 
       t.datetime :paid_at

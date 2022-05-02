@@ -13,26 +13,34 @@ class Boutique::Payment < Boutique::ApplicationRecord
             presence: true
 
   aasm do
-    state :created, initial: true
+    state :pending, initial: true
     state :paid
     state :refunded
     state :cancelled
     state :timeouted
 
     event :pay do
-      transitions from: :created, to: :paid
+      transitions from: :pending, to: :paid
+
+      after do
+        order.pay!
+      end
     end
 
     event :cancel do
-      transitions from: :created, to: :cancelled
+      transitions from: :pending, to: :cancelled
     end
 
     event :timeout do
-      transitions from: :created, to: :timeouted
+      transitions from: :pending, to: :timeouted
     end
 
     event :refund do
       transitions from: :paid, to: :refunded
+
+      # before do
+      #   Boutique::GoPay::Api.new.refund_payment(remote_id, order)
+      # end
     end
   end
 
@@ -47,7 +55,7 @@ end
 #  id                :bigint(8)        not null, primary key
 #  boutique_order_id :bigint(8)        not null
 #  remote_id         :bigint(8)
-#  aasm_state        :string           default("created")
+#  aasm_state        :string           default("pending")
 #  payment_method    :string
 #  paid_at           :datetime
 #  cancelled_at      :datetime

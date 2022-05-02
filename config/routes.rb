@@ -8,9 +8,10 @@ Boutique::Engine.routes.draw do
     post :add
     post :confirm
     get :thank_you, path: "/thank_you/:id"
+    get :failure, path: "/failure/:id"
   end
 
-  resource :go_pay, only: [] do
+  resource :go_pay, only: [], controller: :go_pay do
     get :comeback
     get :notify
   end
