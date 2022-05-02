@@ -26,6 +26,12 @@ class Boutique::Order < Boutique::ApplicationRecord
                         dependent: :destroy,
                         inverse_of: :order
 
+  has_many :payments, -> { ordered },
+                      class_name: "Boutique::Payment",
+                      foreign_key: :boutique_order_id,
+                      dependent: :destroy,
+                      inverse_of: :order
+
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
 

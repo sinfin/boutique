@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -97,6 +97,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_boutique_payment_methods_on_position"
     t.index ["published"], name: "index_boutique_payment_methods_on_published"
+  end
+
+  create_table "boutique_payments", force: :cascade do |t|
+    t.bigint "boutique_order_id", null: false
+    t.bigint "remote_id"
+    t.string "aasm_state", default: "created"
+    t.string "payment_method"
+    t.datetime "paid_at"
+    t.datetime "cancelled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["boutique_order_id"], name: "index_boutique_payments_on_boutique_order_id"
+    t.index ["remote_id"], name: "index_boutique_payments_on_remote_id"
   end
 
   create_table "boutique_product_variants", force: :cascade do |t|
@@ -570,5 +583,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_102128) do
   add_foreign_key "boutique_orders", "boutique_payment_methods"
   add_foreign_key "boutique_orders", "boutique_shipping_methods"
   add_foreign_key "boutique_orders", "folio_users"
+  add_foreign_key "boutique_payments", "boutique_orders"
   add_foreign_key "boutique_product_variants", "boutique_products"
 end
