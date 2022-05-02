@@ -18,3 +18,5 @@
 //= require folio/lightbox
 
 //= require boutique/orders/payment_methods/payment_methods
+
+//= require dummy/ui/flash/flash
