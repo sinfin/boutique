@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_02_222424) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -115,6 +115,24 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_091235) do
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["slug"], name: "index_boutique_products_on_slug"
+  end
+
+  create_table "boutique_vouchers", force: :cascade do |t|
+    t.string "code"
+    t.string "code_prefix", limit: 8
+    t.string "title"
+    t.integer "discount"
+    t.boolean "discount_in_percentages", default: false
+    t.integer "number_of_allowed_uses"
+    t.integer "use_count", default: 0
+    t.boolean "published", default: false
+    t.datetime "published_from"
+    t.datetime "published_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "upper((code)::text)", name: "index_boutique_vouchers_on_upper_code", unique: true
+    t.index ["published_from"], name: "index_boutique_vouchers_on_published_from"
+    t.index ["published_until"], name: "index_boutique_vouchers_on_published_until"
   end
 
   create_table "folio_accounts", force: :cascade do |t|

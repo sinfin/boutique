@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+class CreateBoutiqueVouchers < ActiveRecord::Migration[7.0]
+  def change
+    create_table :boutique_vouchers do |t|
+      t.string :code
+      t.string :code_prefix, limit: 8
+      t.string :title
+      t.integer :discount
+      t.boolean :discount_in_percentages, default: false
+      t.integer :number_of_allowed_uses
+      t.integer :use_count, default: 0
+
+      t.boolean :published, default: false
+      t.datetime :published_from, index: true
+      t.datetime :published_until, index: true
+
+      t.timestamps
+    end
+
+    add_index :boutique_vouchers, "upper(code)", name: "index_boutique_vouchers_on_upper_code", unique: true
+  end
+end

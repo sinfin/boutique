@@ -23,6 +23,7 @@ destroy_all Boutique::Product
 
 destroy_all Folio::File
 destroy_all Folio::User
+destroy_all Folio::Account
 force_destroy Folio::Site
 
 def unsplash_pic(square = false)
@@ -74,3 +75,26 @@ puts "Creating products & variants"
   print "."
 end
 puts "\nCreated products & variants"
+
+puts "Creating vouchers"
+4.times do |i|
+  Boutique::Voucher.create!(title: "50% Discount Voucher",
+                            discount: 50,
+                            discount_in_percentages: true,
+                            published: true,
+                            published_from: 1.minute.ago)
+  print "."
+end
+puts "\nCreated vouchers"
+
+if Rails.env.development?
+  puts "Creating test@test.test account"
+
+  Folio::Account.create!(email: "test@test.test",
+                         password: "test@test.test",
+                         role: :superuser,
+                         first_name: "Test",
+                         last_name: "Dummy")
+
+  puts "Created test@test.test account"
+end
