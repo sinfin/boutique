@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 52ed9381157a339a72fd439a940c30145450efd1
+  revision: 4ad07d3cda38e71277a299cd7f190643f2421c07
   branch: petr/dragonfly-libvips-multi-site-rails-7
   specs:
     folio (0.1.0)
@@ -177,7 +177,7 @@ GEM
     audited (5.0.2)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.581.0)
+    aws-partitions (1.583.0)
     aws-sdk-core (3.130.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -186,7 +186,7 @@ GEM
     aws-sdk-kms (1.56.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.113.2)
+    aws-sdk-s3 (1.114.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -229,7 +229,7 @@ GEM
     colorize (0.8.1)
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
-    countries (5.0.0)
+    countries (5.0.1)
       i18n_data (~> 0.16.0)
       sixarm_ruby_unaccent (~> 1.1)
     country_select (7.0.0)
@@ -395,7 +395,7 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oauth (0.5.8)
+    oauth (0.5.10)
     oauth2 (1.4.9)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -432,7 +432,7 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.6.58)
-    premailer (1.15.0)
+    premailer (1.16.0)
       addressable
       css_parser (>= 1.6.0)
       htmlentities (>= 4.0.0)
