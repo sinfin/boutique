@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Boutique::Page::PrivacyPolicy < Folio::Page
+class Dummy::Page::Terms < Folio::Page
   include Folio::Singleton
 end
 

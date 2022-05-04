@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-if Rails.env.development?
-  Boutique.configure do |config|
-    config.using_cart = false
-  end
+Boutique.configure do |config|
+  config.using_cart = false if Rails.env.development?
+
+  config.data_protection_page_type = "Dummy::Page::DataProtection"
+  config.terms_page_type = "Dummy::Page::Terms"
 end

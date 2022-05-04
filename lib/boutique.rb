@@ -11,7 +11,9 @@ require "gopay"
 
 module Boutique
   class << self
-    attr_accessor :using_cart
+    attr_accessor :using_cart,
+                  :data_protection_page_type,
+                  :terms_page_type
   end
 
   def self.configure
@@ -20,5 +22,7 @@ module Boutique
 
   configure do |config|
     config.using_cart = true
+    config.data_protection_page_type = nil
+    config.terms_page_type = nil
   end
 end

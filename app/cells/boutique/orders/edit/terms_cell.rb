@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Boutique::Orders::Edit::TermsCell < Boutique::ApplicationCell
-  def privacy_policy_page
-    Boutique::Page::PrivacyPolicy.instance
+  def data_protection_page
+    Boutique.data_protection_page_type.constantize.instance
   end
 
   def terms_page
-    Boutique::Page::Terms.instance
+    Boutique.terms_page_type.constantize.instance
   end
 end
