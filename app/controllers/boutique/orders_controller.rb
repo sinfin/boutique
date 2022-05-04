@@ -54,7 +54,8 @@ class Boutique::OrdersController < Boutique::ApplicationController
       params.require(:order).permit(:email,
                                     :first_name,
                                     :last_name,
-                                    *addresses_strong_params)
+                                    *addresses_strong_params,
+                                    *line_items_strong_params)
     end
 
     def addresses_strong_params
@@ -73,11 +74,20 @@ class Boutique::OrdersController < Boutique::ApplicationController
       ]
     end
 
+    def line_items_strong_params
+      [
+        line_items_attributes: %i[id
+                                  subscription_starts_at
+                                  subscription_recurring]
+      ]
+    end
+
     def redirect_if_current_order_is_empty
       if current_order.nil?
         if Boutique.using_cart
           redirect_to action: :show
         else
+          flash[:alert] = "TODO"
           redirect_back fallback_location: main_app.root_url
         end
       end

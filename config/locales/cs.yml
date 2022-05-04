@@ -1,5 +1,9 @@
 ---
 cs:
+  date:
+    formats:
+      month_and_year: '%B %Y'
+
   time:
     formats:
       as_date: "%-d. %-m. %Y"

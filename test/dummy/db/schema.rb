@@ -47,6 +47,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_222424) do
     t.bigint "boutique_order_id", null: false
     t.integer "amount", default: 1
     t.integer "unit_price"
+    t.datetime "subscription_starts_at"
+    t.boolean "subscription_recurring"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "boutique_product_variant_id", null: false

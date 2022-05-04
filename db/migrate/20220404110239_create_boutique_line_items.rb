@@ -8,6 +8,9 @@ class CreateBoutiqueLineItems < ActiveRecord::Migration[7.0]
       t.integer :amount, default: 1
       t.integer :unit_price
 
+      t.datetime :subscription_starts_at
+      t.boolean :subscription_recurring
+
       t.timestamps
     end
   end

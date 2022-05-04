@@ -2,6 +2,10 @@
 cs:
   activerecord:
     attributes:
+      boutique/line_item:
+        subscription_starts_at: Začátek
+        subscription_recurring: Automaticky obnovit po roce
+
       boutique/order:
         items: Předměty
         price: Cena

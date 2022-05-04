@@ -16,6 +16,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                         dependent: :destroy,
                         inverse_of: :order
 
+  accepts_nested_attributes_for :line_items
+
   has_many :payments, -> { ordered },
                       class_name: "Boutique::Payment",
                       foreign_key: :boutique_order_id,

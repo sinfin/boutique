@@ -52,6 +52,8 @@ end
 #  boutique_order_id           :bigint(8)        not null
 #  amount                      :integer          default(1)
 #  unit_price                  :integer
+#  subscription_starts_at      :datetime
+#  subscription_recurring      :boolean
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  boutique_product_variant_id :bigint(8)        not null
