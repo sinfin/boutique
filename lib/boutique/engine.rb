@@ -13,5 +13,13 @@ module Boutique
     initializer :append_boutique_assets_paths do |app|
       app.config.assets.paths << self.root.join("app/cells")
     end
+
+    initializer :append_boutique_migrations do |app|
+      unless app.root.to_s.include? root.to_s
+        config.paths["db/migrate"].expanded.each do |expanded_path|
+          app.config.paths["db/migrate"] << expanded_path
+        end
+      end
+    end
   end
 end
