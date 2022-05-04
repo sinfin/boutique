@@ -25,6 +25,7 @@ destroy_all Folio::File
 destroy_all Folio::User
 destroy_all Folio::Account
 force_destroy Folio::Site
+force_destroy Folio::Page
 
 def unsplash_pic(square = false)
   image = Folio::Image.new
@@ -86,6 +87,19 @@ puts "Creating vouchers"
   print "."
 end
 puts "\nCreated vouchers"
+
+[
+  [Boutique::Page::PrivacyPolicy, "Ochrana osobních údajů"],
+  [Boutique::Page::Terms, "Obchodní podmínky"],
+].each do |klass, title|
+  puts "Creating #{klass}"
+
+  klass.create!(title:,
+                published: true,
+                published_at: 1.minute.ago)
+
+  puts "Created #{klass}"
+end
 
 if Rails.env.development?
   puts "Creating test@test.test account"
