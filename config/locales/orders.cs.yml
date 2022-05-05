@@ -3,6 +3,9 @@ cs:
   boutique:
     orders:
       edit:
+        sidebar:
+          contents: Získáte
+          shipping: Doprava
         subscription_fields:
           title: Nastavení předplatného
         terms:

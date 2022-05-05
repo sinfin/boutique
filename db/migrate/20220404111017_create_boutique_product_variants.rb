@@ -6,6 +6,7 @@ class CreateBoutiqueProductVariants < ActiveRecord::Migration[7.0]
       t.references :boutique_product, null: false, foreign_key: true
 
       t.string :title
+      t.text :contents
 
       t.integer :regular_price, null: false
 

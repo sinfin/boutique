@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_104043) do
   create_table "boutique_product_variants", force: :cascade do |t|
     t.bigint "boutique_product_id", null: false
     t.string "title"
+    t.text "contents"
     t.integer "regular_price", null: false
     t.integer "discounted_price"
     t.datetime "discounted_from"

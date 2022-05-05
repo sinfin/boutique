@@ -39,6 +39,7 @@ end
 #  id                  :bigint(8)        not null, primary key
 #  boutique_product_id :bigint(8)        not null
 #  title               :string
+#  contents            :text
 #  regular_price       :integer          not null
 #  discounted_price    :integer
 #  discounted_from     :datetime

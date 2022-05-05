@@ -3,6 +3,9 @@ en:
   boutique:
     orders:
       edit:
+        sidebar:
+          contents: Includes
+          shipping: Shipping
         subscription_fields:
           title: Subscription settings
         terms:
