@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "gopay-ruby"
 
   spec.add_development_dependency "pry-rails"
+  spec.add_development_dependency "letter_opener"
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "rubocop-rails_config"
   spec.add_development_dependency "rubocop-minitest"

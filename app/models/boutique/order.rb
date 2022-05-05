@@ -58,10 +58,6 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_numbers
         imprint_prices
       end
-
-      after_commit do
-        Boutique::OrderMailer.confirmed(self).deliver_later
-      end
     end
 
     event :pay do
@@ -74,10 +70,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     event :dispatch do
       transitions from: :paid, to: :dispatched
-
-      after_commit do
-        Boutique::OrderMailer.dispatched(self).deliver_later
-      end
     end
 
     event :cancel do

@@ -5,6 +5,15 @@ require "test_helper"
 class Boutique::OrderTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
+  def setup_emails
+    site = create(:folio_site)
+    Rails.application.load_tasks
+    Rake::Task["folio:email_templates:idp_seed"].execute
+
+    Rails.application.routes.default_url_options[:host] = site.domain
+    Rails.application.routes.default_url_options[:only_path] = false
+  end
+
   test "revert_cancelation event returns order to correct state" do
     order = create(:boutique_order, :ready_to_be_confirmed)
 
@@ -32,33 +41,19 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_nil order.read_attribute(:line_items_price)
     assert_nil order.read_attribute(:total_price)
 
-    assert_difference("ActionMailer::Base.deliveries.size", 1) do
-      perform_enqueued_jobs do
-        order.confirm!
-      end
-    end
+    order.confirm!
 
     assert order.read_attribute(:line_items_price)
     assert order.read_attribute(:total_price)
   end
 
   test "pay" do
+    setup_emails
     order = create(:boutique_order, :confirmed)
 
     assert_difference("ActionMailer::Base.deliveries.size", 1) do
       perform_enqueued_jobs do
         order.pay!
-      end
-    end
-  end
-
-
-  test "dispatch" do
-    order = create(:boutique_order, :paid)
-
-    assert_difference("ActionMailer::Base.deliveries.size", 1) do
-      perform_enqueued_jobs do
-        order.dispatch!
       end
     end
   end

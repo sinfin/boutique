@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_02_222424) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_05_104043) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -246,6 +246,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_222424) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "site_id"
+    t.string "subject_cs"
+    t.text "body_html_cs"
+    t.text "body_text_cs"
     t.index ["site_id"], name: "index_folio_email_templates_on_site_id"
     t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end

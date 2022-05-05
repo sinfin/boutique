@@ -1,0 +1,12 @@
+table.table
+  - line_items.each do |line_item|
+    tr
+      td
+        = line_item.to_label
+      td
+        = number_to_currency(line_item.price, precision: 0)
+
+  tr.font-weight-bold
+    td colspan="2"
+      = t("boutique.order_mailer.summary.paid",
+          price: number_to_currency(total_price, precision: 0))

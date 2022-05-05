@@ -2,30 +2,18 @@
 
 require "test_helper"
 
-module Boutique
-  class OrderMailerTest < ActionMailer::TestCase
-    test "confirmed" do
-      order = create(:boutique_order, email: "test@test.test")
+class Boutique::OrderMailerTest < ActionMailer::TestCase
+  setup do
+    create(:folio_site)
+    Rails.application.load_tasks
+    Rake::Task["folio:email_templates:idp_seed"].execute
+  end
 
-      mail = OrderMailer.confirmed(order)
-      assert_equal ["test@test.test"], mail.to
-      assert_match "Hi", mail.body.encoded
-    end
+  test "paid" do
+    order = create(:boutique_order, :paid, email: "test@test.test")
 
-    test "paid" do
-      order = create(:boutique_order, email: "test@test.test")
-
-      mail = OrderMailer.paid(order)
-      assert_equal ["test@test.test"], mail.to
-      assert_match "Hi", mail.body.encoded
-    end
-
-    test "dispatched" do
-      order = create(:boutique_order, email: "test@test.test")
-
-      mail = OrderMailer.dispatched(order)
-      assert_equal ["test@test.test"], mail.to
-      assert_match "Hi", mail.body.encoded
-    end
+    mail = Boutique::OrderMailer.paid(order)
+    assert_equal ["test@test.test"], mail.to
+    assert_match order.number, mail.text_part.body.decoded
   end
 end

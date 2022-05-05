@@ -1,0 +1,6 @@
+---
+en:
+  boutique:
+    order_mailer:
+      summary:
+        paid: "%{price} (paid)"
