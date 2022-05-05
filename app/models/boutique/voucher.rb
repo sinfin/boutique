@@ -107,6 +107,7 @@ end
 #
 # Indexes
 #
+#  index_boutique_vouchers_on_published        (published)
 #  index_boutique_vouchers_on_published_from   (published_from)
 #  index_boutique_vouchers_on_published_until  (published_until)
 #  index_boutique_vouchers_on_upper_code       (upper((code)::text)) UNIQUE

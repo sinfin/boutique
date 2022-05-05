@@ -61,15 +61,16 @@ puts "Creating products & variants"
                                   published: true,
                                   published_at: 1.minute.ago,
                                   cover: images[i])
-  price = (rand * 10).round * 100 - 1
+  price = (3 + rand * 7).round * 100 - 1
   product.build_master_variant(title: "#{product.title} – Print + Digital",
-                               price: price + 300,
+                               regular_price: price + 300,
                                digital_only: false)
   product.variants.build(title: "#{product.title} – Print",
-                         price: price + 200,
+                         regular_price: price + 200,
                          digital_only: false)
   product.variants.build(title: "#{product.title} – Digital",
-                         price:,
+                         regular_price: price,
+                         discounted_price: price - 100,
                          digital_only: true)
   product.save!
 
@@ -89,8 +90,8 @@ end
 puts "\nCreated vouchers"
 
 [
-  [Boutique::Page::PrivacyPolicy, "Ochrana osobních údajů"],
-  [Boutique::Page::Terms, "Obchodní podmínky"],
+  [Dummy::Page::DataProtection, "Ochrana osobních údajů"],
+  [Dummy::Page::Terms, "Obchodní podmínky"],
 ].each do |klass, title|
   puts "Creating #{klass}"
 

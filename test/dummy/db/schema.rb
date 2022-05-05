@@ -98,7 +98,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_222424) do
   create_table "boutique_product_variants", force: :cascade do |t|
     t.bigint "boutique_product_id", null: false
     t.string "title"
-    t.integer "price", null: false
+    t.integer "regular_price", null: false
+    t.integer "discounted_price"
+    t.datetime "discounted_from"
+    t.datetime "discounted_until"
     t.boolean "master", default: false
     t.boolean "digital_only", default: false
     t.datetime "created_at", null: false
@@ -133,6 +136,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_222424) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "upper((code)::text)", name: "index_boutique_vouchers_on_upper_code", unique: true
+    t.index ["published"], name: "index_boutique_vouchers_on_published"
     t.index ["published_from"], name: "index_boutique_vouchers_on_published_from"
     t.index ["published_until"], name: "index_boutique_vouchers_on_published_until"
   end

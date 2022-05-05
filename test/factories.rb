@@ -11,7 +11,7 @@ FactoryBot.define do
     end
 
     before(:create) do |product, evaluator|
-      product.master_variant = build(:boutique_product_variant, price: evaluator.price,
+      product.master_variant = build(:boutique_product_variant, regular_price: evaluator.price,
                                                                 master: true)
     end
   end
@@ -20,7 +20,7 @@ FactoryBot.define do
     association :product, factory: :boutique_product
 
     title { "ProductVariant title" }
-    price { 99 }
+    regular_price { 99 }
   end
 
   factory :boutique_order, class: "Boutique::Order" do
