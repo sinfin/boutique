@@ -3,6 +3,7 @@
 class Boutique::Order < Boutique::ApplicationRecord
   include AASM
   include Folio::HasAddresses
+  include Folio::HasSecretHash
 
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
@@ -86,6 +87,9 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  def self.secret_hash_length
+    16
+  end
 
   def to_label
     [
@@ -173,6 +177,7 @@ end
 #  web_session_id        :string
 #  base_number           :integer
 #  number                :string
+#  secret_hash           :string
 #  email                 :string
 #  first_name            :string
 #  last_name             :string

@@ -61,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_104043) do
     t.string "web_session_id"
     t.integer "base_number"
     t.string "number"
+    t.string "secret_hash"
     t.string "email"
     t.string "first_name"
     t.string "last_name"

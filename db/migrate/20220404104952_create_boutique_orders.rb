@@ -9,6 +9,7 @@ class CreateBoutiqueOrders < ActiveRecord::Migration[7.0]
 
       t.integer :base_number
       t.string  :number
+      t.string  :secret_hash
 
       t.string  :email
       t.string  :first_name
