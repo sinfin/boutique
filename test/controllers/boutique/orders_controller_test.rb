@@ -47,6 +47,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to "https://test.gopay.com"
     assert @order.reload.confirmed?
+    assert @order.payments.present?
     assert @order.primary_address.present?
   end
 
@@ -61,6 +62,19 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     order.pay!
     get order_url(order.secret_hash)
     assert_response :success
+  end
+
+  test "payment" do
+    order = create(:boutique_order, :ready_to_be_confirmed)
+    assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
+
+    order.confirm!
+    go_pay_api_call_mock
+
+    post payment_order_url(order.secret_hash)
+    assert_redirected_to "https://test.gopay.com"
+    assert order.payments.present?
+    assert order.primary_address.present?
   end
 
   private

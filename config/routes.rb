@@ -4,6 +4,7 @@ Boutique::Engine.routes.draw do
   resource :order, only: %i[edit] do
     post :add
     post :confirm
+    post :payment, path: "/:id/payment"
   end
 
   get "order/:id", to: "orders#show", as: :order

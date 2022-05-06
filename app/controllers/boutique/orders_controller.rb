@@ -23,12 +23,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     current_order.transaction do
       if current_order.confirm!
-        gp_payment = Boutique::GoPay::Api.new.create_payment(current_order, controller: self,
-                                                                            payment_method: params[:payment_method])
-        current_order.payments.create!(remote_id: gp_payment["id"],
-                                       payment_method: gp_payment["payment_instrument"])
-
-        redirect_to gp_payment["gw_url"], allow_other_host: true
+        create_payment_and_redirect_to_payment_gateway(current_order)
       else
         render :edit
       end
@@ -36,6 +31,11 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def show
+  end
+
+  def payment
+    # TODO: check if order has been paid
+    create_payment_and_redirect_to_payment_gateway(@order)
   end
 
   private
@@ -69,6 +69,15 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                   subscription_starts_at
                                   subscription_recurring]
       ]
+    end
+
+    def create_payment_and_redirect_to_payment_gateway(order)
+      gp_payment = Boutique::GoPay::Api.new.create_payment(order, controller: self,
+                                                                  payment_method: params[:payment_method])
+      order.payments.create!(remote_id: gp_payment["id"],
+                             payment_method: gp_payment["payment_instrument"])
+
+      redirect_to gp_payment["gw_url"], allow_other_host: true
     end
 
     def redirect_if_current_order_is_empty

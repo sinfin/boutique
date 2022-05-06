@@ -11,3 +11,8 @@
     = l(model.confirmed_at, format: :as_date)
   span.text-gray
     = model.confirmed? ? t('.unpaid') : t('.paid')
+
+  - if model.confirmed?
+    .mt-4
+      = payment_methods_form do |f|
+        = cell('boutique/orders/payment_methods', f)
