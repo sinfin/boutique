@@ -16,3 +16,7 @@
     .mt-4
       = payment_methods_form do |f|
         = cell('boutique/orders/payment_methods', f)
+
+  hr
+
+  = cell('boutique/line_items/summary', model.line_items)

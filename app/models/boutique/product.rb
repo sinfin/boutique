@@ -28,6 +28,7 @@ class Boutique::Product < Boutique::ApplicationRecord
     }
 
     [
+      Boutique::LineItems::SummaryCell::THUMB_SIZE,
       Boutique::Orders::Edit::SummaryCell::THUMB_SIZE,
     ].uniq.each do |size|
       h["Folio::FilePlacement::Cover"] << size

@@ -1,0 +1,11 @@
+.b-line-items-summary
+  h3 = t('.title')
+
+  - line_items.each do |line_item|
+    .b-line-items-summary__item
+      = image(line_item.cover_placement, THUMB_SIZE)
+
+      ul
+        / TODO: site
+        li = line_item.to_label
+        li.font-weight-bold.mt-2 = price(line_item.price)
