@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Boutique::OrdersController < Boutique::ApplicationController
-  before_action :redirect_if_current_order_is_empty, except: %i[add show thank_you failure]
+  before_action :redirect_if_current_order_is_empty, except: %i[add show payment]
+  before_action :find_order_by_secret_hash, only: %i[show payment]
 
   def add
     product_variant = Boutique::ProductVariant.find(params.require(:product_variant_id))
@@ -11,19 +12,10 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     current_order.add_line_item!(product_variant, amount: amount || 1)
 
-    redirect_to redirect_options_after_line_item_added
-  end
-
-  def show
+    redirect_to action: :edit
   end
 
   def edit
-  end
-
-  def update
-  end
-
-  def summary
   end
 
   def confirm
@@ -43,10 +35,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
   end
 
-  def thank_you
-  end
-
-  def failure
+  def show
   end
 
   private
@@ -83,21 +72,10 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def redirect_if_current_order_is_empty
-      if current_order.nil?
-        if Boutique.using_cart
-          redirect_to action: :show
-        else
-          flash[:alert] = "TODO"
-          redirect_back fallback_location: main_app.root_url
-        end
-      end
+      redirect_back fallback_location: main_app.root_url if current_order.nil?
     end
 
-    def redirect_options_after_line_item_added
-      if Boutique.using_cart
-        { action: :show }
-      else
-        { action: :edit }
-      end
+    def find_order_by_secret_hash
+      @order = Boutique::Order.except_pending.find_by!(secret_hash: params[:id])
     end
 end

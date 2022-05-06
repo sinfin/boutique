@@ -14,7 +14,7 @@ class Boutique::GoPayControllerTest < Boutique::ControllerTest
     go_pay_api_call_mock(result_state: "PAID")
 
     get comeback_go_pay_url(id: 123)
-    assert_redirected_to thank_you_order_url(@order)
+    assert_redirected_to order_url(@order.secret_hash)
     assert @payment.reload.paid?
     assert @order.reload.paid?
   end
@@ -23,7 +23,7 @@ class Boutique::GoPayControllerTest < Boutique::ControllerTest
     go_pay_api_call_mock(result_state: "CANCELED")
 
     get comeback_go_pay_url(id: 123)
-    assert_redirected_to failure_order_url(@order)
+    assert_redirected_to order_url(@order.secret_hash)
     assert @payment.reload.cancelled?
     assert @order.reload.confirmed?
   end

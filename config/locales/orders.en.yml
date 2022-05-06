@@ -10,3 +10,9 @@ en:
           title: Subscription settings
         terms:
           text: TRME Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle <a href="%{data_protection_url}" target="_blank">Zásad ochrany osobních údajů</a> a souhlasím se <a href="%{terms_url}" target="_blank">Všeobecnými obchodními podmínkami</a>.
+
+      show:
+        title: Order n. %{number}
+        paid: paid
+        unpaid: unpaid
+        unpaid_notice: Please check payment status

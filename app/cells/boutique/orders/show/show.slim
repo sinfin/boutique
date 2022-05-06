@@ -1,0 +1,13 @@
+.b-orders-show
+  h1 = t(".title", number: model.number)
+
+  - if model.confirmed?
+    h2
+      = t('.unpaid_notice')
+
+  span.mr-4
+    = price(model.total_price)
+  span.text-gray.mr-4
+    = l(model.confirmed_at, format: :as_date)
+  span.text-gray
+    = model.confirmed? ? t('.unpaid') : t('.paid')

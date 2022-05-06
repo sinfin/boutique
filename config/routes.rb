@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 Boutique::Engine.routes.draw do
-  order_actions = %i[edit update]
-  order_actions += %i[show] if Boutique.using_cart
-
-  resource :order, only: order_actions do
+  resource :order, only: %i[edit] do
     post :add
     post :confirm
-    get :thank_you, path: "/thank_you/:id"
-    get :failure, path: "/failure/:id"
   end
+
+  get "order/:id", to: "orders#show", as: :order
 
   resource :go_pay, only: [], controller: :go_pay do
     get :comeback

@@ -9,29 +9,18 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_equal 0, Boutique::Order.count
 
     post add_order_url, params: { product_variant_id: product.master_variant.id }
-    assert_redirected_to order_url
+    assert_redirected_to edit_order_url
 
     assert_equal 1, Boutique::Order.count
     assert_equal 1, Boutique::Order.first.line_items.first.amount
-
-    post add_order_url, params: { product_variant_id: product.master_variant.id, amount: 2 }
-    assert_redirected_to order_url
-    assert_equal 1, Boutique::Order.count
-    assert_equal 3, Boutique::Order.first.line_items.first.amount
-  end
-
-  test "show" do
-    get order_url
-    assert_response :success
-
-    create_order_with_current_session_id
-    get order_url
-    assert_response :success
   end
 
   test "edit" do
+    create(:folio_page, type: "Dummy::Page::DataProtection")
+    create(:folio_page, type: "Dummy::Page::Terms")
+
     get edit_order_url
-    assert_redirected_to order_url
+    assert_redirected_to main_app.root_url
 
     create_order_with_current_session_id
 
@@ -41,7 +30,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
 
   test "confirm" do
     post confirm_order_url
-    assert_redirected_to order_url
+    assert_redirected_to main_app.root_url
 
     create_order_with_current_session_id
     go_pay_api_call_mock
@@ -59,6 +48,19 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_redirected_to "https://test.gopay.com"
     assert @order.reload.confirmed?
     assert @order.primary_address.present?
+  end
+
+  test "show" do
+    order = create(:boutique_order, :ready_to_be_confirmed)
+    assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
+
+    order.confirm!
+    get order_url(order.secret_hash)
+    assert_response :success
+
+    order.pay!
+    get order_url(order.secret_hash)
+    assert_response :success
   end
 
   private

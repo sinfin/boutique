@@ -6,11 +6,12 @@
     def comeback
       if @payment.paid?
         flash[:success] = t(".success")
-        redirect_to thank_you_order_path(@payment.order)
       else
         flash[:alert] = t(".failure")
-        redirect_to failure_order_path(@payment.order)
       end
+
+      # TODO: redirect to confirmation page for unregistered user
+      redirect_to order_path(@payment.order.secret_hash)
     end
 
     def notify
