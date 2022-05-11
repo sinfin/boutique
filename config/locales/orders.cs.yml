@@ -3,6 +3,11 @@ cs:
   boutique:
     orders:
       edit:
+        register: Zaregistujte se
+        or: "Nebo:"
+        have_account_already: Již u nás máte účet?
+        sign_in: Přihlašte se
+
         sidebar:
           contents: Získáte
           shipping: Doprava

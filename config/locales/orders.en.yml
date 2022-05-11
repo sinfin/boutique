@@ -3,6 +3,11 @@ en:
   boutique:
     orders:
       edit:
+        register: Register
+        or: "Or:"
+        have_account_already: Have account already?
+        sign_in: Sign in
+
         sidebar:
           contents: Includes
           shipping: Shipping

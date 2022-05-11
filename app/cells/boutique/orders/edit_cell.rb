@@ -13,4 +13,14 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
 
     simple_form_for(current_order, opts, &block)
   end
+
+  def sign_in_link
+    link_to(t(".sign_in"),
+            controller.main_app.new_user_session_path,
+            data: {
+              toggle: "modal",
+              target: Folio::Devise::ModalCell::CLASS_NAME,
+              action: "sign_in",
+            })
+  end
 end

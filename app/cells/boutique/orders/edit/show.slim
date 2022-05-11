@@ -8,12 +8,23 @@
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
+                h3.mt-0 = t('.register')
+
+                == cell('folio/devise/omniauth')
+
+                p: strong = t('.or')
+
                 = f.input :email, required: true
 
                 - if current_order.digital_only?
                   .row
                     .col-lg-6 = f.input :first_name, required: true
                     .col-lg-6 = f.input :last_name, required: true
+
+                p
+                  = t('.have_account_already')
+                  '
+                  = sign_in_link
 
           .b-orders-edit__box
             .b-orders-edit__box-inner
