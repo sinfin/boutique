@@ -1,13 +1,17 @@
 .b-orders-edit-subscription-fields
-  h3 = t('.title')
+  h3.mt-0 = t('.title')
 
   = html_safe_fields_for model, :line_items do |g|
-    .row
-      .col-4
+    .row.mb-n3
+      .col-lg-6
         = g.input :subscription_starts_at,
                   collection: subscription_starts_at_options_for_select,
                   selected: g.object.subscription_starts_at.try(:to_date),
-                  include_blank: false
-      .col
+                  include_blank: false,
+                  wrapper_html: { class: 'b-orders-edit-subscription-fields__date' }
+
+      .col-lg-6
+        label.pb-2 &nbsp;
+
         = g.input :subscription_recurring,
                   input_html: { checked: subscription_recurring_checked(g) }

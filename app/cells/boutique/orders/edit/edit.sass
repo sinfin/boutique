@@ -1,0 +1,29 @@
+.b-orders-edit
+  &__box
+    background: $white
+    padding: $grid-gutter-half
+    box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.1)
+    margin: 20px (( - $grid-gutter-half ))
+
+  &__box-inner
+    max-width: $folio-addresses-fields-max-width
+
+  +mq-desktop-menu
+    &__box
+      padding: $grid-gutter-width
+      margin: 35px 0
+
+    &__flex
+      display: flex
+
+    &__col--main
+      flex: 1 1 auto
+      min-width: 0
+      margin-right: $grid-gutter-width
+
+      +media-breakpoint-up(xl)
+        margin-right: 2 * $grid-gutter-width
+
+    &__col--aside
+      flex: 0 0 390px
+      max-width: 33%

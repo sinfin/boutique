@@ -30,13 +30,16 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   scope :by_state, -> (state) { where(aasm_state: state) }
 
-  validates :email,
-            :first_name,
+  validates :first_name,
             :last_name,
             :base_number,
             :number,
             :line_items,
             presence: true,
+            unless: :pending?
+
+  validates :email,
+            format: { with: Folio::EMAIL_REGEXP },
             unless: :pending?
 
   validates :primary_address,
@@ -135,6 +138,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def digital_only?
     line_items.all?(&:digital_only?)
+  end
+
+  def checkout_title
+    line_items.first.try(:product_variant).try(:title).presence || self.class.model_name.human
   end
 
   private
