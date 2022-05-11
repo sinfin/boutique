@@ -8,8 +8,6 @@ cs:
           shipping: Doprava
         subscription_fields:
           title: Nastavení předplatného
-        terms:
-          text: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle <a href="%{data_protection_url}" target="_blank">Zásad ochrany osobních údajů</a> a souhlasím se <a href="%{terms_url}" target="_blank">Všeobecnými obchodními podmínkami</a>.
 
       show:
         title: Objednávka č. %{number}

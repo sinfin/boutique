@@ -6,4 +6,12 @@ class Boutique::ApplicationCell < Folio::ApplicationCell
   def current_order
     controller.current_order
   end
+
+  def application_namespace
+    @application_namespace ||= ::Rails.application.class.name.deconstantize
+  end
+
+  def application_namespace_path
+    @application_namespace_path ||= application_namespace.underscore
+  end
 end

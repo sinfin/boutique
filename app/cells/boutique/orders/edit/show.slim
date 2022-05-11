@@ -22,7 +22,9 @@
             .b-orders-edit__box
               == cell('folio/addresses/fields', f, title_tag: "h3")
 
-          == cell('boutique/orders/edit/terms')
+          .b-orders-edit__disclaimer
+            == cell("#{application_namespace_path}/ui/disclaimer")
+
           == cell('boutique/orders/payment_methods', f)
 
       aside.b-orders-edit__col.b-orders-edit__col--aside
