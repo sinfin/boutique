@@ -1,4 +1,7 @@
 .b-orders-payment-methods
+  h3.mt-0
+    = t('.title', price: price(f.object.total_price))
+
   input.b-orders-payment-methods__hidden-method[
     type="hidden"
     name="payment_method"
@@ -8,3 +11,17 @@
   .b-orders-payment-methods__btns
     - payment_methods.each_with_index do |method, i|
       = payment_button(f, method, i)
+
+  .b-orders-payment-methods__info.small.text-muted
+    .b-orders-payment-methods__info-flex
+      = t('.secured_by')
+
+      a.b-orders-payment-methods__info-a[
+        href="https://www.gopay.com/"
+        target="_blank"
+      ]
+        img.b-orders-payment-methods__info-img[
+          src=image_path("boutique/gopay-logo.svg")
+        ]
+
+    = t('.prices_include_vat')

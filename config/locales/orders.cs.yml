@@ -6,8 +6,14 @@ cs:
         sidebar:
           contents: Získáte
           shipping: Doprava
+
         subscription_fields:
           title: Nastavení předplatného
+
+      payment_methods:
+        title: Platba %{price}
+        secured_by: Zabezpečeno
+        prices_include_vat: Uvedené ceny jsou včetně DPH.
 
       show:
         title: Objednávka č. %{number}

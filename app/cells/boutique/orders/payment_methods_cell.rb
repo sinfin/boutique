@@ -36,7 +36,7 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
   def payment_button(f, method, i)
     f.button :submit,
              method[:title],
-             class: "btn btn-#{i.zero? ? "primary" : "secondary"} b-orders-payment-methods__submit-btn",
+             class: "btn btn-#{i.zero? ? "primary" : "secondary"} btn-xs-block b-orders-payment-methods__submit-btn",
              data: { "payment-method": method[:value] },
              style: ("display:none;" if method[:value] == "APPLE_PAY")
   end

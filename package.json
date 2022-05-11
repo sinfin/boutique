@@ -1,0 +1,13 @@
+{
+  "name": "boutique",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "standard": {
+    "globals": [
+      "$",
+      "jQuery",
+      "Turbolinks"
+    ]
+  }
+}

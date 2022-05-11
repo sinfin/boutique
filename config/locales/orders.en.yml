@@ -6,8 +6,14 @@ en:
         sidebar:
           contents: Includes
           shipping: Shipping
+
         subscription_fields:
           title: Subscription settings
+
+      payment_methods:
+        title: Payment %{price}
+        secured_by: Secured
+        prices_include_vat: The listed prices include VAT.
 
       show:
         title: Order n. %{number}

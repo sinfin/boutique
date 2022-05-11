@@ -1,22 +1,24 @@
 .b-orders-show
-  h1 = t(".title", number: model.number)
+  .container
+    h1 = t(".title", number: model.number)
 
-  - if model.confirmed?
-    h2
-      = t('.unpaid_notice')
+    - if model.confirmed?
+      h2
+        = t('.unpaid_notice')
 
-  span.mr-4
-    = price(model.total_price)
-  span.text-gray.mr-4
-    = l(model.confirmed_at, format: :as_date)
-  span.text-gray
-    = model.confirmed? ? t('.unpaid') : t('.paid')
+    span.mr-4
+      = price(model.total_price)
 
-  - if model.confirmed?
-    .mt-4
-      = payment_methods_form do |f|
-        = cell('boutique/orders/payment_methods', f)
+    span.text-gray.mr-4
+      = l(model.confirmed_at, format: :as_date)
+    span.text-gray
+      = model.confirmed? ? t('.unpaid') : t('.paid')
 
-  hr
+    - if model.confirmed?
+      .mt-4
+        = payment_methods_form do |f|
+          = cell('boutique/orders/payment_methods', f)
 
-  = cell('boutique/line_items/summary', model.line_items)
+    hr
+
+    = cell('boutique/line_items/summary', model.line_items)
