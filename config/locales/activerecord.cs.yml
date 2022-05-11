@@ -18,8 +18,35 @@ cs:
         paid_at: Zaplaceno
         dispatched_at: Odesláno
 
+      boutique/product_variant:
+        description: Text kartiček
+        checkout_sidebar_content: Popisek v checkoutu
+        regular_price: Cena
+        discounted_price: Akční cena
+        discounted_from: Akce od
+        discounted_until: Akce do
+        master: Hlavní varianta
+
     models:
+      boutique/product:
+        one: Produkt
+        few: Produkty
+        other: Produktů
+
+      boutique/product_variant:
+        one: Varianta produktu
+        few: Varianty produktu
+        other: Variant produktů
+
       boutique/order:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+    errors:
+      models:
+        boutique/product:
+          attributes:
+            base:
+              missing_master_variant: Nemá vybranou hlavní variantu.
+              too_many_master_variants: Má vybrano více hlavních variant.

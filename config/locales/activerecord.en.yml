@@ -2,6 +2,22 @@
 en:
   activerecord:
     models:
+      boutique/product:
+        one: Product
+        other: Products
+
+      boutique/product_variant:
+        one: Product variant
+        other: Product variants
+
       boutique/order:
         one: Order
         other: Orders
+
+    errors:
+      models:
+        boutique/product:
+          attributes:
+            base:
+              missing_master_variant: Doesn't have a master variant.
+              too_many_master_variants: Has too many master variants.

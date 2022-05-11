@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: ea6946a4198385e54b559a0fce5f5c23ee86c54d
+  revision: 0f6afe16d1b7734c69848fecbc7e88c817300f33
   branch: petr/dragonfly-libvips-multi-site-rails-7
   specs:
     folio (0.1.0)
@@ -76,6 +76,7 @@ GIT
       turbolinks
       uglifier
       whenever
+      zip
 
 PATH
   remote: .
@@ -612,6 +613,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.5.4)
+    zip (2.0.2)
 
 PLATFORMS
   x86_64-linux

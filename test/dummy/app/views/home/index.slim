@@ -12,7 +12,7 @@
             h5 = variant.title
             h5 = price(variant.price)
 
-            .mb-4 == variant.contents
+            = simple_format variant.description
 
             .row
               .col-2 = f.input :amount, input_html: { value: 1 },

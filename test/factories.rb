@@ -11,8 +11,11 @@ FactoryBot.define do
     end
 
     before(:create) do |product, evaluator|
-      product.master_variant = build(:boutique_product_variant, regular_price: evaluator.price,
-                                                                master: true)
+      if product.variants.blank?
+        product.variants << build(:boutique_product_variant,
+                                  regular_price: evaluator.price,
+                                  master: true)
+      end
     end
   end
 

@@ -1,0 +1,40 @@
+.nested-fields.card[
+  class=(f.object.new_record? ? 'card--fresh' : nil)
+]
+  .card-body
+    .row.align-items-center
+      .col
+        .mb-n3
+          .row
+            .col-lg-auto
+              = react_picker(f, :cover_placement)
+
+            .col-lg
+              == cell('folio/console/publishable_inputs',
+                      f,
+                      additional_fields: %i[master])
+
+              .row
+                .col-lg-6
+                  = f.input :title, hint: false
+                .col-lg-6
+                  = f.input :slug, hint: false
+
+              = f.input :description,
+                        character_counter: true,
+                        autosize: true
+
+          = f.input :checkout_sidebar_content, as: :redactor
+
+          .row
+            .col-lg-3
+              = f.input :regular_price
+            .col-lg-3
+              = f.input :discounted_price
+            .col-lg-3
+              = f.input :discounted_from, calendar_on_top: true
+            .col-lg-3
+              = f.input :discounted_until, calendar_on_top: true
+
+      .col-md-auto
+        == cell('folio/console/nested_model_controls', f, vertical: true)

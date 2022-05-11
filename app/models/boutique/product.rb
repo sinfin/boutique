@@ -5,10 +5,13 @@ class Boutique::Product < Boutique::ApplicationRecord
   include Folio::FriendlyId
   include Folio::Publishable::WithDate
 
-  has_many :variants, class_name: "Boutique::ProductVariant",
+  has_many :variants, -> { ordered },
+                      class_name: "Boutique::ProductVariant",
                       foreign_key: :boutique_product_id,
                       dependent: :destroy,
                       inverse_of: :product
+
+  accepts_nested_attributes_for :variants, reject_if: :all_blank, allow_destroy: true
 
   has_one :master_variant, -> { where(master: true) },
                            class_name: "Boutique::ProductVariant",
@@ -19,8 +22,9 @@ class Boutique::Product < Boutique::ApplicationRecord
                                      foreign_key: :boutique_product_id
 
   validates :title,
-            :master_variant,
             presence: true
+
+  validate :validate_master_variant_presence
 
   def self.pregenerated_thumbnails
     h = {
@@ -39,19 +43,40 @@ class Boutique::Product < Boutique::ApplicationRecord
 
     h
   end
+
+  private
+    def validate_master_variant_presence
+      master_ary = []
+
+      variants.each do |variant|
+        if !variant.marked_for_destruction? && variant.master?
+          master_ary << variant
+        end
+      end
+
+      case master_ary.size
+      when 0
+        errors.add(:base, :missing_master_variant)
+      when 1
+        # all good
+      else
+        errors.add(:base, :too_many_master_variants)
+      end
+    end
 end
 
 # == Schema Information
 #
 # Table name: boutique_products
 #
-#  id           :bigint(8)        not null, primary key
-#  title        :string           not null
-#  slug         :string           not null
-#  published    :boolean          default(FALSE)
-#  published_at :datetime
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id             :bigint(8)        not null, primary key
+#  title          :string           not null
+#  slug           :string           not null
+#  published      :boolean          default(FALSE)
+#  published_at   :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  variants_count :integer          default(0)
 #
 # Indexes
 #

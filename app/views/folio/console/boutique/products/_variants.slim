@@ -1,0 +1,12 @@
+fieldset.mt-4.mb-3 id="variants"
+  h2.h4 = Boutique::ProductVariant.model_name.human(count: 2)
+
+  = f.simple_fields_for :variants do |g|
+    = render partial: 'variant_fields',
+             locals: { f: g }
+
+  .links
+    = link_to_add_association t('folio.console.actions.add'),
+                              f,
+                              :variants,
+                              class: "btn btn-success"

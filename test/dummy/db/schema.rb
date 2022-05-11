@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -99,7 +99,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
   create_table "boutique_product_variants", force: :cascade do |t|
     t.bigint "boutique_product_id", null: false
     t.string "title"
-    t.text "contents"
+    t.text "checkout_sidebar_content"
     t.integer "regular_price", null: false
     t.integer "discounted_price"
     t.datetime "discounted_from"
@@ -108,8 +108,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
     t.boolean "digital_only", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position"
+    t.string "slug"
+    t.text "description"
     t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"
     t.index ["master"], name: "index_boutique_product_variants_on_master", where: "master"
+    t.index ["position"], name: "index_boutique_product_variants_on_position"
+    t.index ["slug"], name: "index_boutique_product_variants_on_slug"
   end
 
   create_table "boutique_products", force: :cascade do |t|
@@ -119,6 +124,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "variants_count", default: 0
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["slug"], name: "index_boutique_products_on_slug"

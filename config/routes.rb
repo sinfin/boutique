@@ -19,6 +19,7 @@ Folio::Engine.routes.draw do
   namespace :console do
     scope module: :boutique do
       resources :orders, only: %i[index show edit update]
+      resources :products
     end
   end
 end
