@@ -3,6 +3,10 @@
 class Boutique::ApplicationCell < Folio::ApplicationCell
   include Boutique::PriceHelper
 
+  def current_user
+    controller.current_user
+  end
+
   def current_order
     controller.current_order
   end

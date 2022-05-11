@@ -5,14 +5,15 @@
     .b-orders-edit__flex
       main.b-orders-edit__col.b-orders-edit__col--main
         = form do |f|
-          .b-orders-edit__box
-            .b-orders-edit__box-inner
-              = f.input :email, required: true
+          - unless current_user
+            .b-orders-edit__box
+              .b-orders-edit__box-inner
+                = f.input :email, required: true
 
-              - if  current_order.digital_only?
-                .row
-                  .col-lg-6 = f.input :first_name, required: true
-                  .col-lg-6 = f.input :last_name, required: true
+                - if current_order.digital_only?
+                  .row
+                    .col-lg-6 = f.input :first_name, required: true
+                    .col-lg-6 = f.input :last_name, required: true
 
           .b-orders-edit__box
             .b-orders-edit__box-inner
