@@ -18,6 +18,8 @@ module Dummy
     # For compatibility with applications that use this config
     config.action_controller.include_all_helpers = false
 
+    config.folio_users = true
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 
