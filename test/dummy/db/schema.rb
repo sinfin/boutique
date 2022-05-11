@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_05_104043) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -168,6 +168,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_104043) do
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
+    t.string "crossdomain_devise_token"
+    t.datetime "crossdomain_devise_set_at"
+    t.string "sign_out_salt_part"
+    t.index ["crossdomain_devise_token"], name: "index_folio_accounts_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
@@ -517,7 +521,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_104043) do
     t.boolean "subscribed_to_newsletter", default: false
     t.boolean "has_generated_password", default: false
     t.string "phone"
+    t.string "crossdomain_devise_token"
+    t.datetime "crossdomain_devise_set_at"
+    t.string "sign_out_salt_part"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
+    t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_folio_users_on_invited_by_id"
