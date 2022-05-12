@@ -42,6 +42,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   def cover_placement_from_variant_or_product
     product_variant.cover_placement || product_variant.product.cover_placement
   end
+
+  def summary_text
+    to_label
+  end
 end
 
 # == Schema Information

@@ -8,7 +8,7 @@
                 class: 'b-orders-edit-summary__line-item-cover '\
                        'b-adaptive-css-background-primary')
 
-      = line_item.to_label
+      = simple_format line_item.summary_text
 
   h4.b-orders-edit-summary__total-price
     = price(model.total_price)

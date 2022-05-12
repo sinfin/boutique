@@ -42,9 +42,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             format: { with: Folio::EMAIL_REGEXP },
             unless: :pending?
 
-  validates :primary_address,
-            presence: true,
-            if: :requires_address_and_not_pending?
+  validate :validate_primary_address
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -172,6 +170,15 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def requires_address_and_not_pending?
       requires_address? && !pending?
+    end
+
+    def validate_primary_address
+      return unless requires_address_and_not_pending?
+      if primary_address.blank?
+        build_primary_address
+        primary_address.valid?
+        errors.add(:primary_address, :blank)
+      end
     end
 end
 

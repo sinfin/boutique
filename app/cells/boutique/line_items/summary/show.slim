@@ -1,11 +1,16 @@
 .b-line-items-summary
   h3 = t('.title')
 
-  - line_items.each do |line_item|
-    .b-line-items-summary__item
-      = image(line_item.cover_placement_from_variant_or_product, THUMB_SIZE)
+  .b-line-items-summary__flex
+    - line_items.each do |line_item|
+      .b-line-items-summary__line-item
+        .b-line-items-summary__line-item-cover-wrap
+          = image(line_item.cover_placement_from_variant_or_product,
+                  THUMB_SIZE,
+                  contain: true,
+                  class: 'b-line-items-summary__line-item-cover '\
+                         'b-adaptive-css-background-primary')
 
-      ul
-        / TODO: site
-        li = line_item.to_label
-        li.font-weight-bold.mt-2 = price(line_item.price)
+        p = line_item.summary_text
+
+        h4.mb-0 = price(line_item.price)

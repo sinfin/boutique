@@ -1,0 +1,29 @@
+.b-line-items-summary
+  &__flex
+    display: flex
+    flex-wrap: wrap
+    margin-right: - $grid-gutter-width
+
+  &__line-item
+    flex: 0 0 195px
+    max-width: 50%
+    margin-right: $grid-gutter-width
+
+  &__line-item-cover-wrap
+    margin-bottom: 20px
+    position: relative
+    max-width: 150px
+
+    &::before
+      content: ''
+      padding-top: percentage(100 / 150)
+      display: block
+
+  &__line-item-cover
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    max-width: 100% !important
+    max-height: 100% !important
