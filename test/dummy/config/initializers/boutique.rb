@@ -3,6 +3,5 @@
 Boutique.configure do |config|
   config.using_cart = false if Rails.env.development?
 
-  config.data_protection_page_type = "Dummy::Page::DataProtection"
-  config.terms_page_type = "Dummy::Page::Terms"
+  config.orders_edit_sidebar_shipping_content = "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"
 end

@@ -113,7 +113,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def add_line_item!(product_variant, amount: 1)
     Boutique::Order.transaction do
-      if ::Boutique.using_cart
+      if ::Boutique.config.using_cart
         if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
           line_item.amount += amount
           line_item.save!
