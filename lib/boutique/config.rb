@@ -2,12 +2,12 @@
 
 module Boutique
   class Config
-    attr_accessor :using_cart,
+    attr_accessor :use_cart_in_order,
                   :orders_edit_sidebar_shipping_content,
 
     def initialize
       # set defaults here
-      @using_cart = true
+      @use_cart_in_order = true
       @orders_edit_sidebar_shipping_content = nil
     end
   end
