@@ -43,6 +43,11 @@ class Boutique::Order < Boutique::ApplicationRecord
             unless: :pending?
 
   validate :validate_primary_address
+  validate :validate_email_not_already_registered, unless: :pending?
+
+  validates :primary_address,
+            presence: true,
+            if: :requires_address_and_not_pending?
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -180,8 +185,16 @@ class Boutique::Order < Boutique::ApplicationRecord
         errors.add(:primary_address, :blank)
       end
     end
-end
 
+    def validate_email_not_already_registered
+      return if email.nil?
+      return if user.present?
+
+      if Folio::User.where(email:).exists?
+        errors.add(:email, :already_registered)
+      end
+    end
+end
 # == Schema Information
 #
 # Table name: boutique_orders

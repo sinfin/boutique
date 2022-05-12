@@ -50,3 +50,8 @@ cs:
             base:
               missing_master_variant: Nemá vybranou hlavní variantu.
               too_many_master_variants: Má vybrano více hlavních variant.
+
+        boutique/order:
+          attributes:
+            email:
+              already_registered: je již registrovaný
