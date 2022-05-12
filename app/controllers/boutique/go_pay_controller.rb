@@ -6,12 +6,18 @@
     def comeback
       if @payment.paid?
         flash[:success] = t(".success")
+
+        if @payment.order.user.invitation_accepted_at.nil?
+          session[:folio_user_invited_email] = @payment.order.user.email
+          redirect_to main_app.user_invitation_path
+        else
+          redirect_to order_path(@payment.order.secret_hash)
+        end
       else
         flash[:alert] = t(".failure")
-      end
 
-      # TODO: redirect to confirmation page for unregistered user
-      redirect_to order_path(@payment.order.secret_hash)
+        redirect_to order_path(@payment.order.secret_hash)
+      end
     end
 
     def notify

@@ -64,11 +64,23 @@ class Boutique::Order < Boutique::ApplicationRecord
       before do
         set_numbers
         imprint_prices
+
+        self.email ||= user.try(:email)
       end
     end
 
     event :pay do
       transitions from: :confirmed, to: :paid
+
+      after do
+        if user.nil?
+          self.user = Folio::User.invite!(email:,
+                                          first_name:,
+                                          last_name:)
+          update_columns(folio_user_id: user.id,
+                         updated_at:)
+        end
+      end
 
       after_commit do
         Boutique::OrderMailer.paid(self).deliver_later

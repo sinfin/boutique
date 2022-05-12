@@ -51,6 +51,14 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     setup_emails
     order = create(:boutique_order, :confirmed)
 
+    assert_difference("ActionMailer::Base.deliveries.size", 2) do
+      perform_enqueued_jobs do
+        order.pay!
+      end
+    end
+
+    order = create(:boutique_order, :confirmed, :with_user)
+
     assert_difference("ActionMailer::Base.deliveries.size", 1) do
       perform_enqueued_jobs do
         order.pay!

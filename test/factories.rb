@@ -32,6 +32,10 @@ FactoryBot.define do
       line_items_count { 0 }
     end
 
+    trait :with_user do
+      association :user, factory: :folio_user
+    end
+
     trait :ready_to_be_confirmed do
       email { "order@email.email" }
       first_name { "John" }

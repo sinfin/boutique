@@ -10,7 +10,7 @@ Rails.application.routes.draw do
                        omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
     devise_scope :user do
-      get "/users/invitation", to: "dummy/users/invitations#show", as: nil
+      get "/users/invitation", to: "dummy/folio/users/invitations#show", as: nil
       get "/users/auth/conflict", to: "dummy/folio/users/omniauth_callbacks#conflict"
       get "/users/auth/resolve_conflict", to: "dummy/folio/users/omniauth_callbacks#resolve_conflict"
       get "/users/auth/new_user", to: "dummy/folio/users/omniauth_callbacks#new_user"
