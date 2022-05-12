@@ -3,6 +3,8 @@
 require "test_helper"
 
 class Boutique::OrdersControllerTest < Boutique::ControllerTest
+  include Boutique::Test::GoPayApiMocker
+
   test "add" do
     product = create(:boutique_product)
 
@@ -16,9 +18,6 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
   end
 
   test "edit" do
-    create(:folio_page, type: "Dummy::Page::DataProtection")
-    create(:folio_page, type: "Dummy::Page::Terms")
-
     get edit_order_url
     assert_redirected_to main_app.root_url
 
@@ -33,7 +32,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_redirected_to main_app.root_url
 
     create_order_with_current_session_id
-    go_pay_api_call_mock
+    go_pay_create_payment_api_call_mock
 
     params = {
       order: {
@@ -45,7 +44,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     }
 
     post confirm_order_url, params: params
-    assert_redirected_to "https://test.gopay.com"
+    assert_redirected_to mocked_go_pay_payment_gateway_url
     assert @order.reload.confirmed?
     assert @order.payments.present?
     assert @order.primary_address.present?
@@ -69,10 +68,10 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
 
     order.confirm!
-    go_pay_api_call_mock
+    go_pay_create_payment_api_call_mock
 
     post payment_order_url(order.secret_hash)
-    assert_redirected_to "https://test.gopay.com"
+    assert_redirected_to mocked_go_pay_payment_gateway_url
     assert order.payments.present?
     assert order.primary_address.present?
   end
@@ -82,17 +81,5 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
       product = create(:boutique_product)
       post add_order_url, params: { product_variant_id: product.master_variant.id }
       @order = Boutique::Order.find_by(web_session_id: session.id.public_id)
-    end
-
-    def go_pay_api_call_mock
-      result = {
-        "id" => 123,
-        "payment_instrument" => "PAYMENT_CARD",
-        "gw_url" => "https://test.gopay.com",
-      }
-
-      Boutique::GoPay::Api.any_instance
-                          .expects(:create_payment)
-                          .returns(result)
     end
 end

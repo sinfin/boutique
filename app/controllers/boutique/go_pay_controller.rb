@@ -7,7 +7,7 @@
       if @payment.paid?
         flash[:success] = t(".success")
 
-        if @payment.order.user.invitation_accepted_at.nil?
+        if @payment.order.user.created_by_invite? && !@payment.order.user.invitation_accepted?
           session[:folio_user_invited_email] = @payment.order.user.email
           redirect_to main_app.user_invitation_path
         else
