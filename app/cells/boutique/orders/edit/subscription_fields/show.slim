@@ -7,8 +7,7 @@
         = g.input :subscription_starts_at,
                   collection: subscription_starts_at_options_for_select,
                   selected: g.object.subscription_starts_at.try(:to_date),
-                  include_blank: false,
-                  wrapper_html: { class: 'b-orders-edit-subscription-fields__date' }
+                  include_blank: false
 
       .col-lg-6
         label.pb-2 &nbsp;

@@ -1,10 +1,14 @@
 .b-orders-edit-summary
   - line_items.each do |line_item|
     .b-orders-edit-summary__line-item
-      = image(line_item.cover_placement, THUMB_SIZE)
+      .b-orders-edit-summary__line-item-cover-wrap
+        = image(line_item.cover_placement_from_variant_or_product,
+                THUMB_SIZE,
+                contain: true,
+                class: 'b-orders-edit-summary__line-item-cover '\
+                       'b-adaptive-css-background-primary')
 
-      .mt-2 = line_item.to_label
+      = line_item.to_label
 
-  .b-orders-edit-summary__total-price
-    .font-weight-bold
-      = price(model.total_price)
+  h4.b-orders-edit-summary__total-price
+    = price(model.total_price)

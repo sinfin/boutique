@@ -39,6 +39,24 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     true
   end
 
+  def self.pregenerated_thumbnails
+    h = {
+      "Folio::FilePlacement::Cover" => [],
+    }
+
+    [
+      Boutique::LineItems::SummaryCell::THUMB_SIZE,
+      Boutique::Orders::Edit::SummaryCell::THUMB_SIZE,
+    ].uniq.each do |size|
+      h["Folio::FilePlacement::Cover"] << size
+      h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
+    end
+
+    h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
+
+    h
+  end
+
   private
     def positionable_last_record
       product.variants.last if product

@@ -18,6 +18,7 @@ module Boutique::ConfigHelper
     %{
       <style type="text/css">
         .b-adaptive-css-main-background { background: #{h[:background]}; }
+        .b-adaptive-css-background-primary { background: #{h[:border_color]}; }
         .b-adaptive-css-border-color-primary { border-color: #{h[:border_color]}; }
       </style>
     }.html_safe

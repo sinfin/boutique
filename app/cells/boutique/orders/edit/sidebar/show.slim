@@ -1,11 +1,23 @@
 .b-orders-edit-sidebar
+  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary[
+    class="b-orders-edit-sidebar__hr--mobile-only"
+  ]
+
   = cell('boutique/orders/edit/summary', model)
-  hr
 
-  .font-weight-bold = t('.contents')
-  = contents
-  hr
+  div class=application_css_class("rich-text")
+    hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
 
-  .font-weight-bold = t('.shipping')
-  | Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-  | sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    h4 = t('.contents')
+
+    = contents
+
+    hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
+
+    h4 = t('.shipping')
+
+    == cstypo Boutique.config.orders_edit_sidebar_shipping_content
+
+  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary[
+    class="b-orders-edit-sidebar__hr--mobile-only"
+  ]

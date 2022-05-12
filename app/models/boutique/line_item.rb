@@ -18,10 +18,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
            :product,
            to: :product_variant
 
-  delegate :cover,
-           :cover_placement,
-           to: :product
-
   def to_label
     product_variant.title
   end
@@ -41,6 +37,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def imprint_unit_price!
     update!(unit_price:)
+  end
+
+  def cover_placement_from_variant_or_product
+    product_variant.cover_placement || product_variant.product.cover_placement
   end
 end
 

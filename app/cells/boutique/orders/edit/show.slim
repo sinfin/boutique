@@ -1,10 +1,10 @@
 .b-orders-edit
   .container
-    .b-orders-edit__flex
-      main.b-orders-edit__col.b-orders-edit__col--main
-        h1.h2.mt-0 = current_order.checkout_title
+    = form do |f|
+      .b-orders-edit__flex
+        main.b-orders-edit__col.b-orders-edit__col--main
+          h1.h2.mt-0 = current_order.checkout_title
 
-        = form do |f|
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
@@ -34,10 +34,12 @@
             .b-orders-edit__box
               == cell('folio/addresses/fields', f, title_tag: "h3")
 
+        aside.b-orders-edit__col.b-orders-edit__col--aside
+          == cell('boutique/orders/edit/sidebar', current_order)
+
+      .b-orders-edit__flex
+        main.b-orders-edit__col.b-orders-edit__col--main
           .b-orders-edit__disclaimer
             == cell("#{application_namespace_path}/ui/disclaimer")
 
           == cell('boutique/orders/payment_methods', f)
-
-      aside.b-orders-edit__col.b-orders-edit__col--aside
-        == cell('boutique/orders/edit/sidebar', current_order)

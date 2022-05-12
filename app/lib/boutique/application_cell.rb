@@ -18,4 +18,9 @@ class Boutique::ApplicationCell < Folio::ApplicationCell
   def application_namespace_path
     @application_namespace_path ||= application_namespace.underscore
   end
+
+  def application_css_class(str)
+    @application_namespace_css_class_prefix ||= application_namespace_path[0]
+    "#{@application_namespace_css_class_prefix}-#{str}"
+  end
 end
