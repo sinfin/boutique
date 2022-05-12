@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: ae27a539d2560eaba90be4264525e2d272f9b2fc
+  revision: 54e91e53a7cec73af9f373e88c32c8d1096c98be
   branch: petr/dragonfly-libvips-multi-site-rails-7
   specs:
     folio (0.1.0)
@@ -359,7 +359,7 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.17.0)
+    loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.2.8)
