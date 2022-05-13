@@ -82,16 +82,10 @@ class Boutique::GoPay::Api
         order_number: order.number,
         order_description: "#{order.to_label} – #{order.model_name.human} ##{order.number}",
         callback: {
-          return_url: controller.comeback_go_pay_url,
-          notification_url: controller.notify_go_pay_url,
+          return_url: controller.comeback_go_pay_url(order_id: order.secret_hash),
+          notification_url: controller.notify_go_pay_url(order_id: order.secret_hash),
         },
         lang: :cs
       }
-    end
-
-    def contact_hash(order)
-    end
-
-    def items_hash(order)
     end
 end

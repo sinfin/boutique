@@ -16,7 +16,6 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   test "anonymous - successful payment" do
     post add_order_url, params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
-    assert_equal 1, Boutique::Order.count
 
     params = {
       order: {
@@ -31,14 +30,13 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_find_payment_api_call_mock
-    get comeback_go_pay_url(id: 123)
+    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
     assert_redirected_to main_app.user_invitation_url
   end
 
   test "anonymous - unsuccessful payment" do
     post add_order_url, params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
-    assert_equal 1, Boutique::Order.count
 
     params = {
       order: {
@@ -54,7 +52,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     go_pay_find_payment_api_call_mock(state: "CANCELED")
 
-    get comeback_go_pay_url(id: 123)
+    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
     assert_redirected_to order_url(Boutique::Order.first.secret_hash)
   end
 
@@ -64,7 +62,6 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     post add_order_url, params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
-    assert_equal 1, Boutique::Order.count
 
     params = {
       order: {
@@ -77,8 +74,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     go_pay_find_payment_api_call_mock
 
-    get comeback_go_pay_url(id: 123)
-    assert_redirected_to order_url(Boutique::Order.first.secret_hash)
+    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    assert_redirected_to order_url(current_order.secret_hash)
   end
 
   test "user - unsuccessful payment" do
@@ -87,7 +84,6 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     post add_order_url, params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
-    assert_equal 1, Boutique::Order.count
 
     params = {
       order: {
@@ -100,7 +96,12 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     go_pay_find_payment_api_call_mock
 
-    get comeback_go_pay_url(id: 123)
-    assert_redirected_to order_url(Boutique::Order.first.secret_hash)
+    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    assert_redirected_to order_url(current_order.secret_hash)
   end
+
+  private
+    def current_order
+      Boutique::Order.last
+    end
 end
