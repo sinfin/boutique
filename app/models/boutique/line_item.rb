@@ -22,6 +22,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product_variant.title
   end
 
+  def subscription?
+    product.is_a?(Boutique::Product::Subscription)
+  end
+
   def price
     amount * unit_price
   end

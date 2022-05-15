@@ -19,11 +19,20 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   accepts_nested_attributes_for :line_items
 
+  has_one :subscription, class_name: "Boutique::Subscription",
+                         foreign_key: :boutique_order_id,
+                         dependent: :destroy,
+                         inverse_of: :order
+
   has_many :payments, -> { ordered },
                       class_name: "Boutique::Payment",
                       foreign_key: :boutique_order_id,
                       dependent: :destroy,
                       inverse_of: :order
+
+  has_one :paid_payment, -> { paid },
+                         class_name: "Boutique::Payment",
+                         foreign_key: :boutique_order_id
 
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }

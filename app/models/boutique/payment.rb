@@ -7,6 +7,10 @@ class Boutique::Payment < Boutique::ApplicationRecord
                      foreign_key: :boutique_order_id,
                      inverse_of: :payments
 
+  has_one :subscription, class_name: "Boutique::Subscription",
+                         foreign_key: :boutique_payment_id,
+                         inverse_of: :payment
+
   scope :ordered, -> { order(id: :desc) }
 
   validates :remote_id,

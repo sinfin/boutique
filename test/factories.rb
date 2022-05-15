@@ -19,6 +19,10 @@ FactoryBot.define do
     end
   end
 
+  factory :boutique_product_subscription, class: "Boutique::Product::Subscription", parent: :boutique_product do
+    title { "Product Subscription title" }
+  end
+
   factory :boutique_product_variant, class: "Boutique::ProductVariant" do
     association :product, factory: :boutique_product
 
@@ -53,16 +57,24 @@ FactoryBot.define do
     trait :confirmed do
       ready_to_be_confirmed
 
-      after(:create) do |order|
-        order.confirm!
+      aasm_state { "confirmed" }
+      confirmed_at { 1.minute.ago }
+
+      before(:create) do |order|
+        order.send(:set_numbers)
+        order.send(:imprint_prices)
       end
     end
 
     trait :paid do
       confirmed
+      with_user
+
+      aasm_state { "paid" }
+      paid_at { 1.minute.ago }
 
       after(:create) do |order|
-        order.pay!
+        create(:boutique_payment, order:)
       end
     end
 
@@ -86,6 +98,27 @@ FactoryBot.define do
 
     after(:build) do |line_item, evaluator|
       line_item.product_variant ||= evaluator.product.master_variant
+    end
+  end
+
+  factory :boutique_payment, class: "Boutique::Payment" do
+    association :order, factory: :boutique_order
+
+    remote_id { 12345678 }
+    aasm_state { "paid" }
+    paid_at { 1.minute.ago }
+  end
+
+  factory :boutique_subscription, class: "Boutique::Subscription" do
+    active_from { 1.minute.ago }
+    active_until { 1.minute.ago + 12.months }
+
+    after(:build) do |subscription|
+      order = create(:boutique_order, :paid)
+      subscription.order = order
+      subscription.payment = order.payments.paid.first
+      subscription.product_variant = order.line_items.first.product_variant
+      subscription.user = order.user
     end
   end
 
