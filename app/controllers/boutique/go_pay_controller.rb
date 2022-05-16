@@ -26,8 +26,11 @@
 
   private
     def find_and_update_payment
-      order = Boutique::Order.find_by_secret_hash!(params[:order_id])
-      @payment = order.payments.find_by_remote_id!(params[:id])
+      # FIXME: fix for recurrent payments
+      # order = Boutique::Order.find_by_secret_hash!(params[:order_id])
+      # @payment = order.payments.find_by_remote_id!(params[:id])
+
+      @payment = Boutique::Payment.find_by_remote_id!(params[:id])
 
       @payment.with_lock do
         @payment.order.lock!
