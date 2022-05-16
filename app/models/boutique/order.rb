@@ -122,7 +122,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     [
       number,
       user.try(:full_name) || email
-    ].compact.join(" - ")
+    ].compact.join(" – ")
   end
 
   def line_items_price

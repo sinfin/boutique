@@ -27,6 +27,17 @@ module Boutique::Test
                             .returns(result)
       end
 
+      def go_pay_create_recurrent_payment_api_call_mock
+        result = {
+          "id" => 123,
+          "payment_instrument" => "PAYMENT_CARD",
+        }
+
+        Boutique::GoPay::Api.any_instance
+                            .expects(:create_recurrent_payment)
+                            .returns(result)
+      end
+
       def mocked_go_pay_payment_gateway_url
         "https://test.gopay.com"
       end
