@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Boutique::Subscription < ApplicationRecord
-  belongs_to :order, class_name: "Boutique::Order",
-                     foreign_key: :boutique_order_id,
-                     inverse_of: :subscription
-
   belongs_to :payment, class_name: "Boutique::Payment",
                        foreign_key: :boutique_payment_id,
                        inverse_of: :subscription
@@ -16,6 +12,12 @@ class Boutique::Subscription < ApplicationRecord
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
                     inverse_of: :subscriptions
+
+  has_many :orders, -> { ordered },
+                    class_name: "Boutique::Order",
+                    foreign_key: :boutique_subscription_id,
+                    dependent: :nullify,
+                    inverse_of: :subscription
 
   scope :active_at, -> (time) {
     where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?) AND "\
@@ -30,6 +32,7 @@ class Boutique::Subscription < ApplicationRecord
 
   validates :active_from,
             :active_until,
+            :period,
             presence: true
 
   def active_at?(time)
@@ -56,6 +59,10 @@ class Boutique::Subscription < ApplicationRecord
                    updated_at: now)
     true
   end
+
+  def prolong!
+    update!(active_until: active_until + period.months)
+  end
 end
 
 # == Schema Information
@@ -63,7 +70,6 @@ end
 # Table name: boutique_subscriptions
 #
 #  id                          :bigint(8)        not null, primary key
-#  boutique_order_id           :bigint(8)
 #  boutique_payment_id         :bigint(8)
 #  boutique_product_variant_id :bigint(8)        not null
 #  folio_user_id               :bigint(8)        not null
@@ -78,7 +84,6 @@ end
 #
 #  index_boutique_subscriptions_on_active_from                  (active_from)
 #  index_boutique_subscriptions_on_active_until                 (active_until)
-#  index_boutique_subscriptions_on_boutique_order_id            (boutique_order_id)
 #  index_boutique_subscriptions_on_boutique_payment_id          (boutique_payment_id)
 #  index_boutique_subscriptions_on_boutique_product_variant_id  (boutique_product_variant_id)
 #  index_boutique_subscriptions_on_cancelled_at                 (cancelled_at)
@@ -86,7 +91,6 @@ end
 #
 # Foreign Keys
 #
-#  fk_rails_...  (boutique_order_id => boutique_orders.id)
 #  fk_rails_...  (boutique_payment_id => boutique_payments.id)
 #  fk_rails_...  (boutique_product_variant_id => boutique_product_variants.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)

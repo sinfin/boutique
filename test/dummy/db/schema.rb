@@ -78,8 +78,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "boutique_subscription_id"
+    t.bigint "original_payment_id"
+    t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
+    t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
     t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
   end
 
@@ -133,7 +137,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
   end
 
   create_table "boutique_subscriptions", force: :cascade do |t|
-    t.bigint "boutique_order_id"
     t.bigint "boutique_payment_id"
     t.bigint "boutique_product_variant_id", null: false
     t.bigint "folio_user_id", null: false
@@ -145,7 +148,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
     t.datetime "updated_at", null: false
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
-    t.index ["boutique_order_id"], name: "index_boutique_subscriptions_on_boutique_order_id"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_subscriptions_on_boutique_product_variant_id"
     t.index ["cancelled_at"], name: "index_boutique_subscriptions_on_cancelled_at"
@@ -613,10 +615,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
 
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
+  add_foreign_key "boutique_orders", "boutique_subscriptions"
   add_foreign_key "boutique_orders", "folio_users"
   add_foreign_key "boutique_payments", "boutique_orders"
   add_foreign_key "boutique_product_variants", "boutique_products"
-  add_foreign_key "boutique_subscriptions", "boutique_orders"
   add_foreign_key "boutique_subscriptions", "boutique_payments"
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
   add_foreign_key "boutique_subscriptions", "folio_users"

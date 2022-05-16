@@ -14,8 +14,8 @@ end
 #  published_at   :datetime
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  variants_count :integer          default(0)
 #  type           :string
+#  variants_count :integer          default(0)
 #
 # Indexes
 #

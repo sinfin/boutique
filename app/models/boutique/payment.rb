@@ -11,12 +11,16 @@ class Boutique::Payment < Boutique::ApplicationRecord
                          foreign_key: :boutique_payment_id,
                          inverse_of: :payment
 
+  has_many :subsequent_orders, class_name: "Boutique::Order",
+                               foreign_key: :original_order_id,
+                               inverse_of: :original_payment
+
   scope :ordered, -> { order(id: :desc) }
 
   validates :remote_id,
             presence: true
 
-  aasm do
+  aasm timestamps: true do
     state :pending, initial: true
     state :paid
     state :refunded

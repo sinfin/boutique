@@ -114,8 +114,7 @@ FactoryBot.define do
     active_until { 1.minute.ago + 12.months }
 
     after(:build) do |subscription|
-      order = create(:boutique_order, :paid)
-      subscription.order = order
+      order = create(:boutique_order, :paid, subscription:)
       subscription.payment = order.payments.paid.first
       subscription.product_variant = order.line_items.first.product_variant
       subscription.user = order.user
