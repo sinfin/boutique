@@ -9,7 +9,11 @@ module Boutique::CurrentOrder
 
   def current_order
     @current_order ||= begin
-      order = current_order_scope.find_by(web_session_id: session.id.public_id)
+      if session && session.id
+        order = current_order_scope.find_by(web_session_id: session.id.public_id)
+      else
+        order = nil
+      end
 
       # using update_columns so that we don't get some random 500s by using update!
       if current_user.present?
@@ -33,8 +37,10 @@ module Boutique::CurrentOrder
   end
 
   def create_current_order
+    session[:init] = true if !session || !session.id
+
     @current_order = Boutique::Order.create!(user: current_user,
-                                           web_session_id: session.id.public_id)
+                                             web_session_id: session.id.public_id)
   end
 
   private

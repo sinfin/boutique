@@ -80,6 +80,6 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     def create_order_with_current_session_id
       product = create(:boutique_product)
       post add_order_url, params: { product_variant_id: product.master_variant.id }
-      @order = Boutique::Order.find_by(web_session_id: session.id.public_id)
+      @order = Boutique::Order.find_by(web_session_id: session.id.public_id) if session && session.id
     end
 end

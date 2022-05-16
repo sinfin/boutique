@@ -52,7 +52,7 @@ Folio::Site.create!(title: "Boutique Shop",
 puts "Created Folio::Site"
 
 puts "Creating unsplash pics"
-images = 4.times.map { unsplash_pic }
+4.times { unsplash_pic }
 puts "Created unsplash pics"
 
 puts "Creating products & variants"
