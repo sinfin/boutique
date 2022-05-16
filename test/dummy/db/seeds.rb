@@ -52,22 +52,23 @@ Folio::Site.create!(title: "Boutique Shop",
 puts "Created Folio::Site"
 
 puts "Creating unsplash pics"
-images = 4.times.map { unsplash_pic }
+images = 4.times.map { unsplash_pic unless ENV["NO_IMAGES"] }
 puts "Created unsplash pics"
 
-puts "Creating products & variants"
-4.times do |i|
-  product = Boutique::Product.new(title: Faker::Commerce.product_name,
+def create_product(options)
+  klass = options[:class] || Boutique::Product
+  product = klass.new(title: options[:title],
                                   published: true,
                                   published_at: 1.minute.ago,
-                                  cover: images[i])
+                                  cover: options[:cover])
   price = (3 + rand * 7).round * 100 - 1
-  contents = 5.times.map { "<li>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</li>" }
-  product.build_master_variant(title: "#{product.title} – Print + Digital",
-                               regular_price: price + 300,
-                               checkout_sidebar_content: "<ul>#{contents.join}</ul>",
-                               description: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3),
-                               digital_only: false)
+  contents = 4.times.map { "<li>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</li>" }
+  product.variants.build(title: "#{product.title} – Print + Digital",
+                         regular_price: price + 300,
+                         checkout_sidebar_content: "<ul>#{contents.join}</ul>",
+                         description: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3),
+                         digital_only: false,
+                         master: true)
   product.variants.build(title: "#{product.title} – Print",
                          regular_price: price + 200,
                          checkout_sidebar_content: "<ul>#{contents.first(3).join}</ul>",
@@ -80,7 +81,21 @@ puts "Creating products & variants"
                          description: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3),
                          digital_only: true)
   product.save!
+end
 
+puts "Creating products & variants"
+# standart products
+2.times do |i|
+  create_product(title: Faker::Commerce.product_name,
+                 cover: images.sample)
+  print "."
+end
+
+# subscription products
+2.times do |i|
+  create_product(class: Boutique::Product::Subscription,
+                 title: Faker::Commerce.department + " Subscription",
+                 cover: images.sample)
   print "."
 end
 puts "\nCreated products & variants"
