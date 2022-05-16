@@ -9,8 +9,12 @@
         = react_picker(f, :cover_placement)
       .col-md
         == cell('folio/console/publishable_inputs', f)
+
         = f.input :title
+
         = f.input :slug
+
+        = render partial: "additional_fields", locals: { f: }
 
     = render partial: 'variants', locals: { f: }
 

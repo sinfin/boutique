@@ -56,33 +56,7 @@ images = 4.times.map { unsplash_pic }
 puts "Created unsplash pics"
 
 puts "Creating products & variants"
-4.times do |i|
-  product = Boutique::Product.new(title: Faker::Commerce.product_name,
-                                  published: true,
-                                  published_at: 1.minute.ago,
-                                  cover: images[i])
-  price = (3 + rand * 7).round * 100 - 1
-  contents = 5.times.map { "<li>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</li>" }
-  product.build_master_variant(title: "#{product.title} – Print + Digital",
-                               regular_price: price + 300,
-                               checkout_sidebar_content: "<ul>#{contents.join}</ul>",
-                               description: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3),
-                               digital_only: false)
-  product.variants.build(title: "#{product.title} – Print",
-                         regular_price: price + 200,
-                         checkout_sidebar_content: "<ul>#{contents.first(3).join}</ul>",
-                         description: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3),
-                         digital_only: false)
-  product.variants.build(title: "#{product.title} – Digital",
-                         regular_price: price,
-                         discounted_price: price - 100,
-                         checkout_sidebar_content: "<ul>#{contents.values_at(0, 1, -1).join}</ul>",
-                         description: Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3),
-                         digital_only: true)
-  product.save!
-
-  print "."
-end
+Rake::Task["boutique:idp_seed_dummy_products"].invoke
 puts "\nCreated products & variants"
 
 puts "Creating vouchers"
