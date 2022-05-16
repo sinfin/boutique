@@ -16,11 +16,11 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def edit
-    @use_boutique_adaptive_css_for_head = true
+    @use_boutique_adaptive_css = true
   end
 
   def confirm
-    @use_boutique_adaptive_css_for_head = true
+    @use_boutique_adaptive_css = true
 
     current_order.assign_attributes(order_params)
 
@@ -34,7 +34,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def show
-    @use_boutique_adaptive_css_for_head = :no_background
+    @use_boutique_adaptive_css = :no_background
   end
 
   def payment
