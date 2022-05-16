@@ -8,5 +8,11 @@ module Boutique
 
       OrderMailer.paid(order)
     end
+
+    def paid_subsequent
+      order = Boutique::Order.where(subsequent: true).last
+
+      OrderMailer.paid_subsequent(order)
+    end
   end
 end

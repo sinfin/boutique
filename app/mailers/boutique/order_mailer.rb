@@ -7,6 +7,12 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
     email_template_mail(data, to: order.email)
   end
 
+  def paid_subsequent(order)
+    data = order_summary_data(order)
+
+    email_template_mail(data, to: order.email)
+  end
+
   private
     def order_summary_data(order)
       line_items = order.line_items.includes(product_variant: { product: :cover })

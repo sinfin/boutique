@@ -111,7 +111,11 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       after_commit do
-        Boutique::OrderMailer.paid(self).deliver_later
+        if subsequent?
+          Boutique::OrderMailer.paid_subsequent(self).deliver_later
+        else
+          Boutique::OrderMailer.paid(self).deliver_later
+        end
       end
     end
 
