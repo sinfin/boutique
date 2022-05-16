@@ -2,12 +2,12 @@
 
 module Boutique::ConfigHelper
   ADAPTIVE_CSS_DEFAULTS = {
-    background: "#EBF0FF",
-    border_color: "#0049FB",
+    background_color: "#EBF0FF",
+    main_color: "#0049FB",
   }
 
-  def boutique_adaptive_css_for_head(model)
-    return unless @use_boutique_adaptive_css_for_head
+  def boutique_adaptive_css_for_head(model, force: false)
+    return unless @use_boutique_adaptive_css_for_head || force
 
     if model && model.respond_to?(:boutique_adaptive_css_for_head)
       override = model.boutique_adaptive_css_for_head
@@ -19,9 +19,9 @@ module Boutique::ConfigHelper
 
     %{
       <style type="text/css">
-        #{@use_boutique_adaptive_css_for_head == :no_background ? "" : "body { background: #{h[:background]}; }" }
-        .b-adaptive-css-background-primary { background: #{h[:border_color]}; }
-        .b-adaptive-css-border-color-primary { border-color: #{h[:border_color]}; }
+        #{@use_boutique_adaptive_css_for_head == :no_background ? "" : "body { background: #{h[:background_color]}; }" }
+        .b-adaptive-css-background-primary { background: #{h[:main_color]}; }
+        .b-adaptive-css-border-color-primary { border-color: #{h[:main_color]}; }
       </style>
     }.html_safe
   end
