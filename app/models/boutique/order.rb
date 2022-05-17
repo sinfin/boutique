@@ -10,6 +10,16 @@ class Boutique::Order < Boutique::ApplicationRecord
                     inverse_of: :orders,
                     optional: true
 
+  belongs_to :subscription, class_name: "Boutique::Subscription",
+                            foreign_key: :boutique_subscription_id,
+                            inverse_of: :orders,
+                            optional: true
+
+  belongs_to :original_payment, class_name: "Boutique::Payment",
+                                foreign_key: :original_payment_id,
+                                inverse_of: :subsequent_orders,
+                                optional: true
+
   has_many :line_items, -> { ordered },
                         class_name: "Boutique::LineItem",
                         foreign_key: :boutique_order_id,
@@ -24,6 +34,10 @@ class Boutique::Order < Boutique::ApplicationRecord
                       foreign_key: :boutique_order_id,
                       dependent: :destroy,
                       inverse_of: :order
+
+  has_one :paid_payment, -> { paid },
+                         class_name: "Boutique::Payment",
+                         foreign_key: :boutique_order_id
 
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
@@ -67,23 +81,41 @@ class Boutique::Order < Boutique::ApplicationRecord
 
         self.email ||= user.try(:email)
       end
+
+      after_commit do
+        charge_recurrent_payment! if subsequent?
+      end
     end
 
     event :pay do
       transitions from: :confirmed, to: :paid
 
+      before do
+        unless subsequent?
+          set_up_subscription!
+        end
+      end
+
       after do
-        if user.nil?
-          self.user = Folio::User.invite!(email:,
-                                          first_name:,
-                                          last_name:)
-          update_columns(folio_user_id: user.id,
-                         updated_at:)
+        if subsequent?
+          subscription.prolong!
+        else
+          if user.nil?
+            self.user = Folio::User.invite!(email:,
+                                            first_name:,
+                                            last_name:)
+            update_columns(folio_user_id: user.id,
+                           updated_at:)
+          end
         end
       end
 
       after_commit do
-        Boutique::OrderMailer.paid(self).deliver_later
+        if subsequent?
+          Boutique::OrderMailer.paid_subsequent(self).deliver_later
+        else
+          Boutique::OrderMailer.paid(self).deliver_later
+        end
       end
     end
 
@@ -113,7 +145,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     [
       number,
       user.try(:full_name) || email
-    ].compact.join(" - ")
+    ].compact.join(" – ")
   end
 
   def line_items_price
@@ -155,8 +187,30 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.all?(&:digital_only?)
   end
 
+  def subsequent?
+    original_payment_id?
+  end
+
   def checkout_title
     line_items.first.try(:product_variant).try(:title).presence || self.class.model_name.human
+  end
+
+  def charge_recurrent_payment!
+    return unless confirmed? && subsequent?
+
+    begin
+      payment = Boutique::GoPay::Api.new.create_recurrent_payment(self)
+      payments.create!(remote_id: payment["id"],
+                       payment_method: payment["payment_instrument"])
+    rescue GoPay::Error => error
+      if error.body["errors"].any? { |e| e["error_code"] == 342 }
+        # 342: PAYMENT_RECURRENCE_STOPPED
+        # cancel subscription if recurrence was stopped in GoPay admin
+        subscription.cancel!
+      else
+        raise error
+      end
+    end
   end
 
   private
@@ -168,6 +222,27 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       # format: 2200001, 2200002 ... 2309998, 2309999
       self.number = year_prefix + base_number.to_s.rjust(5, "0")
+    end
+
+    def set_up_subscription!
+      li = line_items.select(&:subscription?)
+
+      return if li.empty?
+
+      fail "multiple subscriptions in one order are not implemented" if li.size > 1
+
+      line_item = li.first
+      period = 12
+      active_from = line_item.subscription_starts_at || current_time_from_proper_timezone
+      cancelled_at = active_from unless line_item.subscription_recurring?
+
+      build_subscription(payment: paid_payment,
+                         product_variant: line_item.product_variant,
+                         user:,
+                         period:,
+                         active_from:,
+                         active_until: active_from + period.months,
+                         cancelled_at:)
     end
 
     def get_next_base_number
@@ -211,36 +286,41 @@ end
 #
 # Table name: boutique_orders
 #
-#  id                    :bigint(8)        not null, primary key
-#  folio_user_id         :bigint(8)
-#  web_session_id        :string
-#  base_number           :integer
-#  number                :string
-#  secret_hash           :string
-#  email                 :string
-#  first_name            :string
-#  last_name             :string
-#  aasm_state            :string           default("pending")
-#  line_items_count      :integer          default(0)
-#  line_items_price      :integer
-#  total_price           :integer
-#  primary_address_id    :bigint(8)
-#  secondary_address_id  :bigint(8)
-#  use_secondary_address :boolean          default(FALSE)
-#  confirmed_at          :datetime
-#  paid_at               :datetime
-#  dispatched_at         :datetime
-#  cancelled_at          :datetime
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
+#  id                       :bigint(8)        not null, primary key
+#  folio_user_id            :bigint(8)
+#  web_session_id           :string
+#  base_number              :integer
+#  number                   :string
+#  secret_hash              :string
+#  email                    :string
+#  first_name               :string
+#  last_name                :string
+#  aasm_state               :string           default("pending")
+#  line_items_count         :integer          default(0)
+#  line_items_price         :integer
+#  total_price              :integer
+#  primary_address_id       :bigint(8)
+#  secondary_address_id     :bigint(8)
+#  use_secondary_address    :boolean          default(FALSE)
+#  confirmed_at             :datetime
+#  paid_at                  :datetime
+#  dispatched_at            :datetime
+#  cancelled_at             :datetime
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  boutique_subscription_id :bigint(8)
+#  original_payment_id      :bigint(8)
 #
 # Indexes
 #
-#  index_boutique_orders_on_folio_user_id   (folio_user_id)
-#  index_boutique_orders_on_number          (number)
-#  index_boutique_orders_on_web_session_id  (web_session_id)
+#  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
+#  index_boutique_orders_on_folio_user_id             (folio_user_id)
+#  index_boutique_orders_on_number                    (number)
+#  index_boutique_orders_on_original_payment_id       (original_payment_id)
+#  index_boutique_orders_on_web_session_id            (web_session_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (boutique_subscription_id => boutique_subscriptions.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
 #

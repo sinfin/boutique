@@ -76,6 +76,7 @@ end
 #  published_at   :datetime
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  type           :string
 #  variants_count :integer          default(0)
 #
 # Indexes
@@ -83,4 +84,5 @@ end
 #  index_boutique_products_on_published     (published)
 #  index_boutique_products_on_published_at  (published_at)
 #  index_boutique_products_on_slug          (slug)
+#  index_boutique_products_on_type          (type)
 #

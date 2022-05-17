@@ -12,6 +12,11 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
                        inverse_of: :variants,
                        counter_cache: :variants_count
 
+  has_many :subscriptions, class_name: "Boutique::Subscription",
+                           foreign_key: :boutique_product_variant_id,
+                           inverse_of: :product_variant
+
+
   validates :regular_price,
             presence: true
 
