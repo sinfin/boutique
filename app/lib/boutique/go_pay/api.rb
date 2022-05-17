@@ -91,8 +91,8 @@ class Boutique::GoPay::Api
         order_number: order.number,
         order_description: order_description(order),
         callback: {
-          return_url: controller.comeback_go_pay_url(order_id: order.secret_hash),
-          notification_url: controller.notify_go_pay_url(order_id: order.secret_hash),
+          return_url: controller.comeback_go_pay_url(order_id: order.secret_hash, only_path: false),
+          notification_url: controller.notify_go_pay_url(order_id: order.secret_hash, only_path: false),
         },
         lang: :cs
       }
