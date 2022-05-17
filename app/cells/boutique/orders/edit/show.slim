@@ -3,6 +3,8 @@
     = form do |f|
       .b-orders-edit__flex
         main.b-orders-edit__col.b-orders-edit__col--main
+          = render(:_main_top)
+
           h1.h2.mt-0 = current_order.checkout_title
 
           - unless current_user
