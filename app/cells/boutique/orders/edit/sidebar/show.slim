@@ -5,15 +5,16 @@
 
   = cell('boutique/orders/edit/summary', model)
 
-  div class=application_css_class("rich-text")
-    hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
+  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
 
+  div class=application_css_class("rich-text")
     h4 = t('.contents')
 
     = contents
 
-    hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
+  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
 
+  div class=application_css_class("rich-text")
     h4 = t('.shipping')
 
     == cstypo Boutique.config.orders_edit_sidebar_shipping_content

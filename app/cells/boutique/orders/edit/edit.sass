@@ -5,6 +5,16 @@
     box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.1)
     margin: 20px (( - $grid-gutter-half ))
 
+    &:last-child
+      margin-bottom: 0
+
+    +media-breakpoint-up(md)
+      padding: $grid-gutter-width
+      margin: 35px 0
+
+    +media-breakpoint-up(xl)
+      padding: 40px
+
   &__box-inner
     max-width: $folio-addresses-fields-max-width
 
@@ -12,10 +22,6 @@
     margin: $grid-gutter-width 0
 
   +mq-desktop-menu
-    &__box
-      padding: $grid-gutter-width
-      margin: 35px 0
-
     &__flex
       display: flex
 
@@ -30,3 +36,7 @@
     &__col--aside
       flex: 0 0 390px
       max-width: 33%
+
+  +mq-mobile-menu
+    &__col--main
+      margin-bottom: $grid-gutter-width
