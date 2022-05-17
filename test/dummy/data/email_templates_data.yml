@@ -4,6 +4,7 @@
     - ORDER_NUMBER
     - ORDER_SUMMARY_HTML
     - ORDER_SUMMARY_PLAIN
+    - ORDER_URL
   title_cs: Objednávka - Zaplaceno
   subject_cs: Objednávka #{ORDER_NUMBER} zaplacena
   subject_en: Order #{ORDER_NUMBER} paid
@@ -35,6 +36,7 @@
     - ORDER_NUMBER
     - ORDER_SUMMARY_HTML
     - ORDER_SUMMARY_PLAIN
+    - ORDER_URL
   title_cs: Objednávka - Opakovaná platba zaplacena
   subject_cs: Objednávka #{ORDER_NUMBER} zaplacena
   subject_en: Order #{ORDER_NUMBER} paid
@@ -62,3 +64,42 @@
     Here is summary of your order #{ORDER_NUMBER}:
 
     {ORDER_SUMMARY_PLAIN}
+
+- mailer: Boutique::OrderMailer
+  action: unpaid_reminder
+  optional_keywords:
+    - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
+  required_keywords:
+    - ORDER_URL
+  title_cs: Objednávka - přípomínka nezaplacené objednávky
+  subject_cs: Objednávka #{ORDER_NUMBER} nezaplacena
+  subject_en: Order #{ORDER_NUMBER} unpaid
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>rádi bychom Vám připomněli, že Vaše objednávka č. {ORDER_NUMBER} dosud nebyla uhrazena.</p>
+    <p>Napravit to můžete snadno pár kliknutími na následujícím odkazu.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Dokončit objednávku</a></p>
+
+  body_text_cs: |
+    Dobrý den,
+    rádi bychom Vám připomněli, že Vaše objednávka č. {ORDER_NUMBER} dosud nebyla uhrazena.
+    Napravit to můžete snadno pár kliknutími na následujícím odkazu.
+
+    {ORDER_URL}
+
+  body_html_en: |
+    <p>Hi</p>
+    <p>your order n. {ORDER_NUMBER} hasn't been paid. </p>
+    <p>You can fix that if you click on the following link.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Finish order</a></p>
+
+  body_text_en: |
+    Hi
+    your order n. {ORDER_NUMBER} hasn't been paid.
+    You can fix that if you click on the following link.
+
+    {ORDER_URL}

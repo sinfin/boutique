@@ -77,6 +77,6 @@ class Boutique::SubscriptionBot
     end
 
     def now
-      @now ||= Time.zone.now.beginning_of_hour
+      @now ||= Time.current.beginning_of_hour
     end
 end

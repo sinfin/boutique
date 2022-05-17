@@ -41,6 +41,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
+  scope :except_subsequent, -> { where(original_payment_id: nil) }
 
   scope :by_state, -> (state) { where(aasm_state: state) }
 

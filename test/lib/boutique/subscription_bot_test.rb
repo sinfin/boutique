@@ -58,6 +58,6 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
 
   private
     def now
-      @now ||= Time.zone.now.beginning_of_hour + 30.minutes
+      @now ||= Time.current.beginning_of_hour + 30.minutes
     end
 end

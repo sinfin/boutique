@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Boutique::Subscriptions::ChargeEligibleJob < ApplicationJob
+class Boutique::SubscriptionBotJob < ApplicationJob
   queue_as :default
 
   def perform
