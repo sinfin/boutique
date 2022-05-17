@@ -18,6 +18,9 @@ cs:
         paid_at: Zaplaceno
         dispatched_at: Odesláno
 
+      boutique/product:
+        type: Typ produktu
+
       boutique/product_variant:
         description: Text kartiček
         checkout_sidebar_content: Popisek v checkoutu
@@ -32,6 +35,9 @@ cs:
         one: Produkt
         few: Produkty
         other: Produktů
+
+      boutique/product/basic: Základní
+      boutique/product/subscription: Předplatné
 
       boutique/product_variant:
         one: Varianta produktu

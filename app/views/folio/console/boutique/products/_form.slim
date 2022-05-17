@@ -10,11 +10,16 @@
       .col-md
         == cell('folio/console/publishable_inputs', f)
 
-        = f.input :title
+        .row
+          .col-md = f.input :title
+          .col-md = f.input :slug
 
-        = f.input :slug
+        .row
+          .col-md-6
+            = f.input :type, collection: Boutique::Product.recursive_subclasses_for_select(include_self: false),
+                             include_blank: false
 
-        = render partial: "additional_fields", locals: { f: }
+        = render partial: 'additional_fields', locals: { f: }
 
     = render partial: 'variants', locals: { f: }
 

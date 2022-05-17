@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class Boutique::Product < Boutique::ApplicationRecord
+  extend Folio::InheritenceBaseNaming
+
   include Folio::HasAttachments
   include Folio::FriendlyId
   include Folio::Publishable::WithDate
+  include Folio::RecursiveSubclasses
+  include Folio::StiPreload
 
   has_many :variants, -> { ordered },
                       class_name: "Boutique::ProductVariant",
@@ -22,6 +26,7 @@ class Boutique::Product < Boutique::ApplicationRecord
                                      foreign_key: :boutique_product_id
 
   validates :title,
+            :type,
             presence: true
 
   validate :validate_master_variant_presence
@@ -42,6 +47,12 @@ class Boutique::Product < Boutique::ApplicationRecord
     h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
 
     h
+  end
+
+  def self.sti_paths
+    [
+      Boutique::Engine.root.join("app/models/boutique/product"),
+    ]
   end
 
   private

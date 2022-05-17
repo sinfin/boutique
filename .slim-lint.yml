@@ -1,3 +1,7 @@
 linters:
   RuboCop:
     enabled: false
+
+  LineLength:
+    exclude:
+      - app/views/folio/console/boutique/products/_form.slim

@@ -5,7 +5,7 @@ namespace :boutique do
   task idp_seed_dummy_products: :environment do
     require "faker"
 
-    def create_product(title:, cover:, klass: Boutique::Product)
+    def create_product(title:, cover:, klass: Boutique::Product::Basic)
       product = klass.new(title:,
                           published: true,
                           published_at: 1.minute.ago,
