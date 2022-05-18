@@ -74,7 +74,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     states = Boutique::Order.aasm.states.map(&:name)
 
-    event :confirm do
+    event :confirm, private: true do
       transitions from: :pending, to: :confirmed
 
       before do
@@ -89,7 +89,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    event :wait_for_offline_payment do
+    event :wait_for_offline_payment, private: true do
       transitions from: :confirmed, to: :waiting_for_offline_payment
 
       after do
@@ -97,7 +97,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    event :pay do
+    event :pay, private: true do
       transitions from: :confirmed, to: :paid
 
       before do

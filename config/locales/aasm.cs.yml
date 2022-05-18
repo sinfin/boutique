@@ -5,15 +5,13 @@ cs:
       boutique/order:
         aasm_state/pending: Nepotvrzená
         aasm_state/confirmed: Nezaplacená
-        aasm_state/wait_for_offline_payment: Čeká na platbu převodem
+        aasm_state/waiting_for_offline_payment: Čeká na platbu převodem
         aasm_state/paid: Zaplacená
         aasm_state/dispatched: Vyřízeno
         aasm_state/cancelled: Stornovaná
 
     events:
       boutique/order:
-        confirm: Potvrdit
-        pay: Označit za zaplacenou
         dispatch: Označit za vyřízenou
         cancel: Stornovat
         revert_cancelation: Vrátit storno
