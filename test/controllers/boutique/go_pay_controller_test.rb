@@ -30,6 +30,15 @@ class Boutique::GoPayControllerTest < Boutique::ControllerTest
     assert @order.reload.confirmed?
   end
 
+  test "comeback with offline payment" do
+    go_pay_find_payment_api_call_mock(state: "PAYMENT_METHOD_CHOSEN")
+
+    get comeback_go_pay_url(id: 123, order_id: @order.secret_hash)
+    assert_redirected_to main_app.user_invitation_url
+    assert @payment.reload.pending?
+    assert @order.reload.waiting_for_offline_payment?
+  end
+
   test "notify" do
     go_pay_find_payment_api_call_mock
 

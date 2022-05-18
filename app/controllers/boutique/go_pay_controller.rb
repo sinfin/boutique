@@ -4,7 +4,7 @@
     before_action :find_and_update_payment
 
     def comeback
-      if @payment.paid?
+      if @payment.paid? || @payment.order.waiting_for_offline_payment?
         flash[:success] = t(".success")
 
         if @payment.order.user.created_by_invite? && !@payment.order.user.invitation_accepted?
@@ -43,6 +43,11 @@
           case gp_payment["state"]
           when "PAID"
             @payment.pay!
+          when "PAYMENT_METHOD_CHOSEN"
+            unless @payment.order.waiting_for_offline_payment?
+              @payment.order.wait_for_offline_payment!
+              @payment.touch
+            end
           when "CANCELED"
             @payment.cancel!
           when "TIMEOUTED"

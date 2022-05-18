@@ -25,3 +25,4 @@ en:
         paid: paid
         unpaid: unpaid
         unpaid_notice: Please check payment status
+        waiting_for_offline_payment_notice: Expecting payment by bank transfer

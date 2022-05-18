@@ -25,3 +25,4 @@ cs:
         paid: zaplacena
         unpaid: nezaplacena
         unpaid_notice: Prosíme prověřte stav platby
+        waiting_for_offline_payment_notice: Očekáváme platbu převodem

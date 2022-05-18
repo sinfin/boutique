@@ -67,6 +67,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   aasm timestamps: true do
     state :pending, initial: true
     state :confirmed, color: "red"
+    state :waiting_for_offline_payment, color: "red"
     state :paid, color: "yellow"
     state :dispatched, color: "green"
     state :cancelled, color: "dark"
@@ -88,6 +89,14 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
+    event :wait_for_offline_payment do
+      transitions from: :confirmed, to: :waiting_for_offline_payment
+
+      after do
+        invite_user!
+      end
+    end
+
     event :pay do
       transitions from: :confirmed, to: :paid
 
@@ -101,13 +110,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         if subsequent?
           subscription.prolong!
         else
-          if user.nil?
-            self.user = Folio::User.invite!(email:,
-                                            first_name:,
-                                            last_name:)
-            update_columns(folio_user_id: user.id,
-                           updated_at:)
-          end
+          invite_user!
         end
       end
 
@@ -157,6 +160,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || [
       line_items_price,
     ].sum
+  end
+
+  def unpaid?
+    !paid_at?
   end
 
   def add_line_item!(product_variant, amount: 1)
@@ -255,6 +262,15 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       self.line_items_price = line_items_price
       self.total_price = total_price
+    end
+
+    def invite_user!
+      return unless user.nil?
+
+      self.user = Folio::User.invite!(email:,
+                                      first_name:,
+                                      last_name:)
+      update_columns(folio_user_id: user.id)
     end
 
     def requires_address?
