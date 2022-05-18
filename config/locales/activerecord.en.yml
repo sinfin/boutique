@@ -1,6 +1,13 @@
 ---
 en:
   activerecord:
+    attributes:
+      folio/email_template:
+        keyword/ORDER_NUMBER: Order number
+        keyword/ORDER_SUMMARY_HTML: Order summary in HTML
+        keyword/ORDER_SUMMARY_PLAIN: Order summary in plain text
+        keyword/ORDER_URL: Order URL
+
     models:
       boutique/product:
         one: Product

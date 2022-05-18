@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+# Preview all emails at http://localhost:3000/rails/mailers/subscription_mailer
+class Boutique::SubscriptionMailerPreview < ActionMailer::Preview
+  def will_be_paid_in_a_week
+    subscription = Boutique::Subscription.last
+
+    Boutique::SubscriptionMailer.will_be_paid_in_a_week(subscription)
+  end
+
+  def failure
+    subscription = Boutique::Subscription.last
+
+    Boutique::SubscriptionMailer.failure(subscription)
+  end
+
+  def unpaid
+    subscription = Boutique::Subscription.last
+
+    Boutique::SubscriptionMailer.unpaid(subscription)
+  end
+end

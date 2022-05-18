@@ -14,9 +14,8 @@ class Boutique::SubscriptionBot
 
   def charge(scope)
     scope.find_each do |subscription|
-      last_order = subscription.orders.first
-      if last_order.present? && last_order.confirmed?
-        last_order.charge_recurrent_payment!
+      if subscription.current_order.present? && subscription.current_order.confirmed?
+        subscription.current_order.charge_recurrent_payment!
         next
       end
 

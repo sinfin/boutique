@@ -103,3 +103,85 @@
     You can fix that if you click on the following link.
 
     {ORDER_URL}
+
+- mailer: Boutique::SubscriptionMailer
+  action: failure
+  optional_keywords:
+    - ORDER_URL
+  title_cs: Předplatné - prodloužení neúspěšná platba 1
+  subject_cs: Předplatné - neúspěšná platba
+  subject_en: Subscription - payment failed
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>doufáme, že jste s předplatným stále spokojeni.</p>
+    <p>Pokusili jsme se prodloužit Vaše předplatné na další období, ale automatické platba neproběhla úspěšně. Zkusíme to v dalších dnech znovu, ale prosíme Vás, jen pro jistotu, o kontrolu, zda je na platební kartě k dispozici dostatek prostředků a zda karta stále platí. Kdyby se to opět nepovedlo, ozveme se Vám.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Prověřte stav platby</a></p>
+
+    <p>Pokud si nepřejete předplatné prodloužit, můžete ho snadno zrušit ve Vašem uživatelském profilu.</p>
+
+  body_text_cs: |
+    Dobrý den,
+    doufáme, že jste s předplatným stále spokojeni.
+
+    Pokusili jsme se prodloužit Vaše předplatné na další období, ale automatická platba neproběhla úspěšně. Zkusíme to v dalších dnech znovu, ale prosíme Vás, jen pro jistotu, o kontrolu, zda je na platební kartě k dispozici dostatek prostředků a zda karta stále platí. Kdyby se to opět nepovedlo, ozveme se Vám.
+
+    {ORDER_URL}
+
+    Pokud si nepřejete předplatné prodloužit, můžete ho snadno zrušit ve Vašem uživatelském profilu.
+
+  body_html_en: |
+    <p>Hi</p>
+    <p>TODO</p>
+
+  body_text_en: |
+    Hi
+    TODO
+
+- mailer: Boutique::SubscriptionMailer
+  action: unpaid
+  title_cs: Předplatné - nezaplaceno
+  subject_cs: Předplatné - nezaplaceno
+  subject_en: Subscription - unpaid
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>Vaše předplatné před nedávnem vypršelo a nebylo obnoveno.</p>
+    <p>Pokud nechcete prodloužit předplatné, mrzí nás to. Dejte nám, prosím, vědět, proč jste se tak rozhodli, abychom mohli náš obsah a služby dále vylepšovat a vycházet vstříc všem čtenářům.</p>
+
+  body_text_cs: |
+    Dobrý den,
+    Vaše předplatné před nedávnem vypršelo a nebylo obnoveno.
+
+    Pokud nechcete prodloužit předplatné, mrzí nás to. Dejte nám, prosím, vědět, proč jste se tak rozhodli, abychom mohli náš obsah a služby dále vylepšovat a vycházet vstříc všem čtenářům.
+
+  body_html_en: |
+    <p>Hi</p>
+    <p>TODO</p>
+
+  body_text_en: |
+    Hi
+    TODO
+
+- mailer: Boutique::SubscriptionMailer
+  action: will_be_paid_in_a_week
+  title_cs: Předplatné - připomenutí týden předem
+  subject_cs: Předplatné - blíží se konec předplaceného období
+  subject_en: Subscription - will be paid in a week
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>doufáme, že jste se svým předplatným stále spokojeni. Za týden vyprší předplacené období. Pokud jej chcete prodloužit, a my věříme, že chcete, nemusíte nic dělat - peníze si automaticky strhneme z Vaší platební karty.</p>
+    <p><strong>Prosíme, myslete na to, abyste měli na účtu dostatečný zůstatek.</strong></p>
+
+  body_text_cs: |
+    Dobrý den,
+    doufáme, že jste se svým předplatným stále spokojeni. Za týden vyprší předplacené období. Pokud jej chcete prodloužit, a my věříme, že chcete, nemusíte nic dělat - peníze si automaticky strhneme z Vaší platební karty.
+
+    Prosíme, myslete na to, abyste měli na účtu dostatečný zůstatek.
+
+  body_html_en: |
+    <p>Hi</p>
+    <p>TODO</p>
+
+  body_text_en: |
+    Hi
+    TODO

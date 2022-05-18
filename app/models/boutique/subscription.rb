@@ -57,6 +57,10 @@ class Boutique::Subscription < ApplicationRecord
     !active?
   end
 
+  def current_order
+    orders.first
+  end
+
   def cancel!
     return false if cancelled_at?
 
