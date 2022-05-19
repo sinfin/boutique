@@ -98,7 +98,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     event :pay, private: true do
-      transitions from: :confirmed, to: :paid
+      transitions from: %i[confirmed waiting_for_offline_payment], to: :paid
 
       before do
         unless subsequent?

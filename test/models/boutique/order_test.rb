@@ -47,10 +47,23 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert order.read_attribute(:total_price)
   end
 
+  test "wait_for_offline_payment" do
+    setup_emails
+    order = create(:boutique_order, :confirmed)
+
+    # user invite
+    assert_difference("ActionMailer::Base.deliveries.size", 1) do
+      perform_enqueued_jobs do
+        order.wait_for_offline_payment!
+      end
+    end
+  end
+
   test "pay" do
     setup_emails
     order = create(:boutique_order, :confirmed)
 
+    # user invite + order confirmation
     assert_difference("ActionMailer::Base.deliveries.size", 2) do
       perform_enqueued_jobs do
         order.pay!
@@ -59,6 +72,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
     order = create(:boutique_order, :confirmed, :with_user)
 
+    # order confirmation
     assert_difference("ActionMailer::Base.deliveries.size", 1) do
       perform_enqueued_jobs do
         order.pay!
