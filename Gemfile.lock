@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 54e91e53a7cec73af9f373e88c32c8d1096c98be
+  revision: 2869e75dd013a693be4f7212c44be84f1bc75f0c
   branch: petr/dragonfly-libvips-multi-site-rails-7
   specs:
     folio (0.1.0)
@@ -178,13 +178,13 @@ GEM
     audited (5.0.2)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.587.0)
-    aws-sdk-core (3.130.2)
+    aws-partitions (1.589.0)
+    aws-sdk-core (3.131.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.56.0)
+    aws-sdk-kms (1.57.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.114.0)
@@ -197,7 +197,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
-    bcrypt (3.1.17)
+    bcrypt (3.1.18)
     breadcrumbs_on_rails (4.1.0)
       railties (>= 5.0)
     builder (3.2.4)
@@ -284,7 +284,7 @@ GEM
     faraday (2.3.0)
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-net_http (2.0.2)
+    faraday-net_http (2.0.3)
     fast_jsonapi (1.5)
       activesupport (>= 4.2)
     ffi (1.15.5)
@@ -350,7 +350,7 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    json (2.6.1)
+    json (2.6.2)
     jwt (2.3.0)
     launchy (2.5.0)
       addressable (~> 2.7)

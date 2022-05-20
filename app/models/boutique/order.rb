@@ -269,7 +269,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       self.user = Folio::User.invite!(email:,
                                       first_name:,
-                                      last_name:)
+                                      last_name:,
+                                      use_secondary_address:,
+                                      primary_address: primary_address.try(:dup),
+                                      secondary_address: secondary_address.try(:dup))
       update_columns(folio_user_id: user.id)
     end
 

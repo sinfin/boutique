@@ -61,7 +61,10 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
   test "pay" do
     setup_emails
-    order = create(:boutique_order, :confirmed)
+    order = create(:boutique_order, :confirmed, email: "foo@test.test")
+
+    assert_nil order.user
+    assert order.primary_address.present?
 
     # user invite + order confirmation
     assert_difference("ActionMailer::Base.deliveries.size", 2) do
@@ -69,6 +72,9 @@ class Boutique::OrderTest < ActiveSupport::TestCase
         order.pay!
       end
     end
+
+    assert_equal "foo@test.test", order.user.email
+    assert order.user.primary_address.present?
 
     order = create(:boutique_order, :confirmed, :with_user)
 
