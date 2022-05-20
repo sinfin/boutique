@@ -1,12 +1,46 @@
-table.table
+table.my-4
   - line_items.each do |line_item|
-    tr
-      td
-        = line_item.to_label
-      td
-        = number_to_currency(line_item.price, precision: 0)
+    ruby:
+      cover = line_item.product_variant.cover
+      cover ||= line_item.product_variant.product.try(:cover)
 
-  tr.font-weight-bold
-    td colspan="2"
+      background = line_item.product_variant
+                            .product
+                            .try(:product_category)
+                            .try(:main_color)
+
+      padding = 0
+      thumb = cover.try(:thumb,
+                        Boutique::LineItems::SummaryCell::THUMB_SIZE,
+                        immediate: true)
+
+      if thumb
+        padding = [
+          "#{((100 - thumb.height) / 2.0).floor}px",
+          "#{((150 - thumb.width) / 2.0).floor}px",
+        ].join(" ")
+      end
+
+      styles = {
+        background:,
+        padding:,
+        width: '150px',
+        height: '100px',
+      }.compact.map do |key, val|
+        "#{key}: #{val}"
+      end.join("; ")
+
+    - if cover
+      tr
+        td style="padding-bottom: 15px"
+          div style=styles
+            img src=thumb.url
+
+    tr
+      td style="padding-bottom: 10px"
+        = line_item.to_label
+
+  tr
+    td.font-weight-bold
       = t("boutique.order_mailer.summary.paid",
           price: number_to_currency(total_price, precision: 0))

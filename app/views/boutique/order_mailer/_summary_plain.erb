@@ -1,6 +1,5 @@
 <%- line_items.each do |line_item| -%>
 <%= line_item.to_label %>
-<%- line_item.price -%>
 
 <%- end -%>
 <%= t("boutique.order_mailer.summary.paid", price: number_to_currency(total_price, precision: 0)) %>
