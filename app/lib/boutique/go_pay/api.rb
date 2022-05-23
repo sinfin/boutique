@@ -71,7 +71,7 @@ class Boutique::GoPay::Api
         email: order.email,
       }
 
-      if address = order.primary_address.presence
+      if address = order.secondary_address || order.primary_address
         contact.merge!(
           city:	address.city,
           street:	[address.address_line_1, address.address_line_2].compact.join(", "),
