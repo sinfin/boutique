@@ -18,8 +18,10 @@ def force_destroy(klass)
   puts "Destroyed #{klass}"
 end
 
+destroy_all Boutique::Subscription
 destroy_all Boutique::Order
 destroy_all Boutique::Product
+destroy_all Boutique::Voucher
 
 destroy_all Folio::File
 destroy_all Folio::User
@@ -56,7 +58,7 @@ puts "Creating unsplash pics"
 puts "Created unsplash pics"
 
 puts "Creating products & variants"
-Rake::Task["boutique:idp_seed_dummy_products"].invoke
+Rake::Task["app:boutique:idp_seed_dummy_products"].invoke
 puts "\nCreated products & variants"
 
 puts "Creating vouchers"
