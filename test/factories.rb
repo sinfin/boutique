@@ -122,6 +122,13 @@ FactoryBot.define do
     end
   end
 
+  factory :boutique_voucher, class: "Boutique::Voucher" do
+    published { true }
+    published_from { 1.minute.ago }
+    title { "Voucher title" }
+    discount { 50 }
+  end
+
   factory :boutique_folio_primary_address, class: "Folio::Address::Primary" do
     name { "name" }
     address_line_1 { "address_line_1" }

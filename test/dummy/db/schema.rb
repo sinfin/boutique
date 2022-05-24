@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_23_113027) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -80,7 +80,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
     t.datetime "updated_at", null: false
     t.bigint "boutique_subscription_id"
     t.bigint "original_payment_id"
+    t.integer "discount"
+    t.string "voucher_code"
+    t.bigint "boutique_voucher_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
+    t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
@@ -616,6 +620,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_11_050348) do
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
   add_foreign_key "boutique_orders", "boutique_subscriptions"
+  add_foreign_key "boutique_orders", "boutique_vouchers"
   add_foreign_key "boutique_orders", "folio_users"
   add_foreign_key "boutique_payments", "boutique_orders"
   add_foreign_key "boutique_product_variants", "boutique_products"

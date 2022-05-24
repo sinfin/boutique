@@ -20,6 +20,11 @@ class Boutique::Order < Boutique::ApplicationRecord
                                 inverse_of: :subsequent_orders,
                                 optional: true
 
+  belongs_to :voucher, class_name: "Boutique::Voucher",
+                       foreign_key: :boutique_voucher_id,
+                       inverse_of: :orders,
+                       optional: true
+
   has_many :line_items, -> { ordered },
                         class_name: "Boutique::LineItem",
                         foreign_key: :boutique_order_id,
@@ -157,9 +162,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def total_price
-    super || [
-      line_items_price,
-    ].sum
+    super || [line_items_price - discount.to_i, 0].max
   end
 
   def unpaid?
@@ -286,6 +289,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def validate_primary_address
       return unless requires_address_and_not_pending?
+
       if primary_address.blank?
         build_primary_address
         primary_address.valid?
@@ -330,10 +334,14 @@ end
 #  updated_at               :datetime         not null
 #  boutique_subscription_id :bigint(8)
 #  original_payment_id      :bigint(8)
+#  discount                 :integer
+#  voucher_code             :string
+#  boutique_voucher_id      :bigint(8)
 #
 # Indexes
 #
 #  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
+#  index_boutique_orders_on_boutique_voucher_id       (boutique_voucher_id)
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
@@ -342,5 +350,6 @@ end
 # Foreign Keys
 #
 #  fk_rails_...  (boutique_subscription_id => boutique_subscriptions.id)
+#  fk_rails_...  (boutique_voucher_id => boutique_vouchers.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
 #

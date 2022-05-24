@@ -49,18 +49,12 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     find_by("upper(code) = upper(?)", code)
   end
 
-  def applicable?
-    return false unless published?
-
-    if number_of_allowed_uses.present? && use_count >= number_of_allowed_uses
-      false
-    else
-      true
-    end
-  end
-
   def use!
     increment!(:use_count)
+  end
+
+  def used_up?
+    number_of_allowed_uses.present? && use_count >= number_of_allowed_uses
   end
 
   def upcase_token
