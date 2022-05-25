@@ -21,6 +21,7 @@ Folio::Engine.routes.draw do
     scope module: :boutique do
       resources :orders, only: %i[index show edit update]
       resources :products
+      resources :vouchers, except: %i[show]
     end
   end
 end

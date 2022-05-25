@@ -1,0 +1,15 @@
+---
+en:
+  folio:
+    console:
+      boutique:
+        orders:
+          index:
+            summary:
+              text: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
+
+        vouchers:
+          code_input:
+            code_types:
+              generated: Generated
+              custom: Manually entered

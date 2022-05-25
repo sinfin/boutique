@@ -31,6 +31,18 @@ cs:
         discounted_until: Akce do
         master: Hlavní varianta
 
+      boutique/voucher:
+        code: Kód
+        code_prefix: Prefix
+        code_type: Typ
+        discount: Sleva
+        discount_in_percentages: Sleva v procentech
+        number_of_allowed_uses: Max. počet použití
+        published: Aktivní
+        quantity: Počet voucherů k vygenerování
+        thing_code: Kód produktu/nabídky nebo jeho část
+        use_count: Počet použití
+
       folio/email_template:
         keyword/ORDER_NUMBER: Číslo objednávky
         keyword/ORDER_SUMMARY_HTML: Shrnutí objednávky v HTML
@@ -55,6 +67,11 @@ cs:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+      boutique/voucher:
+        one: Voucher
+        few: Vouchery
+        other: Voucherů
 
     errors:
       models:

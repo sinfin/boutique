@@ -1,0 +1,13 @@
+---
+cs:
+  simple_form:
+    hints:
+      voucher:
+        code: Libovolný řetězec znaků, nerozlišují se velká a malá písmena.
+        title: ''
+        number_of_allowed_uses: Pro neomezený počet použití ponechte prázdné.
+        code_prefix: 3-5 znaků (pro plně generovaný kód ponechte prázdné).
+
+    placeholders:
+      voucher:
+        title: 'Např.: Black Friday'

@@ -1,0 +1,13 @@
+---
+en:
+  simple_form:
+    hints:
+      voucher:
+        code: Any string of characters, case-insensitive.
+        title: ''
+        number_of_allowed_uses: Leave blank for unlimited number of uses.
+        code_prefix: 3-5 characters (leave blank for fully generated code).
+
+    placeholders:
+      voucher:
+        title: 'e.g.: Black Friday'
