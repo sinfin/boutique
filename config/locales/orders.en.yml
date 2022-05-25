@@ -15,6 +15,10 @@ en:
         subscription_fields:
           title: Subscription settings
 
+        voucher_fields:
+          label: Discount or gift code
+          submit: Submit
+
       payment_methods:
         title: Payment %{price}
         secured_by: Secured

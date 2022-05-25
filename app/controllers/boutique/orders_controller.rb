@@ -19,6 +19,14 @@ class Boutique::OrdersController < Boutique::ApplicationController
     @use_boutique_adaptive_css = true
   end
 
+  def apply_voucher
+    current_order.voucher_code = params[:voucher_code]
+    current_order.validate_voucher_code
+    current_order.save if current_order.errors.blank?
+
+    head :ok
+  end
+
   def confirm
     @use_boutique_adaptive_css = true
 
@@ -47,6 +55,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
       params.require(:order).permit(:email,
                                     :first_name,
                                     :last_name,
+                                    :voucher_code,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end

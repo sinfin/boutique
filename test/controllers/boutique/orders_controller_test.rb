@@ -27,6 +27,21 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_response :success
   end
 
+  test "apply_voucher" do
+    post apply_voucher_order_url
+    assert_redirected_to main_app.root_url
+
+    create_order_with_current_session_id
+
+    post apply_voucher_order_url, params: { voucher_code: "TESTCODE" }
+    assert_response :success
+
+    create(:boutique_voucher, code: "TESTCODE")
+
+    post apply_voucher_order_url, params: { voucher_code: "TESTCODE" }
+    assert_response :success
+  end
+
   test "confirm" do
     post confirm_order_url
     assert_redirected_to main_app.root_url

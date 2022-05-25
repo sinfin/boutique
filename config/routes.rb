@@ -4,6 +4,7 @@ Boutique::Engine.routes.draw do
   resource :order, only: %i[edit] do
     post :add
     post :confirm
+    post :apply_voucher
     post :payment, path: "/:id/payment"
   end
 

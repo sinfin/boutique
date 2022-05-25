@@ -62,6 +62,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             format: { with: Folio::EMAIL_REGEXP },
             unless: :pending?
 
+  validate :validate_voucher_code
   validate :validate_primary_address
   validate :validate_email_not_already_registered, unless: :pending?
 
@@ -84,6 +85,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       before do
         set_numbers
+        apply_voucher
         imprint_prices
 
         self.email ||= user.try(:email)
@@ -194,6 +196,26 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  def validate_voucher_code
+    return unless voucher_code.present? && !pending?
+
+    if voucher_code.blank?
+      # errors.add(:voucher_code, :blank) unless ignore_blank
+    else
+      if voucher.nil?
+        self.voucher = Boutique::Voucher.find_by_token_case_insensitive(voucher_code)
+      end
+
+      require "pry-rails"; binding.pry
+
+      if voucher.nil? || voucher.used_up?
+        errors.add(:voucher_code, :invalid)
+      elsif !voucher.published?
+        errors.add(:voucher_code, :expired)
+      end
+    end
+  end
+
   def digital_only?
     line_items.all?(&:digital_only?)
   end
@@ -258,6 +280,18 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def get_next_base_number
       ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
+    end
+
+    def apply_voucher
+      return unless voucher.present? &&
+                    voucher.applicable? &&
+                    voucher.applicable_for?(line_item.eager_loaded_thing)
+
+      self.discount = if voucher.discount_in_percentages?
+        price * (0.01 * voucher.discount)
+      else
+        voucher.discount
+      end
     end
 
     def imprint_prices

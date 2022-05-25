@@ -13,6 +13,7 @@ cs:
         line_items: Položky
         line_items_price: Cena položek
         total_price: Cena celkem
+        voucher_code: Kód
         created_at: Vytvořeno
         confirmed_at: Objednáno
         paid_at: Zaplaceno
@@ -67,3 +68,6 @@ cs:
           attributes:
             email:
               already_registered: je již registrovaný
+            voucher_code:
+              invalid: není platný
+              expired: již není aktivní
