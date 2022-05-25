@@ -86,6 +86,35 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
+  test "assign voucher by code" do
+    order = create(:boutique_order, line_items_count: 1)
+    order.line_items.first.product_variant.update_column(:regular_price, 100)
+
+    assert_equal 100, order.total_price
+
+    order.assign_voucher_by_code("TEST")
+
+    assert order.errors[:voucher_code]
+    assert_nil order.voucher
+    assert_equal 100, order.total_price
+
+    voucher = create(:boutique_voucher, code: "TEST", discount: 50, published: false)
+    order.errors.clear
+    order.assign_voucher_by_code("TEST")
+
+    assert order.errors[:voucher_code]
+    assert_nil order.voucher
+    assert_equal 100, order.total_price
+
+    voucher.update_column(:published, true)
+    order.errors.clear
+    order.assign_voucher_by_code("TEST")
+
+    assert_empty order.errors[:voucher_code]
+    assert_equal voucher, order.voucher
+    assert_equal 50, order.total_price
+  end
+
   test "order numbers" do
     Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_base_number_seq RESTART;")
 

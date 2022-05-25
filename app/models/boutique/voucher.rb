@@ -64,6 +64,10 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     number_of_allowed_uses.present? && use_count >= number_of_allowed_uses
   end
 
+  def applicable?
+    published? && !used_up?
+  end
+
   def upcase_token
     self.code = code.try(:upcase)
   end

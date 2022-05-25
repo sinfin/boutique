@@ -20,10 +20,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def apply_voucher
-    current_order.voucher_code = params[:voucher_code]
-    current_order.validate_voucher_code
-    current_order.save if current_order.errors.blank?
+    current_order.assign_voucher_by_code(params[:voucher_code])
 
+    # TODO: respond with rendered cell
     head :ok
   end
 

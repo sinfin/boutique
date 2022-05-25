@@ -11,10 +11,9 @@ $(document)
       $fields.removeClass('b-orders-edit-voucher-fields--error')
       $fields.addClass('b-orders-edit-voucher-fields--loading')
 
+      $input = $('.b-orders-edit-voucher-fields__input')
       data = new FormData()
-      data.append('voucher_code', '123456')
-
-      console.log data
+      data.append('voucher_code', $input.val())
 
       $.ajax
         type: 'POST'

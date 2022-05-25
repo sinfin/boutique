@@ -85,7 +85,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       before do
         set_numbers
-        apply_voucher
+        use_voucher!
         imprint_prices
 
         self.email ||= user.try(:email)
@@ -163,6 +163,19 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || line_items.sum(&:price)
   end
 
+  def discount
+    super || begin
+      return 0 unless voucher.present? &&
+                      voucher.applicable?
+
+      if voucher.discount_in_percentages?
+        line_items_price * (0.01 * voucher.discount)
+      else
+        voucher.discount
+      end
+    end
+  end
+
   def total_price
     super || [line_items_price - discount.to_i, 0].max
   end
@@ -196,24 +209,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
-  def validate_voucher_code
-    return unless voucher_code.present? && !pending?
-
-    if voucher_code.blank?
-      # errors.add(:voucher_code, :blank) unless ignore_blank
-    else
-      if voucher.nil?
-        self.voucher = Boutique::Voucher.find_by_token_case_insensitive(voucher_code)
-      end
-
-      require "pry-rails"; binding.pry
-
-      if voucher.nil? || voucher.used_up?
-        errors.add(:voucher_code, :invalid)
-      elsif !voucher.published?
-        errors.add(:voucher_code, :expired)
-      end
-    end
+  def assign_voucher_by_code(code)
+    self.voucher_code = code
+    validate_voucher_code(ignore_blank: false)
+    save(validate: false) if errors.empty?
   end
 
   def digital_only?
@@ -282,10 +281,13 @@ class Boutique::Order < Boutique::ApplicationRecord
       ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
     end
 
+    def use_voucher!
+      voucher.use! if voucher.try(:applicable?)
+    end
+
     def apply_voucher
       return unless voucher.present? &&
-                    voucher.applicable? &&
-                    voucher.applicable_for?(line_item.eager_loaded_thing)
+                    voucher.applicable?
 
       self.discount = if voucher.discount_in_percentages?
         price * (0.01 * voucher.discount)
@@ -298,6 +300,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       line_items.each { |li| li.imprint_unit_price! }
 
       self.line_items_price = line_items_price
+      self.discount = discount
       self.total_price = total_price
     end
 
@@ -319,6 +322,28 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def requires_address_and_not_pending?
       requires_address? && !pending?
+    end
+
+    def validate_voucher_code(ignore_blank: true)
+      return unless pending? || aasm.from_state == :pending
+
+      if voucher_code.blank?
+        errors.add(:voucher_code, :blank) unless ignore_blank
+      else
+        found_voucher = Boutique::Voucher.find_by_token_case_insensitive(voucher_code)
+
+        if found_voucher.nil? || found_voucher.used_up?
+          errors.add(:voucher_code, :invalid)
+        elsif !found_voucher.published?
+          errors.add(:voucher_code, :expired)
+        end
+
+        if errors[:voucher_code].empty?
+          self.voucher = found_voucher
+        else
+          self.voucher = nil
+        end
+      end
     end
 
     def validate_primary_address
