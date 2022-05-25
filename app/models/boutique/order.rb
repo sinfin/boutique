@@ -45,6 +45,11 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   scope :by_state, -> (state) { where(aasm_state: state) }
 
+  pg_search_scope :by_query,
+                  against: %i[base_number number email first_name last_name],
+                  ignoring: :accents,
+                  using: { tsearch: { prefix: true } }
+
   validates :first_name,
             :last_name,
             :base_number,
