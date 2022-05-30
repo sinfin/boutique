@@ -1,11 +1,32 @@
 = show_header @order
 
 .row
-  .col-lg-4
+  .col-lg-6.mb-5
     = show_for @order do |s|
+      = s.attribute(:user)
+        - if s.object.user.present?
+          a[
+            href=folio.url_for([:console, s.object.user])
+            target='_blank'
+          ] = s.object.user.to_label
+
+      = s.email
+
       = s.attribute(:created_at)
       = s.attribute(:confirmed_at, if_blank: "–")
       = s.attribute(:paid_at, if_blank: "–")
 
       - if s.object.cancelled_at.present?
         = s.attribute(:cancelled_at)
+
+      = s.attribute(:line_items)
+        ul
+          - s.object.line_items.each do |li|
+            li = li.to_label
+
+      = s.attribute(:line_items_price)
+        = price(s.object.line_items_price)
+      = s.attribute(:total_price)
+        = price(s.object.total_price)
+
+== cell("folio/console/addresses/show_for_model", @order)

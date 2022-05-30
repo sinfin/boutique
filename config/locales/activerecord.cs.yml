@@ -13,6 +13,7 @@ cs:
         line_items: Položky
         line_items_price: Cena položek
         total_price: Cena celkem
+        user: Uživatel
         created_at: Vytvořeno
         confirmed_at: Objednáno
         paid_at: Zaplaceno
