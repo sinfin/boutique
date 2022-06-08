@@ -14,6 +14,7 @@ cs:
         line_items_price: Cena položek
         total_price: Cena celkem
         user: Uživatel
+        voucher_code: Kód
         created_at: Vytvořeno
         confirmed_at: Objednáno
         paid_at: Zaplaceno
@@ -30,6 +31,18 @@ cs:
         discounted_from: Akce od
         discounted_until: Akce do
         master: Hlavní varianta
+
+      boutique/voucher:
+        code: Kód
+        code_prefix: Prefix
+        code_type: Typ
+        discount: Sleva
+        discount_in_percentages: Sleva v procentech
+        number_of_allowed_uses: Max. počet použití
+        published: Aktivní
+        quantity: Počet voucherů k vygenerování
+        thing_code: Kód produktu/nabídky nebo jeho část
+        use_count: Počet použití
 
       folio/email_template:
         keyword/ORDER_NUMBER: Číslo objednávky
@@ -56,6 +69,11 @@ cs:
         few: Objednávky
         other: Objednávek
 
+      boutique/voucher:
+        one: Voucher
+        few: Vouchery
+        other: Voucherů
+
     errors:
       models:
         boutique/product:
@@ -68,3 +86,6 @@ cs:
           attributes:
             email:
               already_registered: je již registrovaný
+            voucher_code:
+              invalid: není platný
+              expired: již není aktivní

@@ -15,6 +15,11 @@ cs:
         subscription_fields:
           title: Nastavení předplatného
 
+        voucher_fields:
+          label: Slevový nebo dárkový kód
+          apply: Uplatnit
+          generic_error: Kód se nepodařilo uplatnit.
+
       payment_methods:
         title: Platba %{price}
         secured_by: Zabezpečeno

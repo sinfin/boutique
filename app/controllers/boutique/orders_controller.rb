@@ -19,6 +19,42 @@ class Boutique::OrdersController < Boutique::ApplicationController
     @use_boutique_adaptive_css = true
   end
 
+  def apply_voucher
+    @use_boutique_adaptive_css = true
+
+    current_order.assign_voucher_by_code(params[:voucher_code])
+
+    respond_to do |format|
+      format.html do
+        if current_order.errors.blank?
+          flash.now[:success] = t(".success")
+        else
+          flash.now[:alert] = t(".invalid_code")
+        end
+
+        render :edit
+      end
+      format.json do
+        render json: {
+          data: cell("boutique/orders/edit").show
+        }, status: 200
+
+        # if current_order.errors.blank?
+        # else
+        #   errors = [
+        #     {
+        #       status: 400,
+        #       title: "ActiveRecord::RecordInvalid",
+        #       title: t('.invalid_code'),
+        #     }
+        #   ]
+
+        #   render json: { errors: }, status: 400
+        # end
+      end
+    end
+  end
+
   def confirm
     @use_boutique_adaptive_css = true
 
@@ -47,6 +83,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
       params.require(:order).permit(:email,
                                     :first_name,
                                     :last_name,
+                                    :voucher_code,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end

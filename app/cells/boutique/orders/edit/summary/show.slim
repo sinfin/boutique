@@ -1,7 +1,9 @@
 .b-orders-edit-summary
   - line_items.each do |line_item|
     .b-orders-edit-summary__line-item
-      .b-orders-edit-summary__line-item-cover-wrap
+      .b-orders-edit-summary__line-item-cover-wrap[
+        data-line-item=line_item.id
+      ]
         = image(line_item.cover_placement_from_variant_or_product,
                 THUMB_SIZE,
                 contain: true,

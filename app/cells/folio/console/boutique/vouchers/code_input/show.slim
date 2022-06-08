@@ -1,0 +1,24 @@
+.f-c-b-vouchers-code-input
+  - if model.object.new_record?
+    .row
+      .col-4
+        = code_type_input
+
+      .col-8
+        .f-c-b-vouchers-code-input__code-input-group[
+          data-type="generated"
+          style=("display:none;" if model.object.code_type == "custom")
+        ]
+          .row
+            .col-6
+              = model.input :code_prefix
+            .col-6
+              = model.input :quantity, input_html: { min: 1 }
+
+        .f-c-b-vouchers-code-input__code-input-group[
+          data-type="custom"
+          style=("display:none;" if model.object.code_type != "custom")
+        ]
+          = model.input :code
+  - else
+    = model.input :code

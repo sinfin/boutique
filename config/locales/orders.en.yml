@@ -15,6 +15,11 @@ en:
         subscription_fields:
           title: Subscription settings
 
+        voucher_fields:
+          label: Discount or gift code
+          apply: Apply
+          generic_error: Failed to apply the code.
+
       payment_methods:
         title: Payment %{price}
         secured_by: Secured

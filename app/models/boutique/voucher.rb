@@ -7,10 +7,10 @@ class Boutique::Voucher < Boutique::ApplicationRecord
   CODE_PREFIX_MAX_LENGTH = 5
   CODE_DEFAULT_LENGTH = 10
   CODE_CHARS = ["A".."Z", "0".."9"].map(&:to_a).flatten - %w[0 1 O I L]
-  CODE_TYPES = %w[custom generated]
+  CODE_TYPES = %w[generated custom]
 
   attribute :quantity, :integer, default: 1
-  attribute :code_type, :string
+  attribute :code_type, :string, default: CODE_TYPES.first
 
   has_many :orders, class_name: "Boutique::Order",
                     foreign_key: :boutique_voucher_id,
@@ -18,6 +18,11 @@ class Boutique::Voucher < Boutique::ApplicationRecord
                     inverse_of: :voucher
 
   scope :ordered, -> { order(id: :desc) }
+
+  pg_search_scope :by_query,
+                  against: %i[title code],
+                  ignoring: :accents,
+                  using: { tsearch: { prefix: true } }
 
   validates :code,
             :title,
@@ -45,46 +50,58 @@ class Boutique::Voucher < Boutique::ApplicationRecord
   before_validation :set_token
   before_validation :upcase_token
 
+  after_create :create_additional_vouchers
+
   def self.find_by_token_case_insensitive(code)
     find_by("upper(code) = upper(?)", code)
-  end
-
-  def applicable?
-    return false unless published?
-
-    if number_of_allowed_uses.present? && use_count >= number_of_allowed_uses
-      false
-    else
-      true
-    end
   end
 
   def use!
     increment!(:use_count)
   end
 
+  def used_up?
+    number_of_allowed_uses.present? && use_count >= number_of_allowed_uses
+  end
+
+  def applicable?
+    published? && !used_up?
+  end
+
   def upcase_token
     self.code = code.try(:upcase)
-    end
-
-  def set_token
-    return if code.present? || code_type == "custom"
-
-    c = code_prefix || ""
-
-    loop do
-      token_length = CODE_DEFAULT_LENGTH - c.length
-      c += generate_token(token_length).upcase
-      break unless Boutique::Voucher.where("upper(code) = ?", c).exists?
-    end
-
-    self.code = c
   end
 
-  def generate_token(length)
-    # https://gist.github.com/mbajur/2aba832a6df3fc31fe7a82d3109cb626
-    Array.new(length).map { CODE_CHARS[rand(CODE_CHARS.size)] }.join
-  end
+  private
+    def create_additional_vouchers
+      return unless quantity.to_i > 1
+
+      (quantity - 1).times do
+        d = self.dup
+        d.code = nil
+        d.quantity = 1
+        d.save!
+      end
+    end
+
+    def set_token
+      return if code.present? || code_type == "custom"
+
+      c = code_prefix || ""
+
+      loop do
+        token_length = CODE_DEFAULT_LENGTH - c.length
+        c += generate_token(token_length).upcase
+        break unless Boutique::Voucher.where("upper(code) = ?", c).exists?
+      end
+
+      self.code = c
+    end
+
+    def generate_token(length)
+      # https://gist.github.com/mbajur/2aba832a6df3fc31fe7a82d3109cb626
+      Array.new(length).map { CODE_CHARS[rand(CODE_CHARS.size)] }.join
+    end
 end
 
 # == Schema Information

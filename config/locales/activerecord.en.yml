@@ -2,6 +2,9 @@
 en:
   activerecord:
     attributes:
+      boutique/order:
+        voucher_code: Code
+
       folio/email_template:
         keyword/ORDER_NUMBER: Order number
         keyword/ORDER_SUMMARY_HTML: Order summary in HTML

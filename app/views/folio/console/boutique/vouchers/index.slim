@@ -1,0 +1,25 @@
+= index_header
+
+= catalogue(@vouchers)
+  ruby:
+    attribute :code
+    edit_link :title
+
+    attribute :discount do
+      if record.discount_in_percentages?
+        "#{record.discount} %"
+      else
+        price(record.discount)
+      end
+    end
+
+    attribute :use_count do
+     if record.number_of_allowed_uses?
+      "#{record.use_count} / #{record.number_of_allowed_uses}"
+     else
+      record.use_count
+     end
+    end
+
+    published_toggle
+    actions

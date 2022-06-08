@@ -37,6 +37,8 @@
             .b-orders-edit__box
               == cell('folio/addresses/fields', f, title_tag: "h3")
 
+          == cell('boutique/orders/edit/voucher_fields', f)
+
         aside.b-orders-edit__col.b-orders-edit__col--aside
           == cell('boutique/orders/edit/sidebar', current_order)
 

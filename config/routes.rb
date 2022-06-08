@@ -4,6 +4,7 @@ Boutique::Engine.routes.draw do
   resource :order, only: %i[edit] do
     post :add
     post :confirm
+    post :apply_voucher
     post :payment, path: "/:id/payment"
   end
 
@@ -20,6 +21,7 @@ Folio::Engine.routes.draw do
     scope module: :boutique do
       resources :orders, only: %i[index show edit update]
       resources :products
+      resources :vouchers, except: %i[show]
     end
   end
 end
