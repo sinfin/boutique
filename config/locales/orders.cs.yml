@@ -19,6 +19,7 @@ cs:
           label: Slevový nebo dárkový kód
           apply: Uplatnit
           generic_error: Kód se nepodařilo uplatnit.
+          discount: Sleva
 
       payment_methods:
         title: Platba %{price}

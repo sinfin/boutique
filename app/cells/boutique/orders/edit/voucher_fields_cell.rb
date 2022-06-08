@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Boutique::Orders::Edit::VoucherFieldsCell < ApplicationCell
+class Boutique::Orders::Edit::VoucherFieldsCell < Boutique::ApplicationCell
   class_name "b-orders-edit-voucher-fields", :applied?
 
   def input
