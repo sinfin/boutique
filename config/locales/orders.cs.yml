@@ -17,7 +17,8 @@ cs:
 
         voucher_fields:
           label: Slevový nebo dárkový kód
-          submit: Uplatnit
+          apply: Uplatnit
+          generic_error: Kód se nepodařilo uplatnit.
 
       payment_methods:
         title: Platba %{price}

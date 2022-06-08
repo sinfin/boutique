@@ -20,10 +20,39 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def apply_voucher
+    @use_boutique_adaptive_css = true
+
     current_order.assign_voucher_by_code(params[:voucher_code])
 
-    # TODO: respond with rendered cell
-    head :ok
+    respond_to do |format|
+      format.html do
+        if current_order.errors.blank?
+          flash.now[:success] = t(".success")
+        else
+          flash.now[:alert] = t(".invalid_code")
+        end
+
+        render :edit
+      end
+      format.json do
+        render json: {
+          data: cell("boutique/orders/edit").show
+        }, status: 200
+
+        # if current_order.errors.blank?
+        # else
+        #   errors = [
+        #     {
+        #       status: 400,
+        #       title: "ActiveRecord::RecordInvalid",
+        #       title: t('.invalid_code'),
+        #     }
+        #   ]
+
+        #   render json: { errors: }, status: 400
+        # end
+      end
+    end
   end
 
   def confirm

@@ -1,10 +1,18 @@
-.b-orders-edit-voucher-fields
-  .row
-    .col-3
-      = input
+div class=class_name
+  .b-orders-edit-voucher-fields__inner
+    = input
 
-    .col
-      .b-orders-edit-voucher-fields__button.btn.btn-primary[
-       data-url=controller.boutique.apply_voucher_order_path
+    .b-orders-edit-voucher-fields__right
+      span.b-orders-edit-voucher-fields__apply.small[
+        data-url=controller.boutique.apply_voucher_order_path(format: :json)
+        data-error=t('.generic_error')
       ]
-        = t(".submit")
+        = t(".apply")
+
+      img.b-orders-edit-voucher-fields__applied[
+        src=image_path('boutique/coupon-applied.svg')
+        width=20
+        height=20
+      ]
+
+    span.folio-loader.folio-loader--small.b-orders-edit-voucher-fields__loader

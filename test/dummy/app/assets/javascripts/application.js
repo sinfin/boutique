@@ -17,7 +17,6 @@
 //= require folio/lazyload
 //= require folio/lightbox
 
-//= require boutique/orders/edit/voucher_fields/voucher_fields
-//= require boutique/orders/payment_methods/payment_methods
+//= require boutique/base
 
 //= require dummy/ui/flash/flash
