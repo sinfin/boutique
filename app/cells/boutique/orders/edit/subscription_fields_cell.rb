@@ -3,12 +3,14 @@
 class Boutique::Orders::Edit::SubscriptionFieldsCell < Boutique::ApplicationCell
   include Folio::Cell::HtmlSafeFieldsFor
 
-  def subscription_starts_at_options_for_select
-    start = Date.today.beginning_of_month
-    12.times.map do |n|
-      date = start + n.months
-      [I18n.l(date, format: :month_and_year), date]
-    end
+  def subscription_starts_at_input(g)
+    collection = g.object.subscription_starts_at_options_for_select
+    selected = g.object.subscription_starts_at.try(:to_date)
+    selected = nil if collection.none? { |o| o.last == selected }
+
+    g.input(:subscription_starts_at, collection:,
+                                     selected:,
+                                     include_blank: false)
   end
 
   def subscription_recurring_checked(g)

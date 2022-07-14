@@ -50,6 +50,33 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   def summary_text
     to_label
   end
+
+  def subscription_starts_at_options_for_select
+    start = Date.today.beginning_of_month
+    per_year = product.subscription_frequency_in_months_per_year
+    months_per_issue = 12.0 / per_year
+    overlap_in_months = months_per_issue.to_i - 1
+
+    per_year.times.map do |i|
+      date = start + (i * months_per_issue).to_i.months
+      number = (date.month / months_per_issue).ceil
+
+      [subscription_starts_at_label(date, number, overlap_in_months), date]
+    end
+  end
+
+  private
+    def subscription_starts_at_label(date, number, overlap_in_months)
+      from = I18n.l(date, format: "%B")
+      if overlap_in_months > 0
+        to = I18n.l(date + overlap_in_months.months, format: "%B")
+      end
+
+      title = [from, to].compact.join(" / ")
+      year = date.year.to_s.last(2)
+
+      "#{I18n.t("boutique.issue")} #{number}/#{year} - #{title}"
+    end
 end
 
 # == Schema Information

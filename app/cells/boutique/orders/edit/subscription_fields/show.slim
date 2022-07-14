@@ -4,10 +4,7 @@
   = html_safe_fields_for model, :line_items do |g|
     .row.mb-n3
       .col-lg-6
-        = g.input :subscription_starts_at,
-                  collection: subscription_starts_at_options_for_select,
-                  selected: g.object.subscription_starts_at.try(:to_date),
-                  include_blank: false
+        = subscription_starts_at_input(g)
 
       .col-lg-6
         label.pb-2 &nbsp;
