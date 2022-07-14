@@ -17,7 +17,11 @@
         .row
           .col-md-6
             = f.input :type, collection: Boutique::Product.recursive_subclasses_for_select(include_self: false),
-                             include_blank: false
+                             include_blank: false,
+                             required: false
+
+            = f.input :subscription_frequency, collection: Boutique::Product::Subscription.subscription_frequency_options_for_select,
+                                               include_blank: false
 
         = render partial: 'additional_fields', locals: { f: }
 

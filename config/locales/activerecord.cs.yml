@@ -22,6 +22,10 @@ cs:
 
       boutique/product:
         type: Typ produktu
+        subscription_frequency: Periodicita
+        subscription_frequency/quarterly: čtvrtletník
+        subscription_frequency/bimonthly: dvouměsíčník
+        subscription_frequency/monthly: měsíčník
 
       boutique/product_variant:
         description: Text kartiček

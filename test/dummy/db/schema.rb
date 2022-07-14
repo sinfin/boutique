@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_23_113027) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_12_120944) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -134,6 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_23_113027) do
     t.datetime "updated_at", null: false
     t.integer "variants_count", default: 0
     t.string "type"
+    t.string "subscription_frequency"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["slug"], name: "index_boutique_products_on_slug"
