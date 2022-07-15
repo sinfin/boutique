@@ -52,16 +52,11 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def subscription_starts_at_options_for_select
-    start = Date.today.beginning_of_month
-    per_year = product.subscription_frequency_in_months_per_year
-    months_per_issue = 12.0 / per_year
-    overlap_in_months = months_per_issue.to_i - 1
+    product.current_and_upcoming_issues.map do |issue|
+      date = Date.new(issue[:year], issue[:month])
+      overlap_in_months = product.subscription_frequency_in_months_per_issue - 1
 
-    per_year.times.map do |i|
-      date = start + (i * months_per_issue).to_i.months
-      number = (date.month / months_per_issue).ceil
-
-      [subscription_starts_at_label(date, number, overlap_in_months), date]
+      [subscription_starts_at_label(date, issue[:number], overlap_in_months), date]
     end
   end
 
@@ -75,7 +70,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
       title = [from, to].compact.join(" / ")
       year = date.year.to_s.last(2)
 
-      "#{I18n.t("boutique.issue")} #{number}/#{year} - #{title}"
+      "#{number}/#{year} – #{title}"
     end
 end
 

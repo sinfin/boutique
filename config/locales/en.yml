@@ -1,8 +1,5 @@
 ---
 en:
-  boutique:
-    ïssue: číslo
-
   date:
     formats:
       month_and_year: '%B %Y'

@@ -21,6 +21,7 @@ FactoryBot.define do
 
   factory :boutique_product_subscription, class: "Boutique::Product::Subscription", parent: :boutique_product do
     title { "Product Subscription title" }
+    subscription_frequency { Boutique::Product::Subscription::SUBSCRIPTION_FREQUENCIES.keys.first }
   end
 
   factory :boutique_product_variant, class: "Boutique::ProductVariant" do
