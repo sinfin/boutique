@@ -93,9 +93,12 @@ class Boutique::OrdersController < Boutique::ApplicationController
                 name
                 company_name
                 address_line_1
+                address_line_2
                 city
                 zip
-                country_code]
+                country_code
+                phone
+                email]
 
       [
         :use_secondary_address,
