@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   mount Folio::Engine => "/"
   mount Boutique::Engine => "/"
 
-  get "/400", to: "errors#page400", via: :allr
+  get "/400", to: "errors#page400", via: :all
   get "/404", to: "errors#page404", via: :all
   get "/422", to: "errors#page422", via: :all
   get "/500", to: "errors#page500", via: :all
