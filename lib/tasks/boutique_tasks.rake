@@ -5,11 +5,10 @@ namespace :boutique do
   task idp_seed_dummy_products: :environment do
     require "faker"
 
-    def create_product(title:, cover:, klass: Boutique::Product::Basic)
-      product = klass.new(title:,
-                          published: true,
-                          published_at: 1.minute.ago,
-                          cover:)
+    def create_product(options = {})
+      product_class = options.delete(:class) || Boutique::Product::Basic
+      product = product_class.new(options.merge(published: true,
+                                                published_at: 1.minute.ago))
       price = (3 + rand * 7).round * 100 - 1
       contents = 4.times.map { "<li>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</li>" }
       product.variants.build(title: "#{product.title} – Print + Digital",
@@ -44,9 +43,10 @@ namespace :boutique do
       end
 
       2.times do |i|
-        create_product(klass: Boutique::Product::Subscription,
+        create_product(class: Boutique::Product::Subscription,
                        title: Faker::Commerce.department + " Subscription",
-                       cover: images[i + 2])
+                       cover: images[i + 2],
+                       subscription_frequency: Boutique::Product::Subscription::SUBSCRIPTION_FREQUENCIES.keys.first)
         print "."
       end
     end
