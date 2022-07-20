@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_12_120944) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_20_093324) do
   create_sequence "boutique_orders_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
@@ -119,6 +119,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_12_120944) do
     t.integer "position"
     t.string "slug"
     t.text "description"
+    t.boolean "best_offer", default: false
     t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"
     t.index ["master"], name: "index_boutique_product_variants_on_master", where: "master"
     t.index ["position"], name: "index_boutique_product_variants_on_position"

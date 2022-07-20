@@ -87,6 +87,7 @@ end
 #  position                 :integer
 #  slug                     :string
 #  description              :text
+#  best_offer               :boolean          default(FALSE)
 #
 # Indexes
 #

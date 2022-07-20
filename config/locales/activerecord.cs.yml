@@ -28,6 +28,7 @@ cs:
         subscription_frequency/monthly: měsíčník
 
       boutique/product_variant:
+        best_offer: Nejvýhodnější nabídka
         description: Text kartiček
         checkout_sidebar_content: Popisek v checkoutu
         regular_price: Cena

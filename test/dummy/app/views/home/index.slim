@@ -10,7 +10,11 @@
                               value: variant.id
 
             h5 = variant.title
-            h5 = price(variant.price)
+            h5
+              = price(variant.price)
+
+              - if variant.best_offer?
+                span.text-red.ml-2 Best offer
 
             = simple_format variant.description
 
