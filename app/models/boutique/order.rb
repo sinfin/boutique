@@ -110,9 +110,9 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: %i[confirmed waiting_for_offline_payment], to: :paid
 
       before do
-        unless subsequent?
-          set_up_subscription!
-        end
+        set_invoice_number
+
+        set_up_subscription! unless subsequent?
       end
 
       after do
@@ -263,11 +263,25 @@ class Boutique::Order < Boutique::ApplicationRecord
     def set_numbers
       return if base_number.present?
 
-      year_prefix = Time.zone.now.year.to_s.last(2)
-      self.base_number = get_next_base_number
+      year_prefix = current_time_from_proper_timezone.year.to_s.last(2)
+      self.base_number = ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
 
       # format: 2200001, 2200002 ... 2309998, 2309999
       self.number = year_prefix + base_number.to_s.rjust(5, "0")
+    end
+
+    def set_invoice_number
+      return if invoice_number.present?
+
+      unless Boutique::Order.where("paid_at >= ?", Time.current.beginning_of_year).exists?
+        Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
+      end
+
+      self.paid_at = current_time_from_proper_timezone
+      year_prefix = paid_at.year.to_s.last(2)
+      invoice_base_number = ActiveRecord::Base.nextval("boutique_orders_invoice_base_number_seq")
+      # format: 210001, 210002 ... 210998, 220001
+      self.invoice_number = year_prefix + invoice_base_number.to_s.rjust(5, "0")
     end
 
     def set_up_subscription!
@@ -289,10 +303,6 @@ class Boutique::Order < Boutique::ApplicationRecord
                          active_from:,
                          active_until: active_from + period.months,
                          cancelled_at:)
-    end
-
-    def get_next_base_number
-      ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
     end
 
     def use_voucher!
@@ -396,6 +406,7 @@ end
 #  discount                 :integer
 #  voucher_code             :string
 #  boutique_voucher_id      :bigint(8)
+#  invoice_number           :string
 #
 # Indexes
 #

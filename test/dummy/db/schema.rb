@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_20_093324) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_21_120547) do
   create_sequence "boutique_orders_base_number_seq"
+  create_sequence "boutique_orders_invoice_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +84,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_20_093324) do
     t.integer "discount"
     t.string "voucher_code"
     t.bigint "boutique_voucher_id"
+    t.string "invoice_number"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
