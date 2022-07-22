@@ -58,6 +58,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
   def confirm
     @use_boutique_adaptive_css = true
 
+    current_order.force_address_validation = true if current_order.requires_address?
     current_order.assign_attributes(order_params)
 
     current_order.transaction do

@@ -16,6 +16,7 @@
 //= require folio/devise
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/input/phone
 
 //= require boutique/base
 

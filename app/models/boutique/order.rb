@@ -34,6 +34,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   accepts_nested_attributes_for :line_items
 
+  attr_accessor :force_address_validation
+
   has_many :payments, -> { ordered },
                       class_name: "Boutique::Payment",
                       foreign_key: :boutique_order_id,
@@ -68,12 +70,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             unless: :pending?
 
   validate :validate_voucher_code
-  validate :validate_primary_address
   validate :validate_email_not_already_registered, unless: :pending?
-
-  validates :primary_address,
-            presence: true,
-            if: :requires_address_and_not_pending?
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -250,6 +247,14 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  def requires_address?
+    !digital_only?
+  end
+
+  def requires_address_and_not_pending?
+    requires_address? && !pending?
+  end
+
   private
     def set_numbers
       return if base_number.present?
@@ -321,14 +326,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       update_columns(folio_user_id: user.id)
     end
 
-    def requires_address?
-      !digital_only?
-    end
-
-    def requires_address_and_not_pending?
-      requires_address? && !pending?
-    end
-
     def validate_voucher_code(ignore_blank: true)
       return unless pending? || aasm.from_state == :pending
 
@@ -351,14 +348,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def validate_primary_address
-      return unless requires_address_and_not_pending?
-
-      if primary_address.blank?
-        build_primary_address
-        primary_address.valid?
-        errors.add(:primary_address, :blank)
-      end
+    def should_validate_address?
+      force_address_validation || requires_address_and_not_pending?
     end
 
     def validate_email_not_already_registered
