@@ -13,3 +13,7 @@ en:
             code_types:
               generated: Generated
               custom: Manually entered
+
+      sites:
+        boutique_additional_form_fields:
+          billing_details: Billing details

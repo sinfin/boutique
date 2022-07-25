@@ -50,7 +50,13 @@ Folio::Site.create!(title: "Boutique Shop",
                     locale: "cs",
                     locales: ["cs", "en"],
                     email: "info@todo.shop",
-                    phone: "+420 123 456 789")
+                    phone: "+420 123 456 789",
+                    billing_name: "Boutique Shop s.r.o.",
+                    billing_address_line_1: "Address Line 1",
+                    billing_address_line_2: "Address Line 2",
+                    billing_identification_number: "123456789",
+                    billing_vat_identification_number: "CZ123456789",
+                    billing_note: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
 puts "Created Folio::Site"
 
 puts "Creating unsplash pics"

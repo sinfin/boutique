@@ -138,3 +138,14 @@ FactoryBot.define do
     country_code { "US" }
   end
 end
+
+FactoryBot.modify do
+  factory :folio_site do
+    billing_name { "Site billing_name" }
+    billing_address_line_1 { "Site billing_address_line_1" }
+    billing_address_line_2 { "Site billing_address_line_2" }
+    billing_identification_number { "12345678" }
+    billing_vat_identification_number { "CZ12345678" }
+    billing_note { "Site billing_note" }
+  end
+end

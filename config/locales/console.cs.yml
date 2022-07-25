@@ -19,3 +19,7 @@ cs:
               one: Voucher vytvořen
               few: '%{count} vouchery vytvořeny'
               other: '%{count} voucherů vytvořeno'
+
+      sites:
+        boutique_additional_form_fields:
+          billing_details: Fakturační údaje

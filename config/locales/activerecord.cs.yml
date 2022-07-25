@@ -55,6 +55,14 @@ cs:
         keyword/ORDER_SUMMARY_PLAIN: Shrnutí objednávky v plain textu
         keyword/ORDER_URL: Odkaz na objednávku
 
+      folio/site:
+        billing_name: Jméno
+        billing_address_line_1: První řádek adresy
+        billing_address_line_2: Druhý řádek adresy
+        billing_identification_number: IČO
+        billing_vat_identification_number: DIČ
+        billing_note: Patička
+
     models:
       boutique/product:
         one: Produkt

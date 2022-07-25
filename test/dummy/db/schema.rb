@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_21_120547) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -518,6 +518,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_21_120547) do
     t.string "type"
     t.string "slug"
     t.integer "position"
+    t.string "billing_name"
+    t.string "billing_address_line_1"
+    t.string "billing_address_line_2"
+    t.string "billing_identification_number"
+    t.string "billing_vat_identification_number"
+    t.string "billing_note"
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"

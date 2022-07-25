@@ -1,0 +1,17 @@
+- if f.object.billing_enabled?
+  h3 = t(".billing_details")
+
+  .card
+    .card-body
+      .row
+        .col-md-6
+          = f.input :billing_name
+
+      = f.input :billing_address_line_1
+      = f.input :billing_address_line_2
+
+      .row
+        .col-md-6 = f.input :billing_identification_number
+        .col-md-6 = f.input :billing_vat_identification_number
+
+      = f.input :billing_note
