@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_25_164743) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -53,6 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "boutique_product_variant_id", null: false
+    t.integer "vat_rate_value"
     t.index ["boutique_order_id"], name: "index_boutique_line_items_on_boutique_order_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_line_items_on_boutique_product_variant_id"
   end
@@ -135,9 +136,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "variants_count", default: 0
     t.string "type"
+    t.integer "variants_count", default: 0
     t.string "subscription_frequency"
+    t.bigint "boutique_vat_rate_id", null: false
+    t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["slug"], name: "index_boutique_products_on_slug"
@@ -160,6 +163,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.index ["boutique_product_variant_id"], name: "index_boutique_subscriptions_on_boutique_product_variant_id"
     t.index ["cancelled_at"], name: "index_boutique_subscriptions_on_cancelled_at"
     t.index ["folio_user_id"], name: "index_boutique_subscriptions_on_folio_user_id"
+  end
+
+  create_table "boutique_vat_rates", force: :cascade do |t|
+    t.integer "value"
+    t.string "title"
+    t.boolean "default", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["value"], name: "index_boutique_vat_rates_on_value"
   end
 
   create_table "boutique_vouchers", force: :cascade do |t|
@@ -214,7 +226,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
     t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
@@ -312,7 +324,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -404,7 +416,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
   end
 
   create_table "folio_omniauth_authentications", force: :cascade do |t|
-    t.integer "folio_user_id"
+    t.bigint "folio_user_id"
     t.string "uid"
     t.string "provider"
     t.string "email"
@@ -481,7 +493,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.string "type"
     t.string "web_session_id"
     t.string "placement_type"
-    t.integer "placement_id"
+    t.bigint "placement_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "file_width"
@@ -556,7 +568,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
-    t.integer "invited_by_id"
+    t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "nickname"
     t.boolean "use_secondary_address", default: false
@@ -598,7 +610,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -634,6 +646,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_133745) do
   add_foreign_key "boutique_orders", "folio_users"
   add_foreign_key "boutique_payments", "boutique_orders"
   add_foreign_key "boutique_product_variants", "boutique_products"
+  add_foreign_key "boutique_products", "boutique_vat_rates"
   add_foreign_key "boutique_subscriptions", "boutique_payments"
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
   add_foreign_key "boutique_subscriptions", "folio_users"

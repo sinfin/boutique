@@ -9,6 +9,10 @@ class Boutique::Product < Boutique::ApplicationRecord
   include Folio::RecursiveSubclasses
   include Folio::StiPreload
 
+  belongs_to :vat_rate, class_name: "Boutique::VatRate",
+                       foreign_key: :boutique_vat_rate_id,
+                       inverse_of: :products
+
   has_many :variants, -> { ordered },
                       class_name: "Boutique::ProductVariant",
                       foreign_key: :boutique_product_id,
@@ -30,6 +34,8 @@ class Boutique::Product < Boutique::ApplicationRecord
             presence: true
 
   validate :validate_master_variant_presence
+
+  after_initialize :set_default_vat_rate
 
   def self.pregenerated_thumbnails
     h = {
@@ -56,6 +62,10 @@ class Boutique::Product < Boutique::ApplicationRecord
   end
 
   private
+    def set_default_vat_rate
+      self.vat_rate ||= Boutique::VatRate.default
+    end
+
     def validate_master_variant_presence
       master_ary = []
 
@@ -90,11 +100,17 @@ end
 #  type                   :string
 #  variants_count         :integer          default(0)
 #  subscription_frequency :string
+#  boutique_vat_rate_id   :bigint(8)        not null
 #
 # Indexes
 #
-#  index_boutique_products_on_published     (published)
-#  index_boutique_products_on_published_at  (published_at)
-#  index_boutique_products_on_slug          (slug)
-#  index_boutique_products_on_type          (type)
+#  index_boutique_products_on_boutique_vat_rate_id  (boutique_vat_rate_id)
+#  index_boutique_products_on_published             (published)
+#  index_boutique_products_on_published_at          (published_at)
+#  index_boutique_products_on_slug                  (slug)
+#  index_boutique_products_on_type                  (type)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (boutique_vat_rate_id => boutique_vat_rates.id)
 #

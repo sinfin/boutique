@@ -31,6 +31,7 @@ class Folio::Console::Boutique::ProductsControllerTest < Folio::Console::BaseCon
 
   test "create" do
     params = build(:boutique_product).serializable_hash.merge("type" => "Boutique::Product::Basic",
+                                                              "boutique_vat_rate_id" => create(:boutique_vat_rate).id,
                                                               "variants_attributes" => {
       "1" => build(:boutique_product_variant, regular_price: 150, master: true).serializable_hash
     })

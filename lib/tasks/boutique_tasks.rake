@@ -1,6 +1,34 @@
 # frozen_string_literal: true
 
 namespace :boutique do
+  desc "Seeds Boutique::VatRate records"
+  task idp_seed_vat_rates: :environment do
+    Rails.logger.silence do
+      if ENV["FORCE"]
+        Boutique::VatRate.delete_all
+      end
+
+      if Boutique::VatRate.exists?
+        puts "Boutique::VatRate records already present!"
+      else
+        puts "Seeding vat rates"
+
+        [
+          ["Default rate", 21, true],
+          ["Reduced rate 15%", 15, false],
+          ["Reduced rate 10%", 10, false],
+        ].each do |title, value, default|
+          Boutique::VatRate.create!(title:,
+                                    value:,
+                                    default:)
+          print "."
+        end
+
+        puts "\nSeeded vat rates"
+      end
+    end
+  end
+
   desc "Seeds dummy Boutique::Product records"
   task idp_seed_dummy_products: :environment do
     require "faker"

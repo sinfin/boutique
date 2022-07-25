@@ -11,6 +11,10 @@ FactoryBot.define do
     end
 
     before(:create) do |product, evaluator|
+      if product.vat_rate.nil?
+        product.vat_rate = Boutique::VatRate.default || create(:boutique_vat_rate)
+      end
+
       if product.variants.blank?
         product.variants << build(:boutique_product_variant,
                                   regular_price: evaluator.price,
@@ -125,6 +129,15 @@ FactoryBot.define do
       subscription.payment = order.payments.paid.first
       subscription.product_variant = order.line_items.first.product_variant
       subscription.user = order.user
+    end
+  end
+
+  factory :boutique_vat_rate, class: "Boutique::VatRate" do
+    title { "VatRate title" }
+    sequence(:value) { |i| 10 + i }
+
+    before(:create) do |vat_rate|
+      vat_rate.default = true unless Boutique::VatRate.exists?
     end
   end
 

@@ -87,6 +87,7 @@ end
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  boutique_product_variant_id :bigint(8)        not null
+#  vat_rate_value              :integer
 #
 # Indexes
 #

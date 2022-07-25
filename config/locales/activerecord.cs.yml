@@ -37,6 +37,10 @@ cs:
         discounted_until: Akce do
         master: Hlavní varianta
 
+      boutique/vat_rate:
+        value: Výše daně
+        default: Výchozí
+
       boutique/voucher:
         code: Kód
         code_prefix: Prefix
@@ -81,6 +85,11 @@ cs:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+      boutique/vat_rate:
+        one: Sazba DPH
+        few: Sazby DPH
+        other: Sazeb DPH
 
       boutique/voucher:
         one: Voucher
