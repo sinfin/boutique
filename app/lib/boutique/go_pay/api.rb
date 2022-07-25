@@ -115,7 +115,7 @@ class Boutique::GoPay::Api
           name: line_item.to_label,
           amount: line_item.price * 100,
           count: line_item.amount,
-          vat_rate: line_item.vat_rate.to_i,
+          vat_rate: line_item.vat_rate_value.to_i,
         }
       end
     end

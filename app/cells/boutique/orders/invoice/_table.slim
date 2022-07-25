@@ -21,7 +21,7 @@
           td.b-orders-invoice__table-td colspan=3
             = line_item.to_label
           td.b-orders-invoice__table-td.text-right
-            = sprintf('%g %%', model.vat_rate)
+            = "#{line_item.vat_rate_value} %"
           td.b-orders-invoice__table-td.text-right
             = price(line_item.price, precision: 2)
 
@@ -47,32 +47,33 @@
         td.b-orders-invoice__table-td [
           class="text-right font-weight-bold pt-4"
         ]
-          .h3.m-0 = price(model.total_price_without_vat, precision: 2)
+          .h3.m-0 = price(total_price_without_vat, precision: 2)
 
-      tr
-        td.b-orders-invoice__table-td [
-          class="pt-4 d-none d-sm-table-cell"
-          colspan=3
-        ]
+      - vat_amounts.each do |vat_rate_value, amount|
+        tr
+          td.b-orders-invoice__table-td [
+            class="pt-4 d-none d-sm-table-cell"
+            colspan=3
+          ]
 
-        td.b-orders-invoice__table-td [
-          class="font-weight-bold pt-4 d-none d-sm-table-cell"
-        ]
-          .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
-            = t('.total_price_vat', value: sprintf('%g', model.vat_rate))
+          td.b-orders-invoice__table-td [
+            class="font-weight-bold pt-4 d-none d-sm-table-cell"
+          ]
+            .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
+              = t('.total_price_vat', value: vat_rate_value)
 
-        td.b-orders-invoice__table-td [
-          class="font-weight-bold pt-4 d-sm-none"
-          colspan=4
-        ]
-          .h3.m-0.text-nowrap
-            = t('.total_price_vat', value: sprintf('%g', model.vat_rate))
+          td.b-orders-invoice__table-td [
+            class="font-weight-bold pt-4 d-sm-none"
+            colspan=4
+          ]
+            .h3.m-0.text-nowrap
+              = t('.total_price_vat', value: vat_rate_value)
 
-        td.b-orders-invoice__table-td [
-          class="text-right font-weight-bold pt-4"
-          colspan=2
-        ]
-          .h3.m-0 = price(model.total_price_vat, precision: 2)
+          td.b-orders-invoice__table-td [
+            class="text-right font-weight-bold pt-4"
+            colspan=2
+          ]
+            .h3.m-0 = price(amount, precision: 2)
 
       tr.b-orders-invoice__table-dark-border.border-top
         td.b-orders-invoice__table-td [

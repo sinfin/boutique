@@ -34,13 +34,21 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     super || product_variant.price
   end
 
-  def vat_rate
-    # TODO: make configurable
-    21.0
+  def vat_rate_value
+    super || product.vat_rate.value
   end
 
-  def imprint_unit_price!
-    update!(unit_price:)
+  def price_vat
+    (price * (vat_rate_value / (100 + vat_rate_value))).round(2)
+  end
+
+  def price_without_vat
+    price - price_vat
+  end
+
+  def imprint!
+    update!(unit_price:,
+            vat_rate_value:)
   end
 
   def cover_placement_from_variant_or_product
