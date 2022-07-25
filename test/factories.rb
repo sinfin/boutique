@@ -42,7 +42,7 @@ FactoryBot.define do
     end
 
     trait :ready_to_be_confirmed do
-      email { "order@email.email" }
+      sequence(:email) { |i| "order-#{i}@email.email" }
       first_name { "John" }
       last_name { "Doe" }
 
@@ -73,6 +73,11 @@ FactoryBot.define do
 
       aasm_state { "paid" }
       paid_at { 1.minute.ago }
+
+      before(:create) do |order|
+        order.send(:set_invoice_number)
+        order.send(:imprint_prices)
+      end
 
       after(:create) do |order|
         create(:boutique_payment, order:)

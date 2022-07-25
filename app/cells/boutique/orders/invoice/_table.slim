@@ -1,0 +1,115 @@
+.b-orders-invoice__mobile-scroller
+  table.table.b-orders-invoice__table.mb-0
+    thead
+      tr
+        th.b-orders-invoice__table-th [
+          class="b-orders-invoice__table-th--item"
+          colspan=3
+        ]
+        th.b-orders-invoice__table-th.text-right [
+          class="b-orders-invoice__table-th--price"
+        ]
+          = t('.vat')
+        th.b-orders-invoice__table-th.text-right [
+          class="b-orders-invoice__table-th--commission"
+        ]
+          = t('.price')
+
+    tbody
+      - model.line_items.each do |line_item|
+        tr
+          td.b-orders-invoice__table-td colspan=3
+            = line_item.to_label
+          td.b-orders-invoice__table-td.text-right
+            = sprintf('%g %%', model.vat_rate)
+          td.b-orders-invoice__table-td.text-right
+            = price(line_item.price, precision: 2)
+
+    tbody.b-orders-invoice__table-summary
+      tr.b-orders-invoice__table-dark-border.border-top
+        td.b-orders-invoice__table-td [
+          class="pt-4 d-none d-sm-table-cell"
+          colspan=3
+        ]
+
+        td.b-orders-invoice__table-td [
+          class="font-weight-bold pt-4 d-none d-sm-table-cell"
+        ]
+          .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
+            = t('.total_price_without_vat')
+
+        td.b-orders-invoice__table-td [
+          class="font-weight-bold pt-4 d-sm-none"
+          colspan=4
+        ]
+          .h3.m-0.text-nowrap = t('.total_price_without_vat')
+
+        td.b-orders-invoice__table-td [
+          class="text-right font-weight-bold pt-4"
+        ]
+          .h3.m-0 = price(model.total_price_without_vat, precision: 2)
+
+      tr
+        td.b-orders-invoice__table-td [
+          class="pt-4 d-none d-sm-table-cell"
+          colspan=3
+        ]
+
+        td.b-orders-invoice__table-td [
+          class="font-weight-bold pt-4 d-none d-sm-table-cell"
+        ]
+          .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
+            = t('.total_price_vat', value: sprintf('%g', model.vat_rate))
+
+        td.b-orders-invoice__table-td [
+          class="font-weight-bold pt-4 d-sm-none"
+          colspan=4
+        ]
+          .h3.m-0.text-nowrap
+            = t('.total_price_vat', value: sprintf('%g', model.vat_rate))
+
+        td.b-orders-invoice__table-td [
+          class="text-right font-weight-bold pt-4"
+          colspan=2
+        ]
+          .h3.m-0 = price(model.total_price_vat, precision: 2)
+
+      tr.b-orders-invoice__table-dark-border.border-top
+        td.b-orders-invoice__table-td [
+          class="pt-4 d-none d-sm-table-cell"
+          colspan=3
+        ]
+
+        td.b-orders-invoice__table-td [
+          class="font-weight-bold pt-4 d-none d-sm-table-cell"
+        ]
+          .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
+            = t('.total_price')
+
+        td.b-orders-invoice__table-td [
+          class="font-weight-bold pt-4 d-sm-none"
+          colspan=4
+        ]
+          .h3.m-0.text-nowrap = t('.total_price')
+
+        td.b-orders-invoice__table-td [
+          class="text-right font-weight-bold pt-4"
+          colspan=2
+        ]
+          .h3.m-0 = price(model.total_price, precision: 2)
+
+      tr.font-weight-bold
+        td.b-orders-invoice__table-td [
+          class="py-3 d-none d-sm-table-cell"
+          colspan=3
+        ]
+        td.b-orders-invoice__table-td [
+          class="d-none d-sm-table-cell"
+          colspan=3
+        ]
+          .h3.m-0 = t('.do_not_pay')
+        td.b-orders-invoice__table-td [
+          class="d-sm-none"
+          colspan=6
+        ]
+          .h3.m-0 = t('.do_not_pay')

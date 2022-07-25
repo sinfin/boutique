@@ -1,0 +1,18 @@
+.b-orders-invoice
+  .b-orders-invoice__container
+    .row.pb-gg
+      .col-4
+        a.b-orders-invoice__logo href="/"
+          h1 LOGO
+          / = image({ normal: options[:logo] },
+          /         "170x70#",
+          /         class: "a-current-user-orders-invoice__logo-img")
+      .col-8.text-right
+        h3.mt-0.mt-md-3
+          = t('.title', number: model.invoice_number)
+
+    = render(:_header)
+    hr.my-s
+    = render(:_payment_details)
+    hr.mt-4.mb-0
+    = render(:_table)

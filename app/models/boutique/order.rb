@@ -186,6 +186,23 @@ class Boutique::Order < Boutique::ApplicationRecord
     total_price.zero?
   end
 
+  def vat_rate
+    # TODO: make configable per product
+    10.0
+  end
+
+  def total_price_without_vat
+    return unless total_price
+
+    total_price - total_price_vat
+  end
+
+  def total_price_vat
+    return unless total_price
+
+    (total_price * (vat_rate / (100 + vat_rate))).round(2)
+  end
+
   def unpaid?
     !paid_at?
   end

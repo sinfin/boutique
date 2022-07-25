@@ -1,0 +1,30 @@
+table.b-orders-invoice__plain-table
+  tbody
+    tr
+      td.b-orders-invoice__header-td-first
+        ul
+          li.font-weight-bold = current_site.billing_name
+          li = current_site.billing_address_line_1
+          li = current_site.billing_address_line_2
+          li IČO: #{current_site.billing_identification_number}
+          li DIČ: #{current_site.billing_vat_identification_number}
+          li.b-orders-invoice__small-text.pt-2
+            = current_site.billing_note
+
+      td.b-orders-invoice__header-td-second
+        ul.mt-4.mt-sm-0
+          li.font-weight-bold = t('.customer')
+          li.font-weight-bold
+            = billing_address.try(:company_name) || model.user.full_name
+
+          - if billing_address.present?
+            li = billing_address.address_line_1
+            - if billing_address.address_line_2.present?
+              li = billing_address.address_line_2
+            li #{billing_address.zip} #{billing_address.city}
+            li = billing_address_country_name
+
+            - if billing_address.identification_number.present?
+              li IČO: ${billing_address.identification_number}
+            - if billing_address.vat_identification_number.present?
+              li DIČ: ${billing_address.vat_identification_number}

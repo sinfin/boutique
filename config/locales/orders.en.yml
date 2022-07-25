@@ -33,3 +33,22 @@ en:
         unpaid: unpaid
         unpaid_notice: Please check payment status
         waiting_for_offline_payment_notice: Expecting payment by bank transfer
+
+      invoice:
+        title: "Invoice n. %{number}"
+        customer: Customer
+
+        payment_method: "Payment method: "
+        payment_method_card: Card
+        bank_account_number: "Bank account number: "
+        reference: "Reference: "
+        taxable_fulfillment_due_date: "Taxable fulfillment due on: "
+        issued_on_date: "Issued on: "
+        due_date: "Due on: "
+
+        vat: VAT
+        price: Price
+        total_price_without_vat: Total price without VAT
+        total_price_vat: VAT %{value} %
+        total_price: Total price
+        do_not_pay: DO NOT PAY, ALREADY PAID.

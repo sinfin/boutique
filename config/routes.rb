@@ -9,6 +9,7 @@ Boutique::Engine.routes.draw do
   end
 
   get "order/:id", to: "orders#show", as: :order
+  get "invoice/:secret_hash", to: "invoices#show", as: :invoice
 
   resource :go_pay, only: [], controller: :go_pay do
     get :comeback
