@@ -1,14 +1,14 @@
 .b-orders-invoice
   .b-orders-invoice__container
-    .row.pb-gg
-      .col-4
-        a.b-orders-invoice__logo href="/"
-          h1 LOGO
-          / = image({ normal: options[:logo] },
-          /         "170x70#",
-          /         class: "a-current-user-orders-invoice__logo-img")
-      .col-8.text-right
-        h3.mt-0.mt-md-3
+    .row.pb-g
+      - if Boutique.config.logo_path.present?
+        .col-4
+          a.b-orders-invoice__logo href="/"
+              = image({ normal: Boutique.config.logo_path },
+                      "70x70#",
+                      class: "b-orders-invoice__logo-img")
+      .col.text-right
+        h3.mt-0
           = t('.title', number: model.invoice_number)
 
     = render(:_header)

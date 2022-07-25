@@ -3,12 +3,14 @@
 module Boutique
   class Config
     attr_accessor :use_cart_in_orders,
+                  :logo_path,
                   :orders_edit_sidebar_shipping_content,
                   :parent_controller
 
     def initialize
       # set defaults here
       @use_cart_in_orders = true
+      @logo_path = nil
       @orders_edit_sidebar_shipping_content = nil
       @parent_controller = "ApplicationController"
     end
