@@ -36,7 +36,10 @@
           - unless current_order.digital_only?
             .b-orders-edit__box
               - current_order.force_address_validation = true
-              == cell('folio/addresses/fields', f, title_tag: "h3")
+              == cell('folio/addresses/fields',
+                      f,
+                      title: t(".addresses_fields_title"),
+                      title_tag: "h3")
 
           - unless current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)

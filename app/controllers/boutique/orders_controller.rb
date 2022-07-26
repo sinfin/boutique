@@ -107,7 +107,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
                 zip
                 country_code
                 phone
-                email]
+                email
+                identification_number
+                vat_identification_number]
 
       [
         :use_secondary_address,
