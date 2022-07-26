@@ -1,18 +1,15 @@
   # frozen_string_literal: true
 
   class Boutique::GoPayController < Boutique::ApplicationController
+    include Boutique::RedirectAfterOrderPaid
+
     before_action :find_and_update_payment
 
     def comeback
       if @payment.paid? || @payment.order.waiting_for_offline_payment?
         flash[:success] = t(".success")
 
-        if @payment.order.user.created_by_invite? && !@payment.order.user.invitation_accepted?
-          session[:folio_user_invited_email] = @payment.order.user.email
-          redirect_to main_app.user_invitation_path
-        else
-          redirect_to order_path(@payment.order.secret_hash)
-        end
+        redirect_after_order_paid(@payment.order)
       else
         flash[:alert] = t(".failure")
 

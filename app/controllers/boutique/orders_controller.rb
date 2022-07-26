@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Boutique::OrdersController < Boutique::ApplicationController
+  include Boutique::RedirectAfterOrderPaid
+
   before_action :redirect_if_current_order_is_empty, except: %i[add show payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
 
@@ -63,7 +65,13 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     current_order.transaction do
       if current_order.confirm!
-        create_payment_and_redirect_to_payment_gateway(current_order)
+        if current_order.free?
+          current_order.pay!
+
+          redirect_after_order_paid(current_order)
+        else
+          create_payment_and_redirect_to_payment_gateway(current_order)
+        end
       else
         render :edit
       end

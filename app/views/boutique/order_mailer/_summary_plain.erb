@@ -1,5 +1,9 @@
-<%- line_items.each do |line_item| -%>
+<%- order.line_items.each do |line_item| -%>
 <%= line_item.to_label %>
 
 <%- end -%>
-<%= t("boutique.order_mailer.summary.paid", price: number_to_currency(total_price, precision: 0)) %>
+<%- if order.free? -%>
+<%= t("boutique.free") %>
+<%- else -%>
+<%= t("boutique.order_mailer.summary.paid", price: number_to_currency(order.total_price, precision: 0)) %>
+<%- end -%>

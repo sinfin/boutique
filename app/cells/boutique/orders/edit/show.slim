@@ -38,7 +38,8 @@
               - current_order.force_address_validation = true
               == cell('folio/addresses/fields', f, title_tag: "h3")
 
-          == cell('boutique/orders/edit/voucher_fields', f)
+          - unless current_order.free?
+            == cell('boutique/orders/edit/voucher_fields', f)
 
         aside.b-orders-edit__col.b-orders-edit__col--aside
           == cell('boutique/orders/edit/sidebar', current_order)
@@ -48,4 +49,9 @@
           .b-orders-edit__disclaimer
             == cell("#{application_namespace_path}/ui/disclaimer")
 
-          == cell('boutique/orders/payment_methods', f)
+          - if f.object.free?
+             = f.button :submit,
+                       t(".order_for_free"),
+                       class: "btn btn-primary"
+          - else
+            == cell('boutique/orders/payment_methods', f)

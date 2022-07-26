@@ -20,6 +20,11 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
   validates :regular_price,
             presence: true
 
+  validates :regular_price,
+            :discounted_price,
+            numericality: { greater_than_or_equal_to: 0 },
+            allow_nil: true
+
   def current_price
     if discounted?
       discounted_price
@@ -42,6 +47,10 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     end
 
     true
+  end
+
+  def free?
+    current_price.zero?
   end
 
   def self.pregenerated_thumbnails

@@ -182,6 +182,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || [line_items_price - discount.to_i, 0].max
   end
 
+  def free?
+    total_price.zero?
+  end
+
   def unpaid?
     !paid_at?
   end

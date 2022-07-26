@@ -9,7 +9,7 @@
 
     .d-flex.align-items-center.mt-g
       h4.my-0.mr-g
-        = price(model.total_price)
+        = price(model.total_price, zero_as_number: true)
 
       .text-muted.mr-g
         = l(model.confirmed_at, format: :as_date)

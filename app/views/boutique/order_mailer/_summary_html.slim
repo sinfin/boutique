@@ -1,5 +1,5 @@
 table.my-4
-  - line_items.each do |line_item|
+  - order.line_items.each do |line_item|
     ruby:
       cover = line_item.product_variant.cover
       cover ||= line_item.product_variant.product.try(:cover)
@@ -19,5 +19,8 @@ table.my-4
 
   tr
     td.font-weight-bold
-      = t("boutique.order_mailer.summary.paid",
-          price: number_to_currency(total_price, precision: 0))
+      - if order.free?
+        = t("boutique.free")
+      - else
+        = t("boutique.order_mailer.summary.paid",
+            price: number_to_currency(order.total_price, precision: 0))

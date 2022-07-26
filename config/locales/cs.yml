@@ -1,5 +1,8 @@
 ---
 cs:
+  boutique:
+    free: zdarma
+
   date:
     formats:
       month_and_year: '%B %Y'
