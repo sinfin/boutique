@@ -52,6 +52,7 @@ cs:
 
         vat: DPH
         price: Cena
+        discount: "Slevový kód: %{code}"
         total_price_without_vat: Celkem bez DPH
         total_price_vat: DPH %{value} %
         total_price: Celkem k úhradě

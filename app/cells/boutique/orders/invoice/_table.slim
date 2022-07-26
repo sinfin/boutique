@@ -25,6 +25,13 @@
           td.b-orders-invoice__table-td.text-right
             = price(line_item.price, precision: 2)
 
+      - if model.voucher_code.present?
+        tr
+          td.b-orders-invoice__table-td colspan=4
+            = t(".discount", code: model.voucher_code.upcase)
+          td.b-orders-invoice__table-td.text-right
+            = price(model.discount * -1, precision: 2)
+
     tbody.b-orders-invoice__table-summary
       tr.b-orders-invoice__table-dark-border.border-top
         td.b-orders-invoice__table-td [

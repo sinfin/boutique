@@ -48,6 +48,7 @@ en:
 
         vat: VAT
         price: Price
+        discount: "Discount code: %{code}"
         total_price_without_vat: Total price without VAT
         total_price_vat: VAT %{value} %
         total_price: Total price
