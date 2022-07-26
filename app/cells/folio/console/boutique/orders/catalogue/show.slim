@@ -12,9 +12,17 @@
         price(record.total_price)
       end
 
-      state
-
       date :confirmed_at
       date :paid_at
+
+      state
+
+      attribute(:invoice, compact: true) do
+        if record.invoice_number?
+          link_to(record.invoice_number,
+                  controller.boutique.invoice_path(record.secret_hash),
+                  target: "_blank")
+        end
+      end
 
       actions :show, :edit

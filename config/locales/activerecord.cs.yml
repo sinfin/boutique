@@ -7,6 +7,7 @@ cs:
         subscription_recurring: Automaticky obnovit po roce
 
       boutique/order:
+        invoice: Faktura
         items: Předměty
         price: Cena
         number: Číslo
@@ -21,11 +22,12 @@ cs:
         dispatched_at: Odesláno
 
       boutique/product:
-        type: Typ produktu
         subscription_frequency: Periodicita
         subscription_frequency/quarterly: čtvrtletník
         subscription_frequency/bimonthly: dvouměsíčník
         subscription_frequency/monthly: měsíčník
+        type: Typ produktu
+        vat_rate: Sazba daně
 
       boutique/product_variant:
         best_offer: Nejvýhodnější nabídka
