@@ -39,7 +39,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def price_vat
-    (price * (vat_rate_value / (100 + vat_rate_value))).round(2)
+    (price * (vat_rate_value.to_f / (100 + vat_rate_value))).round(2)
   end
 
   def price_without_vat
