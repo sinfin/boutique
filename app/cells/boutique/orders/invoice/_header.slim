@@ -6,8 +6,9 @@ table.b-orders-invoice__plain-table
           li.font-weight-bold = current_site.billing_name
           li = current_site.billing_address_line_1
           li = current_site.billing_address_line_2
-          li IČO: #{current_site.billing_identification_number}
-          li DIČ: #{current_site.billing_vat_identification_number}
+          li
+            | IČO: #{current_site.billing_identification_number},
+            |  DIČ: #{current_site.billing_vat_identification_number}
           li.b-orders-invoice__small-text.pt-2
             = current_site.billing_note
 
@@ -18,13 +19,9 @@ table.b-orders-invoice__plain-table
             = billing_address.try(:company_name) || model.user.full_name
 
           - if billing_address.present?
-            li = billing_address.address_line_1
-            - if billing_address.address_line_2.present?
-              li = billing_address.address_line_2
-            li #{billing_address.zip} #{billing_address.city}
+            li = billing_address_first_line
+            li = billing_address_second_line
             li = billing_address_country_name
 
-            - if billing_address.identification_number.present?
-              li IČO: ${billing_address.identification_number}
-            - if billing_address.vat_identification_number.present?
-              li DIČ: ${billing_address.vat_identification_number}
+            - if billing_address_identification_numbers
+              li = billing_address_identification_numbers

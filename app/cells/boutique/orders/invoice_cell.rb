@@ -4,7 +4,21 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   include Boutique::PriceHelper
 
   def billing_address
-    model.primary_address
+    @billing_address ||= model.secondary_address || model.primary_address
+  end
+
+  def billing_address_first_line
+    [
+      billing_address.address_line_1,
+      billing_address.address_line_2
+    ].compact.join(" ")
+  end
+
+  def billing_address_second_line
+    [
+      billing_address.zip,
+      billing_address.city
+    ].compact.join(" ")
   end
 
   def billing_address_country_name
