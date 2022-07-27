@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_25_164743) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_27_215741) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -180,7 +180,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_25_164743) do
     t.string "title"
     t.integer "discount"
     t.boolean "discount_in_percentages", default: false
-    t.integer "number_of_allowed_uses"
+    t.integer "number_of_allowed_uses", default: 1
     t.integer "use_count", default: 0
     t.boolean "published", default: false
     t.datetime "published_from"

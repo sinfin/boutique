@@ -114,7 +114,7 @@ end
 #  title                   :string
 #  discount                :integer
 #  discount_in_percentages :boolean          default(FALSE)
-#  number_of_allowed_uses  :integer
+#  number_of_allowed_uses  :integer          default(1)
 #  use_count               :integer          default(0)
 #  published               :boolean          default(FALSE)
 #  published_from          :datetime
