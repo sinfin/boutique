@@ -115,6 +115,22 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal 50, order.total_price
   end
 
+  test "confirm with voucher discount" do
+    order = create(:boutique_order, :ready_to_be_confirmed)
+    voucher = create(:boutique_voucher, code: "TEST", number_of_allowed_uses: 1)
+    order.assign_voucher_by_code("TEST")
+
+    assert_equal 0, voucher.use_count
+    assert order.confirm!
+    assert_equal 1, voucher.reload.use_count
+
+    order = create(:boutique_order)
+    order.assign_voucher_by_code("TEST")
+
+    assert_not order.confirm!
+    assert_equal 1, voucher.reload.use_count
+  end
+
   test "order numbers" do
     Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_base_number_seq RESTART;")
 

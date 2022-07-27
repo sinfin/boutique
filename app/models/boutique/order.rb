@@ -87,13 +87,13 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       before do
         set_numbers
-        use_voucher!
         imprint_prices
 
         self.email ||= user.try(:email)
       end
 
-      after_commit do
+      after do
+        use_voucher!
         charge_recurrent_payment! if subsequent?
       end
     end
