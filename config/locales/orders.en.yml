@@ -29,6 +29,7 @@ en:
         prices_include_vat: The listed prices include VAT.
 
       show:
+        invoice: download invoice
         title: Order n. %{number}
         paid: paid
         unpaid: unpaid

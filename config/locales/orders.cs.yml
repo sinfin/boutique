@@ -29,6 +29,7 @@ cs:
         prices_include_vat: Uvedené ceny jsou včetně DPH.
 
       show:
+        invoice: stáhnout fakturu
         title: Objednávka č. %{number}
         paid: zaplacena
         unpaid: nezaplacena

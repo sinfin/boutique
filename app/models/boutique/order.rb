@@ -186,8 +186,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     total_price.zero?
   end
 
-  def unpaid?
-    !paid_at?
+  def is_paid?
+    paid_at?
+  end
+
+  def is_unpaid?
+    !is_paid?
   end
 
   def add_line_item!(product_variant, amount: 1)

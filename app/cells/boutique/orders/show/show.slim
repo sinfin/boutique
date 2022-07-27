@@ -14,10 +14,16 @@
       .text-muted.mr-g
         = l(model.confirmed_at, format: :as_date)
 
-      .text-muted
-        = model.unpaid? ? t('.unpaid') : t('.paid')
+      .text-muted.mr-g
+        = model.is_paid? ? t('.paid') : t('.unpaid')
 
-    - if model.unpaid?
+      - if model.is_paid?
+        a[
+          href=controller.boutique.invoice_path(model.secret_hash)
+          target="_blank"
+        ] = t('.invoice')
+
+    - if model.is_unpaid?
       .mt-4
         = payment_methods_form do |f|
           = cell('boutique/orders/payment_methods',
