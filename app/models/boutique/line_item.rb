@@ -22,6 +22,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product_variant.title
   end
 
+  def to_full_label
+    to_label
+  end
+
   def subscription?
     product.is_a?(Boutique::Product::Subscription)
   end

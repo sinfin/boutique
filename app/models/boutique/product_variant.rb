@@ -25,6 +25,10 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
             numericality: { greater_than_or_equal_to: 0 },
             allow_nil: true
 
+  def title
+    super || product.title
+  end
+
   def current_price
     if discounted?
       discounted_price

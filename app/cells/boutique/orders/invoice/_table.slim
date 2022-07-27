@@ -19,7 +19,7 @@
       - model.line_items.each do |line_item|
         tr
           td.b-orders-invoice__table-td colspan=3
-            = line_item.to_label
+            = line_item.to_full_label
           td.b-orders-invoice__table-td.text-right
             = "#{line_item.vat_rate_value} %"
           td.b-orders-invoice__table-td.text-right
