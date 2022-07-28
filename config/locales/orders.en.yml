@@ -23,6 +23,9 @@ en:
           generic_error: Failed to apply the code.
           discount: Discount
 
+      confirm:
+        success_free: Order successful
+
       payment_methods:
         title: Payment %{price}
         secured_by: Secured

@@ -23,6 +23,9 @@ cs:
           generic_error: Kód se nepodařilo uplatnit.
           discount: Sleva
 
+      confirm:
+        success_free: Objednávka proběhla úspěšně
+
       payment_methods:
         title: Platba %{price}
         secured_by: Zabezpečeno

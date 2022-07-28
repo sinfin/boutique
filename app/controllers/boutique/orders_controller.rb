@@ -68,6 +68,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
         if current_order.free?
           current_order.pay!
 
+          flash[:success] = t(".success_free")
           redirect_after_order_paid(current_order)
         else
           create_payment_and_redirect_to_payment_gateway(current_order)
