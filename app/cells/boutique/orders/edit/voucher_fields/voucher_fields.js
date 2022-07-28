@@ -23,13 +23,14 @@ $(document)
           const $oldEdit = $wrap.closest('.b-orders-edit')
           const $newEdit = $(res.data)
 
-          const $oldCovers = $oldEdit.find(".b-orders-edit-summary__line-item-cover-wrap").detach()
+          const $oldCovers = $oldEdit.find('.b-orders-edit-summary__line-item-cover-wrap').detach()
 
           const selectors = [
             'input[name="authenticity_token"]',
             '.b-orders-edit-voucher-fields',
             '.b-orders-edit-sidebar__ajax-replacable',
             '.b-orders-edit-summary',
+            '.b-orders-payment-methods'
           ]
 
           selectors.forEach((selector) => {
