@@ -17,10 +17,9 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 01c657d56ecabc456f25a70fb4cdb776467b0a01
-  branch: petr/dragonfly-libvips-multi-site-rails-7
+  revision: 2c69f29b854572b3eeb51d9e984a5fdd82625087
   specs:
-    folio (0.1.0)
+    folio (3.0.0)
       aasm
       acts-as-taggable-on
       after_commit_everywhere
@@ -29,7 +28,7 @@ GIT
       aws-sdk-s3
       babel-transpiler
       breadcrumbs_on_rails
-      cancancan (~> 3.0)
+      cancancan
       cocoon
       coffee-rails (~> 5.0)
       countries
@@ -52,10 +51,10 @@ GIT
       message_bus
       multi_exiftool
       nokogiri
-      omniauth (~> 1.9.1)
-      omniauth-facebook (~> 8.0.0)
-      omniauth-google-oauth2 (~> 0.8.1)
-      omniauth-twitter (~> 1.4.0)
+      omniauth
+      omniauth-facebook
+      omniauth-google-oauth2
+      omniauth-twitter
       pagy
       pg
       pg_search (= 2.3.2)
@@ -178,8 +177,8 @@ GEM
     audited (5.0.2)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.610.0)
-    aws-sdk-core (3.131.3)
+    aws-partitions (1.611.0)
+    aws-sdk-core (3.131.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -257,9 +256,9 @@ GEM
       activerecord (>= 4.2, < 8)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.7.6)
-    dotenv-rails (2.7.6)
-      dotenv (= 2.7.6)
+    dotenv (2.8.1)
+    dotenv-rails (2.8.1)
+      dotenv (= 2.8.1)
       railties (>= 3.2)
     dragonfly (1.4.0)
       addressable (~> 2.3)
@@ -397,28 +396,29 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     oauth (0.5.10)
-    oauth2 (1.4.10)
+    oauth2 (2.0.6)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
-      multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    omniauth (1.9.1)
+      rash_alt (>= 0.4, < 1)
+      version_gem (~> 1.1)
+    omniauth (2.1.0)
       hashie (>= 3.4.6)
-      rack (>= 1.6.2, < 3)
-    omniauth-facebook (8.0.0)
+      rack (>= 2.2.3)
+      rack-protection
+    omniauth-facebook (9.0.0)
       omniauth-oauth2 (~> 1.2)
-    omniauth-google-oauth2 (0.8.2)
+    omniauth-google-oauth2 (0.8.0)
       jwt (>= 2.0)
-      oauth2 (~> 1.1)
-      omniauth (~> 1.1)
+      omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.6)
     omniauth-oauth (1.2.0)
       oauth
       omniauth (>= 1.0, < 3)
-    omniauth-oauth2 (1.7.3)
+    omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
-      omniauth (>= 1.9, < 3)
+      omniauth (~> 2.0)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
@@ -451,6 +451,8 @@ GEM
     raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.4)
+    rack-protection (2.2.2)
+      rack
     rack-test (2.0.2)
       rack (>= 1.3)
     rails (7.0.3.1)
@@ -484,6 +486,8 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    rash_alt (0.4.12)
+      hashie (>= 3.4)
     rb-fsevent (0.11.1)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -596,6 +600,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (2.2.0)
+    version_gem (1.1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     websocket-driver (0.7.5)
@@ -621,7 +626,7 @@ DEPENDENCIES
   dragonfly_libvips!
   factory_bot
   faker
-  folio!
+  folio (~> 3.0)!
   guard-rubocop
   guard-slimlint
   letter_opener
