@@ -10,7 +10,8 @@ Folio::Site.class_eval do
             :billing_identification_number,
             :billing_vat_identification_number,
             :billing_note,
-            presence: true
+            presence: true,
+            if: :billing_enabled?
 
   def billing_enabled?
     true
