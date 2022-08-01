@@ -3,18 +3,24 @@
 class Boutique::OrdersController < Boutique::ApplicationController
   include Boutique::RedirectAfterOrderPaid
 
-  before_action :redirect_if_current_order_is_empty, except: %i[add show payment]
+  before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
 
+  def crossdomain_add
+    if request.referrer.present?
+      clean_referrer_domain = request.referrer.gsub(%r{\Ahttps?://}, "").gsub(%r{/.*\z}, "")
+
+      if Folio::Site.all.any? { |site| site.env_aware_domain == clean_referrer_domain }
+        add_to_order_and_redirect
+        return
+      end
+    end
+
+    redirect_to main_app.root_path
+  end
+
   def add
-    product_variant = Boutique::ProductVariant.find(params.require(:product_variant_id))
-    amount = params[:amount].to_i if params[:amount].present?
-
-    create_current_order if current_order.nil?
-
-    current_order.add_line_item!(product_variant, amount: amount || 1)
-
-    redirect_to action: :edit
+    add_to_order_and_redirect
   end
 
   def edit
@@ -142,5 +148,16 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     def find_order_by_secret_hash
       @order = Boutique::Order.except_pending.find_by!(secret_hash: params[:id])
+    end
+
+    def add_to_order_and_redirect
+      product_variant = Boutique::ProductVariant.find(params.require(:product_variant_slug))
+      amount = params[:amount].to_i if params[:amount].present?
+
+      create_current_order if current_order.nil?
+
+      current_order.add_line_item!(product_variant, amount: amount || 1)
+
+      redirect_to action: :edit
     end
 end

@@ -6,8 +6,8 @@
       - product.variants.each do |variant|
         .col-lg-4.mb-4
           = simple_form_for("", url: boutique.add_order_path) do |f|
-            = f.hidden_field :product_variant_id,
-                              value: variant.id
+            = f.hidden_field :product_variant_slug,
+                              value: variant.slug
 
             h5 = variant.title
             h5

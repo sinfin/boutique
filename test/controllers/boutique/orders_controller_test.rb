@@ -10,7 +10,25 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
 
     assert_equal 0, Boutique::Order.count
 
-    post add_order_url, params: { product_variant_id: product.master_variant.id }
+    post add_order_url, params: { product_variant_slug: product.master_variant.slug }
+    assert_redirected_to edit_order_url
+
+    assert_equal 1, Boutique::Order.count
+    assert_equal 1, Boutique::Order.first.line_items.first.amount
+  end
+
+  test "crossdomain_add" do
+    product = create(:boutique_product)
+
+    assert_equal 0, Boutique::Order.count
+
+    get crossdomain_add_order_url(product_variant_slug: product.master_variant.slug)
+    assert_redirected_to main_app.root_path
+
+    assert_equal 0, Boutique::Order.count
+
+    get crossdomain_add_order_url(product_variant_slug: product.master_variant.slug),
+        headers: { "HTTP_REFERER" => Folio::Site.instance.env_aware_domain }
     assert_redirected_to edit_order_url
 
     assert_equal 1, Boutique::Order.count
@@ -94,7 +112,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
   private
     def create_order_with_current_session_id
       product = create(:boutique_product)
-      post add_order_url, params: { product_variant_id: product.master_variant.id }
+      post add_order_url, params: { product_variant_slug: product.master_variant.slug }
       @order = Boutique::Order.find_by(web_session_id: session.id.public_id) if session && session.id
     end
 end

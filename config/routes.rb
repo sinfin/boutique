@@ -2,6 +2,7 @@
 
 Boutique::Engine.routes.draw do
   resource :order, only: %i[edit] do
+    get :crossdomain_add, path: "crossdomain_add/:product_variant_slug"
     post :add
     post :confirm
     post :apply_voucher
