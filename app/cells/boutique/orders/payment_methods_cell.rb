@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
-  PAYMENT_METHODS = %w[
+  STANDARD_PAYMENT_METHODS = %w[
     PAYMENT_CARD
     BANK_ACCOUNT
     APPLE_PAY
@@ -9,6 +9,8 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
     PAYPAL
     BITCOIN
   ]
+
+  RECURRENT_PAYMENT_METHODS = STANDARD_PAYMENT_METHODS - %w[ BANK_ACCOUNT BITCOIN ]
 
   def f
     model
@@ -19,12 +21,15 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
 
     enabled = Boutique::GoPay::Api.new.gateway.payment_instruments["enabledPaymentInstruments"]
                                               .map { |pm| pm["paymentInstrument"] }
-    selected = PAYMENT_METHODS
+    selected = STANDARD_PAYMENT_METHODS
+
+    recurrence_required = f.object.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
 
     (selected & enabled).map do |pm|
       {
         title: payment_method_title(pm),
-        value: pm
+        value: pm,
+        disabled: recurrence_required ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false
       }
     end
   end
@@ -38,6 +43,7 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
              method[:title],
              class: "btn btn-#{i.zero? ? "primary" : "secondary"} btn-xs-block b-orders-payment-methods__submit-btn",
              data: { "payment-method": method[:value] },
-             style: ("display:none;" if method[:value] == "APPLE_PAY")
+             style: ("display:none;" if method[:value] == "APPLE_PAY"),
+             disabled: method[:disabled]
   end
 end

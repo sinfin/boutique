@@ -17,6 +17,13 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   delegate :digital_only?,
            :product,
            to: :product_variant
+  delegate :subscription?,
+           to: :product
+
+  after_initialize do
+    # TODO: change column default
+    self.subscription_recurring = true
+  end
 
   def to_label
     product_variant.title
@@ -24,10 +31,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def to_full_label
     to_label
-  end
-
-  def subscription?
-    product.is_a?(Boutique::Product::Subscription)
   end
 
   def price

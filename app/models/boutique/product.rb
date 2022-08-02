@@ -37,6 +37,10 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   after_initialize :set_default_vat_rate
 
+  def subscription?
+    is_a?(Boutique::Product::Subscription)
+  end
+
   def self.pregenerated_thumbnails
     h = {
       "Folio::FilePlacement::Cover" => [],
