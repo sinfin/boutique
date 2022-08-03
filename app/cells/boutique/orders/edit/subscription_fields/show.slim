@@ -10,4 +10,7 @@
         label.pb-2 &nbsp;
 
         = g.input :subscription_recurring,
-                  input_html: { checked: subscription_recurring_checked(g) }
+                  input_html: { \
+                    checked: subscription_recurring_checked(g), \
+                    class: "b-orders-edit-subscription-fields__recurring-checkbox" \
+                  }
