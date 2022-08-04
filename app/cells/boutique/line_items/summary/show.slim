@@ -11,6 +11,6 @@
                   class: 'b-line-items-summary__line-item-cover '\
                          'b-adaptive-css-background-primary')
 
-        p = line_item.summary_text
+        = simple_format(line_item.summary_text)
 
         h4.mb-0 = price(line_item.price)
