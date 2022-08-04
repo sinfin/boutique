@@ -30,7 +30,7 @@ class Boutique::Subscription < ApplicationRecord
     active_at(Time.current)
   }
 
-  scope :ordered, -> { order(active_from: :desc) }
+  scope :ordered, -> { order(active_until: :asc, active_from: :asc) }
 
   validates :active_from,
             :active_until,
@@ -55,6 +55,14 @@ class Boutique::Subscription < ApplicationRecord
 
   def unactive?
     !active?
+  end
+
+  def expired_at?(time)
+    active_until.present? && active_until <= time
+  end
+
+  def expired?
+    expired_at?(Time.current)
   end
 
   def current_order
