@@ -30,7 +30,12 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def to_full_label
-    to_label
+    return to_label unless subscription? && subscription_starts_at?
+
+    from = product.issue_at(subscription_starts_at)
+    to = product.issue_at(subscription_starts_at + 11.months)
+
+    "#{to_label} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
   end
 
   def price
