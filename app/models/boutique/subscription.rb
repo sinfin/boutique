@@ -49,6 +49,15 @@ class Boutique::Subscription < ApplicationRecord
     true
   end
 
+  def active_range
+    if active_from.present?
+      [
+        I18n.l(active_from, format: :as_date),
+        (I18n.l(active_until, format: :as_date) if active_until)
+      ].compact.join(" – ")
+    end
+  end
+
   def active?
     active_at?(Time.current)
   end
@@ -67,6 +76,10 @@ class Boutique::Subscription < ApplicationRecord
 
   def current_order
     orders.first
+  end
+
+  def original_order
+    orders.last
   end
 
   def cancel!

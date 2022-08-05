@@ -1,0 +1,51 @@
+.f-c-b-subscriptions-catalogue
+  = catalogue(model, collection_actions: options[:collection_actions])
+    ruby:
+      attribute :product do
+        record.product_variant.to_console_label
+      end
+
+      attribute :order do
+        order = record.original_order
+        if order.present?
+          link_to(order.to_label, url_for([:console, order]))
+        end
+      end
+
+      attribute :active do
+        record.active_range
+      end
+
+      attribute :cancelled_at do
+        if record.cancelled_at?
+          if record.order.nil? || record.cancelled_at == record.active_from
+            t(".non_recurring_subscription")
+          else
+            l(record.cancelled_at, format: :short)
+          end
+        end
+      end
+
+/ attribute nil, nil, compact: true, class_name: "actions" do
+/   a = [
+/     link_to("",
+/             edit_console_infocz_subscription_path(record),
+/             class: "btn btn-secondary fa fa-edit",
+/             title: t("folio.console.actions.edit"))
+/   ]
+/
+/   if record.active_until.nil? || record.cancelled_at.nil?
+/     a << link_to("",
+/                  cancel_console_infocz_subscription_path(record),
+/                  method: :delete,
+/                  class: "btn btn-danger fa fa-times",
+/                  title: t(".cancel"),
+/                  data: {
+/                    confirm: t(".cancel_confirm"),
+/                  })
+/   end
+/
+/   content_tag(:div, class: "f-c-index-actions") do
+/     a.join
+/   end
+/ end

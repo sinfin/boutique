@@ -24,6 +24,18 @@ en:
         one: Order
         other: Orders
 
+      boutique/subscription:
+        one: Subscription
+        other: Subscriptions
+
+      boutique/vat_rate:
+        one: VAT rate
+        other: VAT rates
+
+      boutique/voucher:
+        one: Voucher
+        other: Vouchers
+
     errors:
       models:
         boutique/product:

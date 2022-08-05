@@ -1,0 +1,14 @@
+h2 = Boutique::Order.model_name.human(count: 2)
+
+== cell('folio/console/boutique/orders/catalogue',
+        @user.orders.ordered \
+                    .except_pending \
+                    .includes(line_items: { product_variant: :product }),
+        collection_actions: [])
+
+h2 = Boutique::Subscription.model_name.human(count: 2)
+
+== cell('folio/console/boutique/subscriptions/catalogue',
+        @user.subscriptions.ordered \
+                           .includes(:orders, product_variant: :product),
+        collection_actions: [])

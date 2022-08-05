@@ -1,11 +1,12 @@
 .f-c-b-orders-catalogue
-  = catalogue(model, before_lambda: options[:before_lambda])
+  = catalogue(model, before_lambda: options[:before_lambda],
+                     collection_actions: options[:collection_actions])
     ruby:
       show_link(:number)
       attribute(:email)
 
       attribute(:line_items) do
-        record.line_items.map(&:to_label).join(", ")
+        record.line_items.map(&:to_console_label).join(", ")
       end
 
       attribute(:price) do

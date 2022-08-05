@@ -39,6 +39,12 @@ cs:
         discounted_until: Akce do
         master: Hlavní varianta
 
+      boutique/subscription:
+        active: Aktivní
+        cancelled_at: Zrušeno
+        order: Objednávka
+        product: Produkt
+
       boutique/vat_rate:
         value: Výše daně
         default: Výchozí
@@ -87,6 +93,11 @@ cs:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+      boutique/subscription:
+        one: Předplatné
+        few: Předplatné
+        other: Předplatných
 
       boutique/vat_rate:
         one: Sazba DPH

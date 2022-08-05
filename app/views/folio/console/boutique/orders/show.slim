@@ -22,7 +22,7 @@
       = s.attribute(:line_items)
         ul
           - s.object.line_items.each do |li|
-            li = li.to_label
+            li = li.to_full_label
 
       = s.attribute(:line_items_price)
         = price(s.object.line_items_price)

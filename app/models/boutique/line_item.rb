@@ -38,6 +38,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     "#{to_label} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
   end
 
+  def to_console_label
+    to_full_label
+  end
+
   def price
     amount * unit_price
   end
