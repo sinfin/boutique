@@ -40,7 +40,8 @@ cs:
         waiting_for_offline_payment_notice: Očekáváme platbu převodem
 
       invoice:
-        title: "Faktura č. %{number}"
+        title: "Faktura – daňový doklad č. %{number}"
+        title_free: "Faktura č. %{number}"
         customer: Odběratel
         country_name:
           CZ: Česká republika
