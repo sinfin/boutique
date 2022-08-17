@@ -18,7 +18,7 @@
 
       attribute :cancelled_at do
         if record.cancelled_at?
-          if record.order.nil? || record.cancelled_at == record.active_from
+          if record.cancelled_at == record.active_from
             t(".non_recurring_subscription")
           else
             l(record.cancelled_at, format: :short)
