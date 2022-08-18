@@ -96,7 +96,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     go_pay_find_payment_api_call_mock
 
     get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to order_url(current_order.secret_hash)
+    assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
   end
 
   test "user - offline payment" do
@@ -118,7 +118,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     go_pay_find_payment_api_call_mock(state: "PAYMENT_METHOD_CHOSEN")
 
     get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to order_url(current_order.secret_hash)
+    assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
   end
 
   test "user - unsuccessful payment" do
@@ -140,7 +140,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     go_pay_find_payment_api_call_mock
 
     get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to order_url(current_order.secret_hash)
+    assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
   end
 
   private

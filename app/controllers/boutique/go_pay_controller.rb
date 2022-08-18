@@ -4,6 +4,7 @@
     include Boutique::RedirectAfterOrderPaid
 
     before_action :find_and_update_payment
+    skip_before_action :redirect_after_order_paid_if_needed
 
     def comeback
       if @payment.paid? || @payment.order.waiting_for_offline_payment?

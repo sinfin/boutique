@@ -25,7 +25,7 @@ class Boutique::ControllerTest < ActionDispatch::IntegrationTest
   include Boutique::Engine.routes.url_helpers
 
   def setup
-    create(:folio_site)
+    create_and_host_site
   end
 end
 

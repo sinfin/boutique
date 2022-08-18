@@ -12,7 +12,6 @@ module Boutique::ApplicationControllerBase
   private
     def redirect_after_order_paid_if_needed
       if session[:boutique_after_order_paid_user_url] && try(:current_user)
-        require "pry"; binding.pry
         redirect_to session.delete(:boutique_after_order_paid_user_url),
                     allow_other_host: true
       end

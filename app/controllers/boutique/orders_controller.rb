@@ -5,12 +5,19 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
   before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
+  skip_before_action :redirect_after_order_paid_if_needed
 
   def crossdomain_add
     if request.referrer.present?
       clean_referrer_domain = request.referrer.gsub(%r{\Ahttps?://}, "").gsub(%r{/.*\z}, "")
 
       if Folio::Site.all.any? { |site| site.env_aware_domain == clean_referrer_domain }
+        if url_name = ::Boutique.config.after_order_paid_user_url_name
+          session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
+                                                                       host: clean_referrer_domain,
+                                                                       only_path: false)
+        end
+
         add_to_order_and_redirect
         return
       end
@@ -20,6 +27,12 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def add
+    if url_name = ::Boutique.config.after_order_paid_user_url_name
+      session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
+                                                                   host: current_site.env_aware_domain,
+                                                                   only_path: false)
+    end
+
     add_to_order_and_redirect
   end
 

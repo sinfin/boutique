@@ -5,7 +5,8 @@ module Boutique
     attr_accessor :use_cart_in_orders,
                   :logo_path,
                   :orders_edit_sidebar_shipping_content,
-                  :parent_controller
+                  :parent_controller,
+                  :after_order_paid_user_url_name
 
     def initialize
       # set defaults here
@@ -13,6 +14,7 @@ module Boutique
       @logo_path = nil
       @orders_edit_sidebar_shipping_content = nil
       @parent_controller = "ApplicationController"
+      @after_order_paid_user_url_name = :root_url
     end
   end
 
