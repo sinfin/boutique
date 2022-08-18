@@ -7,9 +7,7 @@
         .b-line-items-summary__line-item-cover-wrap
           = image(line_item.cover_placement_from_variant_or_product,
                   THUMB_SIZE,
-                  contain: true,
-                  class: 'b-line-items-summary__line-item-cover '\
-                         'b-adaptive-css-background-primary')
+                  class: 'b-line-items-summary__line-item-cover')
 
         = simple_format(line_item.summary_text)
 
