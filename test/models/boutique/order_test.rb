@@ -175,4 +175,26 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not order.primary_address.present?
     assert order.valid?
   end
+
+  test "event callbacks" do
+    order = create(:boutique_order, :ready_to_be_confirmed)
+
+    order.class_eval do
+      attr_accessor :last_event
+
+      def after_confirm
+        @last_event = :confirm
+      end
+
+      def after_pay
+        @last_event = :pay
+      end
+    end
+
+    assert_nil order.last_event
+    order.confirm!
+    assert_equal order.last_event, :confirm
+    order.pay!
+    assert_equal order.last_event, :pay
+  end
 end

@@ -5,6 +5,8 @@ class Boutique::Order < Boutique::ApplicationRecord
   include Folio::HasAddresses
   include Folio::HasSecretHash
 
+  EVENT_CALLBACKS = %i[after_confirm after_pay]
+
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
                     inverse_of: :orders,
@@ -95,6 +97,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       after do
         use_voucher!
         charge_recurrent_payment! if subsequent?
+
+        after_confirm
       end
     end
 
@@ -121,6 +125,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         else
           invite_user!
         end
+
+        after_pay
       end
 
       after_commit do
@@ -147,6 +153,12 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :cancelled, to: :pending
 
       before { self.cancelled_at = nil }
+    end
+  end
+
+  EVENT_CALLBACKS.each do |cb|
+    define_method cb do
+      # override in main app if needed
     end
   end
 
