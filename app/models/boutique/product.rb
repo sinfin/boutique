@@ -29,6 +29,8 @@ class Boutique::Product < Boutique::ApplicationRecord
                                      class_name: "Boutique::ProductVariant",
                                      foreign_key: :boutique_product_id
 
+  has_many :subscriptions, through: :variants
+
   validates :title,
             :type,
             presence: true
