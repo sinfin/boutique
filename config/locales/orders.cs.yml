@@ -10,6 +10,17 @@ cs:
         addresses_fields_title: Kontaktní údaje
         order_for_free: Objednat zdarma
 
+        gift_recipient_address_fields:
+          title: Adresa obdarovaného
+          address_line_1_regular: Adresa 1
+          address_line_1_inline: Ulice
+          address_line_2_regular: Adresa 2
+          address_line_2_inline: Číslo
+
+        gift_recipient_fields:
+          title: Upozornění pro obdarovaného
+          info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku.
+
         sidebar:
           contents: Získáte
           shipping: Doprava

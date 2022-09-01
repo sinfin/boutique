@@ -10,6 +10,17 @@ en:
         addresses_fields_title: Contact information
         order_for_free: Order for free
 
+        gift_recipient_address_fields:
+          title: Gift recipient address
+          address_line_1_regular: Address line 1
+          address_line_1_inline: Street
+          address_line_2_regular: Address line 2
+          address_line_2_inline: Number
+
+        gift_recipient_fields:
+          title: Notification for the gift recipient 
+          info: Please select a date when we will send an email to the recipient with information about your gift.
+
         sidebar:
           contents: Includes
           shipping: Shipping

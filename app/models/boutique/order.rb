@@ -59,7 +59,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
-  validates :first_name,
+  validates :email,
+            :first_name,
             :last_name,
             :base_number,
             :number,
@@ -69,10 +70,21 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   validates :email,
             format: { with: Folio::EMAIL_REGEXP },
-            unless: :pending?
+            unless: :pending?,
+            allow_nil: true
 
   validate :validate_voucher_code
   validate :validate_email_not_already_registered, unless: :pending?
+
+  validates :gift_recipient_email,
+            :gift_recipient_notification_date,
+            presence: true,
+            if: -> { gift? && !pending? }
+
+  validates :gift_recipient_email,
+            format: { with: Folio::EMAIL_REGEXP },
+            if: -> { gift? && !pending? },
+            allow_nil: true
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -226,6 +238,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                            amount:)
         end
       end
+
+      self.gift = product_variant.gift
 
       save!
     end

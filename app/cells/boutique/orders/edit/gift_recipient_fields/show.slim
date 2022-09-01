@@ -1,0 +1,10 @@
+.b-orders-edit-gift-fields
+  h3.mt-0 = t('.title')
+  = t('.info')
+
+  .row.mt-3.mb-n3
+    .col-5.col-lg-4
+      = gift_recipient_notification_date_input
+
+    .col-7.col-lg-6
+      = f.input :gift_recipient_email, required: true

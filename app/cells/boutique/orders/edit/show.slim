@@ -18,7 +18,7 @@
 
                 = f.input :email, required: true
 
-                - if current_order.digital_only?
+                - if current_order.digital_only? || current_order.gift?
                   .row
                     .col-lg-6 = f.input :first_name, required: true
                     .col-lg-6 = f.input :last_name, required: true
@@ -33,7 +33,16 @@
               .b-orders-edit__box-inner
                 == cell('boutique/orders/edit/subscription_fields', f)
 
-          - unless current_order.digital_only?
+          - if current_order.gift?
+            .b-orders-edit__box
+              .b-orders-edit__box-inner
+                == cell('boutique/orders/edit/gift_recipient_fields', f)
+
+            .b-orders-edit__box
+              .b-orders-edit__box-inner
+                == cell('boutique/orders/edit/gift_recipient_address_fields', f)
+
+          - unless current_order.digital_only? || current_order.gift?
             .b-orders-edit__box
               - current_order.force_address_validation = true
               == cell('folio/addresses/fields',
