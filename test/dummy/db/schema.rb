@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_27_215741) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_22_062741) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -86,6 +86,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_27_215741) do
     t.string "voucher_code"
     t.bigint "boutique_voucher_id"
     t.string "invoice_number"
+    t.boolean "gift", default: false
+    t.string "gift_recipient_email"
+    t.date "gift_recipient_notification_date"
+    t.datetime "gift_recipient_notification_sent_at"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
@@ -123,6 +127,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_27_215741) do
     t.string "slug"
     t.text "description"
     t.boolean "best_offer", default: false
+    t.boolean "gift", default: false
     t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"
     t.index ["master"], name: "index_boutique_product_variants_on_master", where: "master"
     t.index ["position"], name: "index_boutique_product_variants_on_position"

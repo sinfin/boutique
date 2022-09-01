@@ -395,40 +395,45 @@ end
 #
 # Table name: boutique_orders
 #
-#  id                       :bigint(8)        not null, primary key
-#  folio_user_id            :bigint(8)
-#  web_session_id           :string
-#  base_number              :integer
-#  number                   :string
-#  secret_hash              :string
-#  email                    :string
-#  first_name               :string
-#  last_name                :string
-#  aasm_state               :string           default("pending")
-#  line_items_count         :integer          default(0)
-#  line_items_price         :integer
-#  total_price              :integer
-#  primary_address_id       :bigint(8)
-#  secondary_address_id     :bigint(8)
-#  use_secondary_address    :boolean          default(FALSE)
-#  confirmed_at             :datetime
-#  paid_at                  :datetime
-#  dispatched_at            :datetime
-#  cancelled_at             :datetime
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  boutique_subscription_id :bigint(8)
-#  original_payment_id      :bigint(8)
-#  discount                 :integer
-#  voucher_code             :string
-#  boutique_voucher_id      :bigint(8)
-#  invoice_number           :string
+#  id                                  :bigint(8)        not null, primary key
+#  folio_user_id                       :bigint(8)
+#  web_session_id                      :string
+#  base_number                         :integer
+#  number                              :string
+#  secret_hash                         :string
+#  email                               :string
+#  first_name                          :string
+#  last_name                           :string
+#  aasm_state                          :string           default("pending")
+#  line_items_count                    :integer          default(0)
+#  line_items_price                    :integer
+#  total_price                         :integer
+#  primary_address_id                  :bigint(8)
+#  secondary_address_id                :bigint(8)
+#  use_secondary_address               :boolean          default(FALSE)
+#  confirmed_at                        :datetime
+#  paid_at                             :datetime
+#  dispatched_at                       :datetime
+#  cancelled_at                        :datetime
+#  created_at                          :datetime         not null
+#  updated_at                          :datetime         not null
+#  boutique_subscription_id            :bigint(8)
+#  original_payment_id                 :bigint(8)
+#  discount                            :integer
+#  voucher_code                        :string
+#  boutique_voucher_id                 :bigint(8)
+#  invoice_number                      :string
+#  gift_address_id                     :bigint(8)
+#  gift_recipient_email                :string
+#  gift_recipient_notification_date    :date
+#  gift_recipient_notification_sent_at :datetime
 #
 # Indexes
 #
 #  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
 #  index_boutique_orders_on_boutique_voucher_id       (boutique_voucher_id)
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
+#  index_boutique_orders_on_gift_address_id           (gift_address_id)
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)

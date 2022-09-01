@@ -101,6 +101,7 @@ end
 #  slug                     :string
 #  description              :text
 #  best_offer               :boolean          default(FALSE)
+#  gift                     :boolean          default(FALSE)
 #
 # Indexes
 #
