@@ -6,20 +6,52 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
     email_template_mail(data, to: order.email)
   end
 
-  alias_method :paid_subsequent, :paid
-
-  def unpaid_reminder(order)
-    data = order_data(order)
+  def paid_subsequent(order)
+    data = order_data(order, address: false)
     email_template_mail(data, to: order.email)
   end
 
+  def unpaid_reminder(order)
+    data = order_data(order, address: false)
+    email_template_mail(data, to: order.email)
+  end
+
+  def gift_notification(order, token = nil)
+    data = order_data(order, gift: true)
+    data[:USER_ACCEPT_INVITATION_URL] = main_app.accept_user_invitation_url(invitation_token: token)
+    email_template_mail(data, to: order.gift_recipient_email)
+  end
+
   private
-    def order_data(order)
-      {
+    def order_data(order, address: true, gift: false)
+      h = {
         ORDER_NUMBER: order.number,
-        ORDER_SUMMARY_HTML: render(partial: "summary_html", locals: { order: }),
-        ORDER_SUMMARY_PLAIN: render(partial: "summary_plain", locals: { order: }),
-        ORDER_URL: boutique.order_url(order.secret_hash),
+        ORDER_SUMMARY_HTML: render(partial: "summary_html", locals: { order:, gift: }),
+        ORDER_SUMMARY_PLAIN: render(partial: "summary_plain", locals: { order:, gift: }),
       }
+
+      if address
+        h[:ORDER_SHIPPING_ADDRESS_HTML] = order_shipping_address(order, html: true)
+        h[:ORDER_SHIPPING_ADDRESS_PLAIN] = order_shipping_address(order)
+      end
+
+      unless gift
+        h[:ORDER_URL] = boutique.order_url(order.secret_hash)
+      end
+
+      h
+    end
+
+    def order_shipping_address(order, html: false)
+      a = order.primary_address
+      new_line = html ? "<br>" : "\n"
+
+      [
+        a.name || order.full_name,
+        [a.address_line_1, a.address_line_2].join(" "),
+        [a.zip, a.city].join(" "),
+        a.country_code,
+        a.phone
+      ].join(new_line)
     end
 end

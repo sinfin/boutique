@@ -17,10 +17,11 @@ table.my-4
       td style="padding-bottom: 10px"
         = line_item.to_label
 
-  tr
-    td.font-weight-bold
-      - if order.free?
-        = t("boutique.free")
-      - else
-        = t("boutique.order_mailer.summary.paid",
-            price: number_to_currency(order.total_price, precision: 0))
+  - unless gift
+    tr
+      td.font-weight-bold
+        - if order.free?
+          = t("boutique.free")
+        - else
+          = t("boutique.order_mailer.summary.paid",
+              price: number_to_currency(order.total_price, precision: 0))

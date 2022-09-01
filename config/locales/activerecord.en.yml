@@ -9,6 +9,8 @@ en:
 
       folio/email_template:
         keyword/ORDER_NUMBER: Order number
+        keyword/ORDER_SHIPPING_ADDRESS_HTML: Shipping address in HTML
+        keyword/ORDER_SHIPPING_ADDRESS_PLAIN: Shipping address in plain text
         keyword/ORDER_SUMMARY_HTML: Order summary in HTML
         keyword/ORDER_SUMMARY_PLAIN: Order summary in plain text
         keyword/ORDER_URL: Order URL

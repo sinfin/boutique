@@ -128,7 +128,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       before do
         set_invoice_number
 
-        set_up_subscription! unless subsequent?
+        set_up_subscription! unless gift? || subsequent?
       end
 
       after do
@@ -279,6 +279,23 @@ class Boutique::Order < Boutique::ApplicationRecord
         raise error
       end
     end
+  end
+
+  def deliver_gift!
+    return unless gift?
+
+    gift_recipient_user = Folio::User.find_by(email: gift_recipient_email) || begin
+      gift_recipient_first_name, gift_recipient_last_name = primary_address.name.split(" ", 2)
+
+      Folio::User.invite!(email: gift_recipient_email,
+                                                first_name: gift_recipient_first_name,
+                                                last_name: gift_recipient_last_name,
+                                                primary_address: primary_address.try(:dup)) do |u|
+        u.skip_invitation = true
+      end
+    end
+    require "pry-rails"; binding.pry
+    Boutique::OrderMailer.gift_notification(self, gift_recipient_user.raw_invitation_token).deliver_later
   end
 
   def requires_address?

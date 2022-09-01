@@ -66,6 +66,8 @@ cs:
 
       folio/email_template:
         keyword/ORDER_NUMBER: Číslo objednávky
+        keyword/ORDER_SHIPPING_ADDRESS_HTML: Doručovací adresa v HTML
+        keyword/ORDER_SHIPPING_ADDRESS_PLAIN: Doručovací adresa v plain textu
         keyword/ORDER_SUMMARY_HTML: Shrnutí objednávky v HTML
         keyword/ORDER_SUMMARY_PLAIN: Shrnutí objednávky v plain textu
         keyword/ORDER_URL: Odkaz na objednávku

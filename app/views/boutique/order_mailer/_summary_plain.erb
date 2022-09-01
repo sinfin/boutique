@@ -1,9 +1,11 @@
 <%- order.line_items.each do |line_item| -%>
 <%= line_item.to_label %>
-
 <%- end -%>
+<%- unless gift -%>
+
 <%- if order.free? -%>
 <%= t("boutique.free") %>
 <%- else -%>
 <%= t("boutique.order_mailer.summary.paid", price: number_to_currency(order.total_price, precision: 0)) %>
+<%- end -%>
 <%- end -%>
