@@ -37,6 +37,13 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   validate :validate_master_variant_presence
 
+  pg_search_scope :by_query,
+                against: %i[title],
+                ignoring: :accents,
+                using: {
+                  tsearch: { prefix: true }
+                }
+
   after_initialize :set_default_vat_rate
 
   def subscription?
