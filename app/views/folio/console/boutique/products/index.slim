@@ -6,6 +6,18 @@
 
     edit_link :to_label
 
+    Boutique::Product.additional_columns_for_console_index_table.each do |attr|
+      attribute(attr) do
+        value = record.send(attr)
+
+        if value.is_a?(ActiveRecord::Base)
+          value.to_label
+        else
+          value.to_s
+        end
+      end
+    end
+
     type
 
     published_toggle

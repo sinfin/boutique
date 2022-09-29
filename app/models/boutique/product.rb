@@ -50,6 +50,10 @@ class Boutique::Product < Boutique::ApplicationRecord
     is_a?(Boutique::Product::Subscription)
   end
 
+  def self.additional_columns_for_console_index_table
+    []
+  end
+
   def self.pregenerated_thumbnails
     h = {
       "Folio::FilePlacement::Cover" => [],
