@@ -47,3 +47,14 @@ en:
             base:
               missing_master_variant: Doesn't have a master variant.
               too_many_master_variants: Has too many master variants.
+
+        boutique/order:
+          attributes:
+            email:
+              already_registered: is already registered
+            voucher_code:
+              expired: is expired
+
+        boutique/subscription:
+          base:
+            already_cancelled: Automatic renewal is already cancelled.

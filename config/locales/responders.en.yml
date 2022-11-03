@@ -1,0 +1,10 @@
+---
+en:
+  flash:
+    folio:
+      console:
+        boutique:
+          subscriptions:
+            cancel:
+              alert: Automatic subscription renewal could not be cancelled.
+              notice: Automatic subscription renewal was cancelled.

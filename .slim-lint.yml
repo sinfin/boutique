@@ -6,3 +6,4 @@ linters:
     exclude:
       - app/cells/boutique/orders/edit/subscription_fields/show.slim
       - app/views/folio/console/boutique/products/_form.slim
+      - app/cells/folio/console/boutique/subscriptions/catalogue/show.slim

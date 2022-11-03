@@ -1,0 +1,3 @@
+= simple_form_for(@subscription,
+                  url: url_for([:console, @user, @subscription])) do |f|
+  = render 'form', f: f

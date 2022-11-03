@@ -44,6 +44,8 @@ cs:
 
       boutique/subscription:
         active: Aktivní
+        active_from: Aktivní od
+        active_until: Aktivní do
         cancelled_at: Zrušeno
         order: Objednávka
         product: Produkt
@@ -129,3 +131,7 @@ cs:
             voucher_code:
               invalid: není platný
               expired: již není aktivní
+
+        boutique/subscription:
+          base:
+            already_cancelled: Automatická obnova již zrušena.

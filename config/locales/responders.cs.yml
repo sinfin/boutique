@@ -1,0 +1,10 @@
+---
+cs:
+  flash:
+    folio:
+      console:
+        boutique:
+          subscriptions:
+            cancel:
+              alert: Automatická obnova předplatného nelze zrušit.
+              notice: Automatická obnova předplatného zrušena.

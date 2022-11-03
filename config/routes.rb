@@ -25,6 +25,14 @@ Folio::Engine.routes.draw do
       resources :products, except: %i[show]
       resources :vat_rates, except: %i[show]
       resources :vouchers, except: %i[show]
+
+      resources :users, only: [] do
+        resources :subscriptions, only: %i[edit update], controller: :subscriptions do
+          member do
+            delete :cancel
+          end
+        end
+      end
     end
   end
 end

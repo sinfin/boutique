@@ -8,6 +8,11 @@ en:
             summary:
               text: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
 
+        subscriptions:
+          catalogue:
+            cancel: Cancel
+            cancel_confirm: Do you really want to cancel automatic subscription renewal?
+
         vouchers:
           code_input:
             code_types:

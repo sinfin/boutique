@@ -37,6 +37,14 @@ class Boutique::Subscription < ApplicationRecord
             :period,
             presence: true
 
+  def to_label
+    [
+      product_variant.to_label,
+      ("(#{active_range})" if active_from.present?),
+    ].compact
+     .join(" ")
+  end
+
   def active_at?(time)
     if active_from.present? && active_from >= time
       return false
@@ -52,9 +60,10 @@ class Boutique::Subscription < ApplicationRecord
   def active_range
     if active_from.present?
       [
-        I18n.l(active_from, format: :as_date),
-        (I18n.l(active_until, format: :as_date) if active_until)
-      ].compact.join(" – ")
+        active_from,
+        active_until
+      ].filter_map { |a| I18n.l(a, format: :as_date) if a }
+       .join(" – ")
     end
   end
 
@@ -83,12 +92,15 @@ class Boutique::Subscription < ApplicationRecord
   end
 
   def cancel!
-    return false if cancelled_at?
-
-    now = current_time_from_proper_timezone
-    update_columns(cancelled_at: now,
-                   updated_at: now)
-    true
+    if cancelled_at.nil?
+      now = current_time_from_proper_timezone
+      update_columns(cancelled_at: now,
+                     updated_at: now)
+      true
+    else
+      errors.add(:base, :already_cancelled)
+      false
+    end
   end
 
   def prolong!

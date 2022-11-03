@@ -1,0 +1,13 @@
+= form_header f
+
+= tabs [:content]
+
+.tab-content
+  = tab :content
+    .row
+      .col-md-6
+        .row
+          .col-md = f.input :active_from
+          .col-md = f.input :active_until
+
+= form_footer f

@@ -26,26 +26,26 @@
         end
       end
 
-/ attribute nil, nil, compact: true, class_name: "actions" do
-/   a = [
-/     link_to("",
-/             edit_console_infocz_subscription_path(record),
-/             class: "btn btn-secondary fa fa-edit",
-/             title: t("folio.console.actions.edit"))
-/   ]
-/
-/   if record.active_until.nil? || record.cancelled_at.nil?
-/     a << link_to("",
-/                  cancel_console_infocz_subscription_path(record),
-/                  method: :delete,
-/                  class: "btn btn-danger fa fa-times",
-/                  title: t(".cancel"),
-/                  data: {
-/                    confirm: t(".cancel_confirm"),
-/                  })
-/   end
-/
-/   content_tag(:div, class: "f-c-index-actions") do
-/     a.join
-/   end
-/ end
+      attribute nil, nil, compact: true, class_name: "actions" do
+        a = [
+          link_to("",
+                  controller.folio.edit_console_user_subscription_path(record.user, record),
+                  class: "btn btn-secondary fa fa-edit",
+                  title: t("folio.console.actions.edit"))
+        ]
+
+        if record.active_until.nil? || record.cancelled_at.nil?
+          a << link_to("",
+                       controller.folio.cancel_console_user_subscription_path(record.user, record),
+                       method: :delete,
+                       class: "btn btn-danger fa fa-times",
+                       title: t("folio.console.boutique.subscriptions.catalogue.cancel"),
+                       data: {
+                         confirm: t("folio.console.boutique.subscriptions.catalogue.cancel_confirm"),
+                       })
+        end
+
+        content_tag(:div, class: "f-c-index-actions") do
+          a.join
+        end
+      end
