@@ -4,3 +4,4 @@ cs:
     line_items:
       summary:
         title: Produkty v objednávce
+        recurrent_payment: automatická obnova

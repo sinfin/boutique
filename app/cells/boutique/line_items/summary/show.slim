@@ -12,3 +12,8 @@
         = simple_format(line_item.summary_text)
 
         h4.mb-0 = price(line_item.price)
+
+        - if line_item.subscription_recurring?
+          .b-line-items-summary__line-item-recurrent-payment
+            / = icon(:recurrent)
+            = t(".recurrent_payment")
