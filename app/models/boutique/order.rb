@@ -288,13 +288,13 @@ class Boutique::Order < Boutique::ApplicationRecord
       gift_recipient_first_name, gift_recipient_last_name = primary_address.name.split(" ", 2)
 
       Folio::User.invite!(email: gift_recipient_email,
-                                                first_name: gift_recipient_first_name,
-                                                last_name: gift_recipient_last_name,
-                                                primary_address: primary_address.try(:dup)) do |u|
+                          first_name: gift_recipient_first_name,
+                          last_name: gift_recipient_last_name,
+                          primary_address: primary_address.try(:dup)) do |u|
         u.skip_invitation = true
       end
     end
-    require "pry-rails"; binding.pry
+
     Boutique::OrderMailer.gift_notification(self, gift_recipient_user.raw_invitation_token).deliver_later
   end
 
