@@ -454,17 +454,17 @@ end
 #  voucher_code                        :string
 #  boutique_voucher_id                 :bigint(8)
 #  invoice_number                      :string
-#  gift_address_id                     :bigint(8)
+#  gift                                :boolean          default(FALSE)
 #  gift_recipient_email                :string
 #  gift_recipient_notification_date    :date
 #  gift_recipient_notification_sent_at :datetime
+#  gtm_data_sent_at                    :datetime
 #
 # Indexes
 #
 #  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
 #  index_boutique_orders_on_boutique_voucher_id       (boutique_voucher_id)
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
-#  index_boutique_orders_on_gift_address_id           (gift_address_id)
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
