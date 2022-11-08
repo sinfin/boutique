@@ -53,6 +53,18 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     true
   end
 
+  def discount
+    return unless discounted?
+
+    regular_price - discounted_price
+  end
+
+  def discount_in_percentages
+    return unless discounted?
+
+    (100 * (discount / regular_price.to_f)).round(2)
+  end
+
   def free?
     current_price.zero?
   end
