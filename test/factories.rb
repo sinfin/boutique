@@ -149,7 +149,6 @@ FactoryBot.define do
   end
 
   factory :boutique_folio_primary_address, class: "Folio::Address::Primary" do
-    name { "name" }
     address_line_1 { "address_line_1" }
     city { "city" }
     zip { "12345" }

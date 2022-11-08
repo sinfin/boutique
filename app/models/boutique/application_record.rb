@@ -2,6 +2,7 @@
 
 class Boutique::ApplicationRecord < ActiveRecord::Base
   include Folio::Filterable
+  include Folio::HasSanitizedFields
   include Folio::NillifyBlanks
   include Folio::RecursiveSubclasses
   include Folio::Sortable

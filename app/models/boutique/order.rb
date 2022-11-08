@@ -93,6 +93,10 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
+  has_sanitized_fields :first_name,
+                       :last_name,
+                       :email
+
   aasm timestamps: true do
     state :pending, initial: true
     state :confirmed, color: "red"
@@ -186,10 +190,18 @@ class Boutique::Order < Boutique::ApplicationRecord
     16
   end
 
+  def full_name
+    if first_name.present? || last_name.present?
+      "#{first_name} #{last_name}".strip
+    else
+      email
+    end
+  end
+
   def to_label
     [
       number,
-      user.try(:full_name) || email
+      full_name,
     ].compact.join(" – ")
   end
 
