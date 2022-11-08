@@ -46,6 +46,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     amount * unit_price
   end
 
+  def price_vat
+    amount * unit_price_vat
+  end
+
+  def price_without_vat
+    price - price_vat
+  end
+
   def unit_price
     super || product_variant.price
   end
@@ -54,12 +62,12 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     super || product.vat_rate.value
   end
 
-  def price_vat
-    (price * (vat_rate_value.to_f / (100 + vat_rate_value))).round(2)
+  def unit_price_vat
+    (unit_price * (vat_rate_value.to_f / (100 + vat_rate_value))).round(2)
   end
 
-  def price_without_vat
-    price - price_vat
+  def unit_price_without_vat
+    unit_price - unit_price_vat
   end
 
   def imprint!
