@@ -29,6 +29,7 @@ cs:
         subscription_frequency/bimonthly: dvouměsíčník
         subscription_frequency/monthly: měsíčník
         type: Typ produktu
+        site: Web
         vat_rate: Sazba daně
 
       boutique/product_variant:

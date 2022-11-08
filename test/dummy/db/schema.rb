@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_07_075049) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_07_133644) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -91,11 +91,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_075049) do
     t.date "gift_recipient_notification_date"
     t.datetime "gift_recipient_notification_sent_at"
     t.datetime "gtm_data_sent_at"
+    t.bigint "site_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
+    t.index ["site_id"], name: "index_boutique_orders_on_site_id"
     t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
   end
 
@@ -146,9 +148,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_075049) do
     t.integer "variants_count", default: 0
     t.string "subscription_frequency"
     t.bigint "boutique_vat_rate_id", null: false
+    t.bigint "site_id"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
+    t.index ["site_id"], name: "index_boutique_products_on_site_id"
     t.index ["slug"], name: "index_boutique_products_on_slug"
     t.index ["type"], name: "index_boutique_products_on_type"
   end

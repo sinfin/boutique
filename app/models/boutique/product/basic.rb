@@ -18,12 +18,14 @@ end
 #  variants_count         :integer          default(0)
 #  subscription_frequency :string
 #  boutique_vat_rate_id   :bigint(8)        not null
+#  site_id                :bigint(8)
 #
 # Indexes
 #
 #  index_boutique_products_on_boutique_vat_rate_id  (boutique_vat_rate_id)
 #  index_boutique_products_on_published             (published)
 #  index_boutique_products_on_published_at          (published_at)
+#  index_boutique_products_on_site_id               (site_id)
 #  index_boutique_products_on_slug                  (slug)
 #  index_boutique_products_on_type                  (type)
 #

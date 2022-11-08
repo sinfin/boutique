@@ -9,6 +9,9 @@ class Boutique::Product < Boutique::ApplicationRecord
   include Folio::RecursiveSubclasses
   include Folio::StiPreload
 
+  belongs_to :site, class_name: "Folio::Site",
+                    required: Boutique.config.products_belong_to_site
+
   belongs_to :vat_rate, class_name: "Boutique::VatRate",
                        foreign_key: :boutique_vat_rate_id,
                        inverse_of: :products
@@ -35,6 +38,9 @@ class Boutique::Product < Boutique::ApplicationRecord
             :type,
             presence: true
 
+  validates :site, inclusion: { in: proc { sites_for_select } },
+                   allow_nil: true
+
   validate :validate_master_variant_presence
 
   pg_search_scope :by_query,
@@ -48,6 +54,10 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   def subscription?
     is_a?(Boutique::Product::Subscription)
+  end
+
+  def self.sites_for_select
+    Folio::Site.ordered
   end
 
   def self.additional_columns_for_console_index_table
@@ -118,12 +128,14 @@ end
 #  variants_count         :integer          default(0)
 #  subscription_frequency :string
 #  boutique_vat_rate_id   :bigint(8)        not null
+#  site_id                :bigint(8)
 #
 # Indexes
 #
 #  index_boutique_products_on_boutique_vat_rate_id  (boutique_vat_rate_id)
 #  index_boutique_products_on_published             (published)
 #  index_boutique_products_on_published_at          (published_at)
+#  index_boutique_products_on_site_id               (site_id)
 #  index_boutique_products_on_slug                  (slug)
 #  index_boutique_products_on_type                  (type)
 #

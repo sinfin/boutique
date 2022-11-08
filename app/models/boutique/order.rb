@@ -12,6 +12,9 @@ class Boutique::Order < Boutique::ApplicationRecord
                     inverse_of: :orders,
                     optional: true
 
+  belongs_to :site, class_name: "Folio::Site",
+                    optional: true
+
   belongs_to :subscription, class_name: "Boutique::Subscription",
                             foreign_key: :boutique_subscription_id,
                             inverse_of: :orders,
@@ -68,6 +71,10 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             unless: :pending?
 
+  validates :site,
+            presence: true,
+            if: -> { Boutique.config.products_belong_to_site && !pending? }
+
   validates :email,
             format: { with: Folio::EMAIL_REGEXP },
             unless: :pending?,
@@ -102,6 +109,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       before do
         set_numbers
         imprint_prices
+        set_site
 
         self.email ||= user.try(:email)
       end
@@ -240,6 +248,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       self.gift = product_variant.gift
+      self.site = product_variant.product.site
 
       save!
     end
@@ -352,6 +361,10 @@ class Boutique::Order < Boutique::ApplicationRecord
                          cancelled_at:)
     end
 
+    def set_site
+      self.site ||= line_items.first.product_variant.product.site if line_items.present?
+    end
+
     def use_voucher!
       voucher.use! if voucher.try(:applicable?)
     end
@@ -459,6 +472,7 @@ end
 #  gift_recipient_notification_date    :date
 #  gift_recipient_notification_sent_at :datetime
 #  gtm_data_sent_at                    :datetime
+#  site_id                             :bigint(8)
 #
 # Indexes
 #
@@ -467,6 +481,7 @@ end
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
+#  index_boutique_orders_on_site_id                   (site_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
 #
 # Foreign Keys

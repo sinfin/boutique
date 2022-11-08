@@ -16,7 +16,15 @@
 
         .row
           .col-md-6
-            = f.association :vat_rate, remote: true
+            = f.association :vat_rate,
+                            collection: Boutique::VatRate.ordered,
+                            include_blank: false
+
+          - if Boutique.config.products_belong_to_site
+            .col-md-6
+              = f.association :site,
+                              collection: Boutique::Product.sites_for_select,
+                              include_blank: false
 
         == cell('folio/console/boutique/orders/sti_fields', f)
 
