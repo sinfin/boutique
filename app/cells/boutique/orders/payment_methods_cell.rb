@@ -27,16 +27,12 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
 
     (selected & enabled).map do |pm|
       {
-        title: payment_method_title(pm),
+        title: Boutique::Payment.payment_method_to_human(pm),
         value: pm,
         disabled: recurrence_required ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
         enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm)
       }
     end
-  end
-
-  def payment_method_title(payment_method_string)
-    t("boutique.go_pay.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
   end
 
   def payment_button(f, method, i)

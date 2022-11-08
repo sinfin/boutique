@@ -54,6 +54,14 @@ class Boutique::Payment < Boutique::ApplicationRecord
 
   alias_attribute :timeouted_at, :cancelled_at
   alias_attribute :refunded_at, :cancelled_at
+
+  def payment_method_to_human
+    self.class.payment_method_to_human(payment_method)
+  end
+
+  def self.payment_method_to_human(payment_method_string)
+    I18n.t("boutique.go_pay.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
+  end
 end
 
 # == Schema Information
