@@ -2,7 +2,7 @@
 
 class Boutique::Orders::Edit::GiftRecipientAddressFieldsCell < Folio::Addresses::FieldsCell
   def show
-    model.object.build_primary_address if model.object.build_primary_address.nil?
+    model.object.build_primary_address if model.object.primary_address.nil?
 
     render
   end
