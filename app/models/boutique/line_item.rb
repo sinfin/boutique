@@ -20,11 +20,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   delegate :subscription?,
            to: :product
 
-  after_initialize do
-    # TODO: change column default
-    self.subscription_recurring = true
-  end
-
   def to_label
     product_variant.title
   end
@@ -115,7 +110,7 @@ end
 #  amount                      :integer          default(1)
 #  unit_price                  :integer
 #  subscription_starts_at      :datetime
-#  subscription_recurring      :boolean
+#  subscription_recurring      :boolean          default(TRUE)
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  boutique_product_variant_id :bigint(8)        not null

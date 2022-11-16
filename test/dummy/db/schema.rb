@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_07_133644) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_16_114915) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_133644) do
     t.integer "amount", default: 1
     t.integer "unit_price"
     t.datetime "subscription_starts_at"
-    t.boolean "subscription_recurring"
+    t.boolean "subscription_recurring", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "boutique_product_variant_id", null: false
@@ -357,6 +357,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_133644) do
     t.string "file_name_for_search"
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
+    t.string "default_gravity"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
