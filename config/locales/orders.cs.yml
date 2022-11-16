@@ -6,7 +6,7 @@ cs:
         register: Zaregistujte se
         or: "Nebo:"
         have_account_already: Již u nás máte účet?
-        sign_in: Přihlašte se
+        sign_in: Přihlaste se
         addresses_fields_title: Kontaktní údaje
         order_for_free: Objednat zdarma
 
