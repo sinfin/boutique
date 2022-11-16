@@ -1,0 +1,6 @@
+---
+en:
+  boutique:
+    subscriptions:
+      recurrent_payment_label:
+        label: recurrent

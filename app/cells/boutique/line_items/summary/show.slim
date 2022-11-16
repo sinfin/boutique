@@ -14,6 +14,5 @@
         h4.mb-0 = price(line_item.price)
 
         - if line_item.subscription_recurring?
-          .b-line-items-summary__line-item-recurrent-payment
-            / = icon(:recurrent)
-            = t(".recurrent_payment")
+          .mt-3
+            == cell('boutique/subscriptions/recurrent_payment_label')

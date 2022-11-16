@@ -1,0 +1,6 @@
+---
+cs:
+  boutique:
+    subscriptions:
+      recurrent_payment_label:
+        label: automatická obnova
