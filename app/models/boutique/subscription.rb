@@ -3,7 +3,8 @@
 class Boutique::Subscription < ApplicationRecord
   belongs_to :payment, class_name: "Boutique::Payment",
                        foreign_key: :boutique_payment_id,
-                       inverse_of: :subscription
+                       inverse_of: :subscription,
+                       optional: true
 
   belongs_to :product_variant, class_name: "Boutique::ProductVariant",
                                foreign_key: :boutique_product_variant_id,
@@ -36,6 +37,10 @@ class Boutique::Subscription < ApplicationRecord
             :active_until,
             :period,
             presence: true
+
+  validates :payment,
+            presence: true,
+            unless: :cancelled?
 
   def to_label
     [
@@ -89,6 +94,10 @@ class Boutique::Subscription < ApplicationRecord
 
   def original_order
     orders.last
+  end
+
+  def cancelled?
+    cancelled_at?
   end
 
   def cancel!
