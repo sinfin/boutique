@@ -20,9 +20,7 @@
                 .col-lg-6
                   = f.input :slug, hint: false
 
-              = f.input :description,
-                        character_counter: true,
-                        autosize: true
+              = f.input :description, as: :redactor
 
           = f.input :checkout_sidebar_content, as: :redactor
 
