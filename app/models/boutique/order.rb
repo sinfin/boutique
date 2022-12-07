@@ -259,7 +259,6 @@ class Boutique::Order < Boutique::ApplicationRecord
         end
       end
 
-      self.gift = product_variant.gift
       self.site = product_variant.product.site
 
       save!

@@ -36,7 +36,6 @@ cs:
         best_offer: Nejvýhodnější nabídka
         description: Text kartiček
         checkout_sidebar_content: Popisek v checkoutu
-        gift: Dárek
         regular_price: Cena
         discounted_price: Akční cena
         discounted_from: Akce od

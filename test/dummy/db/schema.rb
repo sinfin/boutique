@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_01_075948) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_07_120701) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -130,7 +130,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_01_075948) do
     t.string "slug"
     t.text "description"
     t.boolean "best_offer", default: false
-    t.boolean "gift", default: false
     t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"
     t.index ["master"], name: "index_boutique_product_variants_on_master", where: "master"
     t.index ["position"], name: "index_boutique_product_variants_on_position"
