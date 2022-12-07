@@ -38,4 +38,21 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
               action: "sign_in",
             })
   end
+
+  def addresses_fields_title
+    default_title = if current_order.requires_address?
+      t(".addresses_fields_title.default")
+    else
+      t(".addresses_fields_title.contact")
+    end
+
+    [
+      content_tag(:span, default_title,
+                         class: "b-orders-edit__addresses-fields-title b-orders-edit__addresses-fields-title--default",
+                         style: ("display: none;" if current_order.gift?)),
+      content_tag(:span, t(".addresses_fields_title.payer_contact"),
+                         class: "b-orders-edit__addresses-fields-title b-orders-edit__addresses-fields-title--gift",
+                         style: ("display: none;" unless current_order.gift?)),
+    ].join
+  end
 end

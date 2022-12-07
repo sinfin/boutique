@@ -3,11 +3,15 @@ en:
   boutique:
     orders:
       edit:
+        addresses_fields_title:
+          default: Shipping information
+          digital: Contact information
+          payer_contact: Payer contact information
+
         register: Register
         or: "Or:"
         have_account_already: Have account already?
         sign_in: Sign in
-        addresses_fields_title: Contact information
         order_for_free: Order for free
 
         gift_recipient_address_fields:
@@ -18,7 +22,8 @@ en:
           address_line_2_inline: Number
 
         gift_recipient_fields:
-          title: Notification for the gift recipient 
+          checkbox_label: Order as a gift
+          title: Notification for the gift recipient
           info: Please select a date when we will send an email to the recipient with information about your gift.
 
         sidebar:

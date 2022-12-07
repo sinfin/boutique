@@ -113,6 +113,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                     :first_name,
                                     :last_name,
                                     :voucher_code,
+                                    :gift,
                                     :gift_recipient_email,
                                     :gift_recipient_notification_date,
                                     *addresses_strong_params,

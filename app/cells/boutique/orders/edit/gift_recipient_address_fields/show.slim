@@ -6,28 +6,34 @@
     data-country-code=data_country_code(:primary_address)
   ]
     - model.simple_fields_for :primary_address do |g|
-      = g.input :name, required: true
+      = g.input :name, required: true,
+                       disabled: disabled
 
       .row
         .col-lg-7.f-addresses-fields__address-line-1
-          = address_line_input g, :address_line_1, required: true
+          = address_line_input g, :address_line_1, required: true,
+                                                   disabled: disabled
 
         .col-lg-5.f-addresses-fields__address-line-2
-          = address_line_input g, :address_line_2, required: true
+          = address_line_input g, :address_line_2, required: true,
+                                                   disabled: disabled
 
       .row
         .col-lg-5
-          = g.input :zip, required: true
+          = g.input :zip, required: true,
+                          disabled: disabled
 
         .col-lg-7
-          = g.input :city, required: true
+          = g.input :city, required: true,
+                           disabled: disabled
 
       .row
         .col-lg-7
-          = country_code_input(g)
+          = country_code_input g, disabled: disabled
 
       .row
         .col-lg-7
           = g.input :phone,
                     as: :phone,
-                    default_country_code: data_country_code(:primary_address)
+                    default_country_code: data_country_code(:primary_address),
+                    disabled: disabled

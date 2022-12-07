@@ -93,9 +93,12 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
+  validate :validate_gift_address, if: -> { gift? && !pending? }
+
   has_sanitized_fields :first_name,
                        :last_name,
-                       :email
+                       :email,
+                       :gift_recipient_email
 
   aasm timestamps: true do
     state :pending, initial: true
@@ -443,6 +446,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       if Folio::User.where(email:).exists?
         errors.add(:email, :already_registered)
+      end
+    end
+
+    def validate_gift_address
+      if primary_address.present?
+        primary_address.errors.add(:name, :blank) unless primary_address.name.present?
       end
     end
 end

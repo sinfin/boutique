@@ -6,4 +6,8 @@ class Boutique::Orders::Edit::GiftRecipientAddressFieldsCell < Folio::Addresses:
 
     render
   end
+
+  def disabled
+    !model.object.gift?
+  end
 end
