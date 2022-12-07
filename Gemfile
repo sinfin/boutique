@@ -17,6 +17,9 @@ gem "cells"
 gem "cells-slim", "0.0.6"
 gem "cells-rails", github: "sinfin/cells-rails"
 
+gem "sidekiq", "~> 6.5"
+gem "sidekiq-cron", "~> 1.8"
+
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "mocha", "~> 1.14.0"
