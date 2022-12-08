@@ -5,7 +5,10 @@ class Boutique::Order < Boutique::ApplicationRecord
   include Folio::HasAddresses
   include Folio::HasSecretHash
 
-  EVENT_CALLBACKS = %i[after_confirm after_pay]
+  EVENT_CALLBACKS = %i[before_confirm
+                       after_confirm
+                       before_pay
+                       after_pay]
 
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
@@ -119,6 +122,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_site
 
         self.email ||= user.try(:email)
+
+        before_confirm
       end
 
       after do
@@ -144,6 +149,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_invoice_number
 
         set_up_subscription! unless gift? || subsequent?
+
+        before_pay
       end
 
       after do
