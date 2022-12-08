@@ -286,6 +286,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.try(:product_variant).try(:title).presence || self.class.model_name.human
   end
 
+  def invoice_note
+    nil
+  end
+
   def charge_recurrent_payment!
     return unless confirmed? && subsequent?
 

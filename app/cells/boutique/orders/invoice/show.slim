@@ -19,3 +19,6 @@
     = render(:_payment_details)
     hr.mt-4.mb-0
     = render(:_table)
+
+    - if model.invoice_note.present?
+      = model.invoice_note
