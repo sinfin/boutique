@@ -11,8 +11,8 @@
     = t('.info')
 
     .row.mt-3.mb-n3
-      .col-5.col-lg-4
-        = gift_recipient_notification_date_input
+      .col-12.col-md-5
+        = gift_recipient_notification_scheduled_for_input
 
-      .col-7.col-lg-6
+      .col-12.col-md-7
         = f.input :gift_recipient_email, required: true

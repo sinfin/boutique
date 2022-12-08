@@ -21,7 +21,7 @@ cs:
         paid_at: Zaplaceno
         dispatched_at: Odesláno
         gift_recipient_email: E-mail obdarovaného
-        gift_recipient_notification_date: Datum odeslání upozornění
+        gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
 
       boutique/product:
         subscription_frequency: Periodicita

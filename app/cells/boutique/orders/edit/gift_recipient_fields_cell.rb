@@ -5,11 +5,11 @@ class Boutique::Orders::Edit::GiftRecipientFieldsCell < Boutique::ApplicationCel
     model
   end
 
-  def gift_recipient_notification_date_input
-    date = f.object.gift_recipient_notification_date || Date.today
+  def gift_recipient_notification_scheduled_for_input
+    date = f.object.gift_recipient_notification_scheduled_for || 90.minutes.from_now.beginning_of_hour
 
-    f.input :gift_recipient_notification_date,
+    f.input :gift_recipient_notification_scheduled_for,
             required: true,
-            input_html: { value: date.strftime("%-d. %-m. %Y") }
+            input_html: { value: date.strftime("%-d. %-m. %Y %H:%M") }
   end
 end

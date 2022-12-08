@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_07_120701) do
     t.string "invoice_number"
     t.boolean "gift", default: false
     t.string "gift_recipient_email"
-    t.date "gift_recipient_notification_date"
+    t.datetime "gift_recipient_notification_scheduled_for", precision: nil
     t.datetime "gift_recipient_notification_sent_at"
     t.datetime "gtm_data_sent_at"
     t.bigint "site_id"

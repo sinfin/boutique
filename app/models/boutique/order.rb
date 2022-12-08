@@ -84,7 +84,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   validate :validate_email_not_already_registered, unless: :pending?
 
   validates :gift_recipient_email,
-            :gift_recipient_notification_date,
+            :gift_recipient_notification_scheduled_for,
             presence: true,
             if: -> { gift? && !pending? }
 
@@ -459,40 +459,40 @@ end
 #
 # Table name: boutique_orders
 #
-#  id                                  :bigint(8)        not null, primary key
-#  folio_user_id                       :bigint(8)
-#  web_session_id                      :string
-#  base_number                         :integer
-#  number                              :string
-#  secret_hash                         :string
-#  email                               :string
-#  first_name                          :string
-#  last_name                           :string
-#  aasm_state                          :string           default("pending")
-#  line_items_count                    :integer          default(0)
-#  line_items_price                    :integer
-#  total_price                         :integer
-#  primary_address_id                  :bigint(8)
-#  secondary_address_id                :bigint(8)
-#  use_secondary_address               :boolean          default(FALSE)
-#  confirmed_at                        :datetime
-#  paid_at                             :datetime
-#  dispatched_at                       :datetime
-#  cancelled_at                        :datetime
-#  created_at                          :datetime         not null
-#  updated_at                          :datetime         not null
-#  boutique_subscription_id            :bigint(8)
-#  original_payment_id                 :bigint(8)
-#  discount                            :integer
-#  voucher_code                        :string
-#  boutique_voucher_id                 :bigint(8)
-#  invoice_number                      :string
-#  gift                                :boolean          default(FALSE)
-#  gift_recipient_email                :string
-#  gift_recipient_notification_date    :date
-#  gift_recipient_notification_sent_at :datetime
-#  gtm_data_sent_at                    :datetime
-#  site_id                             :bigint(8)
+#  id                                        :bigint(8)        not null, primary key
+#  folio_user_id                             :bigint(8)
+#  web_session_id                            :string
+#  base_number                               :integer
+#  number                                    :string
+#  secret_hash                               :string
+#  email                                     :string
+#  first_name                                :string
+#  last_name                                 :string
+#  aasm_state                                :string           default("pending")
+#  line_items_count                          :integer          default(0)
+#  line_items_price                          :integer
+#  total_price                               :integer
+#  primary_address_id                        :bigint(8)
+#  secondary_address_id                      :bigint(8)
+#  use_secondary_address                     :boolean          default(FALSE)
+#  confirmed_at                              :datetime
+#  paid_at                                   :datetime
+#  dispatched_at                             :datetime
+#  cancelled_at                              :datetime
+#  created_at                                :datetime         not null
+#  updated_at                                :datetime         not null
+#  boutique_subscription_id                  :bigint(8)
+#  original_payment_id                       :bigint(8)
+#  discount                                  :integer
+#  voucher_code                              :string
+#  boutique_voucher_id                       :bigint(8)
+#  invoice_number                            :string
+#  gift                                      :boolean          default(FALSE)
+#  gift_recipient_email                      :string
+#  gift_recipient_notification_scheduled_for :datetime
+#  gift_recipient_notification_sent_at       :datetime
+#  gtm_data_sent_at                          :datetime
+#  site_id                                   :bigint(8)
 #
 # Indexes
 #

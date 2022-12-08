@@ -4,7 +4,7 @@ en:
     attributes:
       boutique/order:
         gift_recipient_email: Gift recipient e-mail
-        gift_recipient_notification_date: Date of notification
+        gift_recipient_notification_scheduled_for: Date & time of notification
         voucher_code: Code
 
       folio/email_template:
