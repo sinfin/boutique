@@ -81,23 +81,13 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   def subscription_starts_at_options_for_select
     product.current_and_upcoming_issues.map do |issue|
       date = Date.new(issue[:year], issue[:month])
-      overlap_in_months = product.subscription_frequency_in_months_per_issue - 1
-
-      [subscription_starts_at_label(date, issue[:number], overlap_in_months), date]
+      [subscription_starts_at_label(date, issue[:number]), date]
     end
   end
 
   private
-    def subscription_starts_at_label(date, number, overlap_in_months)
-      from = I18n.l(date, format: "%B")
-      if overlap_in_months > 0
-        to = I18n.l(date + overlap_in_months.months, format: "%B")
-      end
-
-      title = [from, to].compact.join(" / ")
-      year = date.year.to_s.last(2)
-
-      "#{number}/#{year} – #{title}"
+    def subscription_starts_at_label(date, number)
+      "#{number}/#{date.year}"
     end
 end
 
