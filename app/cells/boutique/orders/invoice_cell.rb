@@ -7,6 +7,10 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
     @billing_address ||= model.secondary_address || model.primary_address
   end
 
+  def billing_name
+    billing_address.try(:company_name) || billing_address.try(:name) || model.full_name
+  end
+
   def billing_address_first_line
     [
       billing_address.address_line_1,
@@ -40,6 +44,11 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   end
 
   def total_price_without_vat
-    model.total_price - vat_amounts.values.sum
+    sk = true
+    if sk
+      model.total_price - vat_amounts.values.sum
+    else
+      model.total_price - vat_amounts.values.sum
+    end
   end
 end

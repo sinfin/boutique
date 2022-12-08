@@ -16,7 +16,7 @@ table.b-orders-invoice__plain-table
         ul.mt-4.mt-sm-0
           li.font-weight-bold = t('.customer')
           li.font-weight-bold
-            = billing_address.try(:company_name) || model.user.full_name
+            = billing_name
 
           - if billing_address.present?
             li = billing_address_first_line
