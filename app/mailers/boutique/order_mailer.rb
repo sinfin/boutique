@@ -3,23 +3,39 @@
 class Boutique::OrderMailer < Boutique::ApplicationMailer
   def paid(order)
     data = order_data(order)
-    email_template_mail(data, to: order.email, site: order.site)
+    email_template_mail(data,
+                        to: order.email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 
   def paid_subsequent(order)
     data = order_data(order, address: false)
-    email_template_mail(data, to: order.email, site: order.site)
+    email_template_mail(data,
+                        to: order.email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 
   def unpaid_reminder(order)
     data = order_data(order, address: false)
-    email_template_mail(data, to: order.email, site: order.site)
+    email_template_mail(data,
+                        to: order.email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 
   def gift_notification(order, token = nil)
     data = order_data(order, gift: true)
     data[:USER_ACCEPT_INVITATION_URL] = main_app.accept_user_invitation_url(invitation_token: token)
-    email_template_mail(data, to: order.gift_recipient_email, site: order.site)
+    email_template_mail(data,
+                        to: order.gift_recipient_email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 
   private

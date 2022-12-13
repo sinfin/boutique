@@ -2,7 +2,11 @@
 
 class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
   def will_be_paid_in_a_week(subscription)
-    email_template_mail({}, to: subscription.user.email, site: subscription.product_variant.product.site)
+    email_template_mail({},
+                        to: subscription.user.email,
+                        site: subscription.product_variant.product.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 
   def failure(subscription)
@@ -10,10 +14,18 @@ class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
     data = {
       ORDER_URL: boutique.order_url(order.secret_hash),
     }
-    email_template_mail(data, to: subscription.user.email, site: subscription.product_variant.product.site)
+    email_template_mail(data,
+                        to: subscription.user.email,
+                        site: subscription.product_variant.product.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 
   def unpaid(subscription)
-    email_template_mail({}, to: subscription.user.email, site: subscription.product_variant.product.site)
+    email_template_mail({},
+                        to: subscription.user.email,
+                        site: subscription.product_variant.product.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
   end
 end

@@ -7,7 +7,9 @@ module Boutique
                   :orders_edit_sidebar_shipping_content,
                   :products_belong_to_site,
                   :parent_controller,
-                  :after_order_paid_user_url_name
+                  :after_order_paid_user_url_name,
+                  :mailers_bcc,
+                  :mailers_reply_to
 
     def initialize
       # set defaults here
@@ -17,6 +19,8 @@ module Boutique
       @products_belong_to_site = false
       @parent_controller = "ApplicationController"
       @after_order_paid_user_url_name = :root_url
+      @mailers_bcc = nil
+      @mailers_reply_to = nil
     end
   end
 
