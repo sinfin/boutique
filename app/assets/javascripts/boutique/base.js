@@ -1,4 +1,6 @@
 //= require boutique/adaptive_css_for_head
+//= require folio/input/phone
+//= require folio/input/date_time
 
 //= require boutique/orders/edit/gift_recipient_fields/gift_recipient_fields
 //= require boutique/orders/edit/subscription_fields/subscription_fields

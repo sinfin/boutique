@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: c8007e837c8e176911d19d62644307fa4e705e34
+  revision: 801173de56564f77a75ada69fe66b26d14f1eb77
   specs:
     folio (3.0.0)
       aasm
@@ -176,8 +176,8 @@ GEM
     audited (5.0.2)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.673.0)
-    aws-sdk-core (3.168.3)
+    aws-partitions (1.675.0)
+    aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -235,6 +235,7 @@ GEM
     crass (1.0.6)
     css_parser (1.12.0)
       addressable
+    date (3.3.1)
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
@@ -268,7 +269,7 @@ GEM
     erubi (1.11.0)
     et-orbi (1.2.7)
       tzinfo
-    excon (0.94.0)
+    excon (0.95.0)
     execjs (2.8.1)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -350,7 +351,7 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.19.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.2.8)
@@ -373,11 +374,12 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     nenv (0.3.0)
-    net-imap (0.3.1)
+    net-imap (0.3.2)
+      date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.0)
+    net-protocol (0.2.1)
       timeout
     net-smtp (0.3.3)
       net-protocol
@@ -472,8 +474,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.3)
-      loofah (~> 2.3)
+    rails-html-sanitizer (1.4.4)
+      loofah (~> 2.19, >= 2.19.1)
     rails-i18n (7.0.6)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)

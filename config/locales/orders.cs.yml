@@ -25,6 +25,7 @@ cs:
           checkbox_label: Objednat jako dárek
           title: Upozornění pro obdarovaného
           info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku.
+          info_bold: Vaše objednávka bude odeslána až po tomto datu.
 
         sidebar:
           contents: Získáte

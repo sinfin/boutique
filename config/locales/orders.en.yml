@@ -25,6 +25,7 @@ en:
           checkbox_label: Order as a gift
           title: Notification for the gift recipient
           info: Please select a date when we will send an email to the recipient with information about your gift.
+          info_bold: Your order will be sent after this date.
 
         sidebar:
           contents: Includes

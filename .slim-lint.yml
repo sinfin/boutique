@@ -4,6 +4,7 @@ linters:
 
   LineLength:
     exclude:
+      - app/cells/boutique/orders/edit/gift_recipient_fields/_gift_icon_svg.slim
       - app/cells/boutique/orders/edit/subscription_fields/show.slim
       - app/cells/boutique/subscriptions/recurrent_payment_label/show.slim
       - app/cells/folio/console/boutique/subscriptions/catalogue/show.slim

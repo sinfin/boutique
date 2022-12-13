@@ -7,12 +7,18 @@
   .b-orders-edit-gift-fields__fields[
     style=('display: none;' unless f.object.gift?)
   ]
-    h3.mt-0 = t('.title')
-    = t('.info')
+    h4.mt-0 = t('.title')
 
-    .row.mt-3.mb-n3
-      .col-12.col-md-5
+    p
+      = cstypo t('.info')
+      br
+      strong = cstypo t('.info_bold')
+
+    .row
+      .col-12.col-md-5.mt-3
         = gift_recipient_notification_scheduled_for_input
 
-      .col-12.col-md-7
+      .col-12.col-md-7.mt-3
         = f.input :gift_recipient_email, required: true
+
+  = render(:_gift_icon_svg)
