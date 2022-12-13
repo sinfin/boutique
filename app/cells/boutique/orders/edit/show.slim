@@ -53,14 +53,16 @@
           - unless current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)
 
+          .b-orders-edit__disclaimer
+            == cell("#{application_namespace_path}/ui/disclaimer",
+                    nil,
+                    order: current_order)
+
         aside.b-orders-edit__col.b-orders-edit__col--aside
           == cell('boutique/orders/edit/sidebar', current_order)
 
       .b-orders-edit__flex
         main.b-orders-edit__col.b-orders-edit__col--main
-          .b-orders-edit__disclaimer
-            == cell("#{application_namespace_path}/ui/disclaimer")
-
           - if f.object.free?
              = f.button :submit,
                        t(".order_for_free"),
