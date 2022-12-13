@@ -14,10 +14,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   validates :amount,
             numericality: { greater_than_or_equal_to: 1 }
 
-  delegate :digital_only?,
-           :product,
+  delegate :product,
            to: :product_variant
-  delegate :subscription?,
+  delegate :digital_only?,
+           :subscription?,
            to: :product
 
   def to_label

@@ -5,7 +5,7 @@ cs:
       edit:
         addresses_fields_title:
           default: Doručovací údaje
-          digital: Kontaktní údaje
+          contact: Kontaktní údaje
           payer_contact: Kontaktní údaje plátce
 
         register: Zaregistujte se

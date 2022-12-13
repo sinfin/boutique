@@ -106,7 +106,6 @@ end
 #  discounted_from          :datetime
 #  discounted_until         :datetime
 #  master                   :boolean          default(FALSE)
-#  digital_only             :boolean          default(FALSE)
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  position                 :integer

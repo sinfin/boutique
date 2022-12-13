@@ -5,7 +5,7 @@ en:
       edit:
         addresses_fields_title:
           default: Shipping information
-          digital: Contact information
+          contact: Contact information
           payer_contact: Payer contact information
 
         register: Register

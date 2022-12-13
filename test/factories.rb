@@ -92,7 +92,7 @@ FactoryBot.define do
       if order.line_items.empty?
         evaluator.line_items_count.times do
           li = build(:boutique_line_item)
-          li.product_variant.update_column(:digital_only, true) if evaluator.digital_only
+          li.product.update_column(:digital_only, true) if evaluator.digital_only
           order.line_items << li
         end
       end

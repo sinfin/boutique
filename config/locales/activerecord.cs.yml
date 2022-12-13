@@ -24,6 +24,7 @@ cs:
         gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
 
       boutique/product:
+        digital_only: Digitální produkt
         shipping_info: Doprava
         site: Web
         subscription_frequency/bimonthly: dvouměsíčník
