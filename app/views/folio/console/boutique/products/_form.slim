@@ -28,6 +28,8 @@
 
         == cell('folio/console/boutique/orders/sti_fields', f)
 
+        = f.input :shipping_info, as: :redactor
+
         = render partial: 'additional_fields', locals: { f: }
 
     = render partial: 'variants', locals: { f: }

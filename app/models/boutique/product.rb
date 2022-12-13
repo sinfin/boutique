@@ -129,6 +129,7 @@ end
 #  subscription_frequency :string
 #  boutique_vat_rate_id   :bigint(8)        not null
 #  site_id                :bigint(8)
+#  shipping_info          :text
 #
 # Indexes
 #

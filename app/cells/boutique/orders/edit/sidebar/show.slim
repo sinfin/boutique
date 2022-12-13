@@ -12,12 +12,13 @@
 
     = contents
 
-  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
+  - if shipping_info
+    hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
 
-  div class=application_css_class("rich-text")
-    h4 = t('.shipping')
+    div class=application_css_class("rich-text")
+      h4 = t('.shipping')
 
-    == cstypo Boutique.config.orders_edit_sidebar_shipping_content
+      == cstypo shipping_info
 
   hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary[
     class="b-orders-edit-sidebar__hr--mobile-only"

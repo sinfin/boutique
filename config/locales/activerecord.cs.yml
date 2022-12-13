@@ -24,12 +24,13 @@ cs:
         gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
 
       boutique/product:
-        subscription_frequency: Periodicita
-        subscription_frequency/quarterly: čtvrtletník
+        shipping_info: Doprava
+        site: Web
         subscription_frequency/bimonthly: dvouměsíčník
         subscription_frequency/monthly: měsíčník
+        subscription_frequency/quarterly: čtvrtletník
+        subscription_frequency: Periodicita
         type: Typ produktu
-        site: Web
         vat_rate: Sazba daně
 
       boutique/product_variant:
