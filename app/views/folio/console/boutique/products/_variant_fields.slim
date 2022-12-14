@@ -15,9 +15,11 @@
                       additional_fields: %i[master best_offer])
 
               .row
-                .col-lg-6
+                .col-lg-2
+                  = f.input :code
+                .col-lg-5
                   = f.input :title, hint: false
-                .col-lg-6
+                .col-lg-5
                   = f.input :slug, hint: false
 
               = f.input :description, as: :redactor

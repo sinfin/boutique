@@ -17,12 +17,18 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
                            inverse_of: :product_variant
 
 
-  validates :regular_price,
+  validates :code,
+            :regular_price,
             presence: true
 
   validates :regular_price,
             :discounted_price,
             numericality: { greater_than_or_equal_to: 0 },
+            allow_nil: true
+
+  validates :code,
+            length: { maximum: 32 },
+            uniqueness: true,
             allow_nil: true
 
   def title
@@ -112,6 +118,7 @@ end
 #  slug                     :string
 #  description              :text
 #  best_offer               :boolean          default(FALSE)
+#  code                     :string(32)
 #
 # Indexes
 #

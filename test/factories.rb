@@ -31,6 +31,7 @@ FactoryBot.define do
   factory :boutique_product_variant, class: "Boutique::ProductVariant" do
     association :product, factory: :boutique_product
 
+    sequence(:code) { |i| "CODE#{i}" }
     title { "ProductVariant title" }
     regular_price { 99 }
   end
