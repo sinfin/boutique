@@ -19,6 +19,7 @@
 
     .row
       .col-lg-4
-        = f.input :product_variant_code
+        = f.input :product_variant_code,
+                  autocomplete: Boutique::ProductVariant.pluck(:code).sort
 
 = form_footer f
