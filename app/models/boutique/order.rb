@@ -351,6 +351,10 @@ class Boutique::Order < Boutique::ApplicationRecord
       self.number = year_prefix + base_number.to_s.rjust(5, "0")
     end
 
+    def invoice_number_prefix
+      nil
+    end
+
     def set_invoice_number
       return if invoice_number.present?
 
@@ -362,7 +366,11 @@ class Boutique::Order < Boutique::ApplicationRecord
       year_prefix = paid_at.year.to_s.last(2)
       invoice_base_number = ActiveRecord::Base.nextval("boutique_orders_invoice_base_number_seq")
       # format: 210001, 210002 ... 210998, 220001
-      self.invoice_number = year_prefix + invoice_base_number.to_s.rjust(5, "0")
+      self.invoice_number = [
+        invoice_number_prefix,
+        year_prefix,
+        invoice_base_number.to_s.rjust(5, "0")
+      ].compact.join
     end
 
     def set_up_subscription!

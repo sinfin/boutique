@@ -30,3 +30,5 @@ class Boutique::ControllerTest < ActionDispatch::IntegrationTest
 end
 
 require "mocha/minitest"
+require "minitest/mock"
+require "minitest/stub_any_instance"

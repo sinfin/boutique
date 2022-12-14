@@ -23,6 +23,7 @@ gem "sidekiq-cron", "~> 1.8"
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "mocha", "~> 1.14.0"
+  gem "minitest-stub_any_instance"
   gem "factory_bot"
   gem "capybara", "~> 2.13"
 end

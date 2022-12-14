@@ -159,6 +159,11 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     order = create(:boutique_order, :paid)
     assert_equal "2200002", order.invoice_number
 
+    Boutique::Order.stub_any_instance(:invoice_number_prefix, "99") do
+      order = create(:boutique_order, :paid)
+      assert_equal "992200003", order.invoice_number
+    end
+
     travel_to Time.zone.local(2023, 1, 1)
     order = create(:boutique_order, :paid)
     assert_equal "2300001", order.invoice_number
