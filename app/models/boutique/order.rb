@@ -391,12 +391,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def use_voucher!
-      voucher.use! if voucher.try(:applicable?)
+      # TODO: make this work with multiple line items
+      voucher.use! if voucher.try(:applicable_for?, line_items.first.product_variant)
     end
 
     def apply_voucher
       return unless voucher.present? &&
-                    voucher.applicable?
+                    voucher.applicable_for?(line_items.first.product_variant)
 
       self.discount = if voucher.discount_in_percentages?
         price * (0.01 * voucher.discount)
@@ -437,6 +438,8 @@ class Boutique::Order < Boutique::ApplicationRecord
           errors.add(:voucher_code, :invalid)
         elsif !found_voucher.published?
           errors.add(:voucher_code, :expired)
+        elsif !found_voucher.relevant_for?(line_items.first.product_variant)
+          errors.add(:voucher_code, :not_applicable_for)
         end
 
         if errors[:voucher_code].empty?

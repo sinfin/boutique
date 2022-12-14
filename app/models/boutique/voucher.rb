@@ -68,6 +68,18 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     published? && !used_up?
   end
 
+  def applicable_for?(product_variant)
+    return false unless applicable?
+
+    relevant_for?(product_variant)
+  end
+
+  def relevant_for?(product_variant)
+    return true if product_variant_code.blank?
+
+    product_variant.code.include?(product_variant_code)
+  end
+
   def upcase_token
     self.code = code.try(:upcase)
   end
@@ -121,6 +133,7 @@ end
 #  published_until         :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  product_variant_code    :string
 #
 # Indexes
 #

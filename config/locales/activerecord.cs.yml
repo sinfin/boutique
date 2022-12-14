@@ -67,7 +67,7 @@ cs:
         product_variant: Kód produktu nebo jeho část
         published: Aktivní
         quantity: Počet voucherů k vygenerování
-        thing_code: Kód produktu/nabídky nebo jeho část
+        product_variant_code: Kód produktu/nabídky nebo jeho část
         use_count: Počet použití
 
       folio/email_template:
