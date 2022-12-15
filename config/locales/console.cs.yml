@@ -25,6 +25,10 @@ cs:
               few: '%{count} vouchery vytvořeny'
               other: '%{count} voucherů vytvořeno'
 
+      catalogue:
+        boutique/subscription:
+          non_recurring_subscription: Jednorázové předplatné
+
       sites:
         boutique_additional_form_fields:
           billing_details: Fakturační údaje
