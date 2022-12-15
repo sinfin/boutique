@@ -26,7 +26,7 @@
                               collection: Boutique::Product.sites_for_select,
                               include_blank: false
 
-        == cell('folio/console/boutique/orders/sti_fields', f)
+        == cell('folio/console/boutique/products/sti_fields', f)
         = f.input :digital_only
 
         = f.input :shipping_info, as: :redactor
