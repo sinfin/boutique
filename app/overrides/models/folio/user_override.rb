@@ -12,4 +12,8 @@ Folio::User.class_eval do
                     inverse_of: :user,
                     foreign_key: :folio_user_id,
                     dependent: :nullify
+
+  has_many :active_subscriptions, -> { active },
+                                  class_name: "Boutique::Subscription",
+                                  foreign_key: :folio_user_id
 end
