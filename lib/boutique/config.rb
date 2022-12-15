@@ -7,6 +7,8 @@ module Boutique
                   :products_belong_to_site,
                   :parent_controller,
                   :after_order_paid_user_url_name,
+                  :invoice_number_base_length,
+                  :invoice_number_with_year_prefix,
                   :mailers_bcc,
                   :mailers_reply_to
 
@@ -17,6 +19,9 @@ module Boutique
       @products_belong_to_site = false
       @parent_controller = "ApplicationController"
       @after_order_paid_user_url_name = :root_url
+      @invoice_number_base_length = 5
+      @invoice_base_number_sequence_name = "boutique_orders_invoice_base_number_seq"
+      @invoice_number_with_year_prefix = true
       @mailers_bcc = nil
       @mailers_reply_to = nil
     end

@@ -358,18 +358,21 @@ class Boutique::Order < Boutique::ApplicationRecord
     def set_invoice_number
       return if invoice_number.present?
 
-      unless Boutique::Order.where("paid_at >= ?", Time.current.beginning_of_year).exists?
-        Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
+      self.paid_at = current_time_from_proper_timezone
+
+      if Boutique.config.invoice_number_with_year_prefix
+        unless Boutique::Order.where("paid_at >= ?", paid_at.beginning_of_year).exists?
+          Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
+        end
+        year_prefix = paid_at.year.to_s.last(2)
       end
 
-      self.paid_at = current_time_from_proper_timezone
-      year_prefix = paid_at.year.to_s.last(2)
-      invoice_base_number = ActiveRecord::Base.nextval("boutique_orders_invoice_base_number_seq")
-      # format: 210001, 210002 ... 210998, 220001
+      invoice_number_base = ActiveRecord::Base.nextval("boutique_orders_invoice_base_number_seq")
+
       self.invoice_number = [
         invoice_number_prefix,
         year_prefix,
-        invoice_base_number.to_s.rjust(5, "0")
+        invoice_number_base.to_s.rjust(Boutique.config.invoice_number_base_length, "0")
       ].compact.join
     end
 
