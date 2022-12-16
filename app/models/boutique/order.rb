@@ -60,10 +60,37 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   scope :by_state, -> (state) { where(aasm_state: state) }
 
+  scope :by_number_query, -> (q) {
+    where("number ILIKE ?", "%#{q}%")
+  }
+
+  scope :by_address_identification_number_query, -> (q) {
+    subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
+    where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
+  }
+
   pg_search_scope :by_query,
                   against: %i[base_number number email first_name last_name],
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
+
+  pg_search_scope :by_full_name_query,
+                  against: %i[last_name first_name],
+                  ignoring: :accents,
+                  using: { trigram: { word_similarity: true } }
+
+  pg_search_scope :by_addresses_query,
+                  associated_against: {
+                    primary_address: %i[name company_name address_line_1 address_line_2 zip city],
+                    secondary_address: %i[name company_name address_line_1 address_line_2 zip city],
+                  },
+                  ignoring: :accents,
+                  using: { trigram: { word_similarity: true } }
+
+  pg_search_scope :by_email_query,
+                  against: %i[email],
+                  ignoring: :accents,
+                  using: { trigram: { word_similarity: true } }
 
   validates :email,
             :first_name,
