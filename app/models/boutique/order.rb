@@ -69,6 +69,33 @@ class Boutique::Order < Boutique::ApplicationRecord
     where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
   }
 
+  scope :by_confirmed_at_range, -> (range_str) {
+    from, to = range_str.split(" - ")
+    where("confirmed_at >= ?", from).where("confirmed_at <= ?", to)
+  }
+
+  scope :by_subscription_state, -> (subscription_state) {
+    if subscription_state == "active"
+      where(boutique_subscription_id: Boutique::Subscription.active.select(:id))
+    elsif subscription_state == "inactive"
+      where(boutique_subscription_id: Boutique::Subscription.inactive.select(:id))
+    elsif subscription_state == "none"
+      where(boutique_subscription_id: nil)
+    end
+  }
+
+  scope :by_subsequent_subscription, -> (str) {
+    with_subscription = where.not(boutique_subscription_id: nil)
+
+    if str == "subsequent"
+      with_subscription.where.not(original_payment_id: nil)
+    elsif str == "new"
+      with_subscription.where(original_payment_id: nil)
+    else
+      none
+    end
+  }
+
   pg_search_scope :by_query,
                   against: %i[base_number number email first_name last_name],
                   ignoring: :accents,

@@ -35,14 +35,20 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           autocomplete_attribute: :identification_number,
           autocomplete_klass: Folio::Address::Base,
         },
-        by_number_query: {
-          as: :text,
-          autocomplete_attribute: :number,
-        },
         by_email_query: {
           as: :text,
           autocomplete_attribute: :email,
         },
+        by_confirmed_at_range: :date_range,
+        by_subscription_state: [
+          [@klass.human_attribute_name("subscription_state/active"), "active"],
+          [@klass.human_attribute_name("subscription_state/inactive"), "inactive"],
+          [@klass.human_attribute_name("subscription_state/none"), "none"],
+        ],
+        by_subsequent_subscription: [
+          [@klass.human_attribute_name("subsequent_subscription/new"), "new"],
+          [@klass.human_attribute_name("subsequent_subscription/subsequent"), "subsequent"],
+        ],
       }
     end
 

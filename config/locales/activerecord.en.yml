@@ -3,11 +3,19 @@ en:
   activerecord:
     attributes:
       boutique/order:
+        address_identification_number: Indentification number
+        confirmed_at_range: Ordered at
+        full_name: Jméno
         gift_recipient_email: Gift recipient e-mail
         gift_recipient_notification_scheduled_for: Date & time of notification
+        subscription_state/active: Active
+        subscription_state/inactive: Inactive
+        subscription_state/none: None
+        subscription_state: Subscription state
+        subsequent_subscription/new: New
+        subsequent_subscription/subsequent: Subsequent
+        subsequent_subscription: Subscription type
         voucher_code: Code
-        full_name: Jméno
-        address_identification_number: Indentification number
 
       folio/email_template:
         keyword/ORDER_NUMBER: Order number

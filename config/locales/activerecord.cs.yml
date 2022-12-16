@@ -10,6 +10,7 @@ cs:
         address_identification_number: IČO
         addresses: Adresa
         confirmed_at: Objednáno
+        confirmed_at_range: Objednáno
         created_at: Vytvořeno
         dispatched_at: Odesláno
         full_name: Jméno
@@ -22,6 +23,13 @@ cs:
         number: Číslo
         paid_at: Zaplaceno
         price: Cena
+        subscription_state/active: Aktivní předplatné
+        subscription_state/inactive: Neaktivní předplatné
+        subscription_state/none: Žádné předplatné
+        subscription_state: Stav předplatného
+        subsequent_subscription/new: Nové předplatné
+        subsequent_subscription/subsequent: Prodlužující předplatné
+        subsequent_subscription: Typ předplatného
         total_price: Cena celkem
         user: Uživatel
         voucher_code: Kód

@@ -31,6 +31,17 @@ class Boutique::Subscription < ApplicationRecord
     active_at(Time.current)
   }
 
+  scope :inactive_at, -> (time) {
+    where("(#{table_name}.active_from IS NOT NULL AND #{table_name}.active_from > ?) OR "\
+          "(#{table_name}.active_until IS NOT NULL AND #{table_name}.active_until < ?)",
+          time,
+          time)
+  }
+
+  scope :inactive, -> {
+    inactive_at(Time.current)
+  }
+
   scope :ordered, -> { order(active_until: :asc, active_from: :asc) }
 
   validates :active_from,
