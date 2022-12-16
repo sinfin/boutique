@@ -7,21 +7,24 @@ cs:
         subscription_recurring: Automaticky obnovit po roce
 
       boutique/order:
+        address_identification_number: IČO
+        addresses: Adresa
+        confirmed_at: Objednáno
+        created_at: Vytvořeno
+        dispatched_at: Odesláno
+        full_name: Jméno
+        gift_recipient_email: E-mail obdarovaného
+        gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
         invoice: Faktura
         items: Předměty
-        price: Cena
-        number: Číslo
         line_items: Položky
         line_items_price: Cena položek
+        number: Číslo
+        paid_at: Zaplaceno
+        price: Cena
         total_price: Cena celkem
         user: Uživatel
         voucher_code: Kód
-        created_at: Vytvořeno
-        confirmed_at: Objednáno
-        paid_at: Zaplaceno
-        dispatched_at: Odesláno
-        gift_recipient_email: E-mail obdarovaného
-        gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
 
       boutique/product:
         digital_only: Digitální produkt
