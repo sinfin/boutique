@@ -81,9 +81,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     from, to = range_str.split(/ ?- ?/)
     if to
       to = "#{to} 23:59" if from == to && to.exclude?(":")
-      where("confirmed_at >= ?", from).where("confirmed_at <= ?", to)
+      from_date_time = DateTime.parse(from)
+      to_date_time = DateTime.parse(to)
+      where("confirmed_at >= ?", from_date_time).where("confirmed_at <= ?", to_date_time)
     else
-      where("confirmed_at >= ?", from)
+      from_date_time = DateTime.parse(from)
+      where("confirmed_at >= ?", from_date_time)
     end
   }
 
