@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: facc9344ff49c8a95d33aa61418305d39c2b7201
+  revision: 5a55d7d634adbee91451abf7d589a48a0d6d9b66
   specs:
     folio (3.0.0)
       aasm
