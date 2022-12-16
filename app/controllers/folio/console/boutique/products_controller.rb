@@ -15,11 +15,11 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
       {}
     end
 
-    def folio_console_collection_includes
-      [cover_placement: :file]
-    end
-
     def product_variants_strong_params
       Boutique::ProductVariant.column_names - ["boutique_product_id"] + %w[_destroy] + file_placements_strong_params
+    end
+
+    def folio_console_collection_includes
+      Boutique.config.folio_console_collection_includes_for_products
     end
 end

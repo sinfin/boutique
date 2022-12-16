@@ -4,10 +4,10 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
   folio_console_controller_for "Boutique::Order"
 
   def index
-    @orders_scope = @orders.ordered
-    @orders_scope = @orders_scope.except_pending unless filter_params[:by_state] == "pending"
+    @orders = @orders.ordered
+    @orders = @orders.except_pending unless filter_params[:by_state] == "pending"
 
-    @pagy, @orders = pagy(@orders_scope)
+    @pagy, @orders = pagy(@orders)
   end
 
   private
@@ -92,6 +92,6 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
     end
 
     def folio_console_collection_includes
-      []
+      Boutique.config.folio_console_collection_includes_for_orders
     end
 end

@@ -10,7 +10,9 @@ module Boutique
                   :invoice_number_base_length,
                   :invoice_number_with_year_prefix,
                   :mailers_bcc,
-                  :mailers_reply_to
+                  :mailers_reply_to,
+                  :folio_console_collection_includes_for_orders,
+                  :folio_console_collection_includes_for_products
 
     def initialize
       # set defaults here
@@ -24,6 +26,8 @@ module Boutique
       @invoice_number_with_year_prefix = true
       @mailers_bcc = nil
       @mailers_reply_to = nil
+      @folio_console_collection_includes_for_orders = [line_items: { product_variant: :product }]
+      @folio_console_collection_includes_for_products = [cover_placement: :file]
     end
   end
 
