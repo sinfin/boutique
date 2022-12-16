@@ -49,6 +49,45 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           [@klass.human_attribute_name("subsequent_subscription/new"), "new"],
           [@klass.human_attribute_name("subsequent_subscription/subsequent"), "subsequent"],
         ],
+        by_product_id: {
+          klass: "Boutique::Product",
+        },
+        by_number_from: {
+          as: :text,
+          autocomplete_attribute: :number,
+          order_scope: :ordered,
+        },
+        by_number_to: {
+          as: :text,
+          autocomplete_attribute: :number,
+          order_scope: :ordered,
+        },
+        by_line_items_price_from: {
+          as: :text,
+          autocomplete_attribute: :line_items_price,
+          order_scope: :ordered_by_line_items_price_asc,
+        },
+        by_line_items_price_to: {
+          as: :text,
+          autocomplete_attribute: :line_items_price,
+          order_scope: :ordered_by_line_items_price_desc,
+        },
+        by_voucher_title: {
+          as: :text,
+          autocomplete_attribute: :title,
+          autocomplete_klass: Boutique::Voucher,
+        },
+        by_primary_address_country_code: [
+          [@klass.human_attribute_name("primary_address_country_code/CZ"), "CZ"],
+          [@klass.human_attribute_name("primary_address_country_code/SK"), "SK"],
+          [@klass.human_attribute_name("primary_address_country_code/other"), "other"],
+        ],
+        by_non_pending_order_count_from: {
+          as: :text,
+        },
+        by_non_pending_order_count_to: {
+          as: :text,
+        },
       }
     end
 

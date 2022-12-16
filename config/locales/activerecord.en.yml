@@ -8,6 +8,14 @@ en:
         full_name: Jméno
         gift_recipient_email: Gift recipient e-mail
         gift_recipient_notification_scheduled_for: Date & time of notification
+        line_items_price_from: Product price from
+        line_items_price_to: Product price to
+        non_pending_order_count_from: Order count from
+        non_pending_order_count_to: Order count to
+        primary_address_country_code/CZ: Czech republic
+        primary_address_country_code/other: Other
+        primary_address_country_code/SK: Slovakia
+        primary_address_country_code: Country
         subscription_state/active: Active
         subscription_state/inactive: Inactive
         subscription_state/none: None
@@ -16,6 +24,7 @@ en:
         subsequent_subscription/subsequent: Subsequent
         subsequent_subscription: Subscription type
         voucher_code: Code
+        voucher_title: Voucher title
 
       folio/email_template:
         keyword/ORDER_NUMBER: Order number

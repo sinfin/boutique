@@ -58,6 +58,14 @@ class Boutique::Order < Boutique::ApplicationRecord
   scope :except_pending, -> { where.not(aasm_state: "pending") }
   scope :except_subsequent, -> { where(original_payment_id: nil) }
 
+  scope :ordered_by_line_items_price_asc, -> {
+    order(line_items_price: :asc)
+  }
+
+  scope :ordered_by_line_items_price_desc, -> {
+    order(line_items_price: :desc)
+  }
+
   scope :by_state, -> (state) { where(aasm_state: state) }
 
   scope :by_number_query, -> (q) {
@@ -70,8 +78,13 @@ class Boutique::Order < Boutique::ApplicationRecord
   }
 
   scope :by_confirmed_at_range, -> (range_str) {
-    from, to = range_str.split(" - ")
-    where("confirmed_at >= ?", from).where("confirmed_at <= ?", to)
+    from, to = range_str.split(/ ?- ?/)
+    if to
+      to = "#{to} 23:59" if from == to && to.exclude?(":")
+      where("confirmed_at >= ?", from).where("confirmed_at <= ?", to)
+    else
+      where("confirmed_at >= ?", from)
+    end
   }
 
   scope :by_subscription_state, -> (subscription_state) {
@@ -96,6 +109,70 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   }
 
+  scope :by_product_id, -> (product_id) {
+    product_variants_subselect = Boutique::ProductVariant.where(boutique_product_id: product_id)
+                                                         .select(:id)
+
+    ids_subselect = Boutique::LineItem.where(boutique_product_variant_id: product_variants_subselect)
+                                      .select(:boutique_order_id)
+
+    where(id: ids_subselect)
+  }
+
+  scope :by_number_from, -> (number) {
+    where("number::INTEGER >= ?", number)
+  }
+
+  scope :by_number_to, -> (number) {
+    where("number::INTEGER <= ?", number)
+  }
+
+  scope :by_line_items_price_from, -> (line_items_price) {
+    where.not(line_items_price: nil).where("line_items_price >= ?", line_items_price)
+  }
+
+  scope :by_line_items_price_to, -> (line_items_price) {
+    where.not(line_items_price: nil).where("line_items_price <= ?", line_items_price)
+  }
+
+  scope :by_voucher_title, -> (voucher_title) {
+    where(boutique_voucher_id: Boutique::Voucher.by_query(voucher_title).select(:id))
+  }
+
+  scope :by_primary_address_country_code, -> (country_code) {
+    if country_code == "other"
+      subselect = Folio::Address::Primary.where.not(country_code: ["CZ", "SK"]).select(:id)
+      where(primary_address_id: nil).or(where(primary_address_id: subselect))
+    else
+      subselect = Folio::Address::Primary.where(country_code:).select(:id)
+      where(primary_address_id: subselect)
+    end
+  }
+
+  scope :by_non_pending_order_count_from, -> (order_count) {
+    if order_count && (order_count.is_a?(Numeric) || (order_count.is_a?(String) && order_count.match?(/\d+/)))
+      subselect = Boutique::Order.except_pending
+                                 .group(:folio_user_id)
+                                 .select(:folio_user_id)
+                                 .having("COUNT(*) >= ?", order_count)
+      where(folio_user_id: subselect)
+    else
+      none
+    end
+  }
+
+  scope :by_non_pending_order_count_to, -> (order_count) {
+    if order_count && (order_count.is_a?(Numeric) || (order_count.is_a?(String) && order_count.match?(/\d+/)))
+      subselect = Boutique::Order.except_pending
+                                 .group(:folio_user_id)
+                                 .select(:folio_user_id)
+                                 .having("COUNT(*) <= ?", order_count)
+      where(folio_user_id: subselect)
+    else
+      none
+    end
+  }
+
   pg_search_scope :by_query,
                   against: %i[base_number number email first_name last_name],
                   ignoring: :accents,
@@ -108,8 +185,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   pg_search_scope :by_addresses_query,
                   associated_against: {
-                    primary_address: %i[name company_name address_line_1 address_line_2 zip city],
-                    secondary_address: %i[name company_name address_line_1 address_line_2 zip city],
+                    primary_address: %i[name company_name address_line_1 zip city],
+                    secondary_address: %i[name company_name address_line_1 zip city],
                   },
                   ignoring: :accents,
                   using: { trigram: { word_similarity: true } }

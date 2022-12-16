@@ -20,9 +20,20 @@ cs:
         items: Předměty
         line_items: Položky
         line_items_price: Cena položek
+        line_items_price_from: Cena produktu od
+        line_items_price_to: Cena produktu do
+        non_pending_order_count_from: Počet objednávek od
+        non_pending_order_count_to: Počet objednávek do
         number: Číslo
+        number_from: Od čísla
+        number_to: Do čísla
         paid_at: Zaplaceno
         price: Cena
+        primary_address_country_code/CZ: Česká republika
+        primary_address_country_code/other: Jiná
+        primary_address_country_code/SK: Slovensko
+        primary_address_country_code: Země odběru
+        product: Produkt
         subscription_state/active: Aktivní předplatné
         subscription_state/inactive: Neaktivní předplatné
         subscription_state/none: Žádné předplatné
@@ -33,6 +44,7 @@ cs:
         total_price: Cena celkem
         user: Uživatel
         voucher_code: Kód
+        voucher_title: Typ slevy
 
       boutique/product:
         digital_only: Digitální produkt
