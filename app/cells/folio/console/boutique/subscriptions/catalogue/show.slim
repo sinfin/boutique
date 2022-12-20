@@ -12,6 +12,12 @@
         end
       end
 
+      attribute :primary_address, small: true do
+        if record.primary_address.present?
+          record.primary_address.to_label
+        end
+      end
+
       attribute :active do
         record.active_range
       end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Boutique::Subscription < ApplicationRecord
+  include Folio::HasAddresses
+
   belongs_to :payment, class_name: "Boutique::Payment",
                        foreign_key: :boutique_payment_id,
                        inverse_of: :subscription,
@@ -126,6 +128,10 @@ class Boutique::Subscription < ApplicationRecord
   def prolong!
     update!(active_until: active_until + period.months)
   end
+
+  def use_secondary_address
+    false
+  end
 end
 
 # == Schema Information
@@ -142,6 +148,7 @@ end
 #  cancelled_at                :datetime
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
+#  primary_address_id          :bigint(8)
 #
 # Indexes
 #
@@ -151,6 +158,7 @@ end
 #  index_boutique_subscriptions_on_boutique_product_variant_id  (boutique_product_variant_id)
 #  index_boutique_subscriptions_on_cancelled_at                 (cancelled_at)
 #  index_boutique_subscriptions_on_folio_user_id                (folio_user_id)
+#  index_boutique_subscriptions_on_primary_address_id           (primary_address_id)
 #
 # Foreign Keys
 #
