@@ -20,13 +20,10 @@ cs:
         items: Předměty
         line_items: Položky
         line_items_price: Cena položek
-        line_items_price_from: Cena produktu od
-        line_items_price_to: Cena produktu do
-        non_pending_order_count_from: Počet objednávek od
-        non_pending_order_count_to: Počet objednávek do
+        line_items_price_range: Cena
+        non_pending_order_count_range: Počet objednávek
         number: Číslo
-        number_from: Od čísla
-        number_to: Do čísla
+        number_range: Číslo
         paid_at: Zaplaceno
         price: Cena
         primary_address_country_code/CZ: Česká republika

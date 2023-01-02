@@ -321,36 +321,36 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not Boutique::Order.by_product_id(other_product.id).exists?(id: order.id)
   end
 
-  test "scope by_number_from" do
+  test "scope by_number_range_from" do
     order = create(:boutique_order, number: "123456789")
-    assert Boutique::Order.by_number_from("1").exists?(id: order.id)
-    assert Boutique::Order.by_number_from("123456789").exists?(id: order.id)
-    assert_not Boutique::Order.by_number_from("223456789").exists?(id: order.id)
+    assert Boutique::Order.by_number_range_from("1").exists?(id: order.id)
+    assert Boutique::Order.by_number_range_from("123456789").exists?(id: order.id)
+    assert_not Boutique::Order.by_number_range_from("223456789").exists?(id: order.id)
   end
 
-  test "scope by_number_to" do
+  test "scope by_number_range_to" do
     order = create(:boutique_order, number: "123456789")
-    assert_not Boutique::Order.by_number_to("1").exists?(id: order.id)
-    assert Boutique::Order.by_number_to("123456789").exists?(id: order.id)
-    assert Boutique::Order.by_number_to("223456789").exists?(id: order.id)
+    assert_not Boutique::Order.by_number_range_to("1").exists?(id: order.id)
+    assert Boutique::Order.by_number_range_to("123456789").exists?(id: order.id)
+    assert Boutique::Order.by_number_range_to("223456789").exists?(id: order.id)
   end
 
-  test "scope by_line_items_price_from" do
+  test "scope by_line_items_price_range_from" do
     order = create(:boutique_order, line_items_price: 199)
 
-    assert Boutique::Order.by_line_items_price_from(0).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_from(1).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_from(199).exists?(id: order.id)
-    assert_not Boutique::Order.by_line_items_price_from(200).exists?(id: order.id)
+    assert Boutique::Order.by_line_items_price_range_from(0).exists?(id: order.id)
+    assert Boutique::Order.by_line_items_price_range_from(1).exists?(id: order.id)
+    assert Boutique::Order.by_line_items_price_range_from(199).exists?(id: order.id)
+    assert_not Boutique::Order.by_line_items_price_range_from(200).exists?(id: order.id)
   end
 
-  test "scope by_line_items_price_to" do
+  test "scope by_line_items_price_range_to" do
     order = create(:boutique_order, line_items_price: 199)
 
-    assert_not Boutique::Order.by_line_items_price_to(0).exists?(id: order.id)
-    assert_not Boutique::Order.by_line_items_price_to(1).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_to(199).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_to(200).exists?(id: order.id)
+    assert_not Boutique::Order.by_line_items_price_range_to(0).exists?(id: order.id)
+    assert_not Boutique::Order.by_line_items_price_range_to(1).exists?(id: order.id)
+    assert Boutique::Order.by_line_items_price_range_to(199).exists?(id: order.id)
+    assert Boutique::Order.by_line_items_price_range_to(200).exists?(id: order.id)
   end
 
   test "scope by_voucher_title" do
@@ -392,7 +392,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not Boutique::Order.by_primary_address_country_code("other").exists?(id: order.id)
   end
 
-  test "scope by_non_pending_order_count_from" do
+  test "scope by_non_pending_order_count_range_from" do
     user_a = create(:folio_user)
     user_b = create(:folio_user)
 
@@ -401,28 +401,28 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     order_b_2 = create(:boutique_order, :confirmed, user: user_b)
     order_b_3 = create(:boutique_order, :confirmed, user: user_b)
 
-    assert Boutique::Order.by_non_pending_order_count_from(0).exists?(id: order_a.id)
-    assert Boutique::Order.by_non_pending_order_count_from(0).exists?(id: order_b_1.id)
-    assert Boutique::Order.by_non_pending_order_count_from(0).exists?(id: order_b_2.id)
-    assert Boutique::Order.by_non_pending_order_count_from(0).exists?(id: order_b_3.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(0).exists?(id: order_a.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(0).exists?(id: order_b_1.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(0).exists?(id: order_b_2.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(0).exists?(id: order_b_3.id)
 
-    assert Boutique::Order.by_non_pending_order_count_from(1).exists?(id: order_a.id)
-    assert Boutique::Order.by_non_pending_order_count_from(1).exists?(id: order_b_1.id)
-    assert Boutique::Order.by_non_pending_order_count_from(1).exists?(id: order_b_2.id)
-    assert Boutique::Order.by_non_pending_order_count_from(1).exists?(id: order_b_3.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(1).exists?(id: order_a.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(1).exists?(id: order_b_1.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(1).exists?(id: order_b_2.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(1).exists?(id: order_b_3.id)
 
-    assert_not Boutique::Order.by_non_pending_order_count_from(3).exists?(id: order_a.id)
-    assert Boutique::Order.by_non_pending_order_count_from(3).exists?(id: order_b_1.id)
-    assert Boutique::Order.by_non_pending_order_count_from(3).exists?(id: order_b_2.id)
-    assert Boutique::Order.by_non_pending_order_count_from(3).exists?(id: order_b_3.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_from(3).exists?(id: order_a.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(3).exists?(id: order_b_1.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(3).exists?(id: order_b_2.id)
+    assert Boutique::Order.by_non_pending_order_count_range_from(3).exists?(id: order_b_3.id)
 
-    assert_not Boutique::Order.by_non_pending_order_count_from(4).exists?(id: order_a.id)
-    assert_not Boutique::Order.by_non_pending_order_count_from(4).exists?(id: order_b_1.id)
-    assert_not Boutique::Order.by_non_pending_order_count_from(4).exists?(id: order_b_2.id)
-    assert_not Boutique::Order.by_non_pending_order_count_from(4).exists?(id: order_b_3.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_from(4).exists?(id: order_a.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_from(4).exists?(id: order_b_1.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_from(4).exists?(id: order_b_2.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_from(4).exists?(id: order_b_3.id)
   end
 
-  test "scope by_non_pending_order_count_to" do
+  test "scope by_non_pending_order_count_range_to" do
     user_a = create(:folio_user)
     user_b = create(:folio_user)
 
@@ -431,39 +431,39 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     order_b_2 = create(:boutique_order, :confirmed, user: user_b)
     order_b_3 = create(:boutique_order, :confirmed, user: user_b)
 
-    assert_not Boutique::Order.by_non_pending_order_count_to(0).exists?(id: order_a.id)
-    assert_not Boutique::Order.by_non_pending_order_count_to(0).exists?(id: order_b_1.id)
-    assert_not Boutique::Order.by_non_pending_order_count_to(0).exists?(id: order_b_2.id)
-    assert_not Boutique::Order.by_non_pending_order_count_to(0).exists?(id: order_b_3.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(0).exists?(id: order_a.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(0).exists?(id: order_b_1.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(0).exists?(id: order_b_2.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(0).exists?(id: order_b_3.id)
 
-    assert Boutique::Order.by_non_pending_order_count_to(1).exists?(id: order_a.id)
-    assert_not Boutique::Order.by_non_pending_order_count_to(1).exists?(id: order_b_1.id)
-    assert_not Boutique::Order.by_non_pending_order_count_to(1).exists?(id: order_b_2.id)
-    assert_not Boutique::Order.by_non_pending_order_count_to(1).exists?(id: order_b_3.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(1).exists?(id: order_a.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(1).exists?(id: order_b_1.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(1).exists?(id: order_b_2.id)
+    assert_not Boutique::Order.by_non_pending_order_count_range_to(1).exists?(id: order_b_3.id)
 
-    assert Boutique::Order.by_non_pending_order_count_to(3).exists?(id: order_a.id)
-    assert Boutique::Order.by_non_pending_order_count_to(3).exists?(id: order_b_1.id)
-    assert Boutique::Order.by_non_pending_order_count_to(3).exists?(id: order_b_2.id)
-    assert Boutique::Order.by_non_pending_order_count_to(3).exists?(id: order_b_3.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(3).exists?(id: order_a.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(3).exists?(id: order_b_1.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(3).exists?(id: order_b_2.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(3).exists?(id: order_b_3.id)
 
-    assert Boutique::Order.by_non_pending_order_count_to(4).exists?(id: order_a.id)
-    assert Boutique::Order.by_non_pending_order_count_to(4).exists?(id: order_b_1.id)
-    assert Boutique::Order.by_non_pending_order_count_to(4).exists?(id: order_b_2.id)
-    assert Boutique::Order.by_non_pending_order_count_to(4).exists?(id: order_b_3.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(4).exists?(id: order_a.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(4).exists?(id: order_b_1.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(4).exists?(id: order_b_2.id)
+    assert Boutique::Order.by_non_pending_order_count_range_to(4).exists?(id: order_b_3.id)
   end
 
-  test "scope by_full_name_query" do
+  test "scope by_query - name" do
     order = create(:boutique_order, first_name: "foo", last_name: "bar")
 
-    assert Boutique::Order.by_full_name_query("foo bar").exists?(id: order.id)
-    assert Boutique::Order.by_full_name_query("foo").exists?(id: order.id)
-    assert Boutique::Order.by_full_name_query("bar").exists?(id: order.id)
-    assert Boutique::Order.by_full_name_query("fo").exists?(id: order.id)
-    assert Boutique::Order.by_full_name_query("ba").exists?(id: order.id)
-    assert_not Boutique::Order.by_full_name_query("xaxa").exists?(id: order.id)
+    assert Boutique::Order.by_query("foo bar").exists?(id: order.id)
+    assert Boutique::Order.by_query("foo").exists?(id: order.id)
+    assert Boutique::Order.by_query("bar").exists?(id: order.id)
+    assert Boutique::Order.by_query("fo").exists?(id: order.id)
+    assert Boutique::Order.by_query("ba").exists?(id: order.id)
+    assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
   end
 
-  test "scope by_addresses_query" do
+  test "scope by_query - addresses" do
     primary_address = create(:folio_address_primary,
                              name: "Lorem Ipsum",
                              address_line_1: "Downing Street 10",
@@ -471,26 +471,22 @@ class Boutique::OrderTest < ActiveSupport::TestCase
                              zip: "12345")
     order = create(:boutique_order, primary_address:)
 
-    assert Boutique::Order.by_addresses_query("Downing Street 10").exists?(id: order.id)
-    assert Boutique::Order.by_addresses_query("Downing").exists?(id: order.id)
-    assert Boutique::Order.by_addresses_query("10").exists?(id: order.id)
-    assert Boutique::Order.by_addresses_query("London").exists?(id: order.id)
-    assert Boutique::Order.by_addresses_query("Lorem").exists?(id: order.id)
-    assert Boutique::Order.by_addresses_query("Ips").exists?(id: order.id)
-    assert Boutique::Order.by_addresses_query("12345").exists?(id: order.id)
-    assert_not Boutique::Order.by_addresses_query("xaxa").exists?(id: order.id)
+    assert Boutique::Order.by_query("Downing Street 10").exists?(id: order.id)
+    assert Boutique::Order.by_query("Downing").exists?(id: order.id)
+    assert Boutique::Order.by_query("10").exists?(id: order.id)
+    assert Boutique::Order.by_query("London").exists?(id: order.id)
+    assert Boutique::Order.by_query("Lorem").exists?(id: order.id)
+    assert Boutique::Order.by_query("Ips").exists?(id: order.id)
+    assert Boutique::Order.by_query("12345").exists?(id: order.id)
+    assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
   end
 
-  test "scope by_email_query" do
+  test "scope by_query - email" do
     order = create(:boutique_order, email: "foo@bar.baz")
 
-    assert Boutique::Order.by_email_query("foo").exists?(id: order.id)
-    assert Boutique::Order.by_email_query("fo").exists?(id: order.id)
-    assert Boutique::Order.by_email_query("bar").exists?(id: order.id)
-    assert Boutique::Order.by_email_query("ba").exists?(id: order.id)
-    assert Boutique::Order.by_email_query(".baz").exists?(id: order.id)
-    assert Boutique::Order.by_email_query("@bar.baz").exists?(id: order.id)
-    assert Boutique::Order.by_email_query("@bar").exists?(id: order.id)
-    assert_not Boutique::Order.by_email_query("xaxa").exists?(id: order.id)
+    assert Boutique::Order.by_query("foo").exists?(id: order.id)
+    assert Boutique::Order.by_query("fo").exists?(id: order.id)
+    assert Boutique::Order.by_query("foo@bar.baz").exists?(id: order.id)
+    assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
   end
 end

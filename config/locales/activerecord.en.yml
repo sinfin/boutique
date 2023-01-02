@@ -8,10 +8,10 @@ en:
         full_name: Jméno
         gift_recipient_email: Gift recipient e-mail
         gift_recipient_notification_scheduled_for: Date & time of notification
-        line_items_price_from: Product price from
-        line_items_price_to: Product price to
-        non_pending_order_count_from: Order count from
-        non_pending_order_count_to: Order count to
+        line_items_price-range: Price
+        non_pending_order_count_range: Order count
+        number: Number
+        number_range: Number
         primary_address_country_code/CZ: Czech republic
         primary_address_country_code/other: Other
         primary_address_country_code/SK: Slovakia

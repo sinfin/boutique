@@ -122,19 +122,19 @@ class Boutique::Order < Boutique::ApplicationRecord
     where(id: ids_subselect)
   }
 
-  scope :by_number_from, -> (number) {
+  scope :by_number_range_from, -> (number) {
     where("number::INTEGER >= ?", number)
   }
 
-  scope :by_number_to, -> (number) {
+  scope :by_number_range_to, -> (number) {
     where("number::INTEGER <= ?", number)
   }
 
-  scope :by_line_items_price_from, -> (line_items_price) {
+  scope :by_line_items_price_range_from, -> (line_items_price) {
     where.not(line_items_price: nil).where("line_items_price >= ?", line_items_price)
   }
 
-  scope :by_line_items_price_to, -> (line_items_price) {
+  scope :by_line_items_price_range_to, -> (line_items_price) {
     where.not(line_items_price: nil).where("line_items_price <= ?", line_items_price)
   }
 
@@ -152,7 +152,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   }
 
-  scope :by_non_pending_order_count_from, -> (order_count) {
+  scope :by_non_pending_order_count_range_from, -> (order_count) {
     if order_count && (order_count.is_a?(Numeric) || (order_count.is_a?(String) && order_count.match?(/\d+/)))
       subselect = Boutique::Order.except_pending
                                  .group(:folio_user_id)
@@ -164,7 +164,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   }
 
-  scope :by_non_pending_order_count_to, -> (order_count) {
+  scope :by_non_pending_order_count_range_to, -> (order_count) {
     if order_count && (order_count.is_a?(Numeric) || (order_count.is_a?(String) && order_count.match?(/\d+/)))
       subselect = Boutique::Order.except_pending
                                  .group(:folio_user_id)
@@ -178,26 +178,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: %i[base_number number email first_name last_name],
-                  ignoring: :accents,
-                  using: { tsearch: { prefix: true } }
-
-  pg_search_scope :by_full_name_query,
-                  against: %i[last_name first_name],
-                  ignoring: :accents,
-                  using: { trigram: { word_similarity: true } }
-
-  pg_search_scope :by_addresses_query,
                   associated_against: {
                     primary_address: %i[name company_name address_line_1 zip city],
                     secondary_address: %i[name company_name address_line_1 zip city],
                   },
                   ignoring: :accents,
-                  using: { trigram: { word_similarity: true } }
-
-  pg_search_scope :by_email_query,
-                  against: %i[email],
-                  ignoring: :accents,
-                  using: { trigram: { word_similarity: true } }
+                  using: { tsearch: { prefix: true } }
 
   validates :email,
             :first_name,

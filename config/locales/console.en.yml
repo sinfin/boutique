@@ -7,6 +7,13 @@ en:
           index:
             summary:
               text: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
+            by_query_placeholder: "Search: order number, name, address, registration number, e-mail ..."
+            tabs:
+              all: All
+              index: Unpaid
+              paid: Paid
+              dispatched: Dispatched
+              cancelled: Cancelled
 
         subscriptions:
           catalogue:

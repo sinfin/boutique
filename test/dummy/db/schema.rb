@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_16_094610) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_20_115303) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -149,8 +149,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_094610) do
     t.string "subscription_frequency"
     t.bigint "boutique_vat_rate_id", null: false
     t.bigint "site_id"
-    t.boolean "digital_only", default: false
     t.text "shipping_info"
+    t.boolean "digital_only", default: false
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
@@ -598,6 +598,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_094610) do
     t.string "crossdomain_devise_token"
     t.datetime "crossdomain_devise_set_at"
     t.string "sign_out_salt_part"
+    t.bigint "source_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
@@ -607,6 +608,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_094610) do
     t.index ["primary_address_id"], name: "index_folio_users_on_primary_address_id"
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
     t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
+    t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|

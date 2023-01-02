@@ -12,7 +12,8 @@ module Boutique
                   :mailers_bcc,
                   :mailers_reply_to,
                   :folio_console_collection_includes_for_orders,
-                  :folio_console_collection_includes_for_products
+                  :folio_console_collection_includes_for_products,
+                  :folio_console_additional_filters_for_orders
 
     def initialize
       # set defaults here
@@ -28,6 +29,7 @@ module Boutique
       @mailers_reply_to = nil
       @folio_console_collection_includes_for_orders = [line_items: { product_variant: :product }]
       @folio_console_collection_includes_for_products = [cover_placement: :file]
+      @folio_console_additional_filters_for_orders = {}
     end
   end
 
