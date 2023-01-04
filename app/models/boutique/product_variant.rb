@@ -75,7 +75,7 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     current_price.zero?
   end
 
-  def self.pregenerated_thumbnails
+  def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],
     }
@@ -91,6 +91,10 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
 
     h
+  end
+
+  def self.pregenerated_thumbnails
+    pregenerated_thumbnails_base
   end
 
   private

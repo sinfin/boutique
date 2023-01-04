@@ -64,7 +64,7 @@ class Boutique::Product < Boutique::ApplicationRecord
     []
   end
 
-  def self.pregenerated_thumbnails
+  def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],
     }
@@ -80,6 +80,10 @@ class Boutique::Product < Boutique::ApplicationRecord
     h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
 
     h
+  end
+
+  def self.pregenerated_thumbnails
+    pregenerated_thumbnails_base
   end
 
   def self.sti_paths
