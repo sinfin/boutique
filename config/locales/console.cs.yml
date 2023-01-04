@@ -32,6 +32,10 @@ cs:
               few: '%{count} vouchery vytvořeny'
               other: '%{count} voucherů vytvořeno'
 
+        products:
+          form:
+            copy_link: Kopírovat odkaz
+
       catalogue:
         boutique/subscription:
           non_recurring_subscription: Jednorázové předplatné

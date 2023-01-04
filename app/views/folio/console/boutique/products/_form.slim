@@ -1,4 +1,16 @@
-= form_header f
+ruby:
+  if f.object.persisted?
+    link = boutique.product_url(f.object.master_variant, only_path: false)
+    right = cell('folio/console/clipboard_copy',
+                 link,
+                 as_button: true,
+                 button_variant: "btn-secondary",
+                 button_label: t('.copy_link')).show
+  else
+    right = nil
+  end
+
+= form_header f, right:
 
 = tabs [:content]
 

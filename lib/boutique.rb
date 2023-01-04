@@ -7,6 +7,7 @@ require "boutique/engine"
 require "aasm"
 require "ar-sequence"
 require "slim"
+require "route_translator"
 
 require "gopay"
 

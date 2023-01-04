@@ -22,11 +22,6 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
 
     assert_equal 0, Boutique::Order.count
 
-    get crossdomain_add_order_url(product_variant_slug: product.master_variant.slug)
-    assert_redirected_to main_app.root_path
-
-    assert_equal 0, Boutique::Order.count
-
     get crossdomain_add_order_url(product_variant_slug: product.master_variant.slug),
         headers: { "HTTP_REFERER" => Folio::Site.instance.env_aware_domain }
     assert_redirected_to edit_order_url

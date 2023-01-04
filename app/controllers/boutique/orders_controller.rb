@@ -17,13 +17,10 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                                                        host: clean_referrer_domain,
                                                                        only_path: false)
         end
-
-        add_to_order_and_redirect
-        return
       end
     end
 
-    redirect_to main_app.root_path
+    add_to_order_and_redirect
   end
 
   def add

@@ -86,6 +86,7 @@ PATH
       gopay-ruby
       pg (~> 1.2)
       rails (>= 7.0.2.3)
+      route_translator
       slim
 
 GEM
@@ -504,6 +505,9 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
+    route_translator (13.1.0)
+      actionpack (>= 5.2, < 7.1)
+      activesupport (>= 5.2, < 7.1)
     rubocop (1.35.0)
       json (~> 2.3)
       parallel (~> 1.10)

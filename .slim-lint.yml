@@ -9,4 +9,3 @@ linters:
       - app/cells/boutique/subscriptions/recurrent_payment_label/show.slim
       - app/cells/folio/console/boutique/subscriptions/catalogue/show.slim
       - app/views/folio/console/boutique/orders/index.slim
-      - app/views/folio/console/boutique/products/_form.slim

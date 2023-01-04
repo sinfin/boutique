@@ -9,6 +9,10 @@ Boutique::Engine.routes.draw do
     post :payment, path: "/:id/payment"
   end
 
+  localized do
+    resources :products, only: %i[show]
+  end
+
   get "order/:id", to: "orders#show", as: :order
   get "invoice/:secret_hash", to: "invoices#show", as: :invoice
 
