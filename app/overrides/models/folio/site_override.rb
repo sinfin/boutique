@@ -28,6 +28,7 @@ Folio::Site.class_eval do
       billing_identification_number
       billing_vat_identification_number
       billing_note
+      recurring_payment_disclaimer
     ]
   end
 end

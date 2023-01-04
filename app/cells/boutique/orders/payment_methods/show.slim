@@ -15,11 +15,11 @@
 
   - if options[:info] != false
     .b-orders-payment-methods__info.small.text-muted
-      - if info_recurrency
+      - if recurrence_required? && recurring_payment_disclaimer.present?
         .b-orders-payment-methods__info-flex[
-          class="b-orders-payment-methods__info-recurrency"
+          class="b-orders-payment-methods__info-recurring-payment"
         ]
-          = info_recurrency
+          = recurring_payment_disclaimer
 
       .b-orders-payment-methods__info-flex
         = t('.secured_by')

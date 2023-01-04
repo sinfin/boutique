@@ -1,4 +1,6 @@
 - if f.object.billing_enabled?
+  = f.input :recurring_payment_disclaimer, as: :redactor
+
   h3 = t(".billing_details")
 
   .card

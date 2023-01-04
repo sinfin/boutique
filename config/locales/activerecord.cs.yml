@@ -105,6 +105,7 @@ cs:
         billing_identification_number: IČO
         billing_vat_identification_number: DIČ
         billing_note: Patička
+        recurring_payment_disclaimer: Text upozornění na rekurentní platbu
 
     models:
       boutique/product:

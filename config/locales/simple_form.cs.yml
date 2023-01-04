@@ -8,6 +8,9 @@ cs:
         number_of_allowed_uses: Pro neomezený počet použití ponechte prázdné.
         code_prefix: 3-5 znaků (pro plně generovaný kód ponechte prázdné).
 
+      site:
+        recurring_payment_disclaimer: Zobrazuje se v checkoutu při aktivní rekurentní platbě, použijte klíčové slovo {AMOUNT} pro vložení dané částky.
+
     placeholders:
       voucher:
         title: 'Např.: Black Friday'

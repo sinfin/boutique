@@ -23,13 +23,11 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
                                               .map { |pm| pm["paymentInstrument"] }
     selected = STANDARD_PAYMENT_METHODS
 
-    recurrence_required = f.object.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
-
     (selected & enabled).map do |pm|
       {
         title: Boutique::Payment.payment_method_to_human(pm),
         value: pm,
-        disabled: recurrence_required ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
+        disabled: recurrence_required? ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
         enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm)
       }
     end
@@ -44,9 +42,11 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
              disabled: method[:disabled]
   end
 
-  def info_recurrency
-    # TODO: add to DB
-    t = "Odesláním souhlasíte s tím, že bude založena opakovaná platba, a to částka {AMOUNT} Kč. Částka bude strhávána každý rok až do odvolání nebo ukončení předplatného. Nastavení platby, popřípadě její zrušení, můžete kdykoli provést z uživatelského nastavení. Platbu zprostředkovává GoPay. Údaje o vaší platební kartě budou uloženy u GoPay a budou zpracovávány podle mezinárodního bezpečnostního standardu PCI-DSS Level 1."
-    t.gsub("{AMOUNT}", f.object.total_price.to_s)
+  def recurrence_required?
+    @recurrence_required ||= f.object.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
+  end
+
+  def recurring_payment_disclaimer
+    @recurring_payment_disclaimer ||= current_site.recurring_payment_disclaimer.try(:gsub, "{AMOUNT}", f.object.total_price.to_s)
   end
 end
