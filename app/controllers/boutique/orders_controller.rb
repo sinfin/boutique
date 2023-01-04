@@ -5,7 +5,6 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
   before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
-  skip_before_action :redirect_after_order_paid_if_needed
 
   def crossdomain_add
     if request.referrer.present?
