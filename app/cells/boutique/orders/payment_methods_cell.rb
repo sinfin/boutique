@@ -43,4 +43,10 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
              style: ("display:none;" if method[:value] == "APPLE_PAY"),
              disabled: method[:disabled]
   end
+
+  def info_recurrency
+    # TODO: add to DB
+    t = "Odesláním souhlasíte s tím, že bude založena opakovaná platba, a to částka {AMOUNT} Kč. Částka bude strhávána každý rok až do odvolání nebo ukončení předplatného. Nastavení platby, popřípadě její zrušení, můžete kdykoli provést z uživatelského nastavení. Platbu zprostředkovává GoPay. Údaje o vaší platební kartě budou uloženy u GoPay a budou zpracovávány podle mezinárodního bezpečnostního standardu PCI-DSS Level 1."
+    t.gsub("{AMOUNT}", f.object.total_price.to_s)
+  end
 end

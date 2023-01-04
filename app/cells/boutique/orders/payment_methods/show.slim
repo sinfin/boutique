@@ -15,6 +15,12 @@
 
   - if options[:info] != false
     .b-orders-payment-methods__info.small.text-muted
+      - if info_recurrency
+        .b-orders-payment-methods__info-flex[
+          class="b-orders-payment-methods__info-recurrency"
+        ]
+          = info_recurrency
+
       .b-orders-payment-methods__info-flex
         = t('.secured_by')
 
