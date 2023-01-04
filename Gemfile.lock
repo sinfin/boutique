@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: fd37365c30084906029ed7a1a5b4c55ae77d7b29
+  revision: aa8503410522ea0ed6a010122c1f2c289c5483ee
   specs:
     folio (3.0.0)
       aasm
@@ -177,7 +177,7 @@ GEM
     audited (5.1.0)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.686.0)
+    aws-partitions (1.687.0)
     aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -229,14 +229,14 @@ GEM
     colorize (0.8.1)
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
-    countries (5.2.1)
+    countries (5.3.0)
       unaccent (~> 0.3)
-    country_select (8.0.0)
+    country_select (8.0.1)
       countries (~> 5.0)
     crass (1.0.6)
     css_parser (1.13.0)
       addressable
-    date (3.3.1)
+    date (3.3.3)
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
@@ -267,7 +267,7 @@ GEM
       fog-aws
     dropzonejs-rails (0.8.5)
       rails (> 3.1)
-    erubi (1.11.0)
+    erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo
     excon (0.95.0)
@@ -376,7 +376,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     nenv (0.3.0)
-    net-imap (0.3.2)
+    net-imap (0.3.4)
       date
       net-protocol
     net-pop (0.1.2)
@@ -452,8 +452,8 @@ GEM
     puma (5.6.4)
       nio4r (~> 2.0)
     raabro (1.4.0)
-    racc (1.6.1)
-    rack (2.2.4)
+    racc (1.6.2)
+    rack (2.2.5)
     rack-protection (3.0.5)
       rack
     rack-test (2.0.2)
@@ -564,8 +564,8 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-cron (1.9.0)
-      fugit (~> 1)
+    sidekiq-cron (1.9.1)
+      fugit (~> 1.8)
       sidekiq (>= 4.2.1)
     simple_form (5.1.0)
       actionpack (>= 5.2)
@@ -585,9 +585,9 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    sprockets (4.1.1)
+    sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
-      rack (> 1, < 3)
+      rack (>= 2.2.4, < 4)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
