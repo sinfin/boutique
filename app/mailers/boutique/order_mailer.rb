@@ -60,6 +60,9 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
 
     def order_shipping_address(order, html: false)
       a = order.primary_address
+
+      return order.full_name if a.nil?
+
       new_line = html ? "<br>" : "\n"
 
       [
