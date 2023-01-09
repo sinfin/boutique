@@ -383,6 +383,12 @@ class Boutique::Order < Boutique::ApplicationRecord
         if line_item = line_items.first
           line_item.update!(product_variant:,
                             amount:)
+
+          if voucher.present? && !voucher.relevant_for?(product_variant)
+            # TODO: show message that voucher has been removed
+            self.voucher = nil
+            self.voucher_code = nil
+          end
         else
           line_items.build(product_variant:,
                            amount:)
