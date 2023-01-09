@@ -50,7 +50,7 @@
                     title_tag: "h3",
                     primary_address: current_order.requires_address?)
 
-          - unless current_order.free?
+          - unless current_order.voucher_code.nil? && current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)
 
         aside.b-orders-edit__col.b-orders-edit__col--aside
@@ -64,7 +64,7 @@
                     order: current_order)
 
           - if f.object.free?
-             = f.button :submit,
+            = f.button :submit,
                        t(".order_for_free"),
                        class: "btn btn-primary"
           - else
