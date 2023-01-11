@@ -54,6 +54,7 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           as: :hidden,
         },
         by_subscription_state: {
+          as: :collection,
           collection: [
             [@klass.human_attribute_name("subscription_state/active"), "active"],
             [@klass.human_attribute_name("subscription_state/inactive"), "inactive"],
@@ -62,6 +63,7 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           width: 210,
         },
         by_subsequent_subscription: {
+          as: :collection,
           collection: [
             [@klass.human_attribute_name("subsequent_subscription/new"), "new"],
             [@klass.human_attribute_name("subsequent_subscription/subsequent"), "subsequent"],
@@ -95,6 +97,7 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           collapsed: true,
         },
         by_primary_address_country_code: {
+          as: :collection,
           collection: [
             [@klass.human_attribute_name("primary_address_country_code/CZ"), "CZ"],
             [@klass.human_attribute_name("primary_address_country_code/SK"), "SK"],
