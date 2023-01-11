@@ -25,7 +25,11 @@ end
 Folio::Engine.routes.draw do
   namespace :console do
     scope module: :boutique do
-      resources :orders, only: %i[index show edit update]
+      resources :orders, only: %i[index show edit update] do
+        collection do
+          get :invoices
+        end
+      end
 
       resources :products, except: %i[show]
       resources :vat_rates, except: %i[show]

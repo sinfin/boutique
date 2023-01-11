@@ -58,11 +58,11 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def unit_price_vat
-    (unit_price * (vat_rate_value.to_f / (100 + vat_rate_value))).round(2)
+    (unit_price * (vat_rate_value.to_d / (100 + vat_rate_value))).round(2).to_f
   end
 
   def unit_price_without_vat
-    unit_price - unit_price_vat
+    (unit_price - unit_price_vat.to_d).to_f
   end
 
   def imprint!

@@ -22,6 +22,30 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
     render "folio/console/boutique/orders/index"
   end
 
+  def invoices
+    # TODO: apply filters
+    @orders = @orders.where(aasm_state: %w[paid dispatched])
+                     .order(invoice_number: :asc)
+
+    data = ::CSV.generate(headers: true, col_sep: ",") do |csv|
+      csv << %i[invoice_number paid_at email total_price].map do |a|
+        Boutique::Order.human_attribute_name(a)
+      end
+
+      @orders.each do |order|
+        csv << [
+          order.invoice_number,
+          l(order.paid_at, format: :as_date),
+          order.email,
+          order.total_price
+        ]
+      end
+    end
+
+    filename = "#{t(".filename")}-#{Date.today}".parameterize + ".csv"
+    send_data data, filename:
+  end
+
   private
     def order_params
       params.require(:order)

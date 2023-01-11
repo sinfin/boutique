@@ -5,6 +5,7 @@ en:
       boutique:
         orders:
           index:
+            invoices: Invoices
             summary:
               text: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
             by_query_placeholder: "Search: order number, name, address, registration number, e-mail ..."
@@ -14,6 +15,9 @@ en:
               paid: Paid
               dispatched: Dispatched
               cancelled: Cancelled
+
+          invoices:
+            filename: invoices
 
         subscriptions:
           catalogue:

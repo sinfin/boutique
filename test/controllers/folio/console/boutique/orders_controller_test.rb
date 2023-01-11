@@ -36,4 +36,16 @@ class Folio::Console::Boutique::OrdersControllerTest < Folio::Console::BaseContr
     assert_redirected_to url_for([:edit, :console, model])
     assert_equal("foo@test.test", model.reload.email)
   end
+
+  test "invoices" do
+    get url_for([:invoices, :console, Boutique::Order])
+
+    assert_response :success
+
+    create(:boutique_order, :paid)
+
+    get url_for([:invoices, :console, Boutique::Order])
+
+    assert_response :success
+  end
 end
