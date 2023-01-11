@@ -30,7 +30,7 @@ $(document)
             '.b-orders-edit-voucher-fields',
             '.b-orders-edit-sidebar__ajax-replacable',
             '.b-orders-edit-summary',
-            '.b-orders-payment-methods'
+            '.b-orders-edit__payment'
           ]
 
           selectors.forEach((selector) => {
@@ -53,8 +53,13 @@ $(document)
       complete: () => {
         if (success) return
 
-        $wrap
-          .find('.form-group')
+        const $group = $wrap.find('.form-group')
+
+        $group
+          .find('.invalid-feedback')
+          .remove()
+
+        $group
           .addClass('form-group-invalid')
           .find('.form-control')
           .addClass('is-invalid')

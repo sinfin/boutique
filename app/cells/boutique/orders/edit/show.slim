@@ -63,11 +63,12 @@
                     nil,
                     order: current_order)
 
-          - if f.object.free?
-            = f.button :submit,
-                       t(".order_for_free"),
-                       class: "btn btn-primary"
-          - else
-            == cell('boutique/orders/payment_methods', f)
+          .b-orders-edit__payment
+            - if f.object.free?
+              = f.button :submit,
+                         t(".order_for_free"),
+                         class: "btn btn-primary"
+            - else
+              == cell('boutique/orders/payment_methods', f)
 
         aside.b-orders-edit__col.b-orders-edit__col--aside aria-hidden="true"
