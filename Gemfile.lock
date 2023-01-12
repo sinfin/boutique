@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: aa8503410522ea0ed6a010122c1f2c289c5483ee
+  revision: cbb7ce59e439bce0219aa09f7839be6315908608
   specs:
     folio (3.0.0)
       aasm
@@ -177,7 +177,7 @@ GEM
     audited (5.1.0)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.687.0)
+    aws-partitions (1.691.0)
     aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -234,7 +234,7 @@ GEM
     country_select (8.0.1)
       countries (~> 5.0)
     crass (1.0.6)
-    css_parser (1.13.0)
+    css_parser (1.14.0)
       addressable
     date (3.3.3)
     declarative-builder (0.1.0)
@@ -249,7 +249,7 @@ GEM
     devise-bootstrap-views (1.1.0)
     devise-i18n (1.10.2)
       devise (>= 4.8.0)
-    devise_invitable (2.0.6)
+    devise_invitable (2.0.7)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     domain_name (0.5.20190701)
@@ -270,7 +270,7 @@ GEM
     erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo
-    excon (0.95.0)
+    excon (0.97.1)
     execjs (2.8.1)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -362,7 +362,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
-    message_bus (4.3.0)
+    message_bus (4.3.1)
       rack (>= 1.1.3)
     method_source (1.0.0)
     mime-types (3.4.1)
