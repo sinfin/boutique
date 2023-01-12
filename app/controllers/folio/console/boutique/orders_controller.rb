@@ -4,10 +4,22 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
   folio_console_controller_for "Boutique::Order", csv: true
 
   before_action :filter_folio_console_collection, only: %i[index invoices]
-  before_action :filter_orders_by_tab, only: %i[index invoices]
+  before_action :filter_orders_with_invoices, only: %i[invoices]
 
   def index
     @orders = @orders.ordered
+
+    case params[:tab]
+    when nil
+      @orders = @orders.where(aasm_state: %w[confirmed waiting_for_offline_payment])
+    when "paid"
+      @orders = @orders.where(aasm_state: "paid")
+    when "dispatched"
+      @orders = @orders.where(aasm_state: "dispatched")
+    when "cancelled"
+      @orders = @orders.where(aasm_state: "cancelled")
+    end
+
     @orders_scope = @orders
 
     respond_with(@orders) do |format|
@@ -16,14 +28,13 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
         render "folio/console/boutique/orders/index"
       end
       format.csv do
+        @orders = @orders.includes(:primary_address, :secondary_address)
         render_csv(@orders)
       end
     end
   end
 
   def invoices
-    @orders = @orders.reorder(invoice_number: :asc)
-
     data = ::CSV.generate(headers: true, col_sep: ",") do |csv|
       csv << %i[invoice_number paid_at email total_price].map do |a|
         Boutique::Order.human_attribute_name(a)
@@ -66,19 +77,6 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           force_active: tab_param == tab,
           label: t(".tabs.#{tab_param || "index"}")
         }
-      end
-    end
-
-    def filter_orders_by_tab
-      case params[:tab]
-      when nil
-        @orders = @orders.where(aasm_state: %w[confirmed waiting_for_offline_payment])
-      when "paid"
-        @orders = @orders.where(aasm_state: "paid")
-      when "dispatched"
-        @orders = @orders.where(aasm_state: "dispatched")
-      when "cancelled"
-        @orders = @orders.where(aasm_state: "cancelled")
       end
     end
 
@@ -144,6 +142,11 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           collapsed: true,
         }
       )
+    end
+
+    def filter_orders_with_invoices
+      @orders = @orders.reorder(invoice_number: :asc)
+                       .where.not(invoice_number: nil)
     end
 
     def folio_console_collection_includes
