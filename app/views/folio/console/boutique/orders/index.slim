@@ -1,10 +1,5 @@
-ruby:
-  invoices_button = link_to(content_tag(:i, nil, class: 'fa fa-file-invoice-dollar') + t('.invoices'),
-                            invoices_console_orders_path,
-                            class: 'btn btn-secondary f-c-index-header__btn')
-
 = index_header by_query_placeholder: t('folio.console.boutique.orders.index.by_query_placeholder'),
-               right: invoices_button
+               right: cell('folio/console/boutique/orders/index/invoices_button')
 
 ruby:
   bl = -> (item, collection, i) do

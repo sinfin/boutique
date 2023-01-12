@@ -481,7 +481,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         send(attr).try(:to_label)
       when :confirmed_at, :paid_at
         t = send(attr)
-        I18n.l(t, format: :short) if t.present?
+        I18n.l(t, format: :console_short) if t.present?
       when :invoice
         invoice_number
       when :aasm_state

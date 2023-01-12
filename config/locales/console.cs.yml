@@ -5,10 +5,14 @@ cs:
       boutique:
         orders:
           index:
-            invoices: Faktury
+            by_query_placeholder: "Hledat: Číslo objednávky, Jméno, Adresa, IČO, e-mail ..."
+
+            invoices_button:
+              label: Faktury
+
             summary:
               text: Objednáno <strong>%{count}</strong> objednávek za <strong>%{total}</strong> v ∅ ceně %{average}.
-            by_query_placeholder: "Hledat: Číslo objednávky, Jméno, Adresa, IČO, e-mail ..."
+
             tabs:
               all: Vše
               index: Nezaplacená
