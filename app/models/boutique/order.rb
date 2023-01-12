@@ -466,6 +466,32 @@ class Boutique::Order < Boutique::ApplicationRecord
     requires_address? && !pending?
   end
 
+  def self.csv_attribute_names
+    %i[number email full_name line_items total_price primary_address secondary_address confirmed_at paid_at aasm_state invoice]
+  end
+
+  def csv_attributes(controller)
+    self.class.csv_attribute_names.map do |attr|
+      case attr
+      when :full_name
+        user.try(:full_name) || primary_address.try(:name)
+      when :line_items
+        line_items.map(&:to_console_label).join(", ")
+      when :primary_address, :secondary_address
+        send(attr).try(:to_label)
+      when :confirmed_at, :paid_at
+        t = send(attr)
+        I18n.l(t, format: :short) if t.present?
+      when :invoice
+        invoice_number
+      when :aasm_state
+        aasm.human_state
+      else
+        send(attr)
+      end
+    end
+  end
+
   private
     def set_numbers
       return if base_number.present?

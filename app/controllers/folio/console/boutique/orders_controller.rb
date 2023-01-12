@@ -1,25 +1,33 @@
 # frozen_string_literal: true
 
 class Folio::Console::Boutique::OrdersController < Folio::Console::BaseController
-  folio_console_controller_for "Boutique::Order"
+  folio_console_controller_for "Boutique::Order", csv: true
 
   def index
-    @orders_scope = @orders.ordered
+    @orders = @orders.ordered
 
     case params[:tab]
     when nil
-      @orders_scope = @orders_scope.where(aasm_state: %w[confirmed waiting_for_offline_payment])
+      @orders = @orders.where(aasm_state: %w[confirmed waiting_for_offline_payment])
     when "paid"
-      @orders_scope = @orders_scope.where(aasm_state: "paid")
+      @orders = @orders.where(aasm_state: "paid")
     when "dispatched"
-      @orders_scope = @orders_scope.where(aasm_state: "dispatched")
+      @orders = @orders.where(aasm_state: "dispatched")
     when "cancelled"
-      @orders_scope = @orders_scope.where(aasm_state: "cancelled")
+      @orders = @orders.where(aasm_state: "cancelled")
     end
 
-    @pagy, @orders = pagy(@orders_scope)
+    @orders_scope = @orders
 
-    render "folio/console/boutique/orders/index"
+    respond_with(@orders) do |format|
+      format.html do
+        @pagy, @orders = pagy(@orders)
+        render "folio/console/boutique/orders/index"
+      end
+      format.csv do
+        render_csv(@orders)
+      end
+    end
   end
 
   def invoices
