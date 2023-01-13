@@ -268,8 +268,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       before do
         set_invoice_number
 
-        set_up_subscription! unless gift? || subsequent?
-
         before_pay
       end
 
@@ -278,6 +276,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           subscription.prolong!
         else
           invite_user!
+          set_up_subscription! unless gift? || subsequent?
         end
 
         after_pay
@@ -528,6 +527,20 @@ class Boutique::Order < Boutique::ApplicationRecord
       ].compact.join
     end
 
+    def invite_user!
+      return unless user.nil?
+
+      self.user = Folio::User.invite!(email:,
+                                      first_name:,
+                                      last_name:,
+                                      use_secondary_address:,
+                                      primary_address: primary_address.try(:dup),
+                                      secondary_address: secondary_address.try(:dup))
+
+      update_columns(folio_user_id: user.id,
+                     updated_at: current_time_from_proper_timezone)
+    end
+
     def set_up_subscription!
       li = line_items.select(&:subscription?)
 
@@ -540,13 +553,13 @@ class Boutique::Order < Boutique::ApplicationRecord
       active_from = line_item.subscription_starts_at || current_time_from_proper_timezone
       cancelled_at = active_from unless line_item.subscription_recurring?
 
-      build_subscription(payment: paid_payment,
-                         product_variant: line_item.product_variant,
-                         user:,
-                         period:,
-                         active_from:,
-                         active_until: active_from + period.months,
-                         cancelled_at:)
+      create_subscription!(payment: paid_payment,
+                           product_variant: line_item.product_variant,
+                           user:,
+                           period:,
+                           active_from:,
+                           active_until: active_from + period.months,
+                           cancelled_at:)
     end
 
     def set_site
@@ -575,18 +588,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       self.line_items_price = line_items_price
       self.discount = discount
       self.total_price = total_price
-    end
-
-    def invite_user!
-      return unless user.nil?
-
-      self.user = Folio::User.invite!(email:,
-                                      first_name:,
-                                      last_name:,
-                                      use_secondary_address:,
-                                      primary_address: primary_address.try(:dup),
-                                      secondary_address: secondary_address.try(:dup))
-      update_columns(folio_user_id: user.id)
     end
 
     def validate_voucher_code(ignore_blank: true)
