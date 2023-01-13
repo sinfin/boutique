@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: cbb7ce59e439bce0219aa09f7839be6315908608
+  revision: 94850d0eb9b0ff7d06a61569602b6cd3196a86cb
   specs:
     folio (3.0.0)
       aasm
@@ -177,7 +177,7 @@ GEM
     audited (5.1.0)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.691.0)
+    aws-partitions (1.692.0)
     aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -356,7 +356,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.2.8)
-    mail (2.8.0)
+    mail (2.8.0.1)
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
@@ -387,7 +387,7 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.13.10-x86_64-linux)
+    nokogiri (1.14.0-x86_64-linux)
       racc (~> 1.4)
     notiffany (0.1.3)
       nenv (~> 0.1)

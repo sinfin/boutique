@@ -18,7 +18,7 @@ module Boutique::CurrentOrder
       # using update_columns so that we don't get some random 500s by using update!
       if current_user.present?
         if order.nil?
-          order = current_order_scope.find_by(user: current_user)
+          order = current_order_scope.where(user: current_user).order(id: :desc).first
         elsif order.user.nil?
           order.update_columns(folio_user_id: current_user.id,
                                updated_at: Time.current)
