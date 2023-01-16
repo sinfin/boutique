@@ -460,6 +460,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
+    set_up_subscription!(recipient: gift_recipient_user)
+
     Boutique::OrderMailer.gift_notification(self, gift_recipient_user.raw_invitation_token).deliver_later
   end
 
@@ -547,7 +549,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                      updated_at: current_time_from_proper_timezone)
     end
 
-    def set_up_subscription!
+    def set_up_subscription!(recipient: nil)
       li = line_items.select(&:subscription?)
 
       return if li.empty?
@@ -561,7 +563,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       create_subscription!(payment: paid_payment,
                            product_variant: line_item.product_variant,
-                           user:,
+                           user: recipient || user,
                            period:,
                            active_from:,
                            active_until: active_from + period.months,
