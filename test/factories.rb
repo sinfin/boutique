@@ -38,6 +38,7 @@ FactoryBot.define do
 
   factory :boutique_order, class: "Boutique::Order" do
     transient do
+      subscription_product { false }
       digital_only { false }
       line_items_count { 0 }
     end
@@ -92,7 +93,8 @@ FactoryBot.define do
     before(:create) do |order, evaluator|
       if order.line_items.empty?
         evaluator.line_items_count.times do
-          li = build(:boutique_line_item)
+          product = evaluator.subscription_product ? create(:boutique_product_subscription) : create(:boutique_product)
+          li = build(:boutique_line_item, product:)
           li.product.update_column(:digital_only, true) if evaluator.digital_only
           order.line_items << li
         end
@@ -125,7 +127,7 @@ FactoryBot.define do
     active_until { 1.minute.ago + 12.months }
 
     after(:build) do |subscription|
-      order_attrs = { subscription:, user: subscription.user }.compact
+      order_attrs = { subscription:, subscription_product: true, user: subscription.user }.compact
       order = create(:boutique_order, :paid, order_attrs)
       subscription.payment = order.payments.paid.first
       subscription.product_variant = order.line_items.first.product_variant
