@@ -368,6 +368,9 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def add_line_item!(product_variant, amount: 1)
+    subscription_recurring = product_variant.product.subscription? &&
+                             product_variant.product.subscription_recurrent_payment_enabled?
+
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
         if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
@@ -375,12 +378,14 @@ class Boutique::Order < Boutique::ApplicationRecord
           line_item.save!
         else
           line_items.build(product_variant:,
+                           subscription_recurring:,
                            amount:)
         end
       else
         # TODO: add line item count validation
         if line_item = line_items.first
           line_item.update!(product_variant:,
+                            subscription_recurring:,
                             amount:)
 
           if voucher.present? && !voucher.relevant_for?(product_variant)
@@ -390,6 +395,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           end
         else
           line_items.build(product_variant:,
+                           subscription_recurring:,
                            amount:)
         end
       end

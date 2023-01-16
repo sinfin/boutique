@@ -53,6 +53,7 @@ cs:
         subscription_frequency/monthly: měsíční
         subscription_frequency/quarterly: čtvrtletní
         subscription_frequency: Periodicita
+        subscription_recurrent_payment_disabled: Zakázat možnost opakované platby
         type: Typ produktu
         vat_rate: Sazba daně
 

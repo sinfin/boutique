@@ -28,9 +28,11 @@
               == cell('boutique/orders/edit/gift_recipient_fields', f)
 
           - if current_order.line_items.any?(&:subscription?)
-            .b-orders-edit__box
-              .b-orders-edit__box-inner
-                == cell('boutique/orders/edit/subscription_fields', f)
+            - fields = cell('boutique/orders/edit/subscription_fields', f).show
+            - if fields
+              .b-orders-edit__box
+                .b-orders-edit__box-inner
+                  == fields
 
           - if current_order.requires_address?
             .b-orders-edit__box[

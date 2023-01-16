@@ -3,6 +3,22 @@
 class Boutique::Orders::Edit::SubscriptionFieldsCell < Boutique::ApplicationCell
   include Folio::Cell::HtmlSafeFieldsFor
 
+  def show
+    render if show_subscription_starts_at_input? || show_subscription_recurring_input?
+  end
+
+  def line_item
+    model.object.line_items.first
+  end
+
+  def show_subscription_starts_at_input?
+    @show_subscription_starts_at_input ||= line_item.product.has_subscription_frequency?
+  end
+
+  def show_subscription_recurring_input?
+    @show_subscription_recurring_input ||= line_item.product.subscription_recurrent_payment_enabled?
+  end
+
   def subscription_starts_at_input(g)
     collection = g.object.subscription_starts_at_options_for_select
     selected = g.object.subscription_starts_at.try(:to_date)

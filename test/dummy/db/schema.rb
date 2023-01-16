@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_16_051620) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -149,8 +149,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.string "subscription_frequency"
     t.bigint "boutique_vat_rate_id", null: false
     t.bigint "site_id"
-    t.text "shipping_info"
     t.boolean "digital_only", default: false
+    t.text "shipping_info"
+    t.boolean "subscription_recurrent_payment_disabled", default: false
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"

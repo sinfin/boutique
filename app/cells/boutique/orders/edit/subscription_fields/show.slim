@@ -2,19 +2,18 @@
   h3.mt-0 = t('.title')
 
   = html_safe_fields_for model, :line_items do |g|
-    - show_subscription_starts_at_input = g.object.product.has_subscription_frequency?
-
     .row.mb-n3
-      - if show_subscription_starts_at_input
+      - if show_subscription_starts_at_input?
         .col-lg-6
           = subscription_starts_at_input(g)
 
-      .col-lg-6
-        - if show_subscription_starts_at_input
-          label.pb-2 &nbsp;
+      - if show_subscription_recurring_input?
+        .col-lg-6
+          - if show_subscription_starts_at_input?
+            label.pb-2 &nbsp;
 
-        = g.input :subscription_recurring,
-                  input_html: { \
-                    checked: subscription_recurring_checked(g), \
-                    class: "b-orders-edit-subscription-fields__recurring-checkbox" \
-                  }
+          = g.input :subscription_recurring,
+                    input_html: { \
+                      checked: subscription_recurring_checked(g), \
+                      class: "b-orders-edit-subscription-fields__recurring-checkbox" \
+                    }

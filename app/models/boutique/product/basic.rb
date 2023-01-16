@@ -7,20 +7,21 @@ end
 #
 # Table name: boutique_products
 #
-#  id                     :bigint(8)        not null, primary key
-#  title                  :string           not null
-#  slug                   :string           not null
-#  published              :boolean          default(FALSE)
-#  published_at           :datetime
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  type                   :string
-#  variants_count         :integer          default(0)
-#  subscription_frequency :string
-#  boutique_vat_rate_id   :bigint(8)        not null
-#  site_id                :bigint(8)
-#  digital_only           :boolean          default(FALSE)
-#  shipping_info          :text
+#  id                                      :bigint(8)        not null, primary key
+#  title                                   :string           not null
+#  slug                                    :string           not null
+#  published                               :boolean          default(FALSE)
+#  published_at                            :datetime
+#  created_at                              :datetime         not null
+#  updated_at                              :datetime         not null
+#  type                                    :string
+#  variants_count                          :integer          default(0)
+#  subscription_frequency                  :string
+#  boutique_vat_rate_id                    :bigint(8)        not null
+#  site_id                                 :bigint(8)
+#  digital_only                            :boolean          default(FALSE)
+#  shipping_info                           :text
+#  subscription_recurrent_payment_disabled :boolean          default(FALSE)
 #
 # Indexes
 #
