@@ -48,9 +48,10 @@ cs:
         digital_only: Digitální produkt
         shipping_info: Doprava
         site: Web
-        subscription_frequency/bimonthly: dvouměsíčník
-        subscription_frequency/monthly: měsíčník
-        subscription_frequency/quarterly: čtvrtletník
+        subscription_frequency/none: žádná
+        subscription_frequency/bimonthly: dvouměsíční
+        subscription_frequency/monthly: měsíční
+        subscription_frequency/quarterly: čtvrtletní
         subscription_frequency: Periodicita
         type: Typ produktu
         vat_rate: Sazba daně

@@ -20,6 +20,8 @@ class Boutique::LineItem < Boutique::ApplicationRecord
            :subscription?,
            to: :product
 
+  before_save :unset_unwanted_subscription_starts_at
+
   def to_label
     product_variant.title
   end
@@ -78,6 +80,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     to_label
   end
 
+  def requires_subscription_starts_at?
+    product.subscription? && product.has_subscription_frequency?
+  end
+
   def subscription_starts_at_options_for_select
     product.current_and_upcoming_issues.map do |issue|
       date = Date.new(issue[:year], issue[:month])
@@ -88,6 +94,13 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   private
     def subscription_starts_at_label(date, number)
       "#{number}/#{date.year}"
+    end
+
+    def unset_unwanted_subscription_starts_at
+      return unless order.pending?
+      return if requires_subscription_starts_at?
+
+      self.subscription_starts_at = nil
     end
 end
 

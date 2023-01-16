@@ -2,6 +2,7 @@
 
 class Boutique::Product::Subscription < Boutique::Product
   SUBSCRIPTION_FREQUENCIES = {
+    none: nil,
     monthly: 1,
     bimonthly: 2,
     quarterly: 3,
@@ -33,6 +34,8 @@ class Boutique::Product::Subscription < Boutique::Product
   end
 
   def current_and_upcoming_issues(years = 1)
+    return [] if subscription_frequency.nil?
+
     start = Date.today
     per_year = 12 / subscription_frequency_in_months_per_issue
 
@@ -46,6 +49,10 @@ class Boutique::Product::Subscription < Boutique::Product
     return if subscription_frequency.nil?
 
     SUBSCRIPTION_FREQUENCIES[subscription_frequency.to_sym]
+  end
+
+  def has_subscription_frequency?
+    subscription_frequency != "none"
   end
 
   def self.subscription_frequency_options_for_select

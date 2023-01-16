@@ -550,7 +550,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       line_item = li.first
       period = 12
-      active_from = line_item.subscription_starts_at || current_time_from_proper_timezone
+      active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
       cancelled_at = active_from unless line_item.subscription_recurring?
 
       create_subscription!(payment: paid_payment,
