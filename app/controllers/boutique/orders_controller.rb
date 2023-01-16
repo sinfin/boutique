@@ -112,6 +112,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                     :gift,
                                     :gift_recipient_email,
                                     :gift_recipient_notification_scheduled_for,
+                                    :recurring_payment_agreement,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end

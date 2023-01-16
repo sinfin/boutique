@@ -32,6 +32,7 @@ cs:
         primary_address_country_code/SK: Slovensko
         primary_address_country_code: Země odběru
         product: Produkt
+        recurring_payment_agreement: Souhlas se zřízením opakované platby
         subscription_state/active: Aktivní předplatné
         subscription_state/inactive: Neaktivní předplatné
         subscription_state/none: Žádné předplatné
@@ -156,6 +157,8 @@ cs:
           attributes:
             email:
               already_registered: je již registrovaný
+            recurring_payment_agreement:
+              accepted: nebyl potvrzen
             voucher_code:
               invalid: není platný
               expired: již není aktivní

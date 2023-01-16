@@ -27,6 +27,9 @@ cs:
           info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku.
           info_bold: Vaše objednávka bude odeslána až po tomto datu.
 
+        recurring_payment_agreement:
+          label: <strong>Souhlasím se zřízením opakované platby</strong> a uložením údajů o mé platební kartě u provozovatele platební brány GoPay.
+
         sidebar:
           contents: Získáte
           shipping: Doprava

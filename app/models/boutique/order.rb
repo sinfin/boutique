@@ -42,8 +42,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   accepts_nested_attributes_for :line_items
 
-  attr_accessor :force_address_validation
-
   has_many :payments, -> { ordered },
                       class_name: "Boutique::Payment",
                       foreign_key: :boutique_order_id,
@@ -203,6 +201,10 @@ class Boutique::Order < Boutique::ApplicationRecord
             unless: :pending?,
             allow_nil: true
 
+  validates :recurring_payment_agreement,
+            acceptance: true,
+            if: -> { aasm.to_state == :confirmed }
+
   validate :validate_voucher_code
   validate :validate_email_not_already_registered, unless: :pending?
 
@@ -217,6 +219,9 @@ class Boutique::Order < Boutique::ApplicationRecord
             allow_nil: true
 
   validate :validate_gift_address, if: -> { gift? && !pending? }
+
+  attr_accessor :force_address_validation
+  attribute :recurring_payment_agreement, :boolean
 
   has_sanitized_fields :first_name,
                        :last_name,

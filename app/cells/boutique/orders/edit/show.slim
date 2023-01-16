@@ -27,7 +27,7 @@
             .b-orders-edit__box-inner
               == cell('boutique/orders/edit/gift_recipient_fields', f)
 
-          - if current_order.line_items.any?(&:subscription?)
+          - if subscription?
             - fields = cell('boutique/orders/edit/subscription_fields', f).show
             - if fields
               .b-orders-edit__box
@@ -64,6 +64,10 @@
             == cell("#{application_namespace_path}/ui/disclaimer",
                     nil,
                     order: current_order)
+
+            - if subscription?
+              == cell("boutique/orders/edit/recurring_payment_agreement",
+                      f)
 
           .b-orders-edit__payment
             - if f.object.free?

@@ -1,0 +1,6 @@
+.b-orders-edit-recurring-payment-agreement.mt-2[
+  style=("display: none;" if hidden?)
+]
+  = model.input :recurring_payment_agreement,
+                label: content_tag(:div, t(".label"), class: "small").html_safe,
+                disabled: hidden?

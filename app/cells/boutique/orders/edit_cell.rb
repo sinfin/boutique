@@ -55,4 +55,8 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
                          style: ("display: none;" unless current_order.gift?)),
     ].join
   end
+
+  def subscription?
+    @subscription ||= current_order.line_items.any?(&:subscription?)
+  end
 end

@@ -27,6 +27,9 @@ en:
           info: Please select a date when we will send an email to the recipient with information about your gift.
           info_bold: Your order will be sent after this date.
 
+        recurring_payment_agreement:
+          label: <strong>I agree with setting up a recurring payment</strong> and storing my payment card details with the payment gateway provider GoPay.
+
         sidebar:
           contents: Includes
           shipping: Shipping
