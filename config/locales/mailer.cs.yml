@@ -3,4 +3,5 @@ cs:
   boutique:
     order_mailer:
       summary:
+        gift: Dárek pro %{recipient}
         paid: "%{price} (zaplaceno)"

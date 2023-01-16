@@ -29,7 +29,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   end
 
   def gift_notification(order, token = nil)
-    data = order_data(order, gift: true)
+    data = order_data(order, gift_notification: true)
     data[:USER_ACCEPT_INVITATION_URL] = main_app.accept_user_invitation_url(invitation_token: token)
     email_template_mail(data,
                         to: order.gift_recipient_email,
@@ -39,11 +39,11 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   end
 
   private
-    def order_data(order, address: true, gift: false)
+    def order_data(order, address: true, gift_notification: false)
       h = {
         ORDER_NUMBER: order.number,
-        ORDER_SUMMARY_HTML: render(partial: "summary_html", locals: { order:, gift: }),
-        ORDER_SUMMARY_PLAIN: render(partial: "summary_plain", locals: { order:, gift: }),
+        ORDER_SUMMARY_HTML: render(partial: "summary_html", locals: { order:, gift_notification: }),
+        ORDER_SUMMARY_PLAIN: render(partial: "summary_plain", locals: { order:, gift_notification: }),
       }
 
       if address
@@ -51,7 +51,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
         h[:ORDER_SHIPPING_ADDRESS_PLAIN] = order_shipping_address(order)
       end
 
-      unless gift
+      unless gift_notification
         h[:ORDER_URL] = boutique.order_url(order.secret_hash)
       end
 

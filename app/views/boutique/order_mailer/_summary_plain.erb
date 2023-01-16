@@ -1,7 +1,11 @@
+<%- if order.gift? && !gift_notification -%>
+<%= t("boutique.order_mailer.summary.gift", recipient: order.gift_recipient_email) %>
+
+<%- end -%>
 <%- order.line_items.each do |line_item| -%>
 <%= line_item.to_label %>
 <%- end -%>
-<%- unless gift -%>
+<%- if !gift_notification -%>
 
 <%- if order.free? -%>
 <%= t("boutique.free") %>

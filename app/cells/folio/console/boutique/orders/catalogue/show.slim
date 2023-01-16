@@ -7,7 +7,11 @@
       attribute(:email)
 
       attribute(:line_items) do
-        record.line_items.map(&:to_console_label).join(", ")
+        [
+          # TODO @mreq: add gift icon
+          # record.gift? ? "GIFT " : nil,
+          record.line_items.map(&:to_console_label).join(", ")
+        ].join
       end
 
       attribute(:price) do

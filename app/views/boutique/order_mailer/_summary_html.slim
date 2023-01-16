@@ -1,4 +1,10 @@
 table.my-4
+  - if order.gift? && !gift_notification
+    tr
+      td.font-weight-bold style="padding-bottom: 10px"
+        = t("boutique.order_mailer.summary.gift",
+            recipient: order.gift_recipient_email)
+
   - order.line_items.each do |line_item|
     ruby:
       cover = line_item.product_variant.cover
@@ -17,7 +23,7 @@ table.my-4
       td style="padding-bottom: 10px"
         = line_item.to_label
 
-  - unless gift
+  - if !gift_notification
     tr
       td.font-weight-bold
         - if order.free?
