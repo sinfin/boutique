@@ -23,6 +23,8 @@ class Boutique::Product::Subscription < Boutique::Product
   end
 
   def issue_at(date)
+    return unless has_subscription_frequency?
+
     if subscription_frequency_in_months_per_issue == 1
       number = month = date.month
     else
@@ -38,7 +40,7 @@ class Boutique::Product::Subscription < Boutique::Product
   end
 
   def current_and_upcoming_issues(years = 1)
-    return [] if subscription_frequency.nil?
+    return [] unless has_subscription_frequency?
 
     start = Date.today
     per_year = 12 / subscription_frequency_in_months_per_issue
@@ -50,7 +52,7 @@ class Boutique::Product::Subscription < Boutique::Product
   end
 
   def subscription_frequency_in_months_per_issue
-    return if subscription_frequency.nil?
+    return unless has_subscription_frequency?
 
     SUBSCRIPTION_FREQUENCIES[subscription_frequency.to_sym]
   end

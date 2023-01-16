@@ -32,6 +32,8 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     from = product.issue_at(subscription_starts_at)
     to = product.issue_at(subscription_starts_at + 11.months)
 
+    return to_label unless from && to
+
     "#{to_label} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
   end
 
