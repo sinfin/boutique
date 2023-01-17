@@ -31,7 +31,7 @@
             - fields = cell('boutique/orders/edit/subscription_fields', f).show
             - if fields
               .b-orders-edit__box
-                .b-orders-edit__box-inner
+                .b-orders-edit__box-inner.b-orders-edit__box-inner--wide
                   == fields
 
           - if current_order.requires_address?

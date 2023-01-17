@@ -26,7 +26,10 @@ class Boutique::Orders::Edit::SubscriptionFieldsCell < Boutique::ApplicationCell
 
     g.input(:subscription_starts_at, collection:,
                                      selected:,
-                                     include_blank: false)
+                                     include_blank: false,
+                                     label: false,
+                                     wrapper: false,
+                                     input_html: { class: "b-orders-edit-subscription-fields__input" })
   end
 
   def subscription_recurring_checked(g)
