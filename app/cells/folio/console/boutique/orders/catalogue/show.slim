@@ -7,11 +7,21 @@
       attribute(:email)
 
       attribute(:line_items) do
-        [
-          # TODO @mreq: add gift icon
-          # record.gift? ? "GIFT " : nil,
-          record.line_items.map(&:to_console_label).join(", ")
-        ].join
+        content_tag(:div, class: "d-flex align-items-center") do
+          ary = []
+
+          if record.gift?
+            ary <<  cell('boutique/ui/gift_icon',
+                         class: 'mr-2 flex-shrink-0',
+                         size: 18).show
+          end
+
+          ary << content_tag(:div,
+                             record.line_items.map(&:to_console_label).join(", "),
+                             class: "flex-grow-1 flex-shrink-1")
+
+          ary.join(" ")
+        end
       end
 
       attribute(:price) do

@@ -21,4 +21,5 @@
       .col-12.col-md-7.mt-3
         = f.input :gift_recipient_email, required: true
 
-  = render(:_gift_icon_svg)
+  == cell('boutique/ui/gift_icon',
+          class: 'b-orders-edit-gift-fields__gift-icon-svg')
