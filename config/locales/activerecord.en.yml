@@ -73,6 +73,8 @@ en:
               already_registered: is already registered
             voucher_code:
               expired: is expired
+            gift_recipient_notification_scheduled_for:
+              in_the_past: cannot be in the past
 
         boutique/subscription:
           base:

@@ -213,6 +213,8 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             if: -> { gift? && !pending? }
 
+  validate :validate_gift_recipient_notification_scheduled_for_is_in_future
+
   validates :gift_recipient_email,
             format: { with: Folio::EMAIL_REGEXP },
             if: -> { gift? && !pending? },
@@ -221,6 +223,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   validate :validate_gift_address, if: -> { gift? && !pending? }
 
   attr_accessor :force_address_validation
+  attr_accessor :force_gift_recipient_notification_scheduled_for_validation
   attribute :recurring_payment_agreement, :boolean
 
   has_sanitized_fields :first_name,
@@ -643,6 +646,14 @@ class Boutique::Order < Boutique::ApplicationRecord
     def validate_gift_address
       if primary_address.present?
         primary_address.errors.add(:name, :blank) unless primary_address.name.present?
+      end
+    end
+
+    def validate_gift_recipient_notification_scheduled_for_is_in_future
+      if force_gift_recipient_notification_scheduled_for_validation &&
+         gift_recipient_notification_scheduled_for &&
+         gift_recipient_notification_scheduled_for <= Time.current &&
+        errors.add(:gift_recipient_notification_scheduled_for, :in_the_past)
       end
     end
 end

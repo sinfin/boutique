@@ -489,4 +489,21 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert Boutique::Order.by_query("foo@bar.baz").exists?(id: order.id)
     assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
   end
+
+  test "validate gift_recipient_notification_scheduled_for" do
+    I18n.with_locale(:en) do
+      order = build(:boutique_order)
+      assert order.valid?
+
+      order.gift_recipient_notification_scheduled_for = 1.day.ago
+      assert order.valid?
+
+      order.force_gift_recipient_notification_scheduled_for_validation = true
+      assert_not order.valid?
+      assert_equal ["cannot be in the past"], order.errors[:gift_recipient_notification_scheduled_for]
+
+      order.gift_recipient_notification_scheduled_for = 1.minute.from_now
+      assert order.valid?
+    end
+  end
 end

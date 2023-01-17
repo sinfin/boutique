@@ -163,6 +163,8 @@ cs:
               invalid: není platný
               expired: již není aktivní
               not_applicable_for: není platný pro vybranou položku
+            gift_recipient_notification_scheduled_for:
+              in_the_past: nesmí být v minulosti
 
         boutique/subscription:
           base:

@@ -76,6 +76,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     @use_boutique_adaptive_css = true
 
     current_order.force_address_validation = true if current_order.requires_address?
+    current_order.force_gift_recipient_notification_scheduled_for_validation = true
     current_order.assign_attributes(order_params)
 
     current_order.transaction do
