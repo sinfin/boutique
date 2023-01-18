@@ -15,6 +15,10 @@ class Boutique::Order < Boutique::ApplicationRecord
                     inverse_of: :orders,
                     optional: true
 
+  belongs_to :gift_recipient, class_name: "Folio::User",
+                              foreign_key: :gift_recipient_id,
+                              optional: true
+
   belongs_to :site, class_name: "Folio::Site",
                     optional: true
 
@@ -209,6 +213,8 @@ class Boutique::Order < Boutique::ApplicationRecord
   validate :validate_email_not_already_registered, unless: :pending?
 
   validates :gift_recipient_email,
+            :gift_recipient_first_name,
+            :gift_recipient_last_name,
             :gift_recipient_notification_scheduled_for,
             presence: true,
             if: -> { gift? && !pending? }
@@ -220,8 +226,6 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
-  validate :validate_gift_address, if: -> { gift? && !pending? }
-
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
   attribute :recurring_payment_agreement, :boolean
@@ -229,6 +233,8 @@ class Boutique::Order < Boutique::ApplicationRecord
   has_sanitized_fields :first_name,
                        :last_name,
                        :email,
+                       :gift_recipient_first_name,
+                       :gift_recipient_last_name,
                        :gift_recipient_email
 
   aasm timestamps: true do
@@ -457,18 +463,20 @@ class Boutique::Order < Boutique::ApplicationRecord
   def deliver_gift!
     return unless gift?
 
-    gift_recipient_user = Folio::User.find_by(email: gift_recipient_email) || begin
-      gift_recipient_first_name, gift_recipient_last_name = primary_address.name.split(" ", 2)
-
-      Folio::User.invite!(email: gift_recipient_email,
-                          first_name: gift_recipient_first_name,
-                          last_name: gift_recipient_last_name,
-                          primary_address: primary_address.try(:dup)) do |u|
-        u.skip_invitation = true
+    transaction do
+      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email) || begin
+        Folio::User.invite!(email: gift_recipient_email,
+                            first_name: gift_recipient_first_name,
+                            last_name: gift_recipient_last_name,
+                            primary_address: primary_address.try(:dup)) do |u|
+          u.skip_invitation = true
+        end
       end
-    end
 
-    set_up_subscription!(recipient: gift_recipient_user)
+      update_columns(gift_recipient_id:,
+                     updated_at: current_time_from_proper_timezone)
+      set_up_subscription!
+    end
 
     Boutique::OrderMailer.gift_notification(self, gift_recipient_user.raw_invitation_token).deliver_later
   end
@@ -557,7 +565,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                      updated_at: current_time_from_proper_timezone)
     end
 
-    def set_up_subscription!(recipient: nil)
+    def set_up_subscription!
       li = line_items.select(&:subscription?)
 
       return if li.empty?
@@ -567,15 +575,23 @@ class Boutique::Order < Boutique::ApplicationRecord
       line_item = li.first
       period = 12
       active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
+      active_until = active_from + period.months
       cancelled_at = active_from unless line_item.subscription_recurring?
+      subscriber = gift_recipient || user
+
+      if requires_address?
+        address = primary_address.try(:dup)
+        address.name ||= subscriber.full_name
+      end
 
       create_subscription!(payment: paid_payment,
                            product_variant: line_item.product_variant,
-                           user: recipient || user,
+                           user: subscriber,
                            period:,
                            active_from:,
-                           active_until: active_from + period.months,
-                           cancelled_at:)
+                           active_until:,
+                           cancelled_at:,
+                           primary_address: address)
     end
 
     def set_site
@@ -643,12 +659,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def validate_gift_address
-      if primary_address.present?
-        primary_address.errors.add(:name, :blank) unless primary_address.name.present?
-      end
-    end
-
     def validate_gift_recipient_notification_scheduled_for_is_in_future
       if force_gift_recipient_notification_scheduled_for_validation &&
          gift_recipient_notification_scheduled_for &&
@@ -695,12 +705,16 @@ end
 #  gift_recipient_notification_sent_at       :datetime
 #  gtm_data_sent_at                          :datetime
 #  site_id                                   :bigint(8)
+#  gift_recipient_first_name                 :string
+#  gift_recipient_last_name                  :string
+#  gift_recipient_id                         :bigint(8)
 #
 # Indexes
 #
 #  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
 #  index_boutique_orders_on_boutique_voucher_id       (boutique_voucher_id)
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
+#  index_boutique_orders_on_gift_recipient_id         (gift_recipient_id)
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_site_id                   (site_id)

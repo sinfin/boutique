@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_16_051620) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_18_124919) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -93,9 +93,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_16_051620) do
     t.datetime "gift_recipient_notification_sent_at"
     t.datetime "gtm_data_sent_at"
     t.bigint "site_id"
+    t.string "gift_recipient_first_name"
+    t.string "gift_recipient_last_name"
+    t.bigint "gift_recipient_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
+    t.index ["gift_recipient_id"], name: "index_boutique_orders_on_gift_recipient_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
     t.index ["site_id"], name: "index_boutique_orders_on_site_id"

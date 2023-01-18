@@ -112,6 +112,8 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                     :voucher_code,
                                     :gift,
                                     :gift_recipient_email,
+                                    :gift_recipient_first_name,
+                                    :gift_recipient_last_name,
                                     :gift_recipient_notification_scheduled_for,
                                     :recurring_payment_agreement,
                                     *addresses_strong_params,

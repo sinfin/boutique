@@ -15,6 +15,8 @@ cs:
         dispatched_at: Odesláno
         full_name: Jméno
         gift_recipient_email: E-mail obdarovaného
+        gift_recipient_first_name: Jméno obdarovaného
+        gift_recipient_last_name: Příjmení obdarovaného
         gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
         invoice: Faktura
         invoice_number: Číslo faktury

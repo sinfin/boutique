@@ -5,11 +5,19 @@
   .f-addresses-fields__fields-wrap[
     data-country-code=data_country_code(:primary_address)
   ]
-    - model.simple_fields_for :primary_address do |g|
-      = g.input :name, required: true,
-                       disabled: disabled,
-                       input_html: { id: nil }
+    .row
+      .col-lg-6
+        = model.input :gift_recipient_first_name,
+                      required: true,
+                      disabled: disabled,
+                      label: Boutique::Order.human_attribute_name(:first_name)
+      .col-lg-6
+        = model.input :gift_recipient_last_name,
+                      required: true,
+                      disabled: disabled,
+                      label: Boutique::Order.human_attribute_name(:last_name)
 
+    - model.simple_fields_for :primary_address do |g|
       .row
         .col-lg-7.f-addresses-fields__address-line-1
           = address_line_input g, :address_line_1, required: true,
