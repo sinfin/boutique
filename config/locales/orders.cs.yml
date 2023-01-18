@@ -83,3 +83,8 @@ cs:
         total_price_vat: DPH %{value} %
         total_price: Celkem k úhradě
         do_not_pay: NEPLAŤTE, JIŽ UHRAZENO.
+
+      payment_redirect:
+        title: Budete přesměrováni na platební bránu
+        text_html: Prosíme vyčkejte na automatické přesměrování. Pokud nebudete přesměrováni automaticky, <br> %{link}.
+        link: pokračujte na platební bránu

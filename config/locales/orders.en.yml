@@ -78,3 +78,8 @@ en:
         total_price_vat: VAT %{value} %
         total_price: Total price
         do_not_pay: DO NOT PAY, ALREADY PAID.
+
+      payment_redirect:
+        title: You will be redirected to the payment gateway
+        text_html: Please wait for automatic redirection. If you are not redirected automatically, <br> %{link}.
+        link: proceed to the payment gateway
