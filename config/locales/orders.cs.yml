@@ -44,6 +44,7 @@ cs:
           title_true: Automaticky obnovit předplatné
           title_false: Jednorázová platba
           text_false: Bez automatické obnovy. Předplatné bude potřeba pravidelně ručně obnovit a zaplatit.
+          error: Zvolte prosím způsob obnovy!
 
       confirm:
         success_free: Objednávka proběhla úspěšně

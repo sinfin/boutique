@@ -20,16 +20,9 @@ $(document)
     }
   })
 
-  .on('boutiqueOrdersEditSubscriptionFieldsRecurringChanged', (e, checkbox) => {
-    const $form = $(checkbox).closest('form')
-    const $btns = $form.find('.b-orders-payment-methods__submit-btn')
-    const $recurrencyInfo = $form.find(".b-orders-payment-methods__info-recurring-payment")
-
-    if (checkbox.checked) {
-      $btns.filter('[data-enabled-for-recurrent="false"]').prop('disabled', true)
-      $recurrencyInfo.show()
-    } else {
-      $btns.prop('disabled', false)
-      $recurrencyInfo.hide()
-    }
+  .on('boutiqueSubscriptionRecurringChange', (e, subscriptionRecurring) => {
+    $(e.target)
+      .find('.b-orders-payment-methods__submit-btn')
+      .filter('[data-enabled-for-recurrent="false"]')
+      .prop('disabled', subscriptionRecurring)
   })

@@ -105,6 +105,8 @@ FactoryBot.define do
   factory :boutique_line_item, class: "Boutique::LineItem" do
     association :order, factory: :boutique_order
 
+    subscription_recurring { true }
+
     transient do
       product { create(:boutique_product) }
     end

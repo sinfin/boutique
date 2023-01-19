@@ -13,3 +13,7 @@
 
             .b-orders-edit-recurrency-fields__option-text
               = text
+
+    - if g.object.errors && g.object.errors[:subscription_recurring].present?
+      .b-orders-edit-recurrency-fields__error.text-danger
+        = t('.error')

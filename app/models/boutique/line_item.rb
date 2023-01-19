@@ -14,6 +14,12 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   validates :amount,
             numericality: { greater_than_or_equal_to: 1 }
 
+  attr_accessor :skip_subscription_recurring_validation
+
+  validates :subscription_recurring,
+            inclusion: { in: [true, false] },
+            if: :should_validate_subscription_recurring?
+
   delegate :product,
            to: :product_variant
   delegate :digital_only?,
@@ -104,6 +110,12 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
       self.subscription_starts_at = nil
     end
+
+    def should_validate_subscription_recurring?
+      return false if skip_subscription_recurring_validation
+      return false unless subscription?
+      true
+    end
 end
 
 # == Schema Information
@@ -115,7 +127,7 @@ end
 #  amount                      :integer          default(1)
 #  unit_price                  :integer
 #  subscription_starts_at      :datetime
-#  subscription_recurring      :boolean          default(TRUE)
+#  subscription_recurring      :boolean
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  boutique_product_variant_id :bigint(8)        not null

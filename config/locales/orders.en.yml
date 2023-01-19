@@ -44,6 +44,7 @@ en:
           title_true: Automatically renew your subscription
           title_false: One-off payment
           text_false: Without automatic recovery. Subscriptions will need to be manually renewed and paid for.
+          error: Please select your renewal policy!
 
       confirm:
         success_free: Order successful
