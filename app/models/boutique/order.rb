@@ -609,7 +609,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def imprint_prices
-      line_items.each { |li| li.imprint! }
+      line_items.each { |li| li.imprint }
 
       self.line_items_price = line_items_price
       self.discount = discount

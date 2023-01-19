@@ -69,9 +69,9 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     (unit_price - unit_price_vat.to_d).to_f
   end
 
-  def imprint!
-    update!(unit_price:,
-            vat_rate_value:)
+  def imprint
+    self.unit_price = unit_price
+    self.vat_rate_value = vat_rate_value
   end
 
   def cover_placement_from_variant_or_product
