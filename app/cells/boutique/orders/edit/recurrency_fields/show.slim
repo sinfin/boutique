@@ -1,0 +1,15 @@
+.b-orders-edit-recurrency-fields
+  = html_safe_fields_for model, :line_items do |g|
+    .b-orders-edit-recurrency-fields__inner
+      - collection.each do |bool, title, text|
+        label.b-orders-edit-recurrency-fields__option
+          = g.radio_button :subscription_recurring,
+                           bool,
+                           class: "b-orders-edit-recurrency-fields__option-input"
+
+          .b-orders-edit-recurrency-fields__option-content
+            .b-orders-edit-recurrency-fields__option-title
+              = title
+
+            .b-orders-edit-recurrency-fields__option-text
+              = text

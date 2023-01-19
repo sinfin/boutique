@@ -45,8 +45,4 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
   def recurrence_required?
     @recurrence_required ||= f.object.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
   end
-
-  def recurring_payment_disclaimer
-    @recurring_payment_disclaimer ||= current_site.recurring_payment_disclaimer.try(:gsub, "{AMOUNT}", f.object.total_price.to_s)
-  end
 end

@@ -27,21 +27,23 @@ cs:
           info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku.
           info_bold: Vaše objednávka bude odeslána až po tomto datu.
 
-        recurring_payment_agreement:
-          label: <strong>Souhlasím se zřízením opakované platby</strong> a uložením údajů o mé platební kartě u provozovatele platební brány GoPay.
-
         sidebar:
           contents: Získáte
           shipping: Doprava
 
         subscription_fields:
-          title: Nastavení předplatného
+          title: Začátek předplatného
 
         voucher_fields:
           label: Slevový nebo dárkový kód
           apply: Uplatnit
           generic_error: Kód se nepodařilo uplatnit.
           discount: Sleva
+
+        recurrency_fields:
+          title_true: Automaticky obnovit předplatné
+          title_false: Jednorázová platba
+          text_false: Bez automatické obnovy. Předplatné bude potřeba pravidelně ručně obnovit a zaplatit.
 
       confirm:
         success_free: Objednávka proběhla úspěšně

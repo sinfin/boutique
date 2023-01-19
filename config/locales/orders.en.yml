@@ -27,21 +27,23 @@ en:
           info: Please select a date when we will send an email to the recipient with information about your gift.
           info_bold: Your order will be sent after this date.
 
-        recurring_payment_agreement:
-          label: <strong>I agree with setting up a recurring payment</strong> and storing my payment card details with the payment gateway provider GoPay.
-
         sidebar:
           contents: Includes
           shipping: Shipping
 
         subscription_fields:
-          title: Subscription settings
+          title: Subscription start
 
         voucher_fields:
           label: Discount or gift code
           apply: Apply
           generic_error: Failed to apply the code.
           discount: Discount
+
+        recurrency_fields:
+          title_true: Automatically renew your subscription
+          title_false: One-off payment
+          text_false: Without automatic recovery. Subscriptions will need to be manually renewed and paid for.
 
       confirm:
         success_free: Order successful

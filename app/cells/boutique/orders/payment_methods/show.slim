@@ -13,14 +13,12 @@
     - payment_methods.each_with_index do |method, i|
       = payment_button(f, method, i)
 
+  - if options[:disclaimer]
+    .b-orders-payment-methods__disclaimer.small.text-muted
+      == options[:disclaimer]
+
   - if options[:info] != false
     .b-orders-payment-methods__info.small.text-muted
-      - if recurrence_required? && recurring_payment_disclaimer.present?
-        .b-orders-payment-methods__info-flex[
-          class="b-orders-payment-methods__info-recurring-payment"
-        ]
-          = recurring_payment_disclaimer
-
       .b-orders-payment-methods__info-flex
         = t('.secured_by')
 

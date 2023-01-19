@@ -4,7 +4,7 @@ class Boutique::Orders::Edit::SubscriptionFieldsCell < Boutique::ApplicationCell
   include Folio::Cell::HtmlSafeFieldsFor
 
   def show
-    render if show_subscription_starts_at_input? || show_subscription_recurring_input?
+    render if show_subscription_starts_at_input?
   end
 
   def line_item
@@ -13,10 +13,6 @@ class Boutique::Orders::Edit::SubscriptionFieldsCell < Boutique::ApplicationCell
 
   def show_subscription_starts_at_input?
     @show_subscription_starts_at_input ||= line_item.product.has_subscription_frequency?
-  end
-
-  def show_subscription_recurring_input?
-    @show_subscription_recurring_input ||= line_item.product.subscription_recurrent_payment_enabled?
   end
 
   def subscription_starts_at_input(g)
@@ -28,13 +24,7 @@ class Boutique::Orders::Edit::SubscriptionFieldsCell < Boutique::ApplicationCell
                                      selected:,
                                      include_blank: false,
                                      label: false,
-                                     wrapper: false,
+                                     wrapper_html: { class: "mb-0" },
                                      input_html: { class: "b-orders-edit-subscription-fields__input" })
-  end
-
-  def subscription_recurring_checked(g)
-    return true if g.object.subscription_recurring.nil?
-
-    g.object.subscription_recurring
   end
 end

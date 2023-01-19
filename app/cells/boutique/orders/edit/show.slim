@@ -31,7 +31,7 @@
             - fields = cell('boutique/orders/edit/subscription_fields', f).show
             - if fields
               .b-orders-edit__box
-                .b-orders-edit__box-inner.b-orders-edit__box-inner--wide
+                .b-orders-edit__box-inner
                   == fields
 
           - if current_order.requires_address?
@@ -60,21 +60,18 @@
 
       .b-orders-edit__flex
         main.b-orders-edit__col.b-orders-edit__col--main
-          .b-orders-edit__disclaimer
-            == cell("#{application_namespace_path}/ui/disclaimer",
-                    nil,
-                    order: current_order)
-
-            - if subscription?
-              == cell("boutique/orders/edit/recurring_payment_agreement",
-                      f)
+          == cell('boutique/orders/edit/recurrency_fields', f)
 
           .b-orders-edit__payment
             - if f.object.free?
               = f.button :submit,
                          t(".order_for_free"),
                          class: "btn btn-primary"
+
+              .mt-g.small.text-muted
+                = disclaimer
+
             - else
-              == cell('boutique/orders/payment_methods', f)
+              == cell('boutique/orders/payment_methods', f, disclaimer:)
 
         aside.b-orders-edit__col.b-orders-edit__col--aside aria-hidden="true"

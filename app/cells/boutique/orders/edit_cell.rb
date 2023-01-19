@@ -59,4 +59,10 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
   def subscription?
     @subscription ||= current_order.line_items.any?(&:subscription?)
   end
+
+  def disclaimer
+    cell("#{application_namespace_path}/ui/disclaimer",
+         nil,
+         order: current_order).show
+  end
 end

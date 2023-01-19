@@ -205,10 +205,6 @@ class Boutique::Order < Boutique::ApplicationRecord
             unless: :pending?,
             allow_nil: true
 
-  validates :recurring_payment_agreement,
-            acceptance: true,
-            if: -> { aasm.to_state == :confirmed }
-
   validate :validate_voucher_code
   validate :validate_email_not_already_registered, unless: :pending?
 
@@ -228,7 +224,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
-  attribute :recurring_payment_agreement, :boolean
 
   has_sanitized_fields :first_name,
                        :last_name,
