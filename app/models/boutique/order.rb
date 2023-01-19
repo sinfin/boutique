@@ -196,6 +196,9 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             unless: :pending?
 
+  validate :validate_line_items_subscription_recurring,
+           unless: :pending?
+
   validates :site,
             presence: true,
             if: -> { Boutique.config.products_belong_to_site && !pending? }
@@ -381,20 +384,17 @@ class Boutique::Order < Boutique::ApplicationRecord
       if ::Boutique.config.use_cart_in_orders
         if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
           line_item.amount += amount
-          line_item.skip_subscription_recurring_validation = true
           line_item.subscription_recurring = nil
           line_item.save!
         else
           line_items.build(product_variant:,
-                           amount:,
-                           skip_subscription_recurring_validation: true)
+                           amount:)
         end
       else
         # TODO: add line item count validation
         if line_item = line_items.first
           line_item.update!(product_variant:,
                             amount:,
-                            skip_subscription_recurring_validation: true,
                             subscription_recurring: nil)
 
           if voucher.present? && !voucher.relevant_for?(product_variant)
@@ -404,8 +404,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           end
         else
           line_items.build(product_variant:,
-                           amount:,
-                           skip_subscription_recurring_validation: true)
+                           amount:)
         end
       end
 
@@ -659,6 +658,15 @@ class Boutique::Order < Boutique::ApplicationRecord
          gift_recipient_notification_scheduled_for &&
          gift_recipient_notification_scheduled_for <= Time.current &&
         errors.add(:gift_recipient_notification_scheduled_for, :in_the_past)
+      end
+    end
+
+    def validate_line_items_subscription_recurring
+      line_items.each do |line_item|
+        next if line_item.marked_for_destruction?
+        next unless line_item.subscription?
+        next if [true, false].include?(line_item.subscription_recurring)
+        line_item.errors.add(:subscription_recurring, :invalid)
       end
     end
 end
