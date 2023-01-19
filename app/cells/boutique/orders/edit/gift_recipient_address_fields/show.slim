@@ -17,36 +17,35 @@
                       disabled: disabled,
                       label: Boutique::Order.human_attribute_name(:last_name)
 
-    - if model.object.requires_address?
-      - model.simple_fields_for :primary_address do |g|
-        .row
-          .col-lg-7.f-addresses-fields__address-line-1
-            = address_line_input g, :address_line_1, required: true,
-                                                     disabled: disabled
+    - model.simple_fields_for :primary_address do |g|
+      .row
+        .col-lg-7.f-addresses-fields__address-line-1
+          = address_line_input g, :address_line_1, required: true,
+                                                   disabled: disabled
 
-          .col-lg-5.f-addresses-fields__address-line-2
-            = address_line_input g, :address_line_2, required: true,
-                                                     disabled: disabled
+        .col-lg-5.f-addresses-fields__address-line-2
+          = address_line_input g, :address_line_2, required: true,
+                                                   disabled: disabled
 
-        .row
-          .col-lg-5
-            = g.input :zip, required: true,
-                            disabled: disabled,
-                            input_html: { id: nil }
+      .row
+        .col-lg-5
+          = g.input :zip, required: true,
+                          disabled: disabled,
+                          input_html: { id: nil }
 
-          .col-lg-7
-            = g.input :city, required: true,
-                             disabled: disabled,
-                             input_html: { id: nil }
+        .col-lg-7
+          = g.input :city, required: true,
+                           disabled: disabled,
+                           input_html: { id: nil }
 
-        .row
-          .col-lg-7
-            = country_code_input g, disabled: disabled
+      .row
+        .col-lg-7
+          = country_code_input g, disabled: disabled
 
-        .row
-          .col-lg-7
-            = g.input :phone,
-                      as: :phone,
-                      default_country_code: data_country_code(:primary_address),
-                      disabled: disabled,
-                      input_html: { id: nil }
+      .row
+        .col-lg-7
+          = g.input :phone,
+                    as: :phone,
+                    default_country_code: data_country_code(:primary_address),
+                    disabled: disabled,
+                    input_html: { id: nil }
