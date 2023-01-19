@@ -662,11 +662,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def validate_line_items_subscription_recurring
-      line_items.each do |line_item|
-        next if line_item.marked_for_destruction?
-        next unless line_item.subscription?
-        next if [true, false].include?(line_item.subscription_recurring)
-        line_item.errors.add(:subscription_recurring, :invalid)
+      if line_items.any? { |line_item| !line_item.marked_for_destruction? && line_item.subscription? && [true, false].exclude?(line_item.subscription_recurring) }
+        errors.add(:line_items, :missing_subscription_recurring)
       end
     end
 end

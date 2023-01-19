@@ -164,6 +164,8 @@ cs:
               not_applicable_for: není platný pro vybranou položku
             gift_recipient_notification_scheduled_for:
               in_the_past: nesmí být v minulosti
+            line_items:
+              missing_subscription_recurring: nemají vybraný způsob obnovy
 
         boutique/subscription:
           base:

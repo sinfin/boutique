@@ -24,4 +24,8 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
                   price: model.object.total_price,
                   product: model.object.line_items.first.product)
   end
+
+  def show_error_message?
+    model.object.errors && model.object.errors.where(:line_items, :missing_subscription_recurring).present?
+  end
 end

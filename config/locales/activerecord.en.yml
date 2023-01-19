@@ -75,6 +75,8 @@ en:
               expired: is expired
             gift_recipient_notification_scheduled_for:
               in_the_past: cannot be in the past
+            line_items:
+              missing_subscription_recurring: are missing renewal policy
 
         boutique/subscription:
           base:
