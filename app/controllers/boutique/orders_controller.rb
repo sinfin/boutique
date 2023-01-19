@@ -80,7 +80,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     current_order.assign_attributes(order_params)
 
     current_order.transaction do
-      if current_order.valid? && current_order.confirm!
+      if current_order.confirm!
         if current_order.free?
           current_order.pay!
 
