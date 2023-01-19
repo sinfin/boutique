@@ -17,7 +17,11 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
   end
 
   def true_title
-    current_site.recurring_payment_disclaimer
-                .gsub("{AMOUNT}", model.object.total_price.to_s)
+    Boutique.config
+            .orders_edit_recurrency_title_proc
+            .call(context: self,
+                  current_site:,
+                  price: model.object.total_price,
+                  product: model.object.line_items.first.product)
   end
 end
