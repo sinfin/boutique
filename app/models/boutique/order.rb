@@ -472,12 +472,14 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       subscription.update_columns(folio_user_id: gift_recipient_id,
                                   updated_at: current_time_from_proper_timezone)
-
-      update_columns(gift_recipient_id:,
-                     updated_at: current_time_from_proper_timezone)
     end
 
-    Boutique::OrderMailer.gift_notification(self, gift_recipient_user.raw_invitation_token).deliver_later
+    Boutique::OrderMailer.gift_notification(self, gift_recipient.raw_invitation_token).deliver_later
+
+    now = current_time_from_proper_timezone
+    update_columns(gift_recipient_id:,
+                   gift_recipient_notification_sent_at: now,
+                   updated_at: now)
   end
 
   def requires_address?

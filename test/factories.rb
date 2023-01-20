@@ -90,6 +90,14 @@ FactoryBot.define do
       end
     end
 
+    trait :gift do
+      gift { true }
+      sequence(:gift_recipient_email) { |i| "gift-#{i}@email.email" }
+      gift_recipient_first_name { "John" }
+      gift_recipient_last_name { "Doe" }
+      gift_recipient_notification_scheduled_for { 1.hour.from_now }
+    end
+
     before(:create) do |order, evaluator|
       if order.line_items.empty?
         evaluator.line_items_count.times do

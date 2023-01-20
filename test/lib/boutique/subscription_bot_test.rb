@@ -11,7 +11,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
   end
 
   test "subscriptions_eligible_for_recurrent_payment_all" do
-    assert_equal [], @bot.send(:subscriptions_eligible_for_recurrent_payment_all).map(&:id)
+    assert_equal [], @bot.send(:subscriptions_eligible_for_recurrent_payment_all).map(&:id).sort
 
     targets = []
 
@@ -33,7 +33,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
       targets << target
     end
 
-    assert_equal targets.map(&:id), @bot.send(:subscriptions_eligible_for_recurrent_payment_all).map(&:id)
+    assert_equal targets.map(&:id), @bot.send(:subscriptions_eligible_for_recurrent_payment_all).map(&:id).sort
   end
 
   test "charge_all_eligible" do
