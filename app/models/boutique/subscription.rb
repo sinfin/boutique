@@ -14,7 +14,12 @@ class Boutique::Subscription < ApplicationRecord
 
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
-                    inverse_of: :subscriptions
+                    inverse_of: :subscriptions,
+                    optional: true
+
+  belongs_to :payer, class_name: "Folio::User",
+                     foreign_key: :payer_id,
+                     inverse_of: :paid_for_subscriptions
 
   has_many :orders, -> { ordered },
                     class_name: "Boutique::Order",
@@ -141,7 +146,7 @@ end
 #  id                          :bigint(8)        not null, primary key
 #  boutique_payment_id         :bigint(8)
 #  boutique_product_variant_id :bigint(8)        not null
-#  folio_user_id               :bigint(8)        not null
+#  folio_user_id               :bigint(8)
 #  period                      :integer          default(12)
 #  active_from                 :datetime
 #  active_until                :datetime
@@ -149,6 +154,7 @@ end
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  primary_address_id          :bigint(8)
+#  payer_id                    :bigint(8)
 #
 # Indexes
 #
@@ -158,11 +164,11 @@ end
 #  index_boutique_subscriptions_on_boutique_product_variant_id  (boutique_product_variant_id)
 #  index_boutique_subscriptions_on_cancelled_at                 (cancelled_at)
 #  index_boutique_subscriptions_on_folio_user_id                (folio_user_id)
+#  index_boutique_subscriptions_on_payer_id                     (payer_id)
 #  index_boutique_subscriptions_on_primary_address_id           (primary_address_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (boutique_payment_id => boutique_payments.id)
 #  fk_rails_...  (boutique_product_variant_id => boutique_product_variants.id)
-#  fk_rails_...  (folio_user_id => folio_users.id)
 #

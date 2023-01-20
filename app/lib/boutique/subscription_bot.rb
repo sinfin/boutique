@@ -20,7 +20,7 @@ class Boutique::SubscriptionBot
       end
 
       subscription.transaction do
-        original_order = subscription.orders.last
+        original_order = subscription.original_order
         new_order = subscription.orders.build(original_order.attributes.slice(*%w[folio_user_id
                                                                                   first_name
                                                                                   last_name

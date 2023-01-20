@@ -291,7 +291,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           subscription.prolong!
         else
           invite_user!
-          set_up_subscription! unless gift? || subsequent?
+          set_up_subscription! unless subsequent?
         end
 
         after_pay
@@ -470,9 +470,11 @@ class Boutique::Order < Boutique::ApplicationRecord
         end
       end
 
+      subscription.update_columns(folio_user_id: gift_recipient_id,
+                                  updated_at: current_time_from_proper_timezone)
+
       update_columns(gift_recipient_id:,
                      updated_at: current_time_from_proper_timezone)
-      set_up_subscription!
     end
 
     Boutique::OrderMailer.gift_notification(self, gift_recipient_user.raw_invitation_token).deliver_later
@@ -547,15 +549,17 @@ class Boutique::Order < Boutique::ApplicationRecord
     def invite_user!
       return unless user.nil?
 
-      self.user = Folio::User.invite!(email:,
-                                      first_name:,
-                                      last_name:,
-                                      use_secondary_address:,
-                                      primary_address: gift? ? nil : primary_address.try(:dup),
-                                      secondary_address: secondary_address.try(:dup))
+      transaction do
+        self.user = Folio::User.invite!(email:,
+                                        first_name:,
+                                        last_name:,
+                                        use_secondary_address:,
+                                        primary_address: gift? ? nil : primary_address.try(:dup),
+                                        secondary_address: secondary_address.try(:dup))
 
-      update_columns(folio_user_id: user.id,
-                     updated_at: current_time_from_proper_timezone)
+        update_columns(folio_user_id: user.id,
+                       updated_at: current_time_from_proper_timezone)
+      end
     end
 
     def set_up_subscription!
@@ -570,16 +574,17 @@ class Boutique::Order < Boutique::ApplicationRecord
       active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
       active_until = active_from + period.months
       cancelled_at = active_from unless line_item.subscription_recurring?
-      subscriber = gift_recipient || user
+      subscriber = user unless gift?
 
       if requires_address?
         address = primary_address.try(:dup)
-        address.name ||= subscriber.full_name
+        address.name = gift ? "#{gift_recipient_first_name} #{gift_recipient_last_name}" : full_name
       end
 
       create_subscription!(payment: paid_payment,
                            product_variant: line_item.product_variant,
                            user: subscriber,
+                           payer: user,
                            period:,
                            active_from:,
                            active_until:,

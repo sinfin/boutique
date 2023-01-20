@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_19_091438) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_20_135411) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -167,7 +167,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_091438) do
   create_table "boutique_subscriptions", force: :cascade do |t|
     t.bigint "boutique_payment_id"
     t.bigint "boutique_product_variant_id", null: false
-    t.bigint "folio_user_id", null: false
+    t.bigint "folio_user_id"
     t.integer "period", default: 12
     t.datetime "active_from"
     t.datetime "active_until"
@@ -175,12 +175,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_091438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "primary_address_id"
+    t.bigint "payer_id"
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_subscriptions_on_boutique_product_variant_id"
     t.index ["cancelled_at"], name: "index_boutique_subscriptions_on_cancelled_at"
     t.index ["folio_user_id"], name: "index_boutique_subscriptions_on_folio_user_id"
+    t.index ["payer_id"], name: "index_boutique_subscriptions_on_payer_id"
     t.index ["primary_address_id"], name: "index_boutique_subscriptions_on_primary_address_id"
   end
 
@@ -676,5 +678,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_091438) do
   add_foreign_key "boutique_products", "boutique_vat_rates"
   add_foreign_key "boutique_subscriptions", "boutique_payments"
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
-  add_foreign_key "boutique_subscriptions", "folio_users"
 end

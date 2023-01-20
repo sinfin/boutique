@@ -134,6 +134,7 @@ FactoryBot.define do
       subscription.payment = order.payments.paid.first
       subscription.product_variant = order.line_items.first.product_variant
       subscription.user = order.user
+      subscription.payer = order.user
     end
   end
 
