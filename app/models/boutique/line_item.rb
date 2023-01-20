@@ -20,7 +20,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
            :subscription?,
            to: :product
 
-  before_save :unset_unwanted_subscription_starts_at
+  before_validation :unset_unwanted_subscription_starts_at
 
   def to_label
     product_variant.title

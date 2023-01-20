@@ -228,6 +228,8 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
+  before_validation :unset_unwanted_gift_attributes
+
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
 
@@ -648,6 +650,15 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def should_validate_address?
       force_address_validation || requires_address? && !pending?
+    end
+
+    def unset_unwanted_gift_attributes
+      return if pending? || gift?
+
+      self.gift_recipient_email = nil
+      self.gift_recipient_first_name = nil
+      self.gift_recipient_last_name = nil
+      self.gift_recipient_notification_scheduled_for = nil
     end
 
     def validate_email_not_already_registered
