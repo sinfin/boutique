@@ -1,10 +1,4 @@
 table.my-4
-  - if order.gift? && !gift_notification
-    tr
-      td.font-weight-bold style="padding-bottom: 10px"
-        = t("boutique.order_mailer.summary.gift",
-            recipient: order.gift_recipient_email)
-
   - order.line_items.each do |line_item|
     ruby:
       cover = line_item.product_variant.cover
@@ -20,12 +14,24 @@ table.my-4
           img src=thumb.url
 
     tr
-      td style="padding-bottom: 10px"
+      td
         = line_item.to_label
 
   - if !gift_notification
+    - if order.gift?
     tr
-      td.font-weight-bold
+      td
+        = t("boutique.order_mailer.summary.gift",
+            recipient: order.gift_recipient_email)
+
+        - if order.gift_recipient_notification_scheduled_for.present?
+          '
+          = t("boutique.order_mailer.summary.gift_notification_scheduled_for",
+              datetime: l(order.gift_recipient_notification_scheduled_for,
+                          format: :short))
+
+    tr
+      td.font-weight-bold style="padding-top: 10px"
         - if order.free?
           = t("boutique.free")
         - else

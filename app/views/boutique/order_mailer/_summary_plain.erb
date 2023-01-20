@@ -5,6 +5,9 @@
 <%- order.line_items.each do |line_item| -%>
 <%= line_item.to_label %>
 <%- end -%>
+<%- if order.gift? && !gift_notification -%>
+<%= t("boutique.order_mailer.summary.gift", recipient: order.gift_recipient_email) %> <%if order.gift_recipient_notification_scheduled_for %><%= t("boutique.order_mailer.summary.gift_notification_scheduled_for", datetime: l(order.gift_recipient_notification_scheduled_for, format: :short)) %><% end %>
+<%- end -%>
 <%- if !gift_notification -%>
 
 <%- if order.free? -%>
