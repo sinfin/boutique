@@ -212,11 +212,14 @@ class Boutique::Order < Boutique::ApplicationRecord
   validate :validate_email_not_already_registered, unless: :pending?
 
   validates :gift_recipient_email,
-            :gift_recipient_first_name,
-            :gift_recipient_last_name,
             :gift_recipient_notification_scheduled_for,
             presence: true,
             if: -> { gift? && !pending? }
+
+  validates :gift_recipient_first_name,
+            :gift_recipient_last_name,
+            presence: true,
+            if: -> { gift? && requires_address? && !pending? }
 
   validate :validate_gift_recipient_notification_scheduled_for_is_in_future
 
@@ -479,10 +482,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     !digital_only?
   end
 
-  def requires_address_and_not_pending?
-    requires_address? && !pending?
-  end
-
   def self.csv_attribute_names
     %i[number email full_name line_items total_price primary_address secondary_address confirmed_at paid_at aasm_state invoice]
   end
@@ -641,7 +640,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def should_validate_address?
-      force_address_validation || requires_address_and_not_pending?
+      force_address_validation || requires_address? && !pending?
     end
 
     def validate_email_not_already_registered
