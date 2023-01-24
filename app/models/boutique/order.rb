@@ -60,11 +60,11 @@ class Boutique::Order < Boutique::ApplicationRecord
   scope :except_pending, -> { where.not(aasm_state: "pending") }
   scope :except_subsequent, -> { where(original_payment_id: nil) }
 
-  scope :ordered_by_line_items_price_asc, -> {
+  scope :ordered_by_total_price_asc, -> {
     order(line_items_price: :asc)
   }
 
-  scope :ordered_by_line_items_price_desc, -> {
+  scope :ordered_by_total_price_desc, -> {
     order(line_items_price: :desc)
   }
 
@@ -132,12 +132,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     where("number::INTEGER <= ?", number)
   }
 
-  scope :by_line_items_price_range_from, -> (line_items_price) {
-    where.not(line_items_price: nil).where("line_items_price >= ?", line_items_price)
+  scope :by_total_price_range_from, -> (total_price) {
+    where.not(total_price: nil).where("total_price >= ?", total_price)
   }
 
-  scope :by_line_items_price_range_to, -> (line_items_price) {
-    where.not(line_items_price: nil).where("line_items_price <= ?", line_items_price)
+  scope :by_total_price_range_to, -> (total_price) {
+    where.not(total_price: nil).where("total_price <= ?", total_price)
   }
 
   scope :by_voucher_title, -> (voucher_title) {

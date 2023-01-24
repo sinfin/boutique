@@ -335,27 +335,27 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert Boutique::Order.by_number_range_to("223456789").exists?(id: order.id)
   end
 
-  test "scope by_line_items_price_range_from" do
-    order = create(:boutique_order, line_items_price: 199)
+  test "scope by_total_price_range_from" do
+    order = create(:boutique_order, total_price: 199)
 
-    assert Boutique::Order.by_line_items_price_range_from(0).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_range_from(1).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_range_from(199).exists?(id: order.id)
-    assert_not Boutique::Order.by_line_items_price_range_from(200).exists?(id: order.id)
+    assert Boutique::Order.by_total_price_range_from(0).exists?(id: order.id)
+    assert Boutique::Order.by_total_price_range_from(1).exists?(id: order.id)
+    assert Boutique::Order.by_total_price_range_from(199).exists?(id: order.id)
+    assert_not Boutique::Order.by_total_price_range_from(200).exists?(id: order.id)
   end
 
-  test "scope by_line_items_price_range_to" do
-    order = create(:boutique_order, line_items_price: 199)
+  test "scope by_total_price_range_to" do
+    order = create(:boutique_order, total_price: 199)
 
-    assert_not Boutique::Order.by_line_items_price_range_to(0).exists?(id: order.id)
-    assert_not Boutique::Order.by_line_items_price_range_to(1).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_range_to(199).exists?(id: order.id)
-    assert Boutique::Order.by_line_items_price_range_to(200).exists?(id: order.id)
+    assert_not Boutique::Order.by_total_price_range_to(0).exists?(id: order.id)
+    assert_not Boutique::Order.by_total_price_range_to(1).exists?(id: order.id)
+    assert Boutique::Order.by_total_price_range_to(199).exists?(id: order.id)
+    assert Boutique::Order.by_total_price_range_to(200).exists?(id: order.id)
   end
 
   test "scope by_voucher_title" do
     voucher = create(:boutique_voucher, title: "voucher title")
-    order = create(:boutique_order, line_items_price: 199)
+    order = create(:boutique_order, total_price: 199)
 
     assert_not Boutique::Order.by_voucher_title("voucher").exists?(id: order.id)
     assert_not Boutique::Order.by_voucher_title("vouc tit").exists?(id: order.id)

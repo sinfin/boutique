@@ -23,7 +23,6 @@ cs:
         items: Předměty
         line_items: Položky
         line_items_price: Cena položek
-        line_items_price_range: Cena
         non_pending_order_count_range: Počet objednávek
         number: Číslo
         number_range: Číslo
@@ -42,6 +41,7 @@ cs:
         subsequent_subscription/subsequent: Prodlužující předplatné
         subsequent_subscription: Typ předplatného
         total_price: Cena celkem
+        total_price_range: Cena
         user: Uživatel
         voucher_code: Kód
         voucher_title: Typ slevy

@@ -116,10 +116,10 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           order_scope: :ordered,
           collapsed: true,
         },
-        by_line_items_price_range: {
+        by_total_price_range: {
           as: :numeric_range,
-          autocomplete_attribute: :line_items_price,
-          order_scope: :ordered_by_line_items_price_asc,
+          autocomplete_attribute: :total_price,
+          order_scope: :ordered_by_total_price_asc,
           collapsed: true,
         },
         by_voucher_title: {

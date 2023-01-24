@@ -8,7 +8,6 @@ en:
         full_name: Jméno
         gift_recipient_email: Gift recipient e-mail
         gift_recipient_notification_scheduled_for: Date & time of notification
-        line_items_price-range: Price
         non_pending_order_count_range: Order count
         number: Number
         number_range: Number
@@ -23,6 +22,7 @@ en:
         subsequent_subscription/new: New
         subsequent_subscription/subsequent: Subsequent
         subsequent_subscription: Subscription type
+        total_price_range: Price
         voucher_code: Code
         voucher_title: Voucher title
 
