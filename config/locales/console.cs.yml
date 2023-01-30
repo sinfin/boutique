@@ -14,8 +14,8 @@ cs:
               text: Objednáno <strong>%{count}</strong> objednávek za <strong>%{total}</strong> v ∅ ceně %{average}.
 
             tabs:
-              all: Vše
-              index: Nezaplacená
+              index: Vše
+              unpaid: Nezaplacená
               paid: Zaplacená
               dispatched: Expedovaná
               cancelled: Stornovaná
