@@ -9,6 +9,7 @@ module Boutique
                   :after_order_paid_user_url_name,
                   :invoice_number_base_length,
                   :invoice_number_with_year_prefix,
+                  :invoice_number_resets_each_year,
                   :mailers_bcc,
                   :mailers_reply_to,
                   :folio_console_collection_includes_for_orders,
@@ -24,8 +25,8 @@ module Boutique
       @parent_controller = "ApplicationController"
       @after_order_paid_user_url_name = :root_url
       @invoice_number_base_length = 5
-      @invoice_base_number_sequence_name = "boutique_orders_invoice_base_number_seq"
       @invoice_number_with_year_prefix = true
+      @invoice_number_resets_each_year = true
       @mailers_bcc = nil
       @mailers_reply_to = nil
       @folio_console_collection_includes_for_orders = [line_items: { product_variant: :product }]

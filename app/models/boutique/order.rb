@@ -283,6 +283,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: %i[confirmed waiting_for_offline_payment], to: :paid
 
       before do
+        self.paid_at = current_time_from_proper_timezone
+
         set_invoice_number
 
         before_pay
@@ -532,16 +534,14 @@ class Boutique::Order < Boutique::ApplicationRecord
     def set_invoice_number
       return if invoice_number.present?
 
-      self.paid_at = current_time_from_proper_timezone
+      if Boutique.config.invoice_number_resets_each_year && !Boutique::Order.where("paid_at >= ?", paid_at.beginning_of_year).exists?
+        Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
+      end
+      invoice_number_base = ActiveRecord::Base.nextval("boutique_orders_invoice_base_number_seq")
 
       if Boutique.config.invoice_number_with_year_prefix
-        unless Boutique::Order.where("paid_at >= ?", paid_at.beginning_of_year).exists?
-          Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
-        end
         year_prefix = paid_at.year.to_s.last(2)
       end
-
-      invoice_number_base = ActiveRecord::Base.nextval("boutique_orders_invoice_base_number_seq")
 
       self.invoice_number = [
         invoice_number_prefix,

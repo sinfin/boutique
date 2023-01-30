@@ -81,6 +81,7 @@ FactoryBot.define do
       paid_at { 1.minute.ago }
 
       before(:create) do |order|
+        order.paid_at = Time.current
         order.send(:set_invoice_number)
         order.send(:imprint_prices)
       end
