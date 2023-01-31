@@ -89,10 +89,9 @@ cs:
         discount: Sleva
         discount_in_percentages: Sleva v procentech
         number_of_allowed_uses: Max. počet použití
-        product_variant: Kód produktu nebo jeho část
         published: Aktivní
         quantity: Počet voucherů k vygenerování
-        product_variant_code: Kód produktu/nabídky nebo jeho část
+        product_variant_code: Kód produktu/produktů
         use_count: Počet použití
 
       folio/email_template:
@@ -161,7 +160,7 @@ cs:
             voucher_code:
               invalid: není platný
               expired: již není aktivní
-              not_applicable_for: není platný pro vybranou položku
+              not_applicable_for: není platný pro vybraný produkt
             gift_recipient_notification_scheduled_for:
               in_the_past: nesmí být v minulosti
             line_items:

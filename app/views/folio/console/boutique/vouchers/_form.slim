@@ -10,15 +10,15 @@
         = f.input :title
         == cell('folio/console/boutique/vouchers/code_input', f)
     .row
-      .col-lg-4
+      .col-lg-6.col-xl-4
         = f.input :discount, input_html: { min: 1 }
         = f.input :discount_in_percentages
 
-      .col-lg-4
+      .col-lg-6.col-xl-4
         = f.input :number_of_allowed_uses
 
     .row
-      .col-lg-4
+      .col-xl-8
         = f.input :product_variant_code,
                   autocomplete: Boutique::ProductVariant.pluck(:code).sort
 

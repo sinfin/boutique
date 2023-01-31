@@ -7,7 +7,8 @@ FactoryBot.define do
     title { "Product title" }
 
     transient do
-      price { 99 }
+      code { nil }
+      price { nil }
     end
 
     before(:create) do |product, evaluator|
@@ -16,9 +17,9 @@ FactoryBot.define do
       end
 
       if product.variants.blank?
-        product.variants << build(:boutique_product_variant,
-                                  regular_price: evaluator.price,
-                                  master: true)
+        product.variants << build(:boutique_product_variant, { regular_price: evaluator.price,
+                                                               code: evaluator.code,
+                                                               master: true }.compact)
       end
     end
   end

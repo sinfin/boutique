@@ -77,7 +77,9 @@ class Boutique::Voucher < Boutique::ApplicationRecord
   def relevant_for?(product_variant)
     return true if product_variant_code.blank?
 
-    product_variant.code.include?(product_variant_code)
+    product_variant_code.split(",")
+                        .map(&:strip)
+                        .include?(product_variant.code)
   end
 
   def upcase_token
