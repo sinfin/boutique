@@ -5,7 +5,7 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
 
   def show
     render if model.object.line_items.present? && model.object.line_items.any? do |line_item|
-      line_item.product.subscription? && !line_item.product.subscription_recurrent_payment_disabled?
+      line_item.requires_subscription_recurring?
     end
   end
 
