@@ -10,6 +10,6 @@ class Boutique::Orders::Edit::GiftRecipientFieldsCell < Boutique::ApplicationCel
 
     f.input :gift_recipient_notification_scheduled_for,
             required: true,
-            input_html: { value: date.strftime("%-d. %-m. %Y %H:%M") }
+            input_html: { value: date.strftime("%d. %m. %Y %H:%M") }
   end
 end
