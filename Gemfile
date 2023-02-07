@@ -20,6 +20,12 @@ gem "cells-rails", github: "sinfin/cells-rails"
 gem "sidekiq", "~> 6.5"
 gem "sidekiq-cron", "~> 1.8"
 
+gem "omniauth"
+gem "omniauth-facebook"
+gem "omniauth-google-oauth2"
+gem "omniauth-twitter2"
+gem "omniauth-rails_csrf_protection"
+
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "mocha", "~> 1.14.0"
