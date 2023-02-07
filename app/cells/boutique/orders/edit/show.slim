@@ -15,10 +15,11 @@
                 == cell('folio/devise/omniauth')
 
                 p: strong = t('.or')
+                = email_input(f)
 
-                = f.input :email, required: true
-
-                p.mb-0
+                p.mb-0[
+                  class=("font-weight-bold text-danger" if f.object.errors[:email].present?)
+                ]
                   = t('.have_account_already')
                   '
                   = sign_in_link

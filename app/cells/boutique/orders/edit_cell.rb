@@ -39,6 +39,23 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
             })
   end
 
+  def password_reset_link
+    link_to(t(".password_reset"), controller.main_app.new_user_password_path)
+  end
+
+  def email_input(f)
+    # Účet s tímto e-mailem již existuje. Přihlaste se nebo si nechte obnovit heslo.
+    if f.object.errors.added?(:email, :already_registered)
+      custom_error = t(".email_already_registered",
+                       sign_in_link:,
+                       password_reset_link:)
+    else
+      custom_error = false
+    end
+
+    f.input :email, required: true, error: custom_error
+  end
+
   def addresses_fields_title
     default_title = if current_order.requires_address?
       t(".addresses_fields_title.default")
