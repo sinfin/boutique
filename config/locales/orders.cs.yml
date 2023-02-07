@@ -11,7 +11,9 @@ cs:
         register: Zaregistujte se
         or: "Nebo:"
         have_account_already: Již u nás máte účet?
+        email_already_registered: Účet s tímto e-mailem již existuje. %{sign_in_link} nebo si nechte %{password_reset_link}.
         sign_in: Přihlaste se
+        password_reset: obnovit heslo
         order_for_free: Objednat zdarma
 
         gift_recipient_address_fields:
