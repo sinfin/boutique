@@ -240,9 +240,26 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not Boutique::Order.by_confirmed_at_range("1.1.2021-31.12.2021").exists?(id: order.id)
 
     assert Boutique::Order.by_confirmed_at_range("1.1.2022 - ").exists?(id: order.id)
+    assert Boutique::Order.by_confirmed_at_range(" - 1.1.2022").exists?(id: order.id)
     assert Boutique::Order.by_confirmed_at_range("1.1.2022 - 1.1.2022").exists?(id: order.id)
     assert Boutique::Order.by_confirmed_at_range("1.1.2021 - 31.12.2023").exists?(id: order.id)
     assert_not Boutique::Order.by_confirmed_at_range("1.1.2021 - 31.12.2021").exists?(id: order.id)
+  end
+
+  test "scope by_paid_at_range" do
+    order = create(:boutique_order, paid_at: "1.1.2022 8:00")
+
+    assert Boutique::Order.by_paid_at_range("1.1.2022").exists?(id: order.id)
+    assert Boutique::Order.by_paid_at_range("1.1.2022-").exists?(id: order.id)
+    assert Boutique::Order.by_paid_at_range("1.1.2022-1.1.2022").exists?(id: order.id)
+    assert Boutique::Order.by_paid_at_range("1.1.2021-31.12.2023").exists?(id: order.id)
+    assert_not Boutique::Order.by_paid_at_range("1.1.2021-31.12.2021").exists?(id: order.id)
+
+    assert Boutique::Order.by_paid_at_range("1.1.2022 - ").exists?(id: order.id)
+    assert Boutique::Order.by_paid_at_range(" - 1.1.2022").exists?(id: order.id)
+    assert Boutique::Order.by_paid_at_range("1.1.2022 - 1.1.2022").exists?(id: order.id)
+    assert Boutique::Order.by_paid_at_range("1.1.2021 - 31.12.2023").exists?(id: order.id)
+    assert_not Boutique::Order.by_paid_at_range("1.1.2021 - 31.12.2021").exists?(id: order.id)
   end
 
   test "scope by_subscription_state" do

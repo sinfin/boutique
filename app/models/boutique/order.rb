@@ -81,15 +81,40 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   scope :by_confirmed_at_range, -> (range_str) {
     from, to = range_str.split(/ ?- ?/)
-    if to
-      to = "#{to} 23:59" if from == to && to.exclude?(":")
+
+    runner = self
+
+    if from.present?
       from_date_time = DateTime.parse(from)
-      to_date_time = DateTime.parse(to)
-      where("confirmed_at >= ?", from_date_time).where("confirmed_at <= ?", to_date_time)
-    else
-      from_date_time = DateTime.parse(from)
-      where("confirmed_at >= ?", from_date_time)
+      runner = runner.where("confirmed_at >= ?", from_date_time)
     end
+
+    if to.present?
+      to = "#{to} 23:59" if to.exclude?(":")
+      to_date_time = DateTime.parse(to)
+      runner = runner.where("confirmed_at <= ?", to_date_time)
+    end
+
+    runner
+  }
+
+  scope :by_paid_at_range, -> (range_str) {
+    from, to = range_str.split(/ ?- ?/)
+
+    runner = self
+
+    if from.present?
+      from_date_time = DateTime.parse(from)
+      runner = runner.where("paid_at >= ?", from_date_time)
+    end
+
+    if to.present?
+      to = "#{to} 23:59" if to.exclude?(":")
+      to_date_time = DateTime.parse(to)
+      runner = runner.where("paid_at <= ?", to_date_time)
+    end
+
+    runner
   }
 
   scope :by_subscription_state, -> (subscription_state) {

@@ -95,6 +95,9 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
         by_confirmed_at_range: {
           as: :date_range,
         },
+        by_paid_at_range: {
+          as: :date_range,
+        },
         by_product_id: {
           klass: "Boutique::Product",
           width: 210,

@@ -11,6 +11,7 @@ en:
         non_pending_order_count_range: Order count
         number: Number
         number_range: Number
+        paid_at_range: Paid at
         primary_address_country_code/CZ: Czech republic
         primary_address_country_code/other: Other
         primary_address_country_code/SK: Slovakia
