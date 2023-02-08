@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: a9de8404ac2a6ddd1ec7aa0373a8296d59b59bf0
+  revision: c568e8ec09dd7037dc8d4ff3f714def9edf8a78c
   specs:
     folio (3.0.0)
       aasm
@@ -73,6 +73,7 @@ GIT
       sitemap_generator
       slim
       slim-rails
+      terser
       traco
       turbolinks
       uglifier
@@ -179,7 +180,7 @@ GEM
     audited (5.2.0)
       activerecord (>= 5.0, < 7.1)
     aws-eventstream (1.2.0)
-    aws-partitions (1.706.0)
+    aws-partitions (1.707.0)
     aws-sdk-core (3.170.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -589,6 +590,8 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     temple (0.8.2)
+    terser (1.1.13)
+      execjs (>= 0.3.0, < 3)
     thor (1.2.1)
     tilt (2.0.11)
     timeout (0.3.1)

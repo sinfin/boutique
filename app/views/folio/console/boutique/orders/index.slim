@@ -1,5 +1,6 @@
 = index_header by_query_placeholder: t('folio.console.boutique.orders.index.by_query_placeholder'),
-               right: cell('folio/console/boutique/orders/index/invoices_button')
+               right: cell('folio/console/boutique/orders/index/invoices_button'),
+               filters_cancel_url: url_for([:console, @klass, tab: params[:tab]])
 
 ruby:
   bl = -> (item, collection, i) do
