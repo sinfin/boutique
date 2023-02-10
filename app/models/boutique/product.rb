@@ -94,7 +94,7 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   private
     def set_default_vat_rate
-      self.vat_rate ||= Boutique::VatRate.default
+      self.vat_rate = Boutique::VatRate.default if self.boutique_vat_rate_id.nil?
     end
 
     def validate_master_variant_presence
