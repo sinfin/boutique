@@ -59,6 +59,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
   scope :except_subsequent, -> { where(original_payment_id: nil) }
+  scope :with_invoice, -> { where.not(invoice_number: nil) }
 
   scope :ordered_by_total_price_asc, -> {
     order(line_items_price: :asc)

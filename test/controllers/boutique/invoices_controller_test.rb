@@ -14,5 +14,10 @@ class Boutique::InvoicesControllerTest < Boutique::ControllerTest
 
     get invoice_path(order.secret_hash)
     assert_response :ok
+
+    order.cancel!
+
+    get invoice_path(order.secret_hash)
+    assert_response :ok
   end
 end

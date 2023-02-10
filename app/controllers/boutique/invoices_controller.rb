@@ -2,7 +2,7 @@
 
 class Boutique::InvoicesController < ApplicationController
   def show
-    @order = Boutique::Order.where(aasm_state: %w[paid dispatched])
+    @order = Boutique::Order.with_invoice
                             .includes(line_items: { product_variant: :product })
                             .find_by_secret_hash!(params[:secret_hash])
 
