@@ -504,8 +504,10 @@ class Boutique::Order < Boutique::ApplicationRecord
         end
       end
 
-      subscription.update_columns(folio_user_id: gift_recipient_id,
-                                  updated_at: current_time_from_proper_timezone)
+      if subscription.present?
+        subscription.update_columns(folio_user_id: gift_recipient_id,
+                                    updated_at: current_time_from_proper_timezone)
+      end
     end
 
     Boutique::OrderMailer.gift_notification(self, gift_recipient.raw_invitation_token).deliver_later
