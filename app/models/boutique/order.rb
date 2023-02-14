@@ -492,7 +492,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def deliver_gift!
-    return unless gift? || gift_recipient_notification_sent_at?
+    return if !gift? || gift_recipient_notification_sent_at?
 
     transaction do
       self.gift_recipient = Folio::User.find_by(email: gift_recipient_email) || begin
