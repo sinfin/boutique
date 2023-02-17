@@ -78,6 +78,15 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert @order.primary_address.present?
   end
 
+  test "get_confirm" do
+    get confirm_order_url
+    assert_redirected_to main_app.root_url
+
+    create_order_with_current_session_id
+    get confirm_order_url
+    assert_redirected_to edit_order_url
+  end
+
   test "show" do
     order = create(:boutique_order, :ready_to_be_confirmed)
     assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
