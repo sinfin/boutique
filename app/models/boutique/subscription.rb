@@ -19,7 +19,8 @@ class Boutique::Subscription < ApplicationRecord
 
   belongs_to :payer, class_name: "Folio::User",
                      foreign_key: :payer_id,
-                     inverse_of: :paid_for_subscriptions
+                     inverse_of: :paid_for_subscriptions,
+                     optional: true
 
   has_many :orders, -> { ordered },
                     class_name: "Boutique::Order",
@@ -52,13 +53,13 @@ class Boutique::Subscription < ApplicationRecord
   scope :ordered, -> { order(active_until: :asc, active_from: :asc) }
 
   validates :active_from,
-            :active_until,
+            # :active_until,
             :period,
             presence: true
 
-  validates :payment,
-            presence: true,
-            unless: :cancelled?
+  # validates :payment,
+  #           presence: true,
+  #           unless: :cancelled?
 
   def to_label
     [
