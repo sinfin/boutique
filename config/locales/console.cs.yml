@@ -11,7 +11,16 @@ cs:
               label: Faktury
 
             summary:
-              text: Objednáno <strong>%{count}</strong> objednávek za <strong>%{total}</strong> v ∅ ceně %{average}.
+              confirmed:
+                one: Objednána <strong>%{count}</strong> objednávka za <strong>%{total}</strong> v ∅ ceně %{average}.
+                few: Objednány <strong>%{count}</strong> objednávky za <strong>%{total}</strong> v ∅ ceně %{average}.
+                other: Objednáno <strong>%{count}</strong> objednávek za <strong>%{total}</strong> v ∅ ceně %{average}.
+
+              paid:
+                one: Zaplacena <strong>%{count}</strong> objednávka za <strong>%{total}</strong> v ∅ ceně %{average}.
+                few: Zaplaceny <strong>%{count}</strong> objednávky za <strong>%{total}</strong> v ∅ ceně %{average}.
+                other: Zaplaceno <strong>%{count}</strong> objednávek za <strong>%{total}</strong> v ∅ ceně %{average}.
+                zero: Nic nebylo zaplaceno.
 
             tabs:
               index: Vše

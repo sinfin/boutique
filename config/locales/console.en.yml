@@ -8,6 +8,16 @@ en:
             invoices: Invoices
             summary:
               text: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
+
+            confirmed:
+              one: Total <strong>%{count}</strong> order for <strong>%{total}</strong> at ∅ price of %{average}.
+              other: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
+
+            paid:
+              one: Paid total <strong>%{count}</strong> order for <strong>%{total}</strong> at ∅ price of %{average}.
+              other: Paid total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
+              zero: Nothing was paid.
+
             by_query_placeholder: "Search: order number, name, address, registration number, e-mail ..."
             tabs:
               all: All

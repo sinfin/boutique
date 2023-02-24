@@ -8,6 +8,15 @@ aside.f-c-b-orders-index-summary.small
 
           span.mx-2.d-inline-block |
 
-          = t('.text', count: orders.size, \
-                       total: price(total_price), \
-                       average: price(average_price))
+          = t('.confirmed', count: orders_confirmed.size, \
+                            total: price(total_price_confirmed), \
+                            average: price(average_price_confirmed))
+
+          span.mx-2.d-inline-block |
+
+          - if orders_paid.size > 0
+            = t('.paid', count: orders_paid.size, \
+                         total: price(total_price_paid), \
+                         average: price(average_price_paid))
+          - else
+            = t('.paid.zero')
