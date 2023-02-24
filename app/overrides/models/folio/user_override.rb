@@ -28,4 +28,20 @@ Folio::User.class_eval do
                    .update_all(folio_user_id: id,
                                updated_at: Time.current)
   end
+
+  def self.additional_controller_strong_params_for_create
+    [
+      secondary_address_attributes: %i[id
+                                       _destroy
+                                       name
+                                       company_name
+                                       address_line_1
+                                       address_line_2
+                                       zip
+                                       city
+                                       country_code
+                                       identification_number
+                                       vat_identification_number]
+    ]
+  end
 end
