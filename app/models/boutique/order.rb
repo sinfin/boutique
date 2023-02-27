@@ -372,6 +372,16 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  def gift_recipient_full_name
+    return unless gift?
+
+    if gift_recipient_first_name.present? || gift_recipient_last_name.present?
+      "#{gift_recipient_first_name} #{gift_recipient_last_name}".strip
+    else
+      gift_recipient_email
+    end
+  end
+
   def to_label
     [
       number,
@@ -623,7 +633,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       if requires_address?
         address = primary_address.try(:dup)
-        address.name = gift ? "#{gift_recipient_first_name} #{gift_recipient_last_name}" : full_name
+        address.name = gift ? gift_recipient_full_name : full_name
       end
 
       create_subscription!(payment: paid_payment,
