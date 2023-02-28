@@ -333,6 +333,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         else
           Boutique::OrderMailer.paid(self).deliver_later
         end
+
+        dispatch! if digital_only?
       end
     end
 
