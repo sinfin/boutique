@@ -8,7 +8,9 @@ class Boutique::Order < Boutique::ApplicationRecord
   EVENT_CALLBACKS = %i[before_confirm
                        after_confirm
                        before_pay
-                       after_pay]
+                       after_pay
+                       before_dispatch
+                       after_dispatch]
 
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
@@ -340,6 +342,14 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     event :dispatch do
       transitions from: :paid, to: :dispatched
+
+      before do
+        before_dispatch
+      end
+
+      after do
+        after_dispatch
+      end
     end
 
     event :cancel do
