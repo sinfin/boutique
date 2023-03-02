@@ -66,7 +66,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
       new_line = html ? "<br>" : "\n"
 
       [
-        a.name || order.full_name,
+        a.name || order.gift ? order.gift_recipient_full_name : order.full_name,
         [a.address_line_1, a.address_line_2].join(" "),
         [a.zip, a.city].join(" "),
         a.country_code,
