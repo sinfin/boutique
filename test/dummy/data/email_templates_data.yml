@@ -163,6 +163,27 @@
     TODO
 
 - mailer: Boutique::SubscriptionMailer
+  action: ended
+  title_cs: Předplatné - vypršelo
+  subject_cs: Předplatné - vypršelo
+  subject_en: Subscription - ended
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>Vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.</p>
+
+  body_text_cs: |
+    Dobrý den,
+    Vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.
+
+  body_html_en: |
+    <p>Hi</p>
+    <p>TODO</p>
+
+  body_text_en: |
+    Hi
+    TODO
+
+- mailer: Boutique::SubscriptionMailer
   action: will_be_paid_in_a_week
   title_cs: Předplatné - připomenutí týden předem
   subject_cs: Předplatné - blíží se konec předplaceného období

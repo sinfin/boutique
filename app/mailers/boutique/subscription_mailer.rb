@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
+  def ended(subscription)
+    email_template_mail({},
+                        to: subscription.user.email,
+                        site: subscription.product_variant.product.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
+  end
+
   def will_be_paid_in_a_week(subscription)
     email_template_mail({},
                         to: subscription.user.email,

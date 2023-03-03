@@ -9,6 +9,14 @@ class Boutique::SubscriptionMailerTest < ActionMailer::TestCase
     Rake::Task["folio:email_templates:idp_seed"].execute
   end
 
+  test "ended" do
+    user = create(:folio_user, email: "test@test.test")
+    subscription = create(:boutique_subscription, user:)
+
+    mail = Boutique::SubscriptionMailer.ended(subscription)
+    assert_equal ["test@test.test"], mail.to
+  end
+
   test "failure" do
     user = create(:folio_user, email: "test@test.test")
     subscription = create(:boutique_subscription, user:)

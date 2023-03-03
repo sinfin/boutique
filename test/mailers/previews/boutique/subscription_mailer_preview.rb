@@ -2,6 +2,12 @@
 
 # Preview all emails at http://localhost:3000/rails/mailers/subscription_mailer
 class Boutique::SubscriptionMailerPreview < ActionMailer::Preview
+  def ended
+    subscription = Boutique::Subscription.inactive.last
+
+    Boutique::SubscriptionMailer.ended(subscription)
+  end
+
   def will_be_paid_in_a_week
     subscription = Boutique::Subscription.last
 
