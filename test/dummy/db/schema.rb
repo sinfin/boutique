@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_20_135411) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_01_224546) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -96,6 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_20_135411) do
     t.string "gift_recipient_first_name"
     t.string "gift_recipient_last_name"
     t.bigint "gift_recipient_id"
+    t.integer "shipping_price"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
@@ -153,8 +154,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_20_135411) do
     t.string "subscription_frequency"
     t.bigint "boutique_vat_rate_id", null: false
     t.bigint "site_id"
-    t.text "shipping_info"
     t.boolean "digital_only", default: false
+    t.text "shipping_info"
     t.boolean "subscription_recurrent_payment_disabled", default: false
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"

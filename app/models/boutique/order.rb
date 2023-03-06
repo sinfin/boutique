@@ -405,13 +405,36 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || line_items.sum(&:price)
   end
 
+  def shipping_price
+    super || begin
+      return 0 if shipping_price_per_package.zero?
+
+      packages_count * shipping_price_per_package
+    end
+  end
+
+  def packages_count
+    # TODO: implement for order with multiple line items
+    product = line_items.first.product_variant.product
+
+    if product.subscription? && product.has_subscription_frequency?
+      product.subscription_frequency_in_issues_per_year
+    else
+      1
+    end
+  end
+
+  def shipping_price_per_package
+    0
+  end
+
   def discount
     super || begin
       return 0 unless voucher.present? &&
                       voucher.applicable?
 
       if voucher.discount_in_percentages?
-        line_items_price * (0.01 * voucher.discount)
+        (line_items_price + shipping_price) * (0.01 * voucher.discount)
       else
         voucher.discount
       end
@@ -419,7 +442,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def total_price
-    super || [line_items_price - discount.to_i, 0].max
+    super || [line_items_price + shipping_price - discount.to_i, 0].max
   end
 
   def free?
@@ -432,6 +455,11 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def is_unpaid?
     !is_paid?
+  end
+
+  def shipping_info
+    # TODO: move to Shipping model
+    line_items.first.product_variant.product.shipping_info
   end
 
   def add_line_item!(product_variant, amount: 1)
@@ -790,6 +818,7 @@ end
 #  gift_recipient_first_name                 :string
 #  gift_recipient_last_name                  :string
 #  gift_recipient_id                         :bigint(8)
+#  shipping_price                            :integer
 #
 # Indexes
 #

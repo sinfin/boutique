@@ -34,6 +34,7 @@ cs:
         primary_address_country_code/SK: Slovensko
         primary_address_country_code: Země odběru
         product: Produkt
+        shipping_price: Cena dopravy
         subscription_state/active: Aktivní předplatné
         subscription_state/inactive: Neaktivní předplatné
         subscription_state/none: Žádné předplatné
