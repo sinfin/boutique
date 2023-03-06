@@ -30,6 +30,7 @@ $(document)
             '.b-orders-edit-voucher-fields',
             '.b-orders-edit-sidebar__ajax-replacable',
             '.b-orders-edit-summary',
+            '.b-orders-edit-recurrency-fields',
             '.b-orders-edit__payment'
           ]
 

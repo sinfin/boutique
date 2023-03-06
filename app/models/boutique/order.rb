@@ -475,7 +475,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     save(validate: false) if errors.empty?
   end
 
-  def recurrency_option_available?
+  def recurrent_payment_available?
     voucher.nil? && line_items.any?(&:subscription?)
   end
 
@@ -742,6 +742,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def validate_line_items_subscription_recurring
+      return unless recurrent_payment_available?
+
       if line_items.any? { |line_item| !line_item.marked_for_destruction? && line_item.requires_subscription_recurring? && [true, false].exclude?(line_item.subscription_recurring) }
         errors.add(:line_items, :missing_subscription_recurring)
       end

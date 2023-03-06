@@ -4,7 +4,7 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
   include Folio::Cell::HtmlSafeFieldsFor
 
   def show
-    render if model.object.line_items.present? && model.object.line_items.any? do |line_item|
+    render if model.object.recurrent_payment_available? && model.object.line_items.any? do |line_item|
       line_item.requires_subscription_recurring?
     end
   end
