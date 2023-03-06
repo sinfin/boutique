@@ -57,6 +57,12 @@ class Boutique::Product::Subscription < Boutique::Product
     SUBSCRIPTION_FREQUENCIES[subscription_frequency.to_sym]
   end
 
+  def subscription_frequency_in_issues_per_year
+    return unless has_subscription_frequency?
+
+    12 / subscription_frequency_in_months_per_issue
+  end
+
   def has_subscription_frequency?
     subscription_frequency != "none"
   end
