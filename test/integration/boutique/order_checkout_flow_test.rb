@@ -86,6 +86,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     params = {
       order: {
+        first_name: "John",
+        last_name: "Doe",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
       }
     }
@@ -108,6 +110,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     params = {
       order: {
+        first_name: "John",
+        last_name: "Doe",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
       }
     }
@@ -130,6 +134,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     params = {
       order: {
+        first_name: "John",
+        last_name: "Doe",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
       }
     }

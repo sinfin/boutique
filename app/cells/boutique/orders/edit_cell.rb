@@ -5,8 +5,11 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
   include ActionView::Helpers::FormOptionsHelper
 
   def show
-    if current_user.present?
-      if current_order.primary_address.nil?
+    if current_user.present? && !current_order.changed?
+      current_order.first_name ||= current_user.first_name
+      current_order.last_name ||= current_user.last_name
+
+      if !current_order.digital_only? && current_order.primary_address.nil?
         current_order.primary_address = current_user.primary_address.dup
       end
 
@@ -44,7 +47,6 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
   end
 
   def email_input(f)
-    # Účet s tímto e-mailem již existuje. Přihlaste se nebo si nechte obnovit heslo.
     if f.object.errors.added?(:email, :already_registered)
       custom_error = t(".email_already_registered",
                        sign_in_link:,

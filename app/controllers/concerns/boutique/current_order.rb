@@ -23,13 +23,6 @@ module Boutique::CurrentOrder
           order.update_columns(folio_user_id: current_user.id,
                                updated_at: Time.current)
         end
-
-        if order && order.user && (order.first_name.blank? || order.last_name.blank?)
-          order.update_columns(first_name: order.first_name.presence || current_user.first_name.presence,
-                               last_name: order.last_name.presence || current_user.last_name.presence,
-                               updated_at: Time.current)
-
-        end
       end
 
       order
