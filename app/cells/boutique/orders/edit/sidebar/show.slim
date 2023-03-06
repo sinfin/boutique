@@ -5,13 +5,6 @@
 
   = cell('boutique/orders/edit/summary', model)
 
-  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
-
-  div class=application_css_class("rich-text")
-    h4 = t('.contents')
-
-    = contents
-
   - if shipping_info
     hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
 
@@ -19,6 +12,18 @@
       h4 = t('.shipping')
 
       == cstypo shipping_info
+
+      - if shipping_price > 0
+        = shipping_price_summary
+
+        h4 = price(shipping_price)
+
+  hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary
+
+  div class=application_css_class("rich-text")
+    h4 = t('.contents')
+
+    = contents
 
   hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary[
     class="b-orders-edit-sidebar__hr--mobile-only"

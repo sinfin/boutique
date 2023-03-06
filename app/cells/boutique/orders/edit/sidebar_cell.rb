@@ -3,14 +3,20 @@
 class Boutique::Orders::Edit::SidebarCell < Boutique::ApplicationCell
   def contents
     # TODO
-    product_variant.checkout_sidebar_content
-  end
-
-  def product_variant
-    @product_variant ||= model.line_items.first.product_variant
+    model.line_items.first.product_variant.checkout_sidebar_content
   end
 
   def shipping_info
-    @shipping_info ||= product_variant.product.shipping_info
+    @shipping_info ||= model.shipping_info
+  end
+
+  def shipping_price
+    @shipping_price ||= model.shipping_price
+  end
+
+  def shipping_price_summary
+    if model.packages_count > 1
+      "#{model.packages_count} × #{price(model.shipping_price_per_package)}"
+    end
   end
 end

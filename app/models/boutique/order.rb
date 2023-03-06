@@ -407,6 +407,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def shipping_price
     super || begin
+      return 0 if digital_only?
       return 0 if shipping_price_per_package.zero?
 
       packages_count * shipping_price_per_package
