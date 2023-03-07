@@ -40,6 +40,20 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_response :success
   end
 
+  test "refreshed_edit" do
+    get refreshed_edit_order_url
+    assert_redirected_to main_app.root_url
+
+    create_order_with_current_session_id
+
+    assert_raises(ActionController::ParameterMissing) do
+      get refreshed_edit_order_url
+    end
+
+    get refreshed_edit_order_url(country_code: "SK")
+    assert_response :success
+  end
+
   test "apply_voucher" do
     post apply_voucher_order_url
     assert_redirected_to main_app.root_url

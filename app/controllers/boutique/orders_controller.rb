@@ -36,6 +36,25 @@ class Boutique::OrdersController < Boutique::ApplicationController
     @use_boutique_adaptive_css = true
   end
 
+  def refreshed_edit
+    order = current_order
+
+    country_code = params.require(:country_code)
+
+    if order.primary_address.blank?
+      order.build_primary_address(country_code:)
+    else
+      order.primary_address.country_code = country_code
+    end
+
+    render json: {
+      data: {
+        sidebarBottom: cell("boutique/orders/edit/sidebar/bottom", order).show,
+        price: cell("boutique/orders/payment_methods/price", order.total_price).show,
+      }
+    }
+  end
+
   def apply_voucher
     @use_boutique_adaptive_css = true
 
