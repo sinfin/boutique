@@ -30,8 +30,9 @@ cs:
           info_bold: Vaše objednávka bude odeslána až po tomto datu.
 
         sidebar:
-          contents: Získáte
-          shipping: Doprava
+          bottom:
+            contents: Získáte
+            shipping: Doprava
 
         subscription_fields:
           title: Začátek předplatného
@@ -52,9 +53,10 @@ cs:
         success_free: Objednávka proběhla úspěšně
 
       payment_methods:
-        title: Platba %{price}
         secured_by: Zabezpečeno
         prices_include_vat: Uvedené ceny jsou včetně DPH.
+        price:
+          title: Platba %{price}
 
       show:
         invoice: stáhnout fakturu

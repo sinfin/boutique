@@ -16,6 +16,8 @@
           = t('.price')
 
     tbody
+      - shipping_price_part = model.shipping_price.to_f / model.line_items.size
+
       - model.line_items.each do |line_item|
         tr
           td.b-orders-invoice__table-td colspan=3
@@ -23,7 +25,8 @@
           td.b-orders-invoice__table-td.text-right
             = "#{line_item.vat_rate_value} %"
           td.b-orders-invoice__table-td.text-right
-            = price(line_item.price, precision: 2, zero_as_number: true)
+            = price(line_item.price + shipping_price_part, precision: 2,
+                                                           zero_as_number: true)
 
       - if model.voucher_code.present?
         tr

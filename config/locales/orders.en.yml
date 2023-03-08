@@ -28,8 +28,9 @@ en:
           info_bold: Your order will be sent after this date.
 
         sidebar:
-          contents: Includes
-          shipping: Shipping
+          bottom:
+            contents: Includes
+            shipping: Shipping
 
         subscription_fields:
           title: Subscription start
@@ -50,9 +51,10 @@ en:
         success_free: Order successful
 
       payment_methods:
-        title: Payment %{price}
         secured_by: Secured
         prices_include_vat: The listed prices include VAT.
+        price:
+          title: Payment %{price}
 
       show:
         invoice: download invoice
