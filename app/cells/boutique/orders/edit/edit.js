@@ -1,5 +1,5 @@
 $(document)
-  .on('change', '.b-orders-edit .f-addresses-fields__country-code-input', (e) => {
+  .on('change', '.b-orders-edit .f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input', (e) => {
     const $wrap = $(e.currentTarget).closest('.b-orders-edit')
 
     if ($wrap.hasClass('b-orders-edit--refreshing')) {
