@@ -15,9 +15,22 @@
       = s.attribute(:created_at)
       = s.attribute(:confirmed_at, if_blank: "–")
       = s.attribute(:paid_at, if_blank: "–")
+      = s.attribute(:dispatched_at, if_blank: "–")
 
       - if s.object.cancelled_at.present?
         = s.attribute(:cancelled_at)
+
+      - if s.object.gift?
+        = s.attribute(:gift_recipient)
+          - if s.object.gift_recipient.present?
+            a[
+              href=folio.url_for([:console, s.object.gift_recipient])
+              target='_blank'
+            ] = s.object.gift_recipient.to_label
+          - else
+            = s.object.gift_recipient_full_name
+        = s.email(:gift_recipient_email)
+        = s.attribute(:gift_recipient_notification_scheduled_for)
 
       = s.attribute(:line_items)
         ul
