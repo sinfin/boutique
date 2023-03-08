@@ -15,7 +15,7 @@ class Boutique::Orders::Edit::Sidebar::BottomCell < Boutique::ApplicationCell
   end
 
   def shipping_price_summary
-    if model.packages_count > 1
+    @shipping_price_summary ||= if model.packages_count > 1
       "#{model.packages_count} × #{price(model.shipping_price_per_package)}"
     end
   end
