@@ -14,6 +14,7 @@ cs:
         created_at: Vytvořeno
         dispatched_at: Odesláno
         full_name: Jméno
+        gift_recipient: Obdarovaný
         gift_recipient_email: E-mail obdarovaného
         gift_recipient_first_name: Jméno obdarovaného
         gift_recipient_last_name: Příjmení obdarovaného
