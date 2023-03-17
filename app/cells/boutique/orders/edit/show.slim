@@ -9,6 +9,12 @@
 
           h1.h2.mt-0 = current_order.checkout_title
 
+          - if product_variant_description.present?
+            .b-orders-edit__product-variant-description[
+              class=application_css_class("rich-text")
+            ]
+              == product_variant_description
+
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
