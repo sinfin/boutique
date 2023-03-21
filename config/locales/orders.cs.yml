@@ -8,6 +8,7 @@ cs:
           contact: Kontaktní údaje
           payer_contact: Kontaktní údaje plátce
 
+        renewal: Prodloužit
         register: Zaregistujte se
         or: "Nebo:"
         have_account_already: Již u nás máte účet?

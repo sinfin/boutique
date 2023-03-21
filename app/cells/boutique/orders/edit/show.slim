@@ -7,7 +7,11 @@
         main.b-orders-edit__col.b-orders-edit__col--main
           = render(:_main_top)
 
-          h1.h2.mt-0 = current_order.checkout_title
+          h1.h2.mt-0
+            - if current_order.renewed_subscription.present?
+              = t('.renewal')
+              ' :
+            = current_order.checkout_title
 
           - if product_variant_description.present?
             .b-orders-edit__product-variant-description[
@@ -32,16 +36,17 @@
                   '
                   = sign_in_link
 
-          .b-orders-edit__box
-            .b-orders-edit__box-inner
-              == cell('boutique/orders/edit/gift_recipient_fields', f)
+          - unless current_order.renewed_subscription.present?
+            .b-orders-edit__box
+              .b-orders-edit__box-inner
+                == cell('boutique/orders/edit/gift_recipient_fields', f)
 
-          - if subscription?
-            - fields = cell('boutique/orders/edit/subscription_fields', f).show
-            - if fields
-              .b-orders-edit__box
-                .b-orders-edit__box-inner
-                  == fields
+            - if subscription?
+              - fields = cell('boutique/orders/edit/subscription_fields', f).show
+              - if fields
+                .b-orders-edit__box
+                  .b-orders-edit__box-inner
+                    == fields
 
           - if current_order.requires_address?
             .b-orders-edit__box[

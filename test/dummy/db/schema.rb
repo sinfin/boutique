@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_01_224546) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_20_111800) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -97,12 +97,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_224546) do
     t.string "gift_recipient_last_name"
     t.bigint "gift_recipient_id"
     t.integer "shipping_price"
+    t.bigint "renewed_subscription_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
     t.index ["gift_recipient_id"], name: "index_boutique_orders_on_gift_recipient_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
+    t.index ["renewed_subscription_id"], name: "index_boutique_orders_on_renewed_subscription_id"
     t.index ["site_id"], name: "index_boutique_orders_on_site_id"
     t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
   end
@@ -154,8 +156,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_01_224546) do
     t.string "subscription_frequency"
     t.bigint "boutique_vat_rate_id", null: false
     t.bigint "site_id"
-    t.boolean "digital_only", default: false
     t.text "shipping_info"
+    t.boolean "digital_only", default: false
     t.boolean "subscription_recurrent_payment_disabled", default: false
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"

@@ -5,19 +5,7 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
   include ActionView::Helpers::FormOptionsHelper
 
   def show
-    if current_user.present? && !current_order.changed?
-      current_order.first_name ||= current_user.first_name
-      current_order.last_name ||= current_user.last_name
-
-      if !current_order.digital_only? && current_order.primary_address.nil?
-        current_order.primary_address = current_user.primary_address.dup
-      end
-
-      if current_order.secondary_address.nil?
-        current_order.use_secondary_address = current_user.secondary_address.present?
-        current_order.secondary_address = current_user.secondary_address.dup
-      end
-    end
+    assign_name_and_addresses
 
     render
   end
@@ -88,4 +76,32 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
   def product_variant_description
     @product_variant_description ||= current_order&.line_items&.first&.product_variant&.checkout_sidebar_content
   end
+
+  private
+    def assign_name_and_addresses
+      if current_user.present? && !current_order.changed?
+
+        if current_order.renewed_subscription.try(:primary_address).present?
+          names = current_order.renewed_subscription.primary_address.name.split(" ", 2)
+        else
+          names = [current_user.first_name, current_user.last_name]
+        end
+
+        current_order.first_name ||= names.first
+        current_order.last_name ||= names.last
+
+        if !current_order.digital_only? && current_order.primary_address.nil?
+          if current_order.renewed_subscription.present?
+            current_order.primary_address = current_order.renewed_subscription.primary_address.dup
+          else
+            current_order.primary_address = current_user.primary_address.dup
+          end
+        end
+
+        if current_order.secondary_address.nil?
+          current_order.use_secondary_address = current_user.secondary_address.present?
+          current_order.secondary_address = current_user.secondary_address.dup
+        end
+      end
+    end
 end

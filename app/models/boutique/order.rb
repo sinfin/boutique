@@ -29,6 +29,9 @@ class Boutique::Order < Boutique::ApplicationRecord
                             inverse_of: :orders,
                             optional: true
 
+  belongs_to :renewed_subscription, class_name: "Boutique::Subscription",
+                                    optional: true
+
   belongs_to :original_payment, class_name: "Boutique::Payment",
                                 foreign_key: :original_payment_id,
                                 inverse_of: :subsequent_orders,
@@ -463,7 +466,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product_variant.product.shipping_info
   end
 
-  def add_line_item!(product_variant, amount: 1)
+  def add_line_item!(product_variant, amount: 1, renewed_subscription: nil)
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
         if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
@@ -489,6 +492,12 @@ class Boutique::Order < Boutique::ApplicationRecord
         else
           line_items.build(product_variant:,
                            amount:)
+        end
+
+        if renewed_subscription.present? && renewed_subscription.product_variant == product_variant
+          self.renewed_subscription = renewed_subscription
+        else
+          self.renewed_subscription = nil
         end
       end
 
@@ -667,25 +676,35 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       line_item = li.first
       period = 12
-      active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
-      active_until = active_from + period.months
-      cancelled_at = active_from unless line_item.subscription_recurring?
-      subscriber = user unless gift?
 
       if requires_address?
         address = primary_address.try(:dup)
         address.name = gift ? gift_recipient_full_name : full_name
       end
 
-      create_subscription!(payment: paid_payment,
-                           product_variant: line_item.product_variant,
-                           user: subscriber,
-                           payer: user,
-                           period:,
-                           active_from:,
-                           active_until:,
-                           cancelled_at:,
-                           primary_address: address)
+      if renewed_subscription.present?
+        renewed_subscription.cancelled_at = nil if line_item.subscription_recurring?
+
+        renewed_subscription.update!(payment: paid_payment,
+                                     active_until: renewed_subscription.active_until + period.months,
+                                     primary_address: address)
+        update!(subscription: renewed_subscription)
+      else
+        active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
+        active_until = active_from + period.months
+        cancelled_at = active_from unless line_item.subscription_recurring?
+        subscriber = user unless gift?
+
+        create_subscription!(payment: paid_payment,
+                             product_variant: line_item.product_variant,
+                             user: subscriber,
+                             payer: user,
+                             period:,
+                             active_from:,
+                             active_until:,
+                             cancelled_at:,
+                             primary_address: address)
+      end
     end
 
     def set_site
@@ -820,6 +839,7 @@ end
 #  gift_recipient_last_name                  :string
 #  gift_recipient_id                         :bigint(8)
 #  shipping_price                            :integer
+#  renewed_subscription_id                   :bigint(8)
 #
 # Indexes
 #
@@ -829,6 +849,7 @@ end
 #  index_boutique_orders_on_gift_recipient_id         (gift_recipient_id)
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
+#  index_boutique_orders_on_renewed_subscription_id   (renewed_subscription_id)
 #  index_boutique_orders_on_site_id                   (site_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
 #

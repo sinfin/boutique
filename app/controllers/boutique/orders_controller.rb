@@ -188,9 +188,14 @@ class Boutique::OrdersController < Boutique::ApplicationController
       product_variant = Boutique::ProductVariant.find(params.require(:product_variant_slug))
       amount = params[:amount].to_i if params[:amount].present?
 
+      if current_user && params[:subscription_id].present?
+        subscription = current_user.subscriptions.find_by_id(params[:subscription_id])
+      end
+
       create_current_order if current_order.nil?
 
-      current_order.add_line_item!(product_variant, amount: amount || 1)
+      current_order.add_line_item!(product_variant, amount: amount || 1,
+                                                    renewed_subscription: subscription)
 
       redirect_to action: :edit
     end
