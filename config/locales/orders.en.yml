@@ -32,6 +32,13 @@ en:
             contents: Includes
             shipping: Shipping
 
+        summary:
+          subscription_period:
+            months:
+              one: "%{count} month"
+              other: "%{count} months"
+            from: "from %{date}"
+
         subscription_fields:
           title: Subscription start
 

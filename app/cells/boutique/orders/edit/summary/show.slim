@@ -10,5 +10,8 @@
 
       = simple_format line_item.summary_text
 
+      - if line_item.subscription?
+        .mt-n3 = subscription_period(line_item)
+
   h4.b-orders-edit-summary__line-items-price
     = price(model.line_items_price)

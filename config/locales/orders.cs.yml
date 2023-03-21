@@ -38,6 +38,14 @@ cs:
         subscription_fields:
           title: Začátek předplatného
 
+        summary:
+          subscription_period:
+            months:
+              one: "%{count} měsíc"
+              few: "%{count} měsíce"
+              other: "%{count} měsíců"
+            from: "od %{date}"
+
         voucher_fields:
           label: Slevový nebo dárkový kód
           apply: Uplatnit

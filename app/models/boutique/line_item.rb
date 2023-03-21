@@ -90,6 +90,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product.subscription? && !product.subscription_recurrent_payment_disabled?
   end
 
+  def subscription_period
+    12
+  end
+
   def subscription_starts_at_options_for_select
     from = if order.renewed_subscription.present?
       order.renewed_subscription.active_until + 1.day
