@@ -86,6 +86,6 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
   end
 
   def product_variant_description
-    @product_variant_description ||= current_order&.line_items.first&.product_variant&.description.presence
+    @product_variant_description ||= current_order&.line_items&.first&.product_variant&.checkout_sidebar_content
   end
 end

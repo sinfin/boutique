@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class Boutique::Orders::Edit::Sidebar::BottomCell < Boutique::ApplicationCell
-  def contents
-    # TODO
-    model.line_items.first.product_variant.checkout_sidebar_content
-  end
-
   def shipping_info
     @shipping_info ||= model.shipping_info
   end
