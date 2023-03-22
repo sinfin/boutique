@@ -5,4 +5,13 @@
 .tab-content
   = tab :content
     = f.input :email
+
+    .row
+      .col-lg-6 = f.input :first_name
+      .col-lg-6 = f.input :last_name
+
+    .row
+      .col-lg-8
+        == cell('folio/console/addresses/fields', f)
+
 = form_footer f

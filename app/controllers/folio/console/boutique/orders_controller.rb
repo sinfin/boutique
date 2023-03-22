@@ -46,7 +46,8 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
   private
     def order_params
       params.require(:order)
-            .permit(*(@klass.column_names - ["id"]))
+            .permit(*(@klass.column_names - ["id"]),
+                    *addresses_strong_params)
     end
 
     def index_tabs
