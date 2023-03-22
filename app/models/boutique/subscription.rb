@@ -61,6 +61,8 @@ class Boutique::Subscription < ApplicationRecord
   #           presence: true,
   #           unless: :cancelled?
 
+  validate :validate_primary_address_attributes
+
   def to_label
     [
       product_variant.to_label,
@@ -135,9 +137,32 @@ class Boutique::Subscription < ApplicationRecord
     update!(active_until: active_until + period.months)
   end
 
+  def should_validate_address?
+    return false if product_variant.nil?
+
+    !product_variant.product.digital_only?
+  end
+
   def use_secondary_address
     false
   end
+
+  def self.primary_address_fields_layout
+    [
+      :name,
+      { address_line_1: 8, address_line_2: 4 },
+      { city: 7, zip: 5 },
+      :country_code,
+      :phone,
+    ]
+  end
+
+  private
+    def validate_primary_address_attributes
+      return if primary_address.nil?
+
+      primary_address.errors.add(:name, :blank) if primary_address.name.blank?
+    end
 end
 
 # == Schema Information

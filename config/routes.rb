@@ -37,7 +37,7 @@ Folio::Engine.routes.draw do
       resources :vouchers, except: %i[show]
 
       resources :users, only: [] do
-        resources :subscriptions, only: %i[edit update], controller: :subscriptions do
+        resources :subscriptions, except: %i[show destroy], controller: :subscriptions do
           member do
             delete :cancel
           end

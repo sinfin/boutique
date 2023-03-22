@@ -60,3 +60,7 @@ cs:
       sites:
         boutique_additional_form_fields:
           billing_details: Fakturační údaje
+
+      users:
+        show_bottom:
+          new_subscription: Přidat předplatné

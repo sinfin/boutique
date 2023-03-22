@@ -138,6 +138,8 @@ FactoryBot.define do
     active_from { 1.minute.ago }
     active_until { 1.minute.ago + 12.months }
 
+    association :primary_address, factory: :folio_address_primary, name: "name"
+
     after(:build) do |subscription|
       order_attrs = { subscription:, subscription_product: true, user: subscription.user }.compact
       order = create(:boutique_order, :paid, order_attrs)

@@ -31,6 +31,10 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
             uniqueness: true,
             allow_nil: true
 
+  scope :subscriptions, -> {
+    joins(:product).where(boutique_products: { type: "Boutique::Product::Subscription" })
+  }
+
   def title
     super || product.title
   end

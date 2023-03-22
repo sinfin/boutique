@@ -80,6 +80,7 @@ cs:
         cancelled_at: Zrušeno
         order: Objednávka
         product: Produkt
+        product_variant: Varianta produktu
 
       boutique/vat_rate:
         value: Výše daně

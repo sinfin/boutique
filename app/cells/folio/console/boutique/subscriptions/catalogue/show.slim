@@ -40,7 +40,7 @@
                   title: t("folio.console.actions.edit"))
         ]
 
-        if record.active_until.nil? || record.cancelled_at.nil?
+        if record.cancelled_at.nil?
           a << link_to("",
                        controller.folio.cancel_console_user_subscription_path(record.user, record),
                        method: :delete,
