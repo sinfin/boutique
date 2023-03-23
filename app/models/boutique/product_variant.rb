@@ -16,9 +16,7 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
                            foreign_key: :boutique_product_variant_id,
                            inverse_of: :product_variant
 
-
-  validates :code,
-            :regular_price,
+  validates :regular_price,
             presence: true
 
   validates :regular_price,
