@@ -539,6 +539,19 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.try(:product_variant).try(:title).presence || self.class.model_name.human
   end
 
+  def subscription_period_to_human
+    subscription_period = line_items.first.try(:subscription_period)
+
+    return unless subscription_period.present?
+
+    case subscription_period
+    when 12
+      I18n.t("datetime.each.year")
+    else
+      I18n.t("datetime.each.month", count: subscription_period)
+    end
+  end
+
   def invoice_note
     nil
   end

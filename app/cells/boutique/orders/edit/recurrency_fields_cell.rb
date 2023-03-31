@@ -21,6 +21,7 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
             .orders_edit_recurrency_title_proc
             .call(context: self,
                   current_site:,
+                  period: model.object.subscription_period_to_human,
                   price: model.object.total_price,
                   product: model.object.line_items.first.product)
   end

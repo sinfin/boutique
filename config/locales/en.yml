@@ -3,6 +3,13 @@ en:
   boutique:
     free: free
 
+  datetime:
+    each:
+      year: each year
+      month:
+        one: each month
+        other: each %{count} months
+
   time:
     formats:
       as_date: "%-d. %-m. %Y"
