@@ -9,7 +9,7 @@ class Folio::Console::Boutique::SubscriptionsControllerTest < Folio::Console::Ba
   end
 
   test "new" do
-    get url_for([:console, @user,action: :new])
+    get url_for([:console, @user, action: :new])
     assert_response :success
   end
 

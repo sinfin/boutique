@@ -8,6 +8,7 @@ Folio::User.class_eval do
                     inverse_of: :user,
                     foreign_key: :folio_user_id,
                     dependent: :nullify
+
   has_many :paid_for_subscriptions, class_name: "Boutique::Subscription",
                                     inverse_of: :payer,
                                     foreign_key: :payer_id,

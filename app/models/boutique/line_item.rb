@@ -95,10 +95,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def subscription_starts_at_options_for_select
-    from = if order.renewed_subscription.present?
-      order.renewed_subscription.active_until + 1.day
-    end
-
     product.current_and_upcoming_issues.map do |issue|
       date = Date.new(issue[:year], issue[:month])
       [subscription_starts_at_label(date, issue[:number]), date]
