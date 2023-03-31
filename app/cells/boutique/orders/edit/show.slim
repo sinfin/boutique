@@ -36,7 +36,7 @@
                   '
                   = sign_in_link
 
-          - unless current_order.renewed_subscription.present?
+          - if current_order.giftable?
             .b-orders-edit__box
               .b-orders-edit__box-inner
                 == cell('boutique/orders/edit/gift_recipient_fields', f)

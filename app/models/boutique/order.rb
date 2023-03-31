@@ -525,6 +525,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     original_payment_id?
   end
 
+  def giftable?
+    renewed_subscription.nil?
+  end
+
   def checkout_title
     line_items.first.try(:product_variant).try(:title).presence || self.class.model_name.human
   end
