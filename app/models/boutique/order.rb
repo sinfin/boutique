@@ -466,7 +466,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product_variant.product.shipping_info
   end
 
-  def add_line_item!(product_variant, amount: 1, renewed_subscription: nil)
+  def add_line_item!(product_variant, amount: 1, renewed_subscription: nil, additional_options: {})
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
         if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
@@ -503,8 +503,14 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       self.site = product_variant.product.site
 
+      after_add_line_item(additional_options)
+
       save!
     end
+  end
+
+  def after_add_line_item(additional_options = {})
+    nil
   end
 
   def assign_voucher_by_code(code)

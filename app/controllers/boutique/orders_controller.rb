@@ -7,26 +7,36 @@ class Boutique::OrdersController < Boutique::ApplicationController
   before_action :find_order_by_secret_hash, only: %i[show payment]
 
   def crossdomain_add
-    if request.referrer.present?
-      clean_referrer_domain = request.referrer.gsub(%r{\Ahttps?://}, "").gsub(%r{/.*\z}, "")
+    add_to_order_and_redirect
 
-      if Folio::Site.all.any? { |site| site.env_aware_domain == clean_referrer_domain }
-        if url_name = ::Boutique.config.after_order_paid_user_url_name
-          session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
-                                                                       host: clean_referrer_domain,
-                                                                       only_path: false)
+    if custom_url = custom_boutique_after_order_paid_user_url
+      session[:boutique_after_order_paid_user_url] = custom_url
+    else
+      if request.referrer.present?
+        clean_referrer_domain = request.referrer.gsub(%r{\Ahttps?://}, "").gsub(%r{/.*\z}, "")
+
+        if Folio::Site.all.any? { |site| site.env_aware_domain == clean_referrer_domain }
+          if url_name = ::Boutique.config.after_order_paid_user_url_name
+            session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
+                                                                         host: clean_referrer_domain,
+                                                                         only_path: false)
+
+
+          end
         end
       end
     end
-
-    add_to_order_and_redirect
   end
 
   def add
-    if url_name = ::Boutique.config.after_order_paid_user_url_name
-      session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
-                                                                   host: current_site.env_aware_domain,
-                                                                   only_path: false)
+    if custom_url = custom_boutique_after_order_paid_user_url
+      session[:boutique_after_order_paid_user_url] = custom_url
+    else
+      if url_name = ::Boutique.config.after_order_paid_user_url_name
+        session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
+                                                                     host: current_site.env_aware_domain,
+                                                                     only_path: false)
+      end
     end
 
     add_to_order_and_redirect
@@ -184,8 +194,12 @@ class Boutique::OrdersController < Boutique::ApplicationController
       @order = Boutique::Order.except_pending.find_by!(secret_hash: params[:id])
     end
 
+    def custom_boutique_after_order_paid_user_url
+      nil
+    end
+
     def add_to_order_and_redirect
-      product_variant = Boutique::ProductVariant.find(params.require(:product_variant_slug))
+      @product_variant = Boutique::ProductVariant.find(params.require(:product_variant_slug))
       amount = params[:amount].to_i if params[:amount].present?
 
       if current_user && params[:subscription_id].present?
@@ -194,9 +208,14 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
       create_current_order if current_order.nil?
 
-      current_order.add_line_item!(product_variant, amount: amount || 1,
-                                                    renewed_subscription: subscription)
+      current_order.add_line_item!(@product_variant, amount: amount || 1,
+                                                     renewed_subscription: subscription,
+                                                     additional_options: add_line_item_additional_options)
 
       redirect_to action: :edit
+    end
+
+    def add_line_item_additional_options
+      {}
     end
 end
