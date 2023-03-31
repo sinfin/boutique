@@ -127,6 +127,7 @@ end
 #  description              :text
 #  best_offer               :boolean          default(FALSE)
 #  code                     :string(32)
+#  subscription_period      :integer          default(12)
 #
 # Indexes
 #

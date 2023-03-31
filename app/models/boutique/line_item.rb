@@ -69,9 +69,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     (unit_price - unit_price_vat.to_d).to_f
   end
 
+  def subscription_period
+    super || product_variant.subscription_period
+  end
+
   def imprint
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
+    self.subscription_period = subscription_period
   end
 
   def cover_placement_from_variant_or_product
@@ -88,10 +93,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def requires_subscription_recurring?
     product.subscription? && !product.subscription_recurrent_payment_disabled?
-  end
-
-  def subscription_period
-    12
   end
 
   def subscription_starts_at_options_for_select
@@ -128,6 +129,7 @@ end
 #  updated_at                  :datetime         not null
 #  boutique_product_variant_id :bigint(8)        not null
 #  vat_rate_value              :integer
+#  subscription_period         :integer
 #
 # Indexes
 #

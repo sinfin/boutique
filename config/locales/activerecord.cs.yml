@@ -72,6 +72,7 @@ cs:
         discounted_from: Akce od
         discounted_until: Akce do
         master: Hlavní varianta
+        subscription_period: Délka předplatného
 
       boutique/subscription:
         active: Aktivní

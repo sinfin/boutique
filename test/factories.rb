@@ -5,6 +5,7 @@ require_relative Folio::Engine.root.join("test/factories")
 FactoryBot.define do
   factory :boutique_product, class: "Boutique::Product::Basic" do
     title { "Product title" }
+    published { true }
 
     transient do
       code { nil }

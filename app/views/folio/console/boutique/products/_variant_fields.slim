@@ -36,5 +36,9 @@
             .col-lg-3
               = f.input :discounted_until, calendar_on_top: true
 
+          .row
+            .col-lg-3
+              = f.input :subscription_period
+
       .col-md-auto
         == cell('folio/console/nested_model_controls', f, vertical: true)

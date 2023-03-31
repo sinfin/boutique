@@ -685,7 +685,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       fail "multiple subscriptions in one order are not implemented" if li.size > 1
 
       line_item = li.first
-      period = 12
+      period = line_item.product_variant.subscription_period
 
       if requires_address?
         address = primary_address.try(:dup)
