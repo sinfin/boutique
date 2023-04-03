@@ -37,6 +37,7 @@ cs:
 
         subscription_fields:
           title: Začátek předplatného
+          hint: Uvedené číslo označuje pořadí vydání časopisu, nikoli kalendářní měsíc.
 
         summary:
           subscription_period:

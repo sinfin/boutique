@@ -2,6 +2,7 @@
 cs:
   boutique:
     free: zdarma
+    issue: číslo
 
   datetime:
     each:

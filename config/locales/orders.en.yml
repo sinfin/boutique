@@ -41,6 +41,7 @@ en:
 
         subscription_fields:
           title: Subscription start
+          hint: The number indicates the order of publication of the journal, not the calendar month.
 
         voucher_fields:
           label: Discount or gift code

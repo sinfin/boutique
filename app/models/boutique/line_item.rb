@@ -104,7 +104,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   private
     def subscription_starts_at_label(date, number)
-      "#{number}/#{date.year}"
+      "#{I18n.t('boutique.issue').capitalize} #{number} / #{date.year}"
     end
 
     def unset_unwanted_subscription_starts_at

@@ -2,6 +2,7 @@
 en:
   boutique:
     free: free
+    issue: issue
 
   datetime:
     each:
