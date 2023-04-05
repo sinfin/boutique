@@ -142,12 +142,16 @@ FactoryBot.define do
     association :primary_address, factory: :folio_address_primary, name: "name"
 
     after(:build) do |subscription|
-      order_attrs = { subscription:, subscription_product: true, user: subscription.user }.compact
-      order = create(:boutique_order, :paid, order_attrs)
-      subscription.payment = order.payments.paid.first
-      subscription.product_variant = order.line_items.first.product_variant
-      subscription.user = order.user
-      subscription.payer = order.user
+      unless subscription.product_variant.present?
+        order_attrs = { subscription:, subscription_product: true, user: subscription.user }.compact
+        order = create(:boutique_order, :paid, order_attrs)
+        subscription.payment = order.payments.paid.first
+        subscription.product_variant = order.line_items.first.product_variant
+        subscription.user = order.user
+        subscription.payer = order.user
+      else
+        subscription.user = create(:folio_user)
+      end
     end
   end
 
