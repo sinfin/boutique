@@ -12,6 +12,9 @@ class Boutique::Order < Boutique::ApplicationRecord
                        before_dispatch
                        after_dispatch]
 
+  MAILER_ACTIONS = %i[paid
+                      paid_subsequent]
+
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
                     inverse_of: :orders,
@@ -334,9 +337,9 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after_commit do
         if subsequent?
-          Boutique::OrderMailer.paid_subsequent(self).deliver_later
+          mailer_paid_subsequent.deliver_later
         else
-          Boutique::OrderMailer.paid(self).deliver_later
+          mailer_paid.deliver_later
         end
 
         dispatch! if digital_only?
@@ -372,6 +375,13 @@ class Boutique::Order < Boutique::ApplicationRecord
   EVENT_CALLBACKS.each do |cb|
     define_method cb do
       # override in main app if needed
+    end
+  end
+
+  MAILER_ACTIONS.each do |a|
+    define_method "mailer_#{a}" do
+      # override in main app if needed
+      Boutique::OrderMailer.send(a, self)
     end
   end
 

@@ -16,4 +16,12 @@ class Boutique::OrderMailerTest < ActionMailer::TestCase
     assert_equal ["test@test.test"], mail.to
     assert_match order.number, mail.text_part.body.decoded
   end
+
+  test "paid_subsequent" do
+    order = create(:boutique_order, :paid, email: "test@test.test")
+
+    mail = Boutique::OrderMailer.paid_subsequent(order)
+    assert_equal ["test@test.test"], mail.to
+    assert_match order.number, mail.text_part.body.decoded
+  end
 end
