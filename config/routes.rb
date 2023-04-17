@@ -3,8 +3,8 @@
 Boutique::Engine.routes.draw do
   resource :order, only: %i[edit] do
     get :refreshed_edit
-    get :crossdomain_add, path: "crossdomain_add/:product_variant_slug"
-    post :add
+    get :crossdomain_add, path: "crossdomain_add/:product_slug"
+    post :add, path: "add/:product_slug"
     post :confirm
     post :apply_voucher
     post :payment, path: "/:id/payment"

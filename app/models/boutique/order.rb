@@ -476,7 +476,9 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product_variant.product.shipping_info
   end
 
-  def add_line_item!(product_variant, amount: 1, renewed_subscription: nil, additional_options: {})
+  def add_line_item!(product_variant, amount: 1, additional_options: {})
+    raise "Amount must be an integer" unless amount.is_a?(Integer)
+
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
         if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
@@ -502,12 +504,6 @@ class Boutique::Order < Boutique::ApplicationRecord
         else
           line_items.build(product_variant:,
                            amount:)
-        end
-
-        if renewed_subscription.present? && renewed_subscription.product_variant == product_variant
-          self.renewed_subscription = renewed_subscription
-        else
-          self.renewed_subscription = nil
         end
       end
 

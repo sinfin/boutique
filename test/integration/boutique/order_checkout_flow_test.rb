@@ -14,7 +14,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   end
 
   test "anonymous - successful payment" do
-    post add_order_url, params: { product_variant_slug: @product.master_variant.slug }
+    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
 
     params = {
@@ -35,7 +35,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   end
 
   test "anonymous - offline payment" do
-    post add_order_url, params: { product_variant_slug: @product.master_variant.slug }
+    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
 
     params = {
@@ -56,7 +56,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   end
 
   test "anonymous - unsuccessful payment" do
-    post add_order_url, params: { product_variant_slug: @product.master_variant.slug }
+    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
 
     params = {
@@ -81,7 +81,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     user = create(:folio_user)
     sign_in user
 
-    post add_order_url, params: { product_variant_slug: @product.master_variant.slug }
+    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
 
     params = {
@@ -105,7 +105,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     user = create(:folio_user)
     sign_in user
 
-    post add_order_url, params: { product_variant_slug: @product.master_variant.slug }
+    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
 
     params = {
@@ -129,7 +129,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     user = create(:folio_user)
     sign_in user
 
-    post add_order_url, params: { product_variant_slug: @product.master_variant.slug }
+    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
     assert_redirected_to edit_order_url
 
     params = {

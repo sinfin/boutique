@@ -20,8 +20,6 @@ class Boutique::OrdersController < Boutique::ApplicationController
             session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
                                                                          host: clean_referrer_domain,
                                                                          only_path: false)
-
-
           end
         end
       end
@@ -199,20 +197,25 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def add_to_order_and_redirect
-      @product_variant = Boutique::ProductVariant.find(params.require(:product_variant_slug))
-      amount = params[:amount].to_i if params[:amount].present?
+      product = Boutique::Product.find(params.require(:product_slug))
 
-      if current_user && params[:subscription_id].present?
-        subscription = current_user.subscriptions.find_by_id(params[:subscription_id])
+      if params[:product_variant_id].present?
+        product_variant = product.variants.find(params[:product_variant_id])
+      else
+        product_variant = product.master_variant
       end
 
       create_current_order if current_order.nil?
 
-      current_order.add_line_item!(@product_variant, amount: amount || 1,
-                                                     renewed_subscription: subscription,
-                                                     additional_options: add_line_item_additional_options)
+      current_order.add_line_item!(product_variant, **add_line_item_options)
 
       redirect_to action: :edit
+    end
+
+    def add_line_item_options
+      options = { additional_options: add_line_item_additional_options }
+      options[:amount] = params[:amount].to_i if params[:amount].present?
+      options
     end
 
     def add_line_item_additional_options
