@@ -7,19 +7,15 @@
   .b-orders-edit-gift-fields__fields[
     style=('display: none;' unless f.object.gift?)
   ]
-    h4.mt-0 = t('.title')
-
-    p
-      = cstypo t('.info')
-      br
-      strong = cstypo t('.info_bold')
-
     .row
-      .col-12.col-md-5.mt-3
-        = gift_recipient_notification_scheduled_for_input
+      / .col-12.col-md-5.mt-3
+      /   = gift_recipient_notification_scheduled_for_input
 
-      .col-12.col-md-7.mt-3
+      .col-12.col-md-6
         = f.input :gift_recipient_email, required: true
+
+      .col-12.col-md-6
+        = cstypo t('.info')
 
   == cell('boutique/ui/gift_icon',
           class: 'b-orders-edit-gift-fields__gift-icon-svg')

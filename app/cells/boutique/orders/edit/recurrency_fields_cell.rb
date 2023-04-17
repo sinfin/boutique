@@ -16,7 +16,7 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
     ]
   end
 
-  def true_title
+  def text_true
     Boutique.config
             .orders_edit_recurrency_title_proc
             .call(context: self,

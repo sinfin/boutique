@@ -170,8 +170,10 @@ class Boutique::OrdersController < Boutique::ApplicationController
     def line_items_strong_params
       [
         line_items_attributes: %i[id
+                                  boutique_product_variant_id
                                   subscription_starts_at
-                                  subscription_recurring]
+                                  subscription_recurring
+                                  subscription_recurring_period]
       ]
     end
 

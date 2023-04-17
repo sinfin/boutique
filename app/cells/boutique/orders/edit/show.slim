@@ -7,26 +7,29 @@
         main.b-orders-edit__col.b-orders-edit__col--main
           = render(:_main_top)
 
-          h1.h2.mt-0
-            - if current_order.renewed_subscription.present?
-              = t('.renewal')
-              ' :
-            = current_order.checkout_title
+          .h1.mt-0
+            = t('.title')
 
-          - if product_variant_description.present?
-            .b-orders-edit__product-variant-description[
-              class=application_css_class("rich-text")
-            ]
-              == product_variant_description
+          .b-orders-edit__quick-checkout-buttons
+            .h3.mt-0 = t('.quick_checkout')
+
+            .row
+              .col-auto
+                a.btn.btn-primary href="#TODO" G Pay
+              .col-auto
+                a.btn.btn-primary href="#TODO" Apple Pay
+
+          .h3 = t('.or')
 
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
                 h3.mt-0 = t('.register')
 
-                == cell('folio/devise/omniauth')
+                / == cell('folio/devise/omniauth')
+                /
+                / p: strong = t('.or')
 
-                p: strong = t('.or')
                 = email_input(f)
 
                 p.mb-0[
@@ -41,12 +44,12 @@
               .b-orders-edit__box-inner
                 == cell('boutique/orders/edit/gift_recipient_fields', f)
 
-            - if subscription?
-              - fields = cell('boutique/orders/edit/subscription_fields', f).show
-              - if fields
-                .b-orders-edit__box
-                  .b-orders-edit__box-inner
-                    == fields
+            / - if subscription?
+            /   - fields = cell('boutique/orders/edit/subscription_fields', f).show
+            /   - if fields
+            /     .b-orders-edit__box
+            /       .b-orders-edit__box-inner
+            /         == fields
 
           - if current_order.requires_address?
             .b-orders-edit__box[
@@ -70,7 +73,7 @@
             == cell('boutique/orders/edit/voucher_fields', f)
 
         aside.b-orders-edit__col.b-orders-edit__col--aside
-          == cell('boutique/orders/edit/sidebar', current_order)
+          == cell('boutique/orders/edit/sidebar', f)
 
       .b-orders-edit__flex
         main.b-orders-edit__col.b-orders-edit__col--main

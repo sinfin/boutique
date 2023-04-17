@@ -8,8 +8,10 @@ en:
           contact: Contact information
           payer_contact: Payer contact information
 
+        title: Order
+        quick_checkout: Quick checkout
         register: Register
-        or: "Or:"
+        or: Or
         have_account_already: Have account already?
         sign_in: Sign in
         order_for_free: Order for free
@@ -23,9 +25,7 @@ en:
 
         gift_recipient_fields:
           checkbox_label: Order as a gift
-          title: Notification for the gift recipient
-          info: Please select a date when we will send an email to the recipient with information about your gift.
-          info_bold: Your order will be sent after this date.
+          info: The recipient will automatically receive an email invitation after payment. He can enjoy your gift as soon as he accepts the invitation.
 
         sidebar:
           bottom:
@@ -33,11 +33,11 @@ en:
             shipping: Shipping
 
         summary:
-          subscription_period:
-            months:
-              one: "%{count} month"
-              other: "%{count} months"
-            from: "from %{date}"
+          title: Order summary
+          automatic_renewal: Automatic renewal
+          shipping: Shipping
+          voucher: Discount voucher
+          total_price: Total
 
         subscription_fields:
           title: Subscription start
@@ -54,6 +54,13 @@ en:
           title_false: One-off payment
           text_false: Without automatic recovery. Subscriptions will need to be manually renewed and paid for.
           error: Please select your renewal policy!
+
+          nonrecurring_payment:
+            link: I don't want a recurring payment, I'll remember to renew my subscription.
+            title: Nonrecurring payment
+            months:
+              one: 1 month
+              other: "%{count} months"
 
       confirm:
         success_free: Order successful

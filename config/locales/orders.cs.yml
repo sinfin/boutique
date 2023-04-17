@@ -8,9 +8,10 @@ cs:
           contact: Kontaktní údaje
           payer_contact: Kontaktní údaje plátce
 
-        renewal: Prodloužit
+        title: Objednávka
+        quick_checkout: Rychlá objednávka
         register: Zaregistujte se
-        or: "Nebo:"
+        or: Nebo
         have_account_already: Již u nás máte účet?
         email_already_registered: Účet s tímto e-mailem již existuje. %{sign_in_link} nebo si nechte %{password_reset_link}.
         sign_in: Přihlaste se
@@ -26,9 +27,7 @@ cs:
 
         gift_recipient_fields:
           checkbox_label: Objednat jako dárek
-          title: Upozornění pro obdarovaného
-          info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku.
-          info_bold: Vaše objednávka bude odeslána až po tomto datu.
+          info: Obdarovaný po zaplacení obdrží automaticky e-mail s pozvánkou. Vašeho dárku si může užívat ihned jakmile pozvánku přijme.
 
         sidebar:
           bottom:
@@ -40,12 +39,11 @@ cs:
           hint: Uvedené číslo označuje pořadí vydání časopisu, nikoli kalendářní měsíc.
 
         summary:
-          subscription_period:
-            months:
-              one: "%{count} měsíc"
-              few: "%{count} měsíce"
-              other: "%{count} měsíců"
-            from: "od %{date}"
+          title: Rekapitulace objednávky
+          automatic_renewal: Automatická obnova
+          shipping: Doprava
+          voucher: Slevový kupón
+          total_price: Celkem
 
         voucher_fields:
           label: Slevový nebo dárkový kód
@@ -58,6 +56,14 @@ cs:
           title_false: Jednorázová platba
           text_false: Bez automatické obnovy. Předplatné bude potřeba pravidelně ručně obnovit a zaplatit.
           error: Zvolte prosím způsob obnovy!
+
+          nonrecurring_payment:
+            link: Nechci opakovanou platbu, budu si pamatovat, že mám prodloužit předplatné
+            title: Jednorázová platba
+            months:
+              one: 1 měsíc
+              few: "%{count} měsíce"
+              other: "%{count} měsíců"
 
       confirm:
         success_free: Objednávka proběhla úspěšně

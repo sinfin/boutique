@@ -1,17 +1,47 @@
 .b-orders-edit-summary
+  .h4 = t('.title')
+
   - line_items.each do |line_item|
-    .b-orders-edit-summary__line-item
-      .b-orders-edit-summary__line-item-cover-wrap[
-        data-line-item=line_item.id
-      ]
-        = image(line_item.cover_placement_from_variant_or_product,
-                THUMB_SIZE,
-                class: 'b-orders-edit-summary__line-item-cover')
+    .b-orders-edit-summary__line-item.mb-3
+      .row
+        .col-2
+          = image(line_item.cover_placement_from_variant_or_product,
+                  THUMB_SIZE,
+                  class: 'b-line-items-summary__line-item-cover')
+        .col-7
+          .font-weight-bold = line_item.product_variant.product.to_label
+          | TODO
 
-      = simple_format line_item.summary_text
+        .col-3.text-right
+          = price(line_item.price)
+          br
+          a href="#TODO" = t('.remove')
 
-      - if line_item.subscription?
-        .mt-n3 = subscription_period(line_item)
+        - if line_item.subscription?
+          .col-12.mt-2 = t(".automatic_renewal")
 
-  h4.b-orders-edit-summary__line-items-price
-    = price(model.line_items_price)
+        - if line_item.product.variants.size > 1
+          .col-12.mt-2
+            = product_variant_select_for(model, line_item)
+
+  .b-orders-edit-summary__shipping
+    .row
+      .col-auto
+        = t('.shipping')
+      .col.text-right
+        = price(model.object.shipping_price)
+
+  - if model.object.voucher.present?
+    .b-orders-edit-summary__voucher
+      .row
+        .col-auto
+          = t('.voucher')
+        .col.text-right
+          = price(model.object.discount)
+
+  .b-orders-edit-summary__total-price.font-weight-bold
+    .row
+      .col-auto
+        = t('.total')
+      .col.text-right
+        = price(model.object.line_items_price)

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Boutique::LineItem < Boutique::ApplicationRecord
+  # TODO
+  attr_accessor :subscription_recurring_period
+
   belongs_to :order, class_name: "Boutique::Order",
                      foreign_key: :boutique_order_id,
                      inverse_of: :line_items,
