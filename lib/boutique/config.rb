@@ -34,7 +34,9 @@ module Boutique
       @folio_console_additional_filters_for_orders = {}
       @orders_edit_recurrency_title_proc = -> (context:, current_site:, period:, price:, product:) do
         current_site.recurring_payment_disclaimer
+                    .to_s
                     .gsub("{AMOUNT}", price.to_s)
+                    .gsub("{PERIOD}", period)
       end
     end
   end

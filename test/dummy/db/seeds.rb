@@ -56,7 +56,8 @@ Folio::Site.create!(title: "Boutique Shop",
                     billing_address_line_2: "Address Line 2",
                     billing_identification_number: "123456789",
                     billing_vat_identification_number: "CZ123456789",
-                    billing_note: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
+                    billing_note: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+                    recurring_payment_disclaimer: "Uděluji souhlas s automaticky opakovanou platbou a uložením platebních údajů pro platební bránu XY. Částka {AMOUNT} Kč bude strhávána {PERIOD} až do odvolání nebo ukončení předplatného.")
 puts "Created Folio::Site"
 
 puts "Creating unsplash pics"
