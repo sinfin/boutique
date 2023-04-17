@@ -19,18 +19,27 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
   def payment_methods
     return [] if ::Rails.env.test?
 
-    enabled = Boutique::GoPay::Api.new.gateway.payment_instruments["enabledPaymentInstruments"]
-                                              .map { |pm| pm["paymentInstrument"] }
-    selected = STANDARD_PAYMENT_METHODS
+    # enabled = Boutique::GoPay::Api.new.gateway.payment_instruments["enabledPaymentInstruments"]
+    #                                           .map { |pm| pm["paymentInstrument"] }
+    # selected = STANDARD_PAYMENT_METHODS
+    #
+    # (selected & enabled).map do |pm|
+    #   {
+    #     title: Boutique::Payment.payment_method_to_human(pm),
+    #     value: pm,
+    #     disabled: recurrence_required? ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
+    #     enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm)
+    #   }
+    # end
 
-    (selected & enabled).map do |pm|
+    [
       {
-        title: Boutique::Payment.payment_method_to_human(pm),
-        value: pm,
-        disabled: recurrence_required? ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
-        enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm)
+        title: Boutique::Payment.payment_method_to_human("PAYMENT_CARD"),
+        value: "PAYMENT_CARD",
+        disabled: false,
+        enabled_for_recurrent: true
       }
-    end
+    ]
   end
 
   def payment_button(f, method, i)
