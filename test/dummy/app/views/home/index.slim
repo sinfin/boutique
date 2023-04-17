@@ -3,22 +3,25 @@
 
   - @products.each do |product|
     .row
-      - product.variants.each do |variant|
-        .col-lg-4.mb-4
-          = simple_form_for("", url: boutique.add_order_path) do |f|
-            = f.hidden_field :product_variant_slug,
-                              value: variant.slug
+      .col-lg-4.mb-4
+        = simple_form_for("", url: boutique.add_order_path(product.slug)) do |f|
+          h5 = product.title
+          h5
+            = price(product.master_variant.price)
 
-            h5 = variant.title
-            h5
-              = price(variant.price)
+            / - if variant.best_offer?
+            /   span.text-red.ml-2 Best offer
 
-              - if variant.best_offer?
-                span.text-red.ml-2 Best offer
+          = simple_format product.master_variant.description
 
-            = simple_format variant.description
+          .row
+            - if product.variants.size > 1
+              .col-6
+                = f.input :product_variant_id, collection: product.variants,
+                                               label: false,
+                                               include_blank: "Select variant"
 
-            .row
-              .col-2 = f.input :amount, input_html: { value: 1 },
-                                           label: false
-              .col = f.button :submit, "Buy"
+            .col-2 = f.input :amount, input_html: { value: 1 },
+                                      label: false
+
+            .col = f.button :submit, "Buy"
