@@ -64,6 +64,8 @@ puts "Creating unsplash pics"
 4.times { unsplash_pic }
 puts "Created unsplash pics"
 
+Rake::Task["app:boutique:idp_seed_vat_rates"].invoke
+
 puts "Creating products & variants"
 Rake::Task["app:boutique:idp_seed_dummy_products"].invoke
 puts "\nCreated products & variants"
@@ -97,7 +99,7 @@ if Rails.env.development?
 
   Folio::Account.create!(email: "test@test.test",
                          password: "test@test.test",
-                         role: :superuser,
+                         roles: [:superuser],
                          first_name: "Test",
                          last_name: "Dummy")
 

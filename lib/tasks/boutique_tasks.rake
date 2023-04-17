@@ -34,28 +34,35 @@ namespace :boutique do
     require "faker"
 
     def create_product(options = {})
+      variants = options.delete(:variants)
       product_class = options.delete(:class) || Boutique::Product::Basic
       product = product_class.new(options.merge(published: true,
                                                 published_at: 1.minute.ago))
       price = (3 + rand * 7).round * 100 - 1
       contents = 4.times.map { "<li>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</li>" }
-      product.variants.build(title: "#{product.title} – Print + Digital",
-                             regular_price: price + 300,
-                             checkout_sidebar_content: "<ul>#{contents.join}</ul>",
-                             description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
-                             digital_only: false,
-                             master: true)
-      product.variants.build(title: "#{product.title} – Print",
-                             regular_price: price + 200,
-                             checkout_sidebar_content: "<ul>#{contents.first(3).join}</ul>",
-                             description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
-                             digital_only: false)
-      product.variants.build(title: "#{product.title} – Digital",
-                             regular_price: price,
-                             discounted_price: price - 100,
-                             checkout_sidebar_content: "<ul>#{contents.values_at(0, 1, -1).join}</ul>",
-                             description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
-                             digital_only: true)
+
+      if variants
+        product.variants.build(title: "Small",
+                               regular_price: price + 300,
+                               checkout_sidebar_content: "<ul>#{contents.join}</ul>",
+                               description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
+                               master: true)
+        product.variants.build(title: "Medium",
+                               regular_price: price + 200,
+                               checkout_sidebar_content: "<ul>#{contents.first(3).join}</ul>",
+                               description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>")
+        product.variants.build(title: "Large",
+                               regular_price: price,
+                               discounted_price: price - 100,
+                               checkout_sidebar_content: "<ul>#{contents.values_at(0, 1, -1).join}</ul>",
+                               description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>")
+      else
+        product.variants.build(regular_price: price,
+                               checkout_sidebar_content: "<ul>#{contents.join}</ul>",
+                               description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
+                               master: true)
+      end
+
       product.save!
     end
 
@@ -66,17 +73,23 @@ namespace :boutique do
 
       2.times do |i|
         create_product(title: Faker::Commerce.product_name,
-                       cover: images[i])
+                       cover: images[i],
+                       variants: true)
         print "."
       end
 
-      2.times do |i|
-        create_product(class: Boutique::Product::Subscription,
-                       title: Faker::Commerce.department + " Subscription",
-                       cover: images[i + 2],
-                       subscription_frequency: Boutique::Product::Subscription::SUBSCRIPTION_FREQUENCIES.keys.first)
-        print "."
-      end
+      create_product(class: Boutique::Product::Subscription,
+                     title: Faker::Commerce.department + " Magazine Subscription",
+                     cover: images[2],
+                     subscription_frequency: Boutique::Product::Subscription::SUBSCRIPTION_FREQUENCIES.keys.first)
+      print "."
+
+      create_product(class: Boutique::Product::Subscription,
+                     title: Faker::Commerce.department + " Digital Magazine Subscription",
+                     cover: images[3],
+                     subscription_frequency: Boutique::Product::Subscription::SUBSCRIPTION_FREQUENCIES.keys.first,
+                     digital_only: true)
+      print "."
     end
 
     puts "\nSeeded 4 dummy products"
