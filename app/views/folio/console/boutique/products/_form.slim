@@ -20,9 +20,12 @@ ruby:
       .col-md-auto
         = react_picker(f, :cover_placement)
       .col-md
-        == cell('folio/console/publishable_inputs', f)
+        == cell('folio/console/publishable_inputs',
+                f,
+                additional_fields: %i[best_offer])
 
         .row
+          .col-md-2 = f.input :code
           .col-md = f.input :title
           .col-md = f.input :slug
 
@@ -44,6 +47,18 @@ ruby:
         = render partial: 'additional_fields', locals: { f: }
 
         = f.input :shipping_info, as: :redactor
+        = f.input :description, as: :redactor
+        = f.input :checkout_sidebar_content, as: :redactor
+
+        .row
+          .col-lg-3
+            = f.input :regular_price
+          .col-lg-3
+            = f.input :discounted_price
+          .col-lg-3
+            = f.input :discounted_from, calendar_on_top: true
+          .col-lg-3
+            = f.input :discounted_until, calendar_on_top: true
 
     = render partial: 'variants', locals: { f: }
 

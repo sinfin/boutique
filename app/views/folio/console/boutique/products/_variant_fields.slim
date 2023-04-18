@@ -6,39 +6,12 @@
       .col
         .mb-n3
           .row
-            .col-lg-auto
-              = react_picker(f, :cover_placement)
-
-            .col-lg
+            .col-lg-6
               == cell('folio/console/publishable_inputs',
                       f,
-                      additional_fields: %i[master best_offer])
+                      additional_fields: %i[master])
 
-              .row
-                .col-lg-2
-                  = f.input :code
-                .col-lg-5
-                  = f.input :title, hint: false
-                .col-lg-5
-                  = f.input :slug, hint: false
-
-              = f.input :description, as: :redactor
-
-          = f.input :checkout_sidebar_content, as: :redactor
-
-          .row
-            .col-lg-3
-              = f.input :regular_price
-            .col-lg-3
-              = f.input :discounted_price
-            .col-lg-3
-              = f.input :discounted_from, calendar_on_top: true
-            .col-lg-3
-              = f.input :discounted_until, calendar_on_top: true
-
-          .row
-            .col-lg-3
-              = f.input :subscription_period
+              = f.input :title, hint: false
 
       .col-md-auto
         == cell('folio/console/nested_model_controls', f, vertical: true)

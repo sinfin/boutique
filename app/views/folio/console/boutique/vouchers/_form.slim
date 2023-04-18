@@ -19,7 +19,7 @@
 
     .row
       .col-xl-8
-        = f.input :product_variant_code,
-                  autocomplete: Boutique::ProductVariant.pluck(:code).sort
+        = f.input :product_code,
+                  autocomplete: Boutique::Product.pluck(:code).sort
 
 = form_footer f

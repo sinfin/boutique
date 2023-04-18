@@ -1,9 +1,7 @@
 table.my-4
   - order.line_items.each do |line_item|
     ruby:
-      cover = line_item.product_variant.cover
-      cover ||= line_item.product_variant.product.try(:cover)
-
+      cover = line_item.product.cover
       thumb = cover.try(:thumb,
                         Boutique::LineItems::SummaryCell::THUMB_SIZE,
                         immediate: true)

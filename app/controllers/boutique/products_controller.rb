@@ -3,7 +3,7 @@
 class Boutique::ProductsController < Boutique::ApplicationController
   def show
     permitted_params = params.permit(permitted_params_keys).to_h.symbolize_keys
-    redirect_to crossdomain_add_order_url(permitted_params.merge(product_variant_slug: params[:id]))
+    redirect_to crossdomain_add_order_url(permitted_params.merge(product_slug: params[:id]))
   end
 
   private

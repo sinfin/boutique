@@ -199,7 +199,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def add_to_order_and_redirect
-      @product_variant = Boutique::ProductVariant.find(params.require(:product_variant_slug))
+      @product = Boutique::Product.find(params.require(:product_slug))
+      product_variant = @product.master_variant
+
       amount = params[:amount].to_i if params[:amount].present?
 
       if current_user && params[:subscription_id].present?
@@ -208,9 +210,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
       create_current_order if current_order.nil?
 
-      current_order.add_line_item!(@product_variant, amount: amount || 1,
-                                                     renewed_subscription: subscription,
-                                                     additional_options: add_line_item_additional_options)
+      current_order.add_line_item!(product_variant, amount: amount || 1,
+                                                    renewed_subscription: subscription,
+                                                    additional_options: add_line_item_additional_options)
 
       redirect_to action: :edit
     end

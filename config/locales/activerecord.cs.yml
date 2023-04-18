@@ -50,7 +50,14 @@ cs:
         voucher_title: Typ slevy
 
       boutique/product:
+        best_offer: Nejvýhodnější nabídka
+        checkout_sidebar_content: Popisek v checkoutu
+        code: Kód
+        description: Text kartiček
         digital_only: Digitální produkt
+        discounted_price: Akční cena
+        discounted_from: Akce od
+        discounted_until: Akce do
         shipping_info: Doprava
         site: Web
         subscription_frequency/none: žádná
@@ -58,21 +65,14 @@ cs:
         subscription_frequency/monthly: měsíční
         subscription_frequency/quarterly: čtvrtletní
         subscription_frequency: Periodicita
+        subscription_period: Délka předplatného
         subscription_recurrent_payment_disabled: Zakázat možnost opakované platby
+        regular_price: Cena
         type: Typ produktu
         vat_rate: Sazba daně
 
       boutique/product_variant:
-        best_offer: Nejvýhodnější nabídka
-        code: Kód
-        description: Text kartiček
-        checkout_sidebar_content: Popisek v checkoutu
-        regular_price: Cena
-        discounted_price: Akční cena
-        discounted_from: Akce od
-        discounted_until: Akce do
         master: Hlavní varianta
-        subscription_period: Délka předplatného
 
       boutique/subscription:
         active: Aktivní
@@ -96,7 +96,7 @@ cs:
         number_of_allowed_uses: Max. počet použití
         published: Aktivní
         quantity: Počet voucherů k vygenerování
-        product_variant_code: Kód produktu/produktů
+        product_code: Kód produktu/produktů
         use_count: Počet použití
 
       folio/email_template:

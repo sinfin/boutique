@@ -19,9 +19,6 @@ class Boutique::VatRate < Boutique::ApplicationRecord
             :value,
             presence: true
 
-  validates :title,
-            uniqueness: true
-
   def self.default
     where(default: true).first
   end

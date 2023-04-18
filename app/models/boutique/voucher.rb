@@ -68,18 +68,18 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     published? && !used_up?
   end
 
-  def applicable_for?(product_variant)
+  def applicable_for?(product)
     return false unless applicable?
 
-    relevant_for?(product_variant)
+    relevant_for?(product)
   end
 
-  def relevant_for?(product_variant)
-    return true if product_variant_code.blank?
+  def relevant_for?(product)
+    return true if product_code.blank?
 
-    product_variant_code.split(",")
+    product_code.split(",")
                         .map(&:strip)
-                        .include?(product_variant.code)
+                        .include?(product.code)
   end
 
   def upcase_token
@@ -135,7 +135,7 @@ end
 #  published_until         :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  product_variant_code    :string
+#  product_code            :string
 #
 # Indexes
 #

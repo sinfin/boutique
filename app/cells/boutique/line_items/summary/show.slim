@@ -5,7 +5,7 @@
     - line_items.each do |line_item|
       .b-line-items-summary__line-item
         .b-line-items-summary__line-item-cover-wrap
-          = image(line_item.cover_placement_from_variant_or_product,
+          = image(line_item.cover_placement,
                   THUMB_SIZE,
                   class: 'b-line-items-summary__line-item-cover')
 

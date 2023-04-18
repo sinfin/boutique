@@ -90,9 +90,18 @@ end
 #  subscription_frequency                  :string
 #  boutique_vat_rate_id                    :bigint(8)        not null
 #  site_id                                 :bigint(8)
-#  digital_only                            :boolean          default(FALSE)
 #  shipping_info                           :text
+#  digital_only                            :boolean          default(FALSE)
 #  subscription_recurrent_payment_disabled :boolean          default(FALSE)
+#  code                                    :string(32)
+#  checkout_sidebar_content                :text
+#  description                             :text
+#  subscription_period                     :integer          default(12)
+#  regular_price                           :integer
+#  discounted_price                        :integer
+#  discounted_from                         :datetime
+#  discounted_until                        :datetime
+#  best_offer                              :boolean          default(FALSE)
 #
 # Indexes
 #

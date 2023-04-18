@@ -16,7 +16,7 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
     end
 
     def product_variants_strong_params
-      Boutique::ProductVariant.column_names - ["boutique_product_id"] + %w[_destroy] + file_placements_strong_params
+      Boutique::ProductVariant.column_names - ["boutique_product_id"] + %w[_destroy]
     end
 
     def folio_console_collection_includes

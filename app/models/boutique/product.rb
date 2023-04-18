@@ -34,9 +34,21 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   has_many :subscriptions, through: :variants
 
-  validates :title,
+  validates :code,
+            :title,
             :type,
+            :regular_price,
             presence: true
+
+  validates :regular_price,
+            :discounted_price,
+            numericality: { greater_than_or_equal_to: 0 },
+            allow_nil: true
+
+  validates :code,
+            length: { maximum: 32 },
+            uniqueness: true,
+            allow_nil: true
 
   validates :site, inclusion: { in: proc { sites_for_select } },
                    allow_nil: true
@@ -54,6 +66,46 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   def subscription?
     is_a?(Boutique::Product::Subscription)
+  end
+
+  def current_price
+    if discounted?
+      discounted_price
+    else
+      regular_price
+    end
+  end
+
+  alias :price :current_price
+
+  def discounted?
+    return false if discounted_price.nil?
+
+    if discounted_from.present? && discounted_from >= Time.current
+      return false
+    end
+
+    if discounted_until.present? && discounted_until <= Time.current
+      return false
+    end
+
+    true
+  end
+
+  def discount
+    return unless discounted?
+
+    regular_price - discounted_price
+  end
+
+  def discount_in_percentages
+    return unless discounted?
+
+    (100 * (discount / regular_price.to_f)).round(2)
+  end
+
+  def free?
+    current_price.zero?
   end
 
   def self.sites_for_select
@@ -133,9 +185,18 @@ end
 #  subscription_frequency                  :string
 #  boutique_vat_rate_id                    :bigint(8)        not null
 #  site_id                                 :bigint(8)
-#  digital_only                            :boolean          default(FALSE)
 #  shipping_info                           :text
+#  digital_only                            :boolean          default(FALSE)
 #  subscription_recurrent_payment_disabled :boolean          default(FALSE)
+#  code                                    :string(32)
+#  checkout_sidebar_content                :text
+#  description                             :text
+#  subscription_period                     :integer          default(12)
+#  regular_price                           :integer
+#  discounted_price                        :integer
+#  discounted_from                         :datetime
+#  discounted_until                        :datetime
+#  best_offer                              :boolean          default(FALSE)
 #
 # Indexes
 #

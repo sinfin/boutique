@@ -8,8 +8,8 @@ class Boutique::ProductsControllerTest < Boutique::ControllerTest
 
     assert_equal 0, Boutique::Order.count
 
-    get product_url(product.master_variant)
-    assert_redirected_to crossdomain_add_order_url(product_variant_slug: product.master_variant.slug)
+    get product_url(product)
+    assert_redirected_to crossdomain_add_order_url(product)
     follow_redirect!
     assert_redirected_to edit_order_url
 

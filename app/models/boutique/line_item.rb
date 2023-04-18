@@ -16,7 +16,9 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   delegate :product,
            to: :product_variant
-  delegate :digital_only?,
+  delegate :cover,
+           :cover_placement,
+           :digital_only?,
            :subscription?,
            to: :product
 
@@ -54,7 +56,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def unit_price
-    super || product_variant.price
+    super || product.price
   end
 
   def vat_rate_value
@@ -70,17 +72,13 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def subscription_period
-    super || product_variant.subscription_period
+    super || product.subscription_period
   end
 
   def imprint
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
     self.subscription_period = subscription_period
-  end
-
-  def cover_placement_from_variant_or_product
-    product_variant.cover_placement || product_variant.product.cover_placement
   end
 
   def summary_text
