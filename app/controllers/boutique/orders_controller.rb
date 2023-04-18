@@ -172,7 +172,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     def line_items_strong_params
       [
         line_items_attributes: %i[id
-                                  boutique_product_variant_id
+                                  product_variant_id
                                   subscription_starts_at
                                   subscription_recurring]
       ]
@@ -201,7 +201,6 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     def add_to_order_and_redirect
       @product = Boutique::Product.find(params.require(:product_slug))
-      product_variant = @product.master_variant
 
       amount = params[:amount].to_i if params[:amount].present?
 
@@ -211,9 +210,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
       create_current_order if current_order.nil?
 
-      current_order.add_line_item!(product_variant, amount: amount || 1,
-                                                    renewed_subscription: subscription,
-                                                    additional_options: add_line_item_additional_options)
+      current_order.add_line_item!(@product, amount: amount || 1,
+                                             renewed_subscription: subscription,
+                                             additional_options: add_line_item_additional_options)
 
       redirect_to action: :edit
     end

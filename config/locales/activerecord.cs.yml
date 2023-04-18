@@ -5,6 +5,7 @@ cs:
       boutique/line_item:
         subscription_starts_at: Začátek
         subscription_recurring: Automaticky obnovit po roce
+        product_variant: Varianta
 
       boutique/order:
         address_identification_number: IČO

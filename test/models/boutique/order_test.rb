@@ -314,13 +314,13 @@ class Boutique::OrderTest < ActiveSupport::TestCase
   end
 
   test "scope by_product_id" do
-    line_item = create(:boutique_line_item)
+    target_product = create(:boutique_product)
+    line_item = create(:boutique_line_item, product: target_product)
     order = create(:boutique_order, line_items: [line_item])
-    product = line_item.product
 
     other_product = create(:boutique_product)
 
-    assert Boutique::Order.by_product_id(product.id).exists?(id: order.id)
+    assert Boutique::Order.by_product_id(target_product.id).exists?(id: order.id)
     assert_not Boutique::Order.by_product_id(other_product.id).exists?(id: order.id)
   end
 

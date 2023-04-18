@@ -53,11 +53,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_18_105756) do
     t.boolean "subscription_recurring"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "boutique_product_variant_id", null: false
+    t.bigint "product_variant_id"
     t.integer "vat_rate_value"
     t.integer "subscription_period"
+    t.bigint "product_id"
     t.index ["boutique_order_id"], name: "index_boutique_line_items_on_boutique_order_id"
-    t.index ["boutique_product_variant_id"], name: "index_boutique_line_items_on_boutique_product_variant_id"
+    t.index ["product_id"], name: "index_boutique_line_items_on_product_id"
+    t.index ["product_variant_id"], name: "index_boutique_line_items_on_product_variant_id"
   end
 
   create_table "boutique_orders", force: :cascade do |t|
@@ -672,7 +674,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_18_105756) do
   end
 
   add_foreign_key "boutique_line_items", "boutique_orders"
-  add_foreign_key "boutique_line_items", "boutique_product_variants"
+  add_foreign_key "boutique_line_items", "boutique_product_variants", column: "product_variant_id"
+  add_foreign_key "boutique_line_items", "boutique_products", column: "product_id"
   add_foreign_key "boutique_orders", "boutique_subscriptions"
   add_foreign_key "boutique_orders", "boutique_vouchers"
   add_foreign_key "boutique_orders", "folio_users"

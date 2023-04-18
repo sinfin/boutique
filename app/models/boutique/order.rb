@@ -149,12 +149,8 @@ class Boutique::Order < Boutique::ApplicationRecord
   }
 
   scope :by_product_id, -> (product_id) {
-    product_variants_subselect = Boutique::ProductVariant.where(boutique_product_id: product_id)
-                                                         .select(:id)
-
-    ids_subselect = Boutique::LineItem.where(boutique_product_variant_id: product_variants_subselect)
+    ids_subselect = Boutique::LineItem.where(product_id:)
                                       .select(:boutique_order_id)
-
     where(id: ids_subselect)
   }
 
@@ -289,7 +285,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       before do
         set_numbers
-        imprint_prices
+        imprint
         set_site
 
         self.email ||= user.try(:email)
@@ -473,24 +469,24 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def shipping_info
     # TODO: move to Shipping model
-    line_items.first.product_variant.product.shipping_info
+    line_items.first.product.shipping_info
   end
 
-  def add_line_item!(product_variant, amount: 1, renewed_subscription: nil, additional_options: {})
+  def add_line_item!(product, amount: 1, renewed_subscription: nil, additional_options: {})
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
-        if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
+        if line_item = line_items.all.find { |li| li.product_variant_id == product_variant.id }
           line_item.amount += amount
           line_item.subscription_recurring = nil
           line_item.save!
         else
-          line_items.build(product_variant:,
+          line_items.build(product:,
                            amount:)
         end
       else
         # TODO: add line item count validation
         if line_item = line_items.first
-          line_item.update!(product_variant:,
+          line_item.update!(product:,
                             amount:,
                             subscription_recurring: nil)
 
@@ -500,18 +496,18 @@ class Boutique::Order < Boutique::ApplicationRecord
             self.voucher_code = nil
           end
         else
-          line_items.build(product_variant:,
+          line_items.build(product:,
                            amount:)
         end
 
-        if renewed_subscription.present? && renewed_subscription.product_variant == product_variant
+        if renewed_subscription.present? && renewed_subscription.product_variant.product == product
           self.renewed_subscription = renewed_subscription
         else
           self.renewed_subscription = nil
         end
       end
 
-      self.site = product_variant.product.site
+      self.site = product.site
 
       after_add_line_item(additional_options)
 
@@ -741,7 +737,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def set_site
-      self.site ||= line_items.first.product_variant.product.site if line_items.present?
+      self.site ||= line_items.first.product.site if line_items.present?
     end
 
     def use_voucher!
@@ -760,7 +756,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def imprint_prices
+    def imprint
       line_items.each { |li| li.imprint }
 
       self.line_items_price = line_items_price

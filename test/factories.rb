@@ -51,6 +51,8 @@ FactoryBot.define do
         if order.primary_address.nil? && !evaluator.digital_only
           order.primary_address = build(:boutique_folio_primary_address)
         end
+
+        order.line_items.each { |li| li.product_variant ||= li.product.master_variant }
       end
     end
 
@@ -62,7 +64,7 @@ FactoryBot.define do
 
       before(:create) do |order|
         order.send(:set_numbers)
-        order.send(:imprint_prices)
+        order.send(:imprint)
       end
     end
 
@@ -76,7 +78,7 @@ FactoryBot.define do
       before(:create) do |order|
         order.paid_at = Time.current
         order.send(:set_invoice_number)
-        order.send(:imprint_prices)
+        order.send(:imprint)
       end
 
       after(:create) do |order|
@@ -106,16 +108,9 @@ FactoryBot.define do
 
   factory :boutique_line_item, class: "Boutique::LineItem" do
     association :order, factory: :boutique_order
+    association :product, factory: :boutique_product
 
     subscription_recurring { true }
-
-    transient do
-      product { create(:boutique_product) }
-    end
-
-    after(:build) do |line_item, evaluator|
-      line_item.product_variant ||= evaluator.product.master_variant
-    end
   end
 
   factory :boutique_payment, class: "Boutique::Payment" do

@@ -6,16 +6,18 @@ class Boutique::LineItem < Boutique::ApplicationRecord
                      inverse_of: :line_items,
                      counter_cache: :line_items_count
 
+  belongs_to :product, class_name: "Boutique::Product"
+
   belongs_to :product_variant, class_name: "Boutique::ProductVariant",
-                               foreign_key: :boutique_product_variant_id
+                               optional: true
 
   scope :ordered, -> { order(id: :desc) }
 
   validates :amount,
             numericality: { greater_than_or_equal_to: 1 }
 
-  delegate :product,
-           to: :product_variant
+  validate :validate_product_variant
+
   delegate :cover,
            :cover_placement,
            :digital_only?,
@@ -25,7 +27,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   before_validation :unset_unwanted_subscription_starts_at
 
   def to_label
-    product_variant.title
+    [
+      product.title,
+      product_variant.try(:title)
+    ].compact.join(" / ")
   end
 
   def to_full_label
@@ -76,6 +81,8 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def imprint
+    self.unit_price ||= product.master_variant
+
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
     self.subscription_period = subscription_period
@@ -111,31 +118,42 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
       self.subscription_starts_at = nil
     end
+
+    def validate_product_variant
+      return if order.pending? || product_variant.present?
+
+      if product.variants.size > 1
+        errors.add(:product_variant, :blank)
+      end
+    end
 end
 
 # == Schema Information
 #
 # Table name: boutique_line_items
 #
-#  id                          :bigint(8)        not null, primary key
-#  boutique_order_id           :bigint(8)        not null
-#  amount                      :integer          default(1)
-#  unit_price                  :integer
-#  subscription_starts_at      :datetime
-#  subscription_recurring      :boolean
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  boutique_product_variant_id :bigint(8)        not null
-#  vat_rate_value              :integer
-#  subscription_period         :integer
+#  id                     :bigint(8)        not null, primary key
+#  boutique_order_id      :bigint(8)        not null
+#  amount                 :integer          default(1)
+#  unit_price             :integer
+#  subscription_starts_at :datetime
+#  subscription_recurring :boolean
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  product_variant_id     :bigint(8)
+#  vat_rate_value         :integer
+#  subscription_period    :integer
+#  product_id             :bigint(8)
 #
 # Indexes
 #
-#  index_boutique_line_items_on_boutique_order_id            (boutique_order_id)
-#  index_boutique_line_items_on_boutique_product_variant_id  (boutique_product_variant_id)
+#  index_boutique_line_items_on_boutique_order_id   (boutique_order_id)
+#  index_boutique_line_items_on_product_id          (product_id)
+#  index_boutique_line_items_on_product_variant_id  (product_variant_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (boutique_order_id => boutique_orders.id)
-#  fk_rails_...  (boutique_product_variant_id => boutique_product_variants.id)
+#  fk_rails_...  (product_id => boutique_products.id)
+#  fk_rails_...  (product_variant_id => boutique_product_variants.id)
 #
