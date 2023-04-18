@@ -6,21 +6,14 @@ FactoryBot.define do
   factory :boutique_product, class: "Boutique::Product::Basic" do
     title { "Product title" }
     published { true }
+    sequence(:code) { |i| "CODE#{i}" }
+    regular_price { 99 }
 
-    transient do
-      code { nil }
-      price { nil }
-    end
+    vat_rate { Boutique::VatRate.default || create(:boutique_vat_rate) }
 
-    before(:create) do |product, evaluator|
-      if product.vat_rate.nil?
-        product.vat_rate = Boutique::VatRate.default || create(:boutique_vat_rate)
-      end
-
+    before(:create) do |product|
       if product.variants.blank?
-        product.variants << build(:boutique_product_variant, { regular_price: evaluator.price,
-                                                               code: evaluator.code,
-                                                               master: true }.compact)
+        product.variants << build(:boutique_product_variant, master: true)
       end
     end
   end
@@ -33,9 +26,7 @@ FactoryBot.define do
   factory :boutique_product_variant, class: "Boutique::ProductVariant" do
     association :product, factory: :boutique_product
 
-    sequence(:code) { |i| "CODE#{i}" }
     title { "ProductVariant title" }
-    regular_price { 99 }
   end
 
   factory :boutique_order, class: "Boutique::Order" do

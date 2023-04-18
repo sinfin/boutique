@@ -88,7 +88,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
   test "assign voucher by code" do
     order = create(:boutique_order, line_items_count: 1)
-    order.line_items.first.product_variant.update_column(:regular_price, 100)
+    order.line_items.first.product.update!(regular_price: 100)
 
     assert_equal 100, order.total_price
 
