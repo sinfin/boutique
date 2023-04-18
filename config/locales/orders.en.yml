@@ -27,6 +27,10 @@ en:
           info: Please select a date when we will send an email to the recipient with information about your gift.
           info_bold: Your order will be sent after this date.
 
+        line_items_fields:
+          title: Choose a variant
+          blank: Select …
+
         sidebar:
           bottom:
             contents: Includes

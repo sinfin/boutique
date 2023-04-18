@@ -546,7 +546,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def checkout_title
-    line_items.first.try(:product_variant).try(:title).presence || self.class.model_name.human
+    line_items.first.try(:product).try(:title).presence || self.class.model_name.human
   end
 
   def subscription_period_to_human

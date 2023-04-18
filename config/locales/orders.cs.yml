@@ -30,6 +30,10 @@ cs:
           info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku.
           info_bold: Vaše objednávka bude odeslána až po tomto datu.
 
+        line_items_fields:
+          title: Zvolte variantu
+          blank: Vybrat …
+
         sidebar:
           bottom:
             contents: Získáte

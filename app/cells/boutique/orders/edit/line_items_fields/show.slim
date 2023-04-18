@@ -1,0 +1,9 @@
+.b-orders-edit-line-items-fields
+  = html_safe_fields_for model, :line_items do |g|
+    .b-orders-edit-line-item-fields__inner
+      h3.mt-0 = t('.title')
+
+      = g.association :product_variant,
+                      collection: g.object.product.variants,
+                      include_blank: t('.blank'),
+                      label: false

@@ -13,11 +13,11 @@
               ' :
             = current_order.checkout_title
 
-          - if product_variant_description.present?
+          - if product_description.present?
             .b-orders-edit__product-variant-description[
               class=application_css_class("rich-text")
             ]
-              == product_variant_description
+              == product_description
 
           - unless current_user
             .b-orders-edit__box
@@ -47,6 +47,12 @@
                 .b-orders-edit__box
                   .b-orders-edit__box-inner
                     == fields
+
+          - fields = cell('boutique/orders/edit/line_items_fields', f).show
+          - if fields
+            .b-orders-edit__box
+              .b-orders-edit__box-inner
+                == fields
 
           - if current_order.requires_address?
             .b-orders-edit__box[
