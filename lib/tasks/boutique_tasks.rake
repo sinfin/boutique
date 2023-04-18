@@ -35,27 +35,16 @@ namespace :boutique do
 
     def create_product(options = {})
       product_class = options.delete(:class) || Boutique::Product::Basic
-      product = product_class.new(options.merge(published: true,
-                                                published_at: 1.minute.ago))
-      price = (3 + rand * 7).round * 100 - 1
       contents = 4.times.map { "<li>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</li>" }
-      product.variants.build(title: "#{product.title} – Print + Digital",
-                             regular_price: price + 300,
-                             checkout_sidebar_content: "<ul>#{contents.join}</ul>",
-                             description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
-                             digital_only: false,
-                             master: true)
-      product.variants.build(title: "#{product.title} – Print",
-                             regular_price: price + 200,
-                             checkout_sidebar_content: "<ul>#{contents.first(3).join}</ul>",
-                             description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
-                             digital_only: false)
-      product.variants.build(title: "#{product.title} – Digital",
-                             regular_price: price,
-                             discounted_price: price - 100,
-                             checkout_sidebar_content: "<ul>#{contents.values_at(0, 1, -1).join}</ul>",
-                             description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
-                             digital_only: true)
+
+      product = product_class.new(options.merge(published: true,
+                                                published_at: 1.minute.ago,
+                                                code: Faker::Alphanumeric.unique.alpha(number: 5).upcase,
+                                                regular_price: (3 + rand * 7).round * 100 - 1,
+                                                checkout_sidebar_content: "<ul>#{contents.join}</ul>",
+                                                description: "<p>#{Faker::Lorem.sentence(word_count: 3, random_words_to_add: 3)}</p>",
+                                                digital_only: false))
+      product.variants.build(master: true)
       product.save!
     end
 
