@@ -18,6 +18,8 @@ class MoveColumnsFromProductVariantToProduct < ActiveRecord::Migration[7.0]
       add_column :boutique_products, column_name, options.delete(:type), **options
     end
 
+    add_column :boutique_products, :variant_type_title, :string
+
     add_reference :boutique_line_items, :product, foreign_key: { to_table: :boutique_products }
     rename_column :boutique_line_items, :boutique_product_variant_id, :product_variant_id
     change_column_null :boutique_line_items, :product_variant_id, true
@@ -52,6 +54,8 @@ class MoveColumnsFromProductVariantToProduct < ActiveRecord::Migration[7.0]
     COLUMNS_TO_MOVE.each do |column_name, options|
       add_column :boutique_product_variants, column_name, options.delete(:type), **options
     end
+
+    remove_column :boutique_products, :variant_type_title, :string
 
     say_with_time("updating models") do
       Boutique::ProductVariant.includes(:product).find_each do |variant|

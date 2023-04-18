@@ -12,5 +12,7 @@ en:
         recurring_payment_disclaimer: Displayed in the checkout when a recurring payment is active, use the {AMOUNT} keyword to insert the order amount and {TERMS_URL} for privacy policy url.
 
     placeholders:
+      products:
+        variant_type_title: Choose a variant
       voucher:
         title: 'e.g.: Black Friday'

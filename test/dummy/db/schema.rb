@@ -161,6 +161,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_18_105756) do
     t.datetime "discounted_from"
     t.datetime "discounted_until"
     t.boolean "best_offer", default: false
+    t.string "variant_type_title"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"

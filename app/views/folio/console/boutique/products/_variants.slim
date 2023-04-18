@@ -1,6 +1,10 @@
 fieldset.mt-4.mb-3 id="variants"
   h2.h4 = Boutique::ProductVariant.model_name.human(count: 2)
 
+  .row
+    .col-lg-6
+      = f.input :variant_type_title
+
   = f.simple_fields_for :variants do |g|
     = render partial: 'variant_fields',
              locals: { f: g }

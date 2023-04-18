@@ -31,6 +31,7 @@ end
 #  discounted_from                         :datetime
 #  discounted_until                        :datetime
 #  best_offer                              :boolean          default(FALSE)
+#  variant_type_title                      :string
 #
 # Indexes
 #

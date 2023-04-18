@@ -70,6 +70,7 @@ cs:
         subscription_recurrent_payment_disabled: Zakázat možnost opakované platby
         regular_price: Cena
         type: Typ produktu
+        variant_type_title: Popisek volby varianty
         vat_rate: Sazba daně
 
       boutique/product_variant:
