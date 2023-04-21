@@ -16,5 +16,7 @@ cs:
     placeholders:
       product:
         variant_type_title: Zvolte variantu
+        variants:
+          title: ""
       voucher:
         title: 'Např.: Black Friday'

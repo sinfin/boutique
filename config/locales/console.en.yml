@@ -29,6 +29,12 @@ en:
           invoices:
             filename: invoices
 
+        products:
+          form:
+            copy_link: Copy link
+          variants:
+            add: Přidat variantu
+
         subscriptions:
           catalogue:
             cancel: Cancel
@@ -39,10 +45,6 @@ en:
             code_types:
               generated: Generated
               custom: Manually entered
-
-        products:
-          form:
-            copy_link: Copy link
 
       sites:
         boutique_additional_form_fields:

@@ -32,6 +32,12 @@ cs:
           invoices:
             filename: faktury
 
+        products:
+          form:
+            copy_link: Kopírovat odkaz
+          variants:
+            add: Přidat variantu
+
         subscriptions:
           catalogue:
             cancel: Zrušit
@@ -48,10 +54,6 @@ cs:
               one: Voucher vytvořen
               few: '%{count} vouchery vytvořeny'
               other: '%{count} voucherů vytvořeno'
-
-        products:
-          form:
-            copy_link: Kopírovat odkaz
 
       catalogue:
         boutique/subscription:
