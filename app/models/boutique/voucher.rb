@@ -78,8 +78,8 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     return true if product_code.blank?
 
     product_code.split(",")
-                        .map(&:strip)
-                        .include?(product.code)
+                .map(&:strip)
+                .include?(product.code)
   end
 
   def upcase_token

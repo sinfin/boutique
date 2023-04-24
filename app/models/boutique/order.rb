@@ -490,7 +490,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                             amount:,
                             subscription_recurring: nil)
 
-          if voucher.present? && !voucher.relevant_for?(product_variant)
+          if voucher.present? && !voucher.relevant_for?(product)
             # TODO: show message that voucher has been removed
             self.voucher = nil
             self.voucher_code = nil
@@ -776,7 +776,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           errors.add(:voucher_code, :invalid)
         elsif !found_voucher.published?
           errors.add(:voucher_code, :expired)
-        elsif !found_voucher.relevant_for?(line_items.first.product_variant)
+        elsif !found_voucher.relevant_for?(line_items.first.product)
           errors.add(:voucher_code, :not_applicable_for)
         end
 
