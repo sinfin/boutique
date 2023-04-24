@@ -5,17 +5,33 @@
     .form-check
       padding-right: 45px
       padding-left: 1.75rem
+      position: static
 
       &-label
         +font-h3
         margin: 0
+        cursor: pointer
+
+        &::before
+          content: ''
+          display: block
+          position: absolute
+          left: 0
+          right: 0
+          bottom: 0
+          top: 0
 
       &-input
-        margin-top: 0.3rem
+        margin-top: 0.4rem
         margin-left: -1.75rem
+
+  &__gift-checkbox:checked ~ .form-check-label::before
+    display: none
 
   &__fields
     margin-top: 30px
+    position: relative
+    z-index: 2
 
   &__col
     max-width: 350px
@@ -30,8 +46,8 @@
       right: 30px
 
     +media-breakpoint-up(xl)
-      top: 40px
-      right: 40px
+      top: 30px
+      right: 35px
 
   .f-input__ico
     width: 18px
@@ -78,3 +94,8 @@
 
     &__fields
       margin-top: 16px
+
+  +media-breakpoint-down(sm)
+    .form-group
+      .form-check-input
+        margin-top: 0.3rem
