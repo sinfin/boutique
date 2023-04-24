@@ -1,2 +1,4 @@
 h3.b-orders-payment-methods-price
-  = t('.title', price: price(model))
+  span = t('.title', price: price(model))
+  span.b-orders-payment-methods-price__quantity
+    = t('.monthly')

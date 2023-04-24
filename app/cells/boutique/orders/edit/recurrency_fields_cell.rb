@@ -3,10 +3,16 @@
 class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
   include Folio::Cell::HtmlSafeFieldsFor
 
+  class_name "b-orders-edit-recurrency-fields", :nonrecurring_visible?
+
   def show
     render if model.object.recurrent_payment_available? && model.object.line_items.any? do |line_item|
       line_item.requires_subscription_recurring?
     end
+  end
+
+  def nonrecurring_visible?
+    params["nonrecurring_payment_visible"].present?
   end
 
   def collection
@@ -28,5 +34,9 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
 
   def show_error_message?
     model.object.errors && model.object.errors.where(:line_items, :missing_subscription_recurring).present?
+  end
+
+  def nonrecurring_payment_option_input_class_name
+    "b-orders-edit-recurrency-fields__nonrecurring-payment-option-input"
   end
 end

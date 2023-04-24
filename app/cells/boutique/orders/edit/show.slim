@@ -2,38 +2,35 @@
   data-refreshed-url=controller.boutique.refreshed_edit_order_path
 ]
   .container-fluid
+    .h1.mt-0.mb-h.mb-lg-s
+      = t('.title')
+
     = form do |f|
       .b-orders-edit__flex
         main.b-orders-edit__col.b-orders-edit__col--main
           = render(:_main_top)
 
-          .h1.mt-0
-            = t('.title')
-
           .b-orders-edit__quick-checkout-buttons
             .h3.mt-0 = t('.quick_checkout')
 
-            .row
-              .col-auto
-                a.btn.btn-primary href="#TODO" G Pay
-              .col-auto
-                a.btn.btn-primary href="#TODO" Apple Pay
+            div
+              a.btn.btn-primary-rect.btn-primary-dark.mr-3 href="#TODO"
+                = image_tag("boutique/gpay-icon.svg")
 
-          .h3 = t('.or')
+              a.btn.btn-primary-rect.btn-primary-dark href="#TODO"
+                = image_tag("boutique/apple-pay-icon.svg")
+
+          .h3.mb-nh
+            = t('.or')
 
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
-                h3.mt-0 = t('.register')
-
-                / == cell('folio/devise/omniauth')
-                /
-                / p: strong = t('.or')
-
                 = email_input(f)
 
-                p.mb-0[
+                p [
                   class=("font-weight-bold text-danger" if f.object.errors[:email].present?)
+                  class="small mt-md-g mb-0"
                 ]
                   = t('.have_account_already')
                   '
@@ -41,7 +38,7 @@
 
           - if current_order.giftable?
             .b-orders-edit__box
-              .b-orders-edit__box-inner
+              .b-orders-edit__box-inner.b-orders-edit__box-inner--wide
                 == cell('boutique/orders/edit/gift_recipient_fields', f)
 
             / - if subscription?
@@ -70,14 +67,16 @@
                     primary_address: current_order.requires_address?)
 
           - unless current_order.voucher_code.nil? && current_order.free?
-            == cell('boutique/orders/edit/voucher_fields', f)
+            .b-orders-edit__voucher-fields
+              == cell('boutique/orders/edit/voucher_fields', f)
 
         aside.b-orders-edit__col.b-orders-edit__col--aside
           == cell('boutique/orders/edit/sidebar', f)
 
       .b-orders-edit__flex
         main.b-orders-edit__col.b-orders-edit__col--main
-          == cell('boutique/orders/edit/recurrency_fields', f)
+          .b-orders-edit__recurrency-fields
+            == cell('boutique/orders/edit/recurrency_fields', f)
 
           .b-orders-edit__payment
             - if f.object.free?
@@ -91,4 +90,4 @@
             - else
               == cell('boutique/orders/payment_methods', f, disclaimer:)
 
-        aside.b-orders-edit__col.b-orders-edit__col--aside aria-hidden="true"
+        /aside.b-orders-edit__col.b-orders-edit__col--aside aria-hidden="true"

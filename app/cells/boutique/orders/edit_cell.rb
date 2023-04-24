@@ -43,7 +43,11 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
       custom_error = false
     end
 
-    f.input :email, required: true, error: custom_error
+    f.input :email,
+            required: true,
+            error: custom_error,
+            wrapper_html: { class: "b-orders-edit__email-input" },
+            label: t(".email_input_label")
   end
 
   def addresses_fields_title

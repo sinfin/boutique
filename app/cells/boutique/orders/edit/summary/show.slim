@@ -1,47 +1,58 @@
 .b-orders-edit-summary
-  .h4 = t('.title')
+  h4.b-orders-edit-summary__h4
+    = t('.title')
 
   - line_items.each do |line_item|
-    .b-orders-edit-summary__line-item.mb-3
+    .b-orders-edit-summary__line-item
       .row
         .col-2
           = image(line_item.cover_placement_from_variant_or_product,
                   THUMB_SIZE,
                   class: 'b-line-items-summary__line-item-cover')
-        .col-7
-          .font-weight-bold = line_item.product_variant.product.to_label
+        .col-7.b-orders-edit-summary__line-item-left
+          .b-orders-edit-summary__line-item-name
+            = line_item.product_variant.product.to_label
           | TODO
 
-        .col-3.text-right
+        .col-3.b-orders-edit-summary__line-item-right
           = price(line_item.price)
           br
-          a href="#TODO" = t('.remove')
+          a.b-orders-edit-summary__remove-btn href="#TODO"
+            = t('.remove')
 
         - if line_item.subscription?
-          .col-12.mt-2 = t(".automatic_renewal")
+          .col-12.b-orders-edit-summary__col
+            .b-orders-edit-summary__renewal-tag
+              = image_tag("boutique/refresh.svg",
+                          class: 'b-orders-edit-summary__renewal-tag-img')
+
+              = t(".automatic_renewal")
 
         - if line_item.product.variants.size > 1
-          .col-12.mt-2
+          .col-12.b-orders-edit-summary__col
             = product_variant_select_for(model, line_item)
 
-  .b-orders-edit-summary__shipping
+  .b-orders-edit-summary__price-row
     .row
       .col-auto
         = t('.shipping')
+
       .col.text-right
         = price(model.object.shipping_price)
 
   - if model.object.voucher.present?
-    .b-orders-edit-summary__voucher
+    .b-orders-edit-summary__price-row
       .row
         .col-auto
           = t('.voucher')
+
         .col.text-right
           = price(model.object.discount)
 
-  .b-orders-edit-summary__total-price.font-weight-bold
-    .row
+  .b-orders-edit-summary__price-row
+    .row.font-weight-bold
       .col-auto
         = t('.total')
+
       .col.text-right
         = price(model.object.line_items_price)

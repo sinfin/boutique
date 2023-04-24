@@ -2,15 +2,26 @@
   .form-group
     margin-bottom: 0
 
-  .form-check-label
-    +font-h3
-    margin: 0
+    .form-check
+      padding-right: 45px
+      padding-left: 1.75rem
 
-  .form-check
-    padding-right: 45px
+      &-label
+        +font-h3
+        margin: 0
+
+      &-input
+        margin-top: 0.4rem
+        margin-left: -1.75rem
 
   &__fields
     margin-top: 30px
+
+  &__col
+    max-width: 350px
+
+    &:nth-child(2)
+      margin: 0 auto
 
   &__gift-icon-svg
     position: absolute

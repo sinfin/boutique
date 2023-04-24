@@ -15,6 +15,7 @@ en:
         have_account_already: Have account already?
         sign_in: Sign in
         order_for_free: Order for free
+        email_input_label: E-mail (used for login)
 
         gift_recipient_address_fields:
           title: Gift recipient address
@@ -26,6 +27,7 @@ en:
         gift_recipient_fields:
           checkbox_label: Order as a gift
           info: The recipient will automatically receive an email invitation after payment. He can enjoy your gift as soon as he accepts the invitation.
+          recipient_email_input_label: Gift recipient's email (used for login)
 
         sidebar:
           bottom:
@@ -38,6 +40,7 @@ en:
           shipping: Shipping
           voucher: Discount voucher
           total_price: Total
+          remove: remove
 
         subscription_fields:
           title: Subscription start
@@ -70,6 +73,7 @@ en:
         prices_include_vat: The listed prices include VAT.
         price:
           title: Payment %{price}
+          monthly: monthly
 
       show:
         invoice: download invoice

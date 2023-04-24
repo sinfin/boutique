@@ -9,9 +9,12 @@ class Boutique::Orders::Edit::SummaryCell < Boutique::ApplicationCell
 
   def product_variant_select_for(f, line_item)
     f.simple_fields_for :line_items, line_item do |subfields|
-      subfields.association(:product_variant, collection: line_item.product.variants,
-                                              include_blank: false,
-                                              label: false).html_safe
+      subfields.association(:product_variant,
+                            collection: line_item.product.variants,
+                            include_blank: false,
+                            label: false,
+                            wrapper_html: { class: "b-orders-edit-summary__product-variants-wrap" },
+                            input_html: { class: "b-orders-edit-summary__product-variants-select" }).html_safe
     end
   end
 

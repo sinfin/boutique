@@ -1,22 +1,20 @@
 $dark-gray: #525252 !default
 
 .b-orders-edit-recurrency-fields
-  margin: $grid-gutter-width 0
-
   &__option
-    margin: 20px 0
+    margin: 16px 0
     padding-left: 25px
     position: relative
     display: block
 
   &__option-input
     position: absolute
-    top: 6px
+    top: 4px
     left: 0
     margin: 0
 
   &__option-title
-    font-weight: $font-weight-bold
+    +font-h4
     color: $dark
 
   &__option-text
@@ -29,3 +27,43 @@ $dark-gray: #525252 !default
 
     > :last-child
       margin-bottom: 0
+
+  &__show-nonrecurring-button
+    +unbutton
+    +font-size-sm
+    text-decoration: underline
+    color: $dark-blue
+    overflow: hidden
+    margin: 0
+
+  &__show-nonrecurring-button-input
+    visibility: hidden
+    opacity: 0
+    position: absolute
+    left: -10000px
+
+  &--nonrecurring-visible &__show-nonrecurring-button
+    display: none
+
+  &__nonrecurring-payment
+    margin-top: 20px
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    margin-bottom: -10px
+
+  &:not(&--nonrecurring-visible) &__nonrecurring-payment
+    display: none
+
+  &__nonrecurring-payment-title
+    +font-h4
+    margin-bottom: 10px
+
+  &__nonrecurring-payment-option
+    +font-size-sm
+    margin-bottom: 10px
+
+    input
+      margin-right: 10px
+      transform: translateY(2px)
+

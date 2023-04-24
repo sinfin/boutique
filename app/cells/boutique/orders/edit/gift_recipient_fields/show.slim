@@ -11,10 +11,12 @@
       / .col-12.col-md-5.mt-3
       /   = gift_recipient_notification_scheduled_for_input
 
-      .col-12.col-md-6
-        = f.input :gift_recipient_email, required: true
+      .col-12.col-md-6.b-orders-edit-gift-fields__col
+        = f.input :gift_recipient_email,
+                  required: true,
+                  label: t('.recipient_email_input_label')
 
-      .col-12.col-md-6
+      .col-12.col-md-6.b-orders-edit-gift-fields__col
         = cstypo t('.info')
 
   == cell('boutique/ui/gift_icon',

@@ -17,6 +17,7 @@ cs:
         sign_in: Přihlaste se
         password_reset: obnovit heslo
         order_for_free: Objednat zdarma
+        email_input_label: E-mail (slouží pro přihlášení)
 
         gift_recipient_address_fields:
           title: Adresa obdarovaného
@@ -28,6 +29,7 @@ cs:
         gift_recipient_fields:
           checkbox_label: Objednat jako dárek
           info: Obdarovaný po zaplacení obdrží automaticky e-mail s pozvánkou. Vašeho dárku si může užívat ihned jakmile pozvánku přijme.
+          recipient_email_input_label: E-mail obdarovaného (slouží pro přihlášení)
 
         sidebar:
           bottom:
@@ -44,6 +46,7 @@ cs:
           shipping: Doprava
           voucher: Slevový kupón
           total_price: Celkem
+          remove: odebrat
 
         voucher_fields:
           label: Slevový nebo dárkový kód
@@ -73,6 +76,7 @@ cs:
         prices_include_vat: Uvedené ceny jsou včetně DPH.
         price:
           title: Platba %{price}
+          monthly: měsíčně
 
       show:
         invoice: stáhnout fakturu

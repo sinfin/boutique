@@ -45,7 +45,7 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
   def payment_button(f, method, i)
     f.button :submit,
              method[:title],
-             class: "btn btn-#{i.zero? ? "primary" : "secondary"} btn-xs-block b-orders-payment-methods__submit-btn",
+             class: "btn btn-#{i.zero? ? "primary-yellow" : "secondary"} btn-xs-block b-orders-payment-methods__submit-btn",
              data: { payment_method: method[:value], enabled_for_recurrent: method[:enabled_for_recurrent].to_s  },
              style: ("display:none;" if method[:value] == "APPLE_PAY"),
              disabled: method[:disabled]

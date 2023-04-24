@@ -13,20 +13,20 @@
       = payment_button(f, method, i)
 
   - if options[:disclaimer]
-    .b-orders-payment-methods__disclaimer.small.text-muted
+    .b-orders-payment-methods__disclaimer
       == options[:disclaimer]
 
   - if options[:info] != false
-    .b-orders-payment-methods__info.small.text-muted
+    .b-orders-payment-methods__info
       .b-orders-payment-methods__info-flex
         = t('.secured_by')
 
         a.b-orders-payment-methods__info-a[
-          href="https://www.gopay.com/"
+          href="https://www.comgate.cz/"
           target="_blank"
         ]
           img.b-orders-payment-methods__info-img[
-            src=image_path("boutique/gopay-logo.svg")
+            src=image_path("boutique/comgate-logo.png")
           ]
 
       = t('.prices_include_vat')
