@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 Folio::Address::Secondary.class_eval do
-  validates :company_name,
-            :identification_number,
-            presence: true
-
-
   def self.fields_layout
     [
       :company_name,
