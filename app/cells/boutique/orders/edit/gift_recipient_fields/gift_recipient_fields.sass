@@ -11,7 +11,7 @@
         margin: 0
 
       &-input
-        margin-top: 0.4rem
+        margin-top: 0.3rem
         margin-left: -1.75rem
 
   &__fields
@@ -19,9 +19,6 @@
 
   &__col
     max-width: 350px
-
-    &:nth-child(2)
-      margin: 0 auto
 
   &__gift-icon-svg
     position: absolute
@@ -66,3 +63,18 @@
 
     &--trash-alt
       display: none
+
+  +mq-desktop-menu
+    &__col
+      &:nth-child(2)
+        margin: 0 auto
+
+  +mq-mobile-menu
+    &__col
+      max-width: 500px
+
+    &__col:not(&__col:last-child)
+      margin-bottom: $grid-gutter-half
+
+    &__fields
+      margin-top: 16px
