@@ -3,6 +3,7 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
+require "pry-byebug"
 require_relative "../test/dummy/config/environment"
 require Folio::Engine.root.join("test/test_helper_base")
 require Boutique::Engine.root.join("test/go_pay_api_mocker")
