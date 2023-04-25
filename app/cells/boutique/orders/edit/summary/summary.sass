@@ -8,6 +8,14 @@
   &__line-item
     border-bottom: 1px solid $beige
 
+  &__col-cover
+    max-width: 65px
+    padding-right: 0
+
+  &__line-item-left
+    max-width: 100%
+    flex-grow: 1
+
   &__line-item-right
     text-align: right
     display: flex
@@ -27,12 +35,22 @@
     &:hover
       text-decoration: underline
 
+  &__inputs
+    max-width: 500px
+    display: flex
+
   &__product-variants-wrap
     margin-bottom: 0
+    flex: 1 0 auto
 
   &__product-variants-select
     +font-size-sm
     padding: 8px 13px
+
+  &__quantity
+    margin-left: 10px
+    margin-bottom: 0
+    flex: 0 1 100px
 
   &__renewal-tag
     padding: 3px 10px
@@ -54,8 +72,11 @@
     &__h4
       padding-bottom: $grid-gutter-half
 
+    &__col-cover,
+    &__line-item-left,
+    &__line-item-right,
     &__col
-      margin: $grid-gutter-half 0
+      margin-bottom: $grid-gutter-half
 
     &__price-row
       padding: $grid-gutter-half 0
@@ -64,8 +85,11 @@
     &__h4
       padding-bottom: 10px
 
+    &__col-cover,
+    &__line-item-left,
+    &__line-item-right,
     &__col
-      margin: 10px 0
+      margin-bottom: 10px
 
     &__price-row
       padding: 10px 0

@@ -5,7 +5,7 @@
   - line_items.each do |line_item|
     .b-orders-edit-summary__line-item
       .row
-        .col-2
+        .col-2.b-orders-edit-summary__col-cover
           = image(line_item.cover_placement_from_variant_or_product,
                   THUMB_SIZE,
                   class: 'b-line-items-summary__line-item-cover')
@@ -30,7 +30,12 @@
 
         - if line_item.product.variants.size > 1
           .col-12.b-orders-edit-summary__col
-            = product_variant_select_for(model, line_item)
+            .b-orders-edit-summary__inputs
+              = product_variant_select_for(model, line_item)
+
+              #TODO
+              .b-orders-edit-summary__quantity.form-group
+                input.form-control type="number" value=1
 
   .b-orders-edit-summary__price-row
     .row
