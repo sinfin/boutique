@@ -32,22 +32,22 @@
       @payment.with_lock do
         @payment.order.lock!
 
-        gp_payment = Boutique::GoPay::Api.new.find_payment(params[:id])
+        gp_transaction = Boutique::PaymentGateway.new(:go_pay).check_transaction(params[:id])
 
         if @payment.pending?
-          @payment.payment_method = gp_payment["payment_instrument"]
+          @payment.payment_method = gp_transaction.method
 
-          case gp_payment["state"]
-          when "PAID"
+          case gp_transaction.state
+          when :paid
             @payment.pay!
-          when "PAYMENT_METHOD_CHOSEN"
+          when :payment_method_chosen
             unless @payment.order.waiting_for_offline_payment?
               @payment.order.wait_for_offline_payment!
               @payment.touch
             end
-          when "CANCELED"
+          when :cancelled
             @payment.cancel!
-          when "TIMEOUTED"
+          when :expired, :timeouted
             @payment.timeout!
           end
         end

@@ -30,10 +30,10 @@ class Boutique::GoPay::Api
   attr_reader :controller
 
   def gateway
-    @gateway ||= GoPay::Gateway.new(gate: ENV.fetch("GO_PAY_GATE"),
-                                    goid: ENV.fetch("GO_PAY_GOID"),
-                                    client_id: ENV.fetch("GO_PAY_CLIENT_ID"),
-                                    client_secret: ENV.fetch("GO_PAY_CLIENT_SECRET"))
+    @gateway ||= GoPay::Gateway.new(gate: ENV.fetch("GO_PAY_GATE"), # payment service url
+                                    goid: ENV.fetch("GO_PAY_GOID"), # merchant_id
+                                    client_id: ENV.fetch("GO_PAY_CLIENT_ID"),  # client authorization id (username)
+                                    client_secret: ENV.fetch("GO_PAY_CLIENT_SECRET")) # client authorization secret (password)
   end
 
   def find_payment(id)

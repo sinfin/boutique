@@ -178,18 +178,19 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def create_payment_and_redirect_to_payment_gateway(order)
+
       # TODO: rm this after configurable payment gateway is added
       if ENV["DEV_SKIP_ORDER_PAYMENT"]
         order.pay!
 
         redirect_after_order_paid(order)
       else
-        gp_payment = Boutique::GoPay::Api.new.create_payment(order, controller: self,
-                                                                    payment_method: params[:payment_method])
-        order.payments.create!(remote_id: gp_payment["id"],
-                               payment_method: gp_payment["payment_instrument"])
+        transaction = order.payment_gateway.start_transaction(order, { payment_method: params[:payment_method],
+                                                                        return_url: return_after_pay_url(order_id: order.secret_hash, only_path: false),
+                                                                        callback_url: payment_callback_url(order_id: order.secret_hash, only_path: false)})
+        order.payments.create!(remote_id: transaction.id, payment_method: transaction.method)
 
-        redirect_to gp_payment["gw_url"], allow_other_host: true
+        redirect_to transaction.redirect_to, allow_other_host: true
       end
     end
 

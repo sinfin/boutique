@@ -47,7 +47,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
       transitions from: :paid, to: :refunded
 
       # before do
-      #   Boutique::GoPay::Api.new.refund_payment(remote_id, order)
+      #   order.payment_gateway.refund_transaction(self)
       # end
     end
   end

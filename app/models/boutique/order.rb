@@ -558,15 +558,19 @@ class Boutique::Order < Boutique::ApplicationRecord
     nil
   end
 
+  def payment_gateway
+    @payment_gateway ||= Boutique::PaymentGateway.new
+  end
+
   def charge_recurrent_payment!
     return unless confirmed? && subsequent?
 
     begin
-      payment = Boutique::GoPay::Api.new.create_recurrent_payment(self)
-      payments.create!(remote_id: payment["id"],
-                       payment_method: payment["payment_instrument"])
-    rescue GoPay::Error => error
-      if error.body["errors"].any? { |e| e["error_code"] == 342 }
+      transaction = payment_gateway.start_recurring_transaction(self)
+      payments.create!(remote_id: transaction.id,
+                       payment_method: transaction.method)
+    rescue Boutique::PaymentGateway::Error => error
+      if error.stopped_recurrence?
         # 342: PAYMENT_RECURRENCE_STOPPED
         # cancel subscription if recurrence was stopped in GoPay admin
         subscription.cancel!
@@ -632,6 +636,10 @@ class Boutique::Order < Boutique::ApplicationRecord
         send(attr)
       end
     end
+  end
+
+  def currency_code
+    "CZK"
   end
 
   private
