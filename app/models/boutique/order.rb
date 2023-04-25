@@ -425,7 +425,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def packages_count
     # TODO: implement for order with multiple line items
-    product = line_items.first.product_variant.product
+    product = line_items.first.product
 
     if product.subscription? && product.has_subscription_frequency?
       product.subscription_frequency_in_issues_per_year
@@ -704,7 +704,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       fail "multiple subscriptions in one order are not implemented" if li.size > 1
 
       line_item = li.first
-      period = line_item.product_variant.subscription_period
+      period = line_item.product.subscription_period
 
       if requires_address?
         address = primary_address.try(:dup)

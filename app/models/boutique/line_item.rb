@@ -81,7 +81,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def imprint
-    self.unit_price ||= product.master_variant
+    self.product_variant ||= product.master_variant
 
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
