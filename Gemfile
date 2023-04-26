@@ -32,6 +32,7 @@ group :test do
   gem "minitest-stub_any_instance"
   gem "factory_bot"
   gem "capybara", "~> 2.13"
+  gem "pry-byebug"
 end
 
 group :development do
