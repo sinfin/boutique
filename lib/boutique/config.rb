@@ -15,7 +15,8 @@ module Boutique
                   :folio_console_collection_includes_for_orders,
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
-                  :orders_edit_recurrency_title_proc
+                  :orders_edit_recurrency_title_proc,
+                  :payment_gateways
 
     def initialize
       # set defaults here
@@ -38,6 +39,13 @@ module Boutique
                     .gsub("{AMOUNT}", price.to_s)
                     .gsub("{PERIOD}", period)
       end
+      @payment_gateways = {
+        default: :go_pay,
+        go_pay: Boutique::GoPay::UniversalGateway.new(test_calls: !Rails.env.production?,
+                                                    merchant_gateway_id: ENV.fetch("GO_PAY_GOID"), # merchant_id
+                                                    client_id: ENV.fetch("GO_PAY_CLIENT_ID"),  # client authorization id (username)
+                                                    client_secret: ENV.fetch("GO_PAY_CLIENT_SECRET")), # client authorization secret (password)
+      }
     end
   end
 

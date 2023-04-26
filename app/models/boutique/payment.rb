@@ -47,13 +47,21 @@ class Boutique::Payment < Boutique::ApplicationRecord
       transitions from: :paid, to: :refunded
 
       # before do
-      #   order.payment_gateway.refund_transaction(self)
+      #   payment_gateway.refund_transaction(self, order.total_price)
       # end
     end
   end
 
   alias_attribute :timeouted_at, :cancelled_at
   alias_attribute :refunded_at, :cancelled_at
+
+  def amount_in_cents
+    order.total_price * 100
+  end
+
+  def payment_gateway
+    order.payment_gateway
+  end
 
   def payment_method_to_human
     self.class.payment_method_to_human(payment_method)

@@ -59,7 +59,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
-  test "pay" do
+  test "pay without user" do
     setup_emails
     order = create(:boutique_order, :confirmed, email: "foo@test.test")
 
@@ -75,6 +75,10 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
     assert_equal "foo@test.test", order.user.email
     assert order.user.primary_address.present?
+  end
+
+  test "pay with user" do
+    setup_emails
 
     order = create(:boutique_order, :confirmed, :with_user)
 

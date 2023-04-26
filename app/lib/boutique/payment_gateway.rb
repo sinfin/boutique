@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Boutique::PaymentGateway
-  attr_reader :provider,:provider_gateway
+  attr_reader :provider, :provider_gateway
 
   DEFAULT_PAYMENT_METHOD = "PAYMENT_CARD"
 
@@ -15,9 +15,22 @@ class Boutique::PaymentGateway
     end
   end
 
+  def self.process_callback(params, provider: nil)
+    unless provider
+      provider = if params["transId"].present?
+        :comgate
+      else
+        :go_pay
+      end
+    end
+
+    gw = Boutique::PaymentGateway.new(provider)
+    gw.provider_gateway.process_callback(params)
+  end
+
   def initialize(provider = nil)
-    @provider = provider || Rails.application.config.x.boutique.payment_gateways[:default]
-    @provider_gateway = Rails.application.config.x.boutique.payment_gateways[@provider]
+    @provider = provider || Boutique.config.payment_gateways[:default]
+    @provider_gateway = Boutique.config.payment_gateways[@provider]
     raise "Gateway instance not found for #{@provider}" unless @provider_gateway
   end
 
@@ -29,15 +42,26 @@ class Boutique::PaymentGateway
     provider_gateway.start_transaction(payment_params(order, options))
   end
 
-  def start_recurring_transaction(order)
-    provider_gateway.start_recurring_transaction(payment_params(order))
+  def start_recurring_transaction(order, options = {})
+    unless order.line_items.reload.any?(&:requires_subscription_recurring?)
+      fail "cannot create recurrence for non-recurrent order"
+    end
+
+    params = payment_params(order, options)
+    params[:payment][:recurrence][:period] = 1
+
+    provider_gateway.start_recurring_transaction(params)
   end
 
-  def repeat_recurring_transaction(payment_data)
-  end
+  def repeat_recurring_transaction(order)
+    fail "cannot create recurrence for non-recurrent order" unless order.subsequent?
 
-  def process_callback(payload)
-    provider_gateway.process_state_change(payload)
+    params = payment_params(order, {})
+    params[:payment][:recurrence] = {
+      init_transaction_id: order.original_payment.remote_id,
+      period: order.subscription.orders.count
+    }
+    provider_gateway.repeat_recurring_transaction(params)
   end
 
   def start_preauthorized_transaction(payment_data)
@@ -52,7 +76,17 @@ class Boutique::PaymentGateway
   def start_verification_transaction(payment_data)
   end
 
-  def refund_transaction(payment_data)
+  def refund_transaction(payment, amount)
+    payment_data = {
+      transaction_id: payment.remote_id,
+      payment: {
+        currency: payment.order.currency_code,
+        amount_in_cents: amount * 100,
+        reference_id: payment.order.number,
+      }
+    }
+
+    provider_gateway.refund_transaction(payment_data)
   end
 
   def cancel_transaction(transaction_id)
@@ -62,7 +96,6 @@ class Boutique::PaymentGateway
   end
 
   private
-
     def payment_params(order, options)
       params = {
         payer: {
@@ -99,10 +132,10 @@ class Boutique::PaymentGateway
       end
 
       if order.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
-          params[:recurrence] = {
-            cycle: "ON_DEMAND",
-            valid_to: "2099-12-31"
-          }
+        params[:payment][:recurrence] = {
+          cycle: :on_demand,
+          valid_to: Date.new(2099, 12, 31)
+        }
       end
 
       params
@@ -129,8 +162,3 @@ end
 #   # 342: PAYMENT_RECURRENCE_STOPPED
 #   # cancel subscription if recurrence was stopped in GoPay admin
 
-# case gp_transaction.state
-# when :paid
-# when :payment_method_chosen
-# when :cancelled
-# when :expired, :timeouted

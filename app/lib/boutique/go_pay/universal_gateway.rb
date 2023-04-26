@@ -1,12 +1,14 @@
 # frozen_string_literal: true
-require "gopay"
-puts("required!!")
+
+require_relative "gopay_ruby_override"
+
 module Boutique
   module GoPay
     class UniversalGateway
       attr_reader :gp_gateway
-      TEST_GATEWAY_URL = "https://gw.sandbox.gopay.com/api"
-      PRODUCTION_GATEWAY_URL = "https://gate.gopay.cz/api"
+      # TEST_GATEWAY_URL = "https://gw.sandbox.gopay.com/api"
+      TEST_GATEWAY_URL = "https://testgw.gopay.cz"
+      PRODUCTION_GATEWAY_URL = "https://gate.gopay.cz"
       CURRENCY = "CZK"
       DEFAULT_PAYMENT_METHOD = "PAYMENT_CARD"
 
@@ -22,6 +24,10 @@ module Boutique
         @test_calls == true
       end
 
+      def process_callback(params)
+        # callback is just PING with transaction id
+        check_transaction(transaction_id: params["id"])
+      end
 
       def check_transaction(transaction_id:)
         resp = gp_gateway.retrieve(transaction_id)
@@ -70,7 +76,36 @@ module Boutique
       end
 
       def repeat_recurring_transaction(payment_data)
-        # chcek if it have period ON_DEMAND
+        recurrence_hash = payment_data[:payment].delete(:recurrence)
+        init_tr_id = recurrence_hash.present? ? recurrence_hash[:init_transaction_id] : nil
+        raise "[:payment][:recurrence][:init_transaction_id] is needed!" if init_tr_id.blank?
+
+        payload = payment_hash(payment_data).slice(:amount, :currency, :order_number, :order_description, :items, :additional_params)
+
+        resp = gp_gateway.create_recurrent_payment(init_tr_id, payload)
+        response_hash = convert_response_to_hash(resp)
+
+        Boutique::PaymentGateway::ResponseStruct.new(
+          transaction_id: response_hash[:transaction_id],
+          redirect_to: response_hash[:redirect_to],
+          hash: response_hash,
+          array: nil
+        )
+      end
+
+      def refund_transaction(payment_data)
+        resp = gp_gateway.refund(payment_data[:transaction_id], payment_data[:payment][:amount_in_cents])
+        response_hash = convert_response_to_hash(resp)
+        response_hash[:state] = resp["result"].downcase.to_sym
+        response_hash.delete(:payment)
+        response_hash.delete(:payer)
+
+        Boutique::PaymentGateway::ResponseStruct.new(
+          transaction_id: response_hash[:transaction_id],
+          redirect_to: response_hash[:redirect_to],
+          hash: response_hash,
+          array: nil
+        )
       end
 
       private
@@ -193,6 +228,14 @@ module Boutique
               state:  convert_state(resp.dig("recurrence", "recurrence_state"))
             }
           end
+          if resp["parent_id"].present?
+            if response_hash[:payment][:recurrence].nil?
+              response_hash[:payment][:recurrence] = { init_transaction_id: resp["parent_id"] }
+            else
+              response_hash[:payment][:recurrence][:init_transaction_id] = resp["parent_id"]
+            end
+          end
+
           if resp.dig("preauthorization").present?
             response_hash[:payment][:preauthorization] = {
               requested: resp.dig("preauthorization", "requested"),

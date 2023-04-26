@@ -5,7 +5,7 @@ require "test_helper"
 class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
   test "select right endpoints" do
     GoPay::Gateway.expects(:new)
-                  .with(gate: "https://gw.sandbox.gopay.com/api",
+                  .with(gate: "https://testgw.gopay.cz",
                     goid: gateway_params[:merchant_gateway_id],
                     client_id: gateway_params[:client_id],
                     client_secret: gateway_params[:client_secret])
@@ -13,12 +13,30 @@ class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
     Boutique::GoPay::UniversalGateway.new(**gateway_params.merge({ test_calls: true }))
 
     GoPay::Gateway.expects(:new)
-                  .with(gate: "https://gate.gopay.cz/api",
+                  .with(gate: "https://gate.gopay.cz",
                     goid: gateway_params[:merchant_gateway_id],
                     client_id: gateway_params[:client_id],
                     client_secret: gateway_params[:client_secret])
 
     Boutique::GoPay::UniversalGateway.new(**gateway_params.merge({ test_calls: false }))
+  end
+
+  test "handles callbacks" do
+    transaction_id = 3186828749
+    request_params = { "order_id" => "joQNtFWDudZAxk9gOmFEUA", "id" => transaction_id }
+
+    GoPay::Gateway.any_instance
+                  .expects(:retrieve)
+                  .with(transaction_id)
+                  .returns(gopay_response_for(transaction_id:, state: "CREATED"))
+
+    gateway = Boutique::GoPay::UniversalGateway.new(**gateway_params)
+    result = gateway.process_callback(request_params)
+
+    assert_not result.redirect?
+    assert_nil result.redirect_to
+    # state CREATED is translated for us to :pending
+    assert_equal expected_result_hash_for(transaction_id:, state: :pending), result.hash
   end
 
   test "make right call to check transaction" do
@@ -105,6 +123,43 @@ class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
 
     assert result.redirect?
     assert_equal gopay_response["gw_url"], result.redirect_to
+    assert_equal expected_result_hash, result.hash
+  end
+
+  test "make right call for refund of payment" do
+    transaction_id = "asdsadasd"
+    amount_in_cents = 555
+    payment_data = {
+      transaction_id:,
+      payment: {
+        amount_in_cents:,
+        currency: "CZK",
+        reference_id: "aasasas"
+      }
+    }
+
+    new_transaction_id = 465789654
+    gopay_response = {
+      "id" => new_transaction_id,
+      "result" => "FINISHED"
+    }
+    expected_result_hash = {
+      code: 0,
+      message: "OK",
+      transaction_id: new_transaction_id,
+      state: :finished,
+      redirect_to: nil
+    }
+
+    GoPay::Gateway.any_instance
+                  .expects(:refund)
+                  .with(transaction_id, amount_in_cents)
+                  .returns(gopay_response)
+
+    gateway = Boutique::GoPay::UniversalGateway.new(**gateway_params)
+    result = gateway.refund_transaction(payment_data)
+
+    assert_not result.redirect?
     assert_equal expected_result_hash, result.hash
   end
 

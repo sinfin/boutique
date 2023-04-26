@@ -566,9 +566,9 @@ class Boutique::Order < Boutique::ApplicationRecord
     return unless confirmed? && subsequent?
 
     begin
-      transaction = payment_gateway.start_recurring_transaction(self)
-      payments.create!(remote_id: transaction.id,
-                       payment_method: transaction.method)
+      transaction = payment_gateway.repeat_recurring_transaction(self)
+      payments.create!(remote_id: transaction.transaction_id,
+                       payment_method: transaction.hash[:payment][:method])
     rescue Boutique::PaymentGateway::Error => error
       if error.stopped_recurrence?
         # 342: PAYMENT_RECURRENCE_STOPPED
