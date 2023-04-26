@@ -68,7 +68,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
   end
 
   def self.payment_method_to_human(payment_method_string)
-    I18n.t("boutique.go_pay.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
+    I18n.t("boutique.payment_gateways.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
   end
 end
 

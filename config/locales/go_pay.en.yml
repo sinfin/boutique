@@ -1,8 +1,8 @@
 ---
 en:
   boutique:
-    go_pay:
-      comeback:
+    payment_gateways:
+      after_payment:
         success: Payment successful
         failure: Payment failure
 

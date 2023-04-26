@@ -161,4 +161,3 @@ end
 # if error.stopped_recurrence?
 #   # 342: PAYMENT_RECURRENCE_STOPPED
 #   # cancel subscription if recurrence was stopped in GoPay admin
-

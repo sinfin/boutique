@@ -1,13 +1,13 @@
   # frozen_string_literal: true
 
-  class Boutique::GoPayController < Boutique::ApplicationController
+  class Boutique::PaymentGatewaysController < Boutique::ApplicationController
     include Boutique::RedirectAfterOrderPaid
 
     before_action :update_payment
     # for GO PAY it is returning at "http://folio-1.com/after_payment?order_id=joQNtFWDudZAxk9gOmFEUA&id=3186828749"
     # according to `return_url` in payment creation params
     # for COMGATE it return url is fixed and set at gateway , id of transaction is in params as `transId`
-    def comeback
+    def after_payment
       if @payment.paid? || @payment.order.waiting_for_offline_payment?
         flash[:success] = t(".success")
 
@@ -19,7 +19,7 @@
       end
     end
 
-    def notify # callback_url
+    def payment_callback
       head :ok
     end
 

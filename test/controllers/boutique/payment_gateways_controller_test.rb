@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Boutique::GoPayControllerTest < Boutique::ControllerTest
+class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
   include Boutique::Test::GoPayApiMocker
 
   def setup
@@ -16,33 +16,40 @@ class Boutique::GoPayControllerTest < Boutique::ControllerTest
     go_pay_check_transaction_api_call_mock
 
     get return_after_pay_url(id: 123, order_id: @order.secret_hash)
+
     assert_redirected_to main_app.user_invitation_url
     assert @payment.reload.paid?
     assert @order.reload.paid?
+    assert_equal "Platba proběhla úspěšně", flash[:success]
   end
 
   test "comeback with failed payment" do
     go_pay_check_transaction_api_call_mock(state: :cancelled)
 
     get return_after_pay_url(id: 123, order_id: @order.secret_hash)
+
     assert_redirected_to order_url(@order.secret_hash)
     assert @payment.reload.cancelled?
     assert @order.reload.confirmed?
+    assert_equal "Platba selhala", flash[:alert]
   end
 
   test "comeback with offline payment" do
     go_pay_check_transaction_api_call_mock(state: :payment_method_chosen)
 
     get return_after_pay_url(id: 123, order_id: @order.secret_hash)
+
     assert_redirected_to main_app.user_invitation_url
     assert @payment.reload.pending?
     assert @order.reload.waiting_for_offline_payment?
+    assert_equal "Platba proběhla úspěšně", flash[:success]
   end
 
-  test "notify" do
+  test "payment callback" do
     go_pay_check_transaction_api_call_mock
 
-    get notify_go_pay_url(id: 123, order_id: @order.secret_hash)
+    get payment_callback_url(id: 123, order_id: @order.secret_hash)
+
     assert_response :success
   end
 end
