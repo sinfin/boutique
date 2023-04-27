@@ -87,7 +87,7 @@ PATH
       aasm (~> 5.2)
       after_commit_everywhere (~> 1.0)
       ar-sequence
-      comgate_ruby (~> 0.6)
+      comgate_ruby (~> 0.7)
       gopay-ruby
       pg (~> 1.2)
       rails (>= 7.0.2.3)
@@ -234,7 +234,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorize (0.8.1)
-    comgate_ruby (0.6.0)
+    comgate_ruby (0.7.1)
     concurrent-ruby (1.2.2)
     connection_pool (2.3.0)
     countries (5.4.0)

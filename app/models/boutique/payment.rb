@@ -78,7 +78,7 @@ end
 #
 #  id                :bigint(8)        not null, primary key
 #  boutique_order_id :bigint(8)        not null
-#  remote_id         :bigint(8)
+#  remote_id         :string
 #  aasm_state        :string           default("pending")
 #  payment_method    :string
 #  paid_at           :datetime

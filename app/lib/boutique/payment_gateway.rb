@@ -111,7 +111,7 @@ class Boutique::PaymentGateway
           label: order.to_label,
           reference_id: order.number,
           description: order_description(order),
-          method: options[:payment_method],
+          method: provider == :comgate ? "ALL" : options[:payment_method],
           product_name: order.model_name.human
         },
         options: {
