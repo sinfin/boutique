@@ -26,6 +26,7 @@ gem "omniauth-google-oauth2"
 gem "omniauth-twitter2"
 gem "omniauth-rails_csrf_protection"
 
+gem "comgate_ruby", "~> 0.7"
 # gem "comgate_ruby", path: "../comgate_ruby"
 
 group :test do

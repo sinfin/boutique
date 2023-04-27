@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "ar-sequence"
   spec.add_dependency "slim"
   spec.add_dependency "gopay-ruby"
-  spec.add_dependency "comgate_ruby", "~> 0.7"
   spec.add_dependency "route_translator"
 
   spec.add_development_dependency "pry-rails"
