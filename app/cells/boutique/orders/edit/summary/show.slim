@@ -31,11 +31,11 @@
         - if line_item.product.variants.size > 1
           .col-12.b-orders-edit-summary__col
             .b-orders-edit-summary__inputs
-              = product_variant_select_for(model, line_item)
+              = fields_for_line_item(line_item) do |g|
+                = product_variant_input(g)
 
-              #TODO
-              .b-orders-edit-summary__quantity.form-group
-                input.form-control type="number" value=1
+                .b-orders-edit-summary__quantity
+                  = g.input :amount, label: false
 
   .b-orders-edit-summary__price-row
     .row

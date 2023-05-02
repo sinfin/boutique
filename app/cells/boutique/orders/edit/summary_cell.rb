@@ -7,15 +7,19 @@ class Boutique::Orders::Edit::SummaryCell < Boutique::ApplicationCell
     @line_items ||= model.object.line_items.includes(product_variant: { product: { cover_placement: :file } }).load
   end
 
-  def product_variant_select_for(f, line_item)
-    f.simple_fields_for :line_items, line_item do |subfields|
-      subfields.association(:product_variant,
-                            collection: line_item.product.variants,
-                            include_blank: false,
-                            label: false,
-                            wrapper_html: { class: "b-orders-edit-summary__product-variants-wrap" },
-                            input_html: { class: "b-orders-edit-summary__product-variants-select" }).html_safe
+  def fields_for_line_item(line_item, &block)
+    model.simple_fields_for :line_items, line_item do |subfields|
+      (yield subfields).html_safe
     end
+  end
+
+  def product_variant_input(f)
+    f.association(:product_variant,
+                  collection: f.object.product.variants,
+                  include_blank: false,
+                  label: false,
+                  wrapper_html: { class: "b-orders-edit-summary__product-variants-wrap" },
+                  input_html: { class: "b-orders-edit-summary__product-variants-select" })
   end
 
   def subscription_period(line_item)
