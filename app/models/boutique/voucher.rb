@@ -86,6 +86,10 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     self.code = code.try(:upcase)
   end
 
+  def self.use_preview_tokens?
+    false
+  end
+
   private
     def create_additional_vouchers
       return unless quantity.to_i > 1

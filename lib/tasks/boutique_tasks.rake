@@ -69,7 +69,7 @@ namespace :boutique do
     puts "Seeding 4 dummy products"
 
     Rails.logger.silence do
-      images = Folio::Image.tagged_with("unsplash").limit(4)
+      images = Folio::File::Image.tagged_with("unsplash").limit(4)
 
       2.times do |i|
         create_product(title: Faker::Commerce.product_name,

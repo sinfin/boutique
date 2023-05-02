@@ -28,7 +28,5 @@ Rails.application.routes.draw do
   get "/422", to: "errors#page422", via: :all
   get "/500", to: "errors#page500", via: :all
 
-  resources :pages, only: [:show], path: "" do
-    member { get :preview }
-  end
+  resources :pages, only: [:show], path: ""
 end

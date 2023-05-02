@@ -30,7 +30,7 @@ force_destroy Folio::Site
 force_destroy Folio::Page
 
 def unsplash_pic(square = false)
-  image = Folio::Image.new
+  image = Folio::File::Image.new
   scale = 0.5 + rand / 2
   w = (scale * 2560).to_i
   h = (square ? scale * 2560 : scale * 1440).to_i

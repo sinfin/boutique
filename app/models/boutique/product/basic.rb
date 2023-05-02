@@ -19,9 +19,10 @@ end
 #  subscription_frequency                  :string
 #  boutique_vat_rate_id                    :bigint(8)        not null
 #  site_id                                 :bigint(8)
-#  digital_only                            :boolean          default(FALSE)
 #  shipping_info                           :text
+#  digital_only                            :boolean          default(FALSE)
 #  subscription_recurrent_payment_disabled :boolean          default(FALSE)
+#  preview_token                           :string
 #
 # Indexes
 #
