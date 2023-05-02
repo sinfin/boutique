@@ -7,6 +7,7 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
     def product_params
       params.require(:product)
             .permit(*(@klass.column_names - ["id"]),
+                    *@klass.additional_params,
                     *file_placements_strong_params,
                     variants_attributes: product_variants_strong_params)
     end
