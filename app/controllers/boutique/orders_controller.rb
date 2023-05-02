@@ -179,7 +179,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     def create_payment_and_redirect_to_payment_gateway(order)
       # TODO: rm this after configurable payment gateway is added
-      if Rails.env.development? && ENV["GO_PAY_GATE"].nil?
+      if ENV["DEV_SKIP_ORDER_PAYMENT"]
         order.pay!
 
         redirect_after_order_paid(order)
