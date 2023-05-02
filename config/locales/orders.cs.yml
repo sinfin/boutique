@@ -45,7 +45,7 @@ cs:
           automatic_renewal: Automatická obnova
           shipping: Doprava
           voucher: Slevový kupón
-          total_price: Celkem
+          total: Celkem
           remove: odebrat
 
         voucher_fields:
