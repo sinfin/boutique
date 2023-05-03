@@ -2,7 +2,7 @@
   const BASE_CLASS = 'b-orders-edit-recurrency-fields'
 
   const uncheckOtherInputs = ($input) => {
-    const $base = $input.closest(`.${BASE_CLASS}`)
+    const $base = $input.closest(`.${BASE_CLASS}__inner`)
 
     const recurringSelector = `${BASE_CLASS}__option-input`
     const nonrecurringSelector = `${BASE_CLASS}__nonrecurring-payment-option-input`
