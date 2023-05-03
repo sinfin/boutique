@@ -742,12 +742,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def use_voucher!
       # TODO: make this work with multiple line items
-      voucher.use! if voucher.try(:applicable_for?, line_items.first.product_variant)
+      voucher.use! if voucher.try(:applicable_for?, line_items.first.product)
     end
 
     def apply_voucher
       return unless voucher.present? &&
-                    voucher.applicable_for?(line_items.first.product_variant)
+                    voucher.applicable_for?(line_items.first.product)
 
       self.discount = if voucher.discount_in_percentages?
         price * (0.01 * voucher.discount)
