@@ -35,11 +35,13 @@ group :test do
   gem "minitest-stub_any_instance"
   gem "factory_bot"
   gem "capybara", "~> 2.13"
-  gem "pry-byebug"
 end
 
 group :development do
   gem "puma", "< 6"
-  gem "pry-byebug"
   gem "faker", require: false
+end
+
+group :development, :test do
+  gem "pry-byebug"
 end

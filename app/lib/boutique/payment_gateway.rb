@@ -31,7 +31,7 @@ class Boutique::PaymentGateway
   def initialize(provider = nil)
     @provider = provider || Boutique.config.payment_gateways[:default]
     @provider_gateway = Boutique.config.payment_gateways[@provider]
-    raise "Gateway instance not found for #{@provider}" unless @provider_gateway
+    raise "Gateway instance not found for :#{@provider}, did you set it in `Boutique.config.payment_gateways`?" unless @provider_gateway
   end
 
   def check_transaction(transaction_id)
