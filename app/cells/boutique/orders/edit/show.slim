@@ -10,19 +10,6 @@
         main.b-orders-edit__col.b-orders-edit__col--main
           = render(:_main_top)
 
-          .b-orders-edit__quick-checkout-buttons
-            .h3.mt-0 = t('.quick_checkout')
-
-            div
-              a.btn.btn-primary-rect.btn-primary-dark.mr-3 href="#TODO"
-                = image_tag("boutique/gpay-icon.svg")
-
-              a.btn.btn-primary-rect.btn-primary-dark href="#TODO"
-                = image_tag("boutique/apple-pay-icon.svg")
-
-          .h3.mb-nh
-            = t('.or')
-
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
