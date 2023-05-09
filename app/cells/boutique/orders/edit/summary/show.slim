@@ -17,8 +17,10 @@
         .col-3.b-orders-edit-summary__line-item-right
           = price(line_item.price)
           br
-          a.b-orders-edit-summary__remove-btn href="#TODO"
-            = t('.remove')
+          a.b-orders-edit-summary__remove-btn[
+            href=controller.remove_item_order_url(line_item)
+            data-method="delete"
+          ] = t('.remove')
 
         - if line_item.subscription?
           .col-12.b-orders-edit-summary__col

@@ -30,6 +30,16 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_equal 1, Boutique::Order.first.line_items.first.amount
   end
 
+  test "remove_item" do
+    create_order_with_current_session_id
+    assert_equal 1, @order.line_items.count
+
+    delete remove_item_order_url(@order.line_items.first.id)
+
+    assert_redirected_to edit_order_url
+    assert_equal 0, @order.line_items.count
+  end
+
   test "edit" do
     get edit_order_url
     assert_response :success

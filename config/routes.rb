@@ -5,6 +5,7 @@ Boutique::Engine.routes.draw do
     get :refreshed_edit
     get :crossdomain_add, path: "crossdomain_add/:product_slug"
     post :add, path: "add/:product_slug"
+    delete :remove_item, path: "remove_item/:line_item_id"
     post :confirm
     post :apply_voucher
     post :payment, path: "/:id/payment"

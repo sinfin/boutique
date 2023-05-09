@@ -103,3 +103,6 @@ en:
         total_price_vat: VAT %{value} %
         total_price: Total price
         do_not_pay: DO NOT PAY, ALREADY PAID.
+
+      remove_item:
+        error: Line item could not be removed.

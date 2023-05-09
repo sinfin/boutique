@@ -3,7 +3,7 @@
 class Boutique::OrdersController < Boutique::ApplicationController
   include Boutique::RedirectAfterOrderPaid
 
-  before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
+  before_action :redirect_if_current_order_is_empty, except: %i[add edit show crossdomain_add payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
 
   def crossdomain_add
@@ -38,6 +38,16 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     add_to_order_and_redirect
+  end
+
+  def remove_item
+    line_item = current_order.line_items.find(params[:line_item_id])
+
+    unless line_item.destroy
+      flash[:alert] = t(".error")
+    end
+
+    redirect_to action: :edit
   end
 
   def edit
@@ -78,6 +88,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
         render :edit
       end
+
       format.json do
         render json: {
           data: cell("boutique/orders/edit").show

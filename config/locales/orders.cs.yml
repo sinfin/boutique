@@ -111,3 +111,6 @@ cs:
         total_price_vat: DPH %{value} %
         total_price: Celkem k úhradě
         do_not_pay: NEPLAŤTE, JIŽ UHRAZENO.
+
+      remove_item:
+        error: Položku se nepodařilo odebrat.
