@@ -480,31 +480,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     raise "Amount must be an integer" unless amount.is_a?(Integer)
 
     Boutique::Order.transaction do
-      if ::Boutique.config.use_cart_in_orders
-        if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
-          line_item.amount += amount
-          line_item.subscription_recurring = nil
-          line_item.save!
-        else
-          line_items.build(product_variant:,
-                           amount:)
-        end
+      if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
+        line_item.amount += amount
+        line_item.subscription_recurring = nil
+        line_item.save!
       else
-        # TODO: add line item count validation
-        if line_item = line_items.first
-          line_item.update!(product_variant:,
-                            amount:,
-                            subscription_recurring: nil)
-
-          if voucher.present? && !voucher.relevant_for?(product_variant)
-            # TODO: show message that voucher has been removed
-            self.voucher = nil
-            self.voucher_code = nil
-          end
-        else
-          line_items.build(product_variant:,
-                           amount:)
-        end
+        line_items.build(product_variant:,
+                         amount:)
       end
 
       self.site = product_variant.product.site

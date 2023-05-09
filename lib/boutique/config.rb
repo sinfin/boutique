@@ -2,8 +2,7 @@
 
 module Boutique
   class Config
-    attr_accessor :use_cart_in_orders,
-                  :logo_path,
+    attr_accessor :logo_path,
                   :products_belong_to_site,
                   :parent_controller,
                   :after_order_paid_user_url_name,
@@ -19,7 +18,6 @@ module Boutique
 
     def initialize
       # set defaults here
-      @use_cart_in_orders = true
       @logo_path = nil
       @products_belong_to_site = false
       @parent_controller = "ApplicationController"
