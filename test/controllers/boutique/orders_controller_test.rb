@@ -84,7 +84,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_redirected_to main_app.root_url
 
     create_order_with_current_session_id
-    go_pay_create_payment_api_call_mock
+    go_pay_start_transaction_api_call_mock
 
     params = {
       order: {
@@ -120,7 +120,8 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
 
     order.confirm!
-    go_pay_create_payment_api_call_mock
+
+    go_pay_start_transaction_api_call_mock
 
     post payment_order_url(order.secret_hash)
     assert_redirected_to mocked_go_pay_payment_gateway_url

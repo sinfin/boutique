@@ -36,20 +36,21 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     assert_equal targets.map(&:id), @bot.send(:subscriptions_eligible_for_recurrent_payment_all).map(&:id).sort
   end
 
+  # TODO: I do not understand this test
   test "charge_all_eligible" do
     target = create(:boutique_subscription, active_until: now + 6.hours)
-    target_active_until = target.active_until
+    target_active_until = target.active_until # TODO: what is tihis good for?
 
     assert_equal 1, Boutique::Order.count
     assert_equal 1, Boutique::Payment.count
 
-    go_pay_create_recurrent_payment_api_call_mock
+    go_pay_repeat_recurring_transaction_api_call_mock
     @bot.charge_all_eligible
 
     assert_equal 2, Boutique::Order.count
     assert_equal 2, Boutique::Payment.count
 
-    go_pay_create_recurrent_payment_api_call_mock
+    go_pay_repeat_recurring_transaction_api_call_mock
     @bot.charge_all_eligible
 
     assert_equal 2, Boutique::Order.count

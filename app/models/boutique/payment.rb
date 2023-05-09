@@ -47,7 +47,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
       transitions from: :paid, to: :refunded
 
       # before do
-      #   Boutique::GoPay::Api.new.refund_payment(remote_id, order)
+      #   payment_gateway.refund_transaction(self, order.total_price)
       # end
     end
   end
@@ -55,12 +55,20 @@ class Boutique::Payment < Boutique::ApplicationRecord
   alias_attribute :timeouted_at, :cancelled_at
   alias_attribute :refunded_at, :cancelled_at
 
+  def amount_in_cents
+    order.total_price * 100
+  end
+
+  def payment_gateway
+    order.payment_gateway
+  end
+
   def payment_method_to_human
     self.class.payment_method_to_human(payment_method)
   end
 
   def self.payment_method_to_human(payment_method_string)
-    I18n.t("boutique.go_pay.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
+    I18n.t("boutique.payment_gateways.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
   end
 end
 
@@ -70,7 +78,7 @@ end
 #
 #  id                :bigint(8)        not null, primary key
 #  boutique_order_id :bigint(8)        not null
-#  remote_id         :bigint(8)
+#  remote_id         :string
 #  aasm_state        :string           default("pending")
 #  payment_method    :string
 #  paid_at           :datetime

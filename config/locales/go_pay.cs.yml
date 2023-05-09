@@ -1,8 +1,8 @@
 ---
 cs:
   boutique:
-    go_pay:
-      comeback:
+    payment_gateways:
+      after_payment:
         success: Platba proběhla úspěšně
         failure: Platba selhala
 

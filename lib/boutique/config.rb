@@ -14,7 +14,8 @@ module Boutique
                   :folio_console_collection_includes_for_orders,
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
-                  :orders_edit_recurrency_title_proc
+                  :orders_edit_recurrency_title_proc,
+                  :payment_gateways
 
     def initialize
       # set defaults here
@@ -36,6 +37,10 @@ module Boutique
                     .gsub("{AMOUNT}", price.to_s)
                     .gsub("{PERIOD}", period)
       end
+      @payment_gateways = {
+        default: :go_pay,
+        go_pay: nil
+      }
     end
   end
 

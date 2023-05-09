@@ -20,6 +20,7 @@ FactoryBot.define do
       if product.variants.blank?
         product.variants << build(:boutique_product_variant, { regular_price: evaluator.price,
                                                                code: evaluator.code,
+                                                               title: "#{evaluator.title} - variant A",
                                                                master: true }.compact)
       end
     end

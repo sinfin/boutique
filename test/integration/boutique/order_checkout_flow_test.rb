@@ -10,7 +10,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     super
 
     @product = create(:boutique_product)
-    go_pay_create_payment_api_call_mock
+    go_pay_start_transaction_api_call_mock
   end
 
   test "anonymous - successful payment" do
@@ -29,9 +29,12 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
-    go_pay_find_payment_api_call_mock
-    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    go_pay_check_transaction_api_call_mock(state: :paid)
+
+    get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
+
     assert_redirected_to main_app.user_invitation_url
+    assert current_order.reload.paid?
   end
 
   test "anonymous - offline payment" do
@@ -50,9 +53,11 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
-    go_pay_find_payment_api_call_mock(state: "PAYMENT_METHOD_CHOSEN")
-    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    go_pay_check_transaction_api_call_mock(state: :payment_method_chosen)
+
+    get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
     assert_redirected_to main_app.user_invitation_url
+    assert_not current_order.reload.paid?
   end
 
   test "anonymous - unsuccessful payment" do
@@ -71,10 +76,11 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
-    go_pay_find_payment_api_call_mock(state: "CANCELED")
+    go_pay_check_transaction_api_call_mock(state: :cancelled)
 
-    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
     assert_redirected_to order_url(Boutique::Order.first.secret_hash)
+    assert_not current_order.reload.paid?
   end
 
   test "user - successful payment" do
@@ -88,6 +94,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       order: {
         first_name: "John",
         last_name: "Doe",
+        # not needed for signed in user:    email: "order@test.test",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
       }
     }
@@ -95,10 +102,11 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
-    go_pay_find_payment_api_call_mock
+    go_pay_check_transaction_api_call_mock(state: :paid)
 
-    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
     assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
+    assert current_order.reload.paid?
   end
 
   test "user - offline payment" do
@@ -112,6 +120,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       order: {
         first_name: "John",
         last_name: "Doe",
+        # not needed for signed in user:    email: "order@test.test",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
       }
     }
@@ -119,10 +128,11 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
-    go_pay_find_payment_api_call_mock(state: "PAYMENT_METHOD_CHOSEN")
+    go_pay_check_transaction_api_call_mock(state: :payment_method_chosen)
 
-    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
+    get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
     assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
+    assert_not current_order.reload.paid?
   end
 
   test "user - unsuccessful payment" do
@@ -136,6 +146,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       order: {
         first_name: "John",
         last_name: "Doe",
+        # not needed for signed in user:    email: "order@test.test",
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
       }
     }
@@ -143,10 +154,11 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     post confirm_order_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
-    go_pay_find_payment_api_call_mock
+    go_pay_check_transaction_api_call_mock(state: :cancelled)
 
-    get comeback_go_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
+    get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
+    assert_redirected_to order_url(Boutique::Order.first.secret_hash)
+    assert_not current_order.reload.paid?
   end
 
   private

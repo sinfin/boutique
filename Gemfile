@@ -26,6 +26,9 @@ gem "omniauth-google-oauth2"
 gem "omniauth-twitter2"
 gem "omniauth-rails_csrf_protection"
 
+gem "comgate_ruby", "~> 0.7"
+# gem "comgate_ruby", path: "../comgate_ruby"
+
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "mocha", "~> 1.14.0"
@@ -36,6 +39,9 @@ end
 
 group :development do
   gem "puma", "< 6"
-
   gem "faker", require: false
+end
+
+group :development, :test do
+  gem "pry-byebug"
 end
