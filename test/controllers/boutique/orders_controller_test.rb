@@ -32,7 +32,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
 
   test "edit" do
     get edit_order_url
-    assert_redirected_to main_app.root_url
+    assert_response :success
 
     create_order_with_current_session_id
 

@@ -18,6 +18,7 @@ cs:
         password_reset: obnovit heslo
         order_for_free: Objednat zdarma
         email_input_label: E-mail (slouží pro přihlášení)
+        empty: Nákupní košík je prázdný.
 
         gift_recipient_address_fields:
           title: Adresa obdarovaného

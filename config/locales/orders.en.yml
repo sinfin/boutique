@@ -16,6 +16,7 @@ en:
         sign_in: Sign in
         order_for_free: Order for free
         email_input_label: E-mail (used for login)
+        empty: The shopping cart is empty.
 
         gift_recipient_address_fields:
           title: Gift recipient address
