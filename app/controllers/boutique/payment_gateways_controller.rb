@@ -30,7 +30,7 @@
     #   # @payment = order.payments.find_by_remote_id!(params[:id])
 
     def update_payment
-      transaction_result = Boutique::PaymentGateway.process_callback(params)
+      transaction_result = Boutique::PaymentGateway.process_callback(params.to_unsafe_h)
       result_hash = transaction_result.hash
 
       @payment = Boutique::Payment.find_by_remote_id!(result_hash[:transaction_id])
