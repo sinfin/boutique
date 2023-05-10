@@ -39,13 +39,14 @@
                 .b-orders-edit-summary__quantity
                   = g.input :amount, label: false
 
-  .b-orders-edit-summary__price-row
-    .row
-      .col-auto
-        = t('.shipping')
+  - unless model.object.digital_only?
+    .b-orders-edit-summary__price-row
+      .row
+        .col-auto
+          = t('.shipping')
 
-      .col.text-right
-        = price(model.object.shipping_price)
+        .col.text-right
+          = price(model.object.shipping_price)
 
   - if model.object.voucher.present?
     .b-orders-edit-summary__price-row
