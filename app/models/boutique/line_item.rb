@@ -29,6 +29,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product_variant.title
   end
 
+  def summary_title
+    product.title
+  end
+
+  def summary_subtitle
+    product_variant.title
+  end
+
   def to_full_label
     return to_label unless subscription? && subscription_starts_at?
 

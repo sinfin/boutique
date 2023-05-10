@@ -11,8 +11,8 @@
                   class: 'b-line-items-summary__line-item-cover')
         .col-7.b-orders-edit-summary__line-item-left
           .b-orders-edit-summary__line-item-name
-            = line_item.product_variant.product.to_label
-          | TODO
+            = line_item.summary_title
+          = line_item.summary_subtitle
 
         .col-3.b-orders-edit-summary__line-item-right
           = price(line_item.price)
