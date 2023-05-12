@@ -476,29 +476,34 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product_variant.product.shipping_info
   end
 
-  def add_line_item!(product_variant, amount: 1, additional_options: {})
+  def add_line_item!(product_variant, amount: 1)
     raise "Amount must be an integer" unless amount.is_a?(Integer)
 
+    li = nil
+
     Boutique::Order.transaction do
-      if line_item = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
-        line_item.amount += amount
-        line_item.subscription_recurring = nil
-        line_item.save!
+      if product_variant.product.subscription? && li = subscription_line_item
+        # only one product of subscription type is allowed in the order
+        li.amount = 1
+        li.product_variant = product_variant
+      elsif li = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
+        # variant is already in the order, just add the required amount
+        li.amount += amount
       else
-        line_items.build(product_variant:,
-                         amount:)
+        # variant isn't present in the order, add new line item
+        li = line_items.build(product_variant:,
+                              amount:)
       end
+
+      li.subscription_recurring = nil
+      li.subscription_period = nil
 
       self.site = product_variant.product.site
 
-      after_add_line_item(additional_options)
-
       save!
     end
-  end
 
-  def after_add_line_item(additional_options = {})
-    nil
+    li
   end
 
   def assign_voucher_by_code(code)
@@ -521,6 +526,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def giftable?
     renewed_subscription.nil?
+  end
+
+  def subscription_line_item
+    line_items.find(&:subscription?)
   end
 
   def subscription_period_to_human

@@ -226,12 +226,8 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     def add_line_item_options
-      options = { additional_options: add_line_item_additional_options }
+      options = {}
       options[:amount] = params[:amount].to_i if params[:amount].present?
       options
-    end
-
-    def add_line_item_additional_options
-      {}
     end
 end
