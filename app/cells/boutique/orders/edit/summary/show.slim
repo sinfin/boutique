@@ -5,11 +5,13 @@
   - line_items.each do |line_item|
     .b-orders-edit-summary__line-item
       .row
-        .col-2.b-orders-edit-summary__col-cover
-          = image(line_item.cover_placement_from_variant_or_product,
-                  THUMB_SIZE,
-                  class: 'b-line-items-summary__line-item-cover')
-        .col-7.b-orders-edit-summary__line-item-left
+        - if line_item.summary_cover_placement.present?
+          .col-2.b-orders-edit-summary__col-cover
+            = image(line_item.summary_cover_placement,
+                    THUMB_SIZE,
+                    class: 'b-line-items-summary__line-item-cover')
+
+        .col-auto.b-orders-edit-summary__line-item-left
           .b-orders-edit-summary__line-item-name
             = line_item.summary_title
           = line_item.summary_subtitle

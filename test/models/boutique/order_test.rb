@@ -14,6 +14,40 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     Rails.application.routes.default_url_options[:only_path] = false
   end
 
+  test "add_line_item" do
+    product_basic = create(:boutique_product)
+    order = create(:boutique_order)
+
+    assert_equal 0, order.line_items.count
+
+    line_item = order.add_line_item!(product_basic.master_variant)
+
+    assert_equal 1, order.line_items.count
+    assert_equal 1, line_item.amount
+
+    line_item = order.add_line_item!(product_basic.master_variant, amount: 2)
+
+    assert_equal 1, order.line_items.count
+    assert_equal 3, line_item.amount
+
+    product_subscription = create(:boutique_product_subscription)
+    line_item = order.add_line_item!(product_subscription.master_variant)
+
+    assert_equal 2, order.line_items.count
+    assert_equal 1, line_item.amount
+
+    line_item = order.add_line_item!(product_subscription.master_variant)
+
+    assert_equal 2, order.line_items.count
+    assert_equal 1, line_item.amount
+
+    line_item = order.add_line_item!(create(:boutique_product_subscription).master_variant)
+
+    assert_equal 2, order.line_items.count
+    assert_equal 1, line_item.amount
+  end
+
+
   test "revert_cancelation event returns order to correct state" do
     order = create(:boutique_order, :ready_to_be_confirmed)
 

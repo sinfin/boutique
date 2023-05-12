@@ -4,10 +4,11 @@
   .b-line-items-summary__flex
     - line_items.each do |line_item|
       .b-line-items-summary__line-item
-        .b-line-items-summary__line-item-cover-wrap
-          = image(line_item.cover_placement_from_variant_or_product,
-                  THUMB_SIZE,
-                  class: 'b-line-items-summary__line-item-cover')
+        - if line_item.summary_cover_placement.present?
+          .b-line-items-summary__line-item-cover-wrap
+            = image(line_item.summary_cover_placement,
+                    THUMB_SIZE,
+                    class: 'b-line-items-summary__line-item-cover')
 
         = simple_format(line_item.summary_text)
 

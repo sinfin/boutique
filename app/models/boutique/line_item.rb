@@ -29,12 +29,20 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product_variant.title
   end
 
+  def cover_placement_from_variant_or_product
+    product_variant.cover_placement || product_variant.product.cover_placement
+  end
+
   def summary_title
     product.title
   end
 
   def summary_subtitle
     product_variant.title
+  end
+
+  def summary_cover_placement
+    cover_placement_from_variant_or_product
   end
 
   def to_full_label
@@ -88,10 +96,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
     self.subscription_period = subscription_period
-  end
-
-  def cover_placement_from_variant_or_product
-    product_variant.cover_placement || product_variant.product.cover_placement
   end
 
   def summary_text
