@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Boutique::Order < Boutique::ApplicationRecord
-  include AASM
+  include Folio::HasAasmStates
   include Folio::HasAddresses
   include Folio::HasSecretHash
 
@@ -63,6 +63,12 @@ class Boutique::Order < Boutique::ApplicationRecord
   has_one :paid_payment, -> { paid },
                          class_name: "Boutique::Payment",
                          foreign_key: :boutique_order_id
+
+  has_many :shipments, -> { ordered },
+                      class_name: "Boutique::Shipment",
+                      foreign_key: :boutique_order_id,
+                      dependent: :destroy,
+                      inverse_of: :order
 
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
@@ -285,7 +291,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     states = Boutique::Order.aasm.states.map(&:name)
 
     event :confirm, private: true do
-      transitions from: :pending, to: :confirmed
+      transitions from: :pending, to: :confirmed, if: :passed_shipment_check
 
       before do
         set_numbers
@@ -819,6 +825,11 @@ class Boutique::Order < Boutique::ApplicationRecord
       if line_items.any? { |line_item| !line_item.marked_for_destruction? && line_item.requires_subscription_recurring? && [true, false].exclude?(line_item.subscription_recurring) }
         errors.add(:line_items, :missing_subscription_recurring)
       end
+    end
+
+    def passed_shipment_check
+      return true if line_items.all?(&:digital_only?)
+      return shipment.present?
     end
 end
 # == Schema Information
