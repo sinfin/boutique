@@ -6,6 +6,7 @@ module Boutique
                   :products_belong_to_site,
                   :parent_controller,
                   :after_order_paid_user_url_name,
+                  :checkout_routes_contstraints,
                   :invoice_number_base_length,
                   :invoice_number_with_year_prefix,
                   :invoice_number_resets_each_year,
@@ -23,6 +24,7 @@ module Boutique
       @products_belong_to_site = false
       @parent_controller = "ApplicationController"
       @after_order_paid_user_url_name = :root_url
+      @checkout_routes_contstraints = {}
       @invoice_number_base_length = 5
       @invoice_number_with_year_prefix = true
       @invoice_number_resets_each_year = true
