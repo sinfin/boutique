@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Boutique::Engine.routes.draw do
-  scope constraints: Boutique.config.checkout_routes_contstraints do
+  scope constraints: Boutique.config.checkout_routes_constraints do
     resource :order, only: %i[edit] do
       get :refreshed_edit
       get :crossdomain_add, path: "crossdomain_add/:product_slug"
