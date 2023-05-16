@@ -188,6 +188,10 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
                     .expects(:process_callback)
                     .with(comgate_like_params)
                     .returns(comgate_response)
+    Comgate::Gateway.any_instance
+                    .expects(:check_transaction)
+                    .with(transaction_id: transaction_id)
+                    .returns(comgate_response)
 
     Boutique::GoPay::UniversalGateway.any_instance
                     .expects(:process_callback)

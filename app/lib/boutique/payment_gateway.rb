@@ -16,16 +16,24 @@ class Boutique::PaymentGateway
   end
 
   def self.process_callback(params, provider: nil)
-    unless provider
-      provider = if params["transId"].present?
-        :comgate
-      else
-        :go_pay
-      end
-    end
+    provider ||= params["transId"].present? ? :comgate : :go_pay
 
-    gw = Boutique::PaymentGateway.new(provider)
-    gw.provider_gateway.process_callback(params)
+    case provider
+    when :comgate
+      # :comgate DO NOT CheckTransaction in process_callback
+      gw = Boutique::PaymentGateway.new(:comgate)
+      callback_res = gw.provider_gateway
+                       .process_callback(params)
+      # do not trust payment info from callback body
+      gw.check_transaction(callback_res.transaction_id)
+    when :go_pay
+      # go_pay DO CheckTransaction in process_callback
+      Boutique::PaymentGateway.new(:go_pay)
+                              .provider_gateway
+                              .process_callback(params)
+    else
+      raise "Uncaptured provider `#{provider}`"
+    end
   end
 
   def initialize(provider = nil)
