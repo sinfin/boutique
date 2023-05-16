@@ -76,15 +76,16 @@ end
 #
 # Table name: boutique_payments
 #
-#  id                :bigint(8)        not null, primary key
-#  boutique_order_id :bigint(8)        not null
-#  remote_id         :string
-#  aasm_state        :string           default("pending")
-#  payment_method    :string
-#  paid_at           :datetime
-#  cancelled_at      :datetime
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                       :bigint(8)        not null, primary key
+#  boutique_order_id        :bigint(8)        not null
+#  remote_id                :string
+#  aasm_state               :string           default("pending")
+#  payment_method           :string
+#  paid_at                  :datetime
+#  cancelled_at             :datetime
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  payment_gateway_provider :string
 #
 # Indexes
 #

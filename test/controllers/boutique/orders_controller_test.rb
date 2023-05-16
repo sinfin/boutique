@@ -86,6 +86,8 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     create_order_with_current_session_id
     go_pay_start_transaction_api_call_mock
 
+    assert @order.payments.blank?
+
     params = {
       order: {
         first_name: "John",
@@ -99,6 +101,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_redirected_to mocked_go_pay_payment_gateway_url
     assert @order.reload.confirmed?
     assert @order.payments.present?
+    assert_equal "go_pay", @order.payments.last.payment_gateway_provider
     assert @order.primary_address.present?
   end
 

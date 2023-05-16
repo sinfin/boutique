@@ -190,7 +190,7 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
                     .returns(comgate_response)
     Comgate::Gateway.any_instance
                     .expects(:check_transaction)
-                    .with(transaction_id: transaction_id)
+                    .with(transaction_id:)
                     .returns(comgate_response)
 
     Boutique::GoPay::UniversalGateway.any_instance
