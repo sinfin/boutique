@@ -32,8 +32,8 @@ module Boutique::CurrentOrder
   def create_current_order
     session[:init] = true if !session || !session.id
 
-    @current_order = Boutique::Order.create!(user: current_user,
-                                             web_session_id: session.id.public_id)
+    @current_order = current_order_scope.create!(user: current_user,
+                                                 web_session_id: session.id.public_id)
   end
 
   private
