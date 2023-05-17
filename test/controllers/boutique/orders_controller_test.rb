@@ -81,11 +81,12 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
 
   test "confirm" do
     post confirm_order_url
+
     assert_redirected_to main_app.root_url
 
     create_order_with_current_session_id
+    @order.shipments << build(:boutique_shipment) if @order.will_be_shipped?
     go_pay_start_transaction_api_call_mock
-
     assert @order.payments.blank?
 
     params = {
@@ -98,6 +99,7 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     }
 
     post confirm_order_url, params: params
+
     assert_redirected_to mocked_go_pay_payment_gateway_url
     assert @order.reload.confirmed?
     assert @order.payments.present?

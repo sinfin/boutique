@@ -12,6 +12,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   belongs_to :product_variant, class_name: "Boutique::ProductVariant",
                                foreign_key: :boutique_product_variant_id
 
+  has_many :line_item_package_links, -> { ordered },
+                               class_name: "Boutique::Delivery::LineItemPackageLink",
+                               foreign_key: :line_item_id,
+                               dependent: :destroy,
+                               inverse_of: :line_item
+
+  has_many :packages, through: :line_item_package_links
+
   scope :ordered, -> { order(id: :desc) }
 
   validates :amount,

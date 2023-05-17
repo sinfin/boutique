@@ -58,8 +58,9 @@ FactoryBot.define do
       line_items_count { 1 }
 
       before(:create) do |order, evaluator|
-        if order.primary_address.nil? && !evaluator.digital_only
-          order.primary_address = build(:boutique_folio_primary_address)
+        if !evaluator.digital_only
+          order.shipments << build(:boutique_shipment)
+          order.primary_address = build(:boutique_folio_primary_address) if order.primary_address.nil?
         end
       end
     end
@@ -107,7 +108,7 @@ FactoryBot.define do
         evaluator.line_items_count.times do
           product = evaluator.subscription_product ? create(:boutique_product_subscription) : create(:boutique_product)
           li = build(:boutique_line_item, product:)
-          li.product.update_column(:digital_only, true) if evaluator.digital_only
+          li.product.update_column(:digital_only, evaluator.digital_only)
           order.line_items << li
         end
       end
@@ -177,6 +178,15 @@ FactoryBot.define do
     city { "city" }
     zip { "12345" }
     country_code { "US" }
+  end
+
+  factory :boutique_shipment, class: "Boutique::Delivery::Shipment" do
+    branch_id { nil }
+    address { build(:boutique_folio_primary_address).attributes.slice("address_line_1", "city", "zip", "country_code") }
+    shipper_tracking_number { nil }
+    last_mile_carrier_tracking_number { nil }
+    tracking_history { "" }
+    state_history { nil }
   end
 end
 

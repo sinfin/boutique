@@ -549,13 +549,20 @@ class Boutique::OrderTest < ActiveSupport::TestCase
   end
 
   test "requires selected shipment before confirm, if there are for non digital items" do
-    order = create(:boutique_order, :ready_to_be_confirmed, email: "foo@test.test")
+    order = create(:boutique_order, :ready_to_be_confirmed,
+                                     email: "foo@test.test",
+                                     line_items_count: 0)
+
+    order.shipments = []
+    order.reload
+    assert order.shipments.blank?
+    assert order.line_items.blank?
     assert order.valid?
 
     digital_only_product = create(:boutique_product, digital_only: true)
-    digital_only_subscription = create(:boutique_product_subscription)
+    digital_only_subscription = create(:boutique_product_subscription, digital_only: true)
     not_digital_only_product = create(:boutique_product, digital_only: false)
-    not_digital_only_subscription = create(:boutique_product_subscription)
+    not_digital_only_subscription = create(:boutique_product_subscription, digital_only: false)
 
     order.line_items << build(:boutique_line_item, product: digital_only_product)
     assert_includes order.permitted_event_names, :confirm
@@ -566,14 +573,17 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     order.line_items << build(:boutique_line_item, product: not_digital_only_product)
     assert_not_includes order.permitted_event_names, :confirm
 
-    order.line_items =[build(:boutique_line_item, product: not_digital_only_subscription)]
+    order.line_items = [build(:boutique_line_item, product: not_digital_only_subscription)]
     assert_not_includes order.permitted_event_names, :confirm
+
+    order.shipments << build(:boutique_shipment)
+    assert_includes order.permitted_event_names, :confirm
   end
 
   test "#after payment, packages are created" do
-    skip
-    setup_emails
-    order = create(:boutique_order, :confirmed, line_items_count: 3, email: "foo@test.test")
+    order = create(:boutique_order, :confirmed,
+                                    line_items_count: 3,
+                                    email: "foo@test.test")
 
     assert_nil order.user
     assert_equal 0, order.packages.count

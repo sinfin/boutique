@@ -65,10 +65,17 @@ class Boutique::Order < Boutique::ApplicationRecord
                          foreign_key: :boutique_order_id
 
   has_many :shipments, -> { ordered },
-                      class_name: "Boutique::Shipment",
-                      foreign_key: :boutique_order_id,
+                      class_name: "Boutique::Delivery::Shipment",
+                      foreign_key: :order_id,
                       dependent: :destroy,
                       inverse_of: :order
+  has_one :last_shipment, -> { ordered },
+                          class_name: "Boutique::Delivery::Shipment",
+                          foreign_key: :order_id,
+                          dependent: :destroy,
+                          inverse_of: :order
+
+  has_many :packages, through: :shipments
 
   scope :ordered, -> { order(base_number: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
@@ -291,7 +298,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     states = Boutique::Order.aasm.states.map(&:name)
 
     event :confirm, private: true do
-      transitions from: :pending, to: :confirmed, if: :passed_shipment_check
+      transitions from: :pending, to: :confirmed, if: :passed_shipment_check?
 
       before do
         set_numbers
@@ -335,8 +342,10 @@ class Boutique::Order < Boutique::ApplicationRecord
           subscription.prolong!
         else
           invite_user!
-          set_up_subscription! unless subsequent?
+          set_up_subscription!
         end
+
+        create_packages if will_be_shipped?
 
         after_pay
       end
@@ -609,6 +618,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     !digital_only?
   end
 
+  def will_be_shipped?
+    requires_address?
+  end
+
   def self.csv_attribute_names
     %i[number email full_name line_items total_price primary_address secondary_address confirmed_at paid_at aasm_state invoice]
   end
@@ -827,9 +840,13 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def passed_shipment_check
-      return true if line_items.all?(&:digital_only?)
-      return shipment.present?
+    def passed_shipment_check?
+      return true unless will_be_shipped?
+      shipments.present?
+    end
+
+    def create_packages
+      last_shipment.packages.create!(line_items:)
     end
 end
 # == Schema Information

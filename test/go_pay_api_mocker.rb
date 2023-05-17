@@ -25,6 +25,7 @@ module Boutique::Test
         response_hash = {
           transaction_id: 123,
           redirect_to: nil,
+          method: :payment_card,
           state:
         }
 

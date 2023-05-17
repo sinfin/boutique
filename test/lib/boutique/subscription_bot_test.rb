@@ -39,6 +39,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
   # TODO: I do not understand this test
   test "charge_all_eligible" do
     target = create(:boutique_subscription, active_until: now + 6.hours)
+    target.product_variant.product.update!(digital_only: true)
     target_active_until = target.active_until # TODO: what is tihis good for?
 
     assert_equal 1, Boutique::Order.count

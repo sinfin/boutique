@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_16_074403) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_16_134931) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -43,6 +43,39 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_074403) do
     t.index ["placement_version"], name: "index_audits_on_placement_version"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "boutique_delivery_line_item_package_links", force: :cascade do |t|
+    t.bigint "line_item_id", null: false
+    t.bigint "package_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["line_item_id"], name: "index_boutique_delivery_line_item_package_links_on_line_item_id"
+    t.index ["package_id"], name: "index_boutique_delivery_line_item_package_links_on_package_id"
+  end
+
+  create_table "boutique_delivery_packages", force: :cascade do |t|
+    t.string "number"
+    t.bigint "shipment_id", null: false
+    t.string "aasm_state"
+    t.jsonb "state_history"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shipment_id"], name: "index_boutique_delivery_packages_on_shipment_id"
+  end
+
+  create_table "boutique_delivery_shipments", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "aasm_state"
+    t.integer "branch_id"
+    t.jsonb "address"
+    t.string "shipper_tracking_number"
+    t.string "last_mile_carrier_tracking_number"
+    t.jsonb "tracking_history"
+    t.jsonb "state_history"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_boutique_delivery_shipments_on_order_id"
   end
 
   create_table "boutique_line_items", force: :cascade do |t|
@@ -678,6 +711,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_074403) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  add_foreign_key "boutique_delivery_line_item_package_links", "boutique_delivery_packages", column: "package_id"
+  add_foreign_key "boutique_delivery_line_item_package_links", "boutique_line_items", column: "line_item_id"
+  add_foreign_key "boutique_delivery_packages", "boutique_delivery_shipments", column: "shipment_id"
+  add_foreign_key "boutique_delivery_shipments", "boutique_orders", column: "order_id"
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
   add_foreign_key "boutique_orders", "boutique_subscriptions"
