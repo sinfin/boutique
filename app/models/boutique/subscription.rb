@@ -12,6 +12,8 @@ class Boutique::Subscription < ApplicationRecord
                                foreign_key: :boutique_product_variant_id,
                                inverse_of: :subscriptions
 
+  has_one :product, through: :product_variant
+
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
                     inverse_of: :subscriptions,

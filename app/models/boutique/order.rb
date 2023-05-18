@@ -577,8 +577,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     transaction do
       self.gift_recipient = Folio::User.find_by(email: gift_recipient_email) || begin
         Folio::User.invite!(email: gift_recipient_email,
-                            first_name: gift_recipient_first_name,
-                            last_name: gift_recipient_last_name,
+                            first_name:,
+                            last_name:,
                             primary_address: primary_address.try(:dup),
                             source_site: site) do |u|
           u.skip_invitation = true
@@ -676,8 +676,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       transaction do
         if user.nil?
           self.user = Folio::User.invite!(email:,
-                                          first_name:,
-                                          last_name:,
+                                          first_name: gift ? nil : first_name,
+                                          last_name: gift ? nil : last_name,
                                           use_secondary_address:,
                                           primary_address: gift? ? nil : primary_address.try(:dup),
                                           secondary_address: secondary_address.try(:dup),

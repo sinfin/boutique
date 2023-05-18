@@ -5,8 +5,7 @@ cs:
       edit:
         addresses_fields_title:
           default: Doručovací údaje
-          contact: Kontaktní údaje
-          payer_contact: Kontaktní údaje plátce
+          gift: Doručovací údaje obdarovaného
 
         title: Objednávka
         quick_checkout: Rychlá objednávka
@@ -19,6 +18,7 @@ cs:
         order_for_free: Objednat zdarma
         email_input_label: E-mail (slouží pro přihlášení)
         empty: Nákupní košík je prázdný.
+        use_secondary_address: Jsem společnost a chci fakturu
 
         gift_recipient_address_fields:
           title: Adresa obdarovaného
