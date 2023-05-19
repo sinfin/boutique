@@ -1,0 +1,8 @@
+.b-orders-cart-sidebar
+  hr.b-orders-cart-sidebar__hr.b-adaptive-css-border-color-primary[
+    class="b-orders-cart-sidebar__hr--mobile-only"
+  ]
+
+  = cell('boutique/orders/cart/summary', model)
+
+  / == cell('boutique/orders/cart/sidebar/bottom', model.object)

@@ -2,7 +2,7 @@
 en:
   boutique:
     orders:
-      edit:
+      cart:
         addresses_fields_title:
           default: Shipping information
           contact: Contact information
@@ -35,14 +35,6 @@ en:
             contents: Includes
             shipping: Shipping
 
-        summary:
-          title: Order summary
-          automatic_renewal: Automatic renewal
-          shipping: Shipping
-          voucher: Discount voucher
-          total_price: Total
-          remove: remove
-
         subscription_fields:
           title: Subscription start
           hint: The number indicates the order of publication of the journal, not the calendar month.
@@ -66,9 +58,6 @@ en:
               one: 1 month
               other: "%{count} months"
 
-      confirm:
-        success_free: Order successful
-
       payment_methods:
         secured_by: Secured
         prices_include_vat: The listed prices include VAT.
@@ -83,6 +72,14 @@ en:
         unpaid: unpaid
         unpaid_notice: Please check payment status
         waiting_for_offline_payment_notice: Expecting payment by bank transfer
+
+      summary:
+        title: Order summary
+        automatic_renewal: Automatic renewal
+        shipping: Shipping
+        voucher: Discount voucher
+        total_price: Total
+        remove: remove
 
       invoice:
         customer: Customer
@@ -104,6 +101,3 @@ en:
         total_price_vat: VAT %{value} %
         total_price: Total price
         do_not_pay: DO NOT PAY, ALREADY PAID.
-
-      remove_item:
-        error: Line item could not be removed.

@@ -1,0 +1,9 @@
+---
+cs:
+  boutique:
+    checkout:
+      confirm:
+        success_free: Objednávka proběhla úspěšně
+
+      remove_item:
+        error: Položku se nepodařilo odebrat.

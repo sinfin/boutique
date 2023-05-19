@@ -71,7 +71,7 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
     render json: {
       data: {
-        sidebarBottom: cell("boutique/orders/edit/sidebar/bottom", current_order).show,
+        sidebarBottom: cell("boutique/orders/cart/sidebar/bottom", current_order).show,
         price: cell("boutique/orders/payment_methods/price", current_order.total_price).show,
       }
     }
@@ -95,7 +95,7 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
       format.json do
         render json: {
-          data: cell("boutique/orders/edit").show
+          data: cell("boutique/orders/cart").show
         }, status: 200
 
         # if current_order.errors.blank?

@@ -2,7 +2,7 @@
 cs:
   boutique:
     orders:
-      edit:
+      cart:
         addresses_fields_title:
           default: Doručovací údaje
           gift: Doručovací údaje obdarovaného
@@ -41,14 +41,6 @@ cs:
           title: Začátek předplatného
           hint: Uvedené číslo označuje pořadí vydání časopisu, nikoli kalendářní měsíc.
 
-        summary:
-          title: Rekapitulace objednávky
-          automatic_renewal: Automatická obnova
-          shipping: Doprava
-          voucher: Slevový kupón
-          total: Celkem
-          remove: odebrat
-
         voucher_fields:
           label: Slevový nebo dárkový kód
           apply: Uplatnit
@@ -69,9 +61,6 @@ cs:
               few: "%{count} měsíce"
               other: "%{count} měsíců"
 
-      confirm:
-        success_free: Objednávka proběhla úspěšně
-
       payment_methods:
         secured_by: Zabezpečeno
         prices_include_vat: Uvedené ceny jsou včetně DPH.
@@ -86,6 +75,14 @@ cs:
         unpaid: nezaplacena
         unpaid_notice: Prosíme prověřte stav platby
         waiting_for_offline_payment_notice: Očekáváme platbu převodem
+
+      summary:
+        title: Rekapitulace objednávky
+        automatic_renewal: Automatická obnova
+        shipping: Doprava
+        voucher: Slevový kupón
+        total: Celkem
+        remove: odebrat
 
       invoice:
         title: "Faktura – daňový doklad č. %{number}"
@@ -112,6 +109,3 @@ cs:
         total_price_vat: DPH %{value} %
         total_price: Celkem k úhradě
         do_not_pay: NEPLAŤTE, JIŽ UHRAZENO.
-
-      remove_item:
-        error: Položku se nepodařilo odebrat.

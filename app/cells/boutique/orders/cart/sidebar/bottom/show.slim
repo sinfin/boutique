@@ -1,0 +1,18 @@
+.b-orders-cart-sidebar-bottom
+  - if shipping_info
+    hr.b-orders-cart-sidebar__hr.b-adaptive-css-border-color-primary
+
+    div class=application_css_class("rich-text")
+      h4 = t('.shipping')
+
+      == cstypo shipping_info
+
+      - if shipping_price > 0
+        - if shipping_price_summary.present?
+          .mt-n3 = shipping_price_summary
+
+        h4 = price(shipping_price)
+
+  hr.b-orders-cart-sidebar__hr.b-adaptive-css-border-color-primary[
+    class="b-orders-cart-sidebar__hr--mobile-only"
+  ]
