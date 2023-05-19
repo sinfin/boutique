@@ -52,6 +52,8 @@ class Boutique::CheckoutController < Boutique::ApplicationController
   end
 
   def cart
+    @public_page_title = t(".public_page_title")
+
     @use_boutique_adaptive_css = true
   end
 

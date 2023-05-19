@@ -2,6 +2,9 @@
 cs:
   boutique:
     checkout:
+      cart:
+        public_page_title: Objednávka
+
       confirm:
         success_free: Objednávka proběhla úspěšně
 

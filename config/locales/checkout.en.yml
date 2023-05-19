@@ -2,6 +2,9 @@
 en:
   boutique:
     checkout:
+      cart:
+        public_page_title: Order
+
       confirm:
         success_free: Order successful
 
