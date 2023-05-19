@@ -44,7 +44,7 @@ class Boutique::CheckoutControllerTest < Boutique::ControllerTest
     assert_equal 0, @order.line_items.count
   end
 
-  test "edit" do
+  test "cart" do
     get cart_checkout_url
     assert_response :success
 
@@ -54,7 +54,7 @@ class Boutique::CheckoutControllerTest < Boutique::ControllerTest
     assert_response :success
   end
 
-  test "refreshed_edit" do
+  test "refreshed_cart" do
     assert_raises(ActionController::ParameterMissing) do
       get refreshed_cart_checkout_url
     end

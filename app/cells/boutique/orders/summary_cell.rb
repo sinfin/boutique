@@ -1,14 +1,31 @@
 # frozen_string_literal: true
 
-class Boutique::Orders::Cart::SummaryCell < Boutique::ApplicationCell
+class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
+  include SimpleForm::ActionViewExtensions::FormHelper
+
   THUMB_SIZE = "50x50#"
 
   def line_items
-    @line_items ||= model.object.line_items.includes(product_variant: { product: { cover_placement: :file } }).load
+    @line_items ||= model.line_items.includes(product_variant: { product: { cover_placement: :file } }).load
   end
 
-  def fields_for_line_item(line_item, &block)
-    model.simple_fields_for :line_items, line_item do |subfields|
+  def form(&block)
+    if model.pending?
+      opts = {
+        # url: controller.boutique.checkout_path,
+        url: "/TODO",
+        method: :post,
+        html: { class: "b-orders-summary__form" },
+      }
+
+      simple_form_for(model, opts, &block)
+    else
+      block.call(nil)
+    end
+  end
+
+  def fields_for_line_item(f, line_item, &block)
+    f.simple_fields_for :line_items, line_item do |subfields|
       (yield subfields).html_safe
     end
   end

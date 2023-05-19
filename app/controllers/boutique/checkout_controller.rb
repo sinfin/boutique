@@ -73,7 +73,8 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
     render json: {
       data: {
-        sidebarBottom: cell("boutique/orders/cart/sidebar/bottom", current_order).show,
+        # FIXME
+        # summary: cell("boutique/orders/summary", current_order).show,
         price: cell("boutique/orders/payment_methods/price", current_order.total_price).show,
       }
     }

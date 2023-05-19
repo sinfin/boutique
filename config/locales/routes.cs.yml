@@ -7,3 +7,4 @@ cs:
     checkout: nakup
     order: objednavka
     products: produkt
+    remote_item: odebrat

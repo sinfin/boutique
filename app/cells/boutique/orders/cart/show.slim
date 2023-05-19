@@ -2,14 +2,15 @@
   data-refreshed-url=controller.boutique.refreshed_cart_checkout_path
 ]
   .container-fluid
-    .h1.mt-0.mb-h.mb-lg-s
+    .h1.mt-0.mb-h
       = t('.title')
-    - if current_order.present? && current_order.line_items.present?
-      = form do |f|
-        .b-orders-cart__flex
-          main.b-orders-cart__col.b-orders-cart__col--main
-            = render(:_main_top)
 
+    - if current_order.present? && current_order.line_items.present?
+      .b-orders-cart__flex
+        main.b-orders-cart__col.b-orders-cart__col--main
+          = render(:_main_top)
+
+          = form do |f|
             - unless current_user
               .b-orders-cart__box
                 .b-orders-cart__box-inner
@@ -60,11 +61,6 @@
               .b-orders-cart__voucher-fields
                 == cell('boutique/orders/cart/voucher_fields', f)
 
-          aside.b-orders-cart__col.b-orders-cart__col--aside
-            == cell('boutique/orders/cart/sidebar', f)
-
-        .b-orders-cart__flex
-          main.b-orders-cart__col.b-orders-cart__col--main
             .b-orders-cart__recurrency-fields
               == cell('boutique/orders/cart/recurrency_fields', f)
 
@@ -80,6 +76,7 @@
               - else
                 == cell('boutique/orders/payment_methods', f, disclaimer:)
 
-        /aside.b-orders-cart__col.b-orders-cart__col--aside aria-hidden="true"
+        aside.b-orders-cart__col.b-orders-cart__col--aside
+          == cell('boutique/orders/cart/sidebar', current_order, form: true)
     - else
       h3 = t('.empty')
