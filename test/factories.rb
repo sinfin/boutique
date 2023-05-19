@@ -52,14 +52,14 @@ FactoryBot.define do
 
     trait :ready_to_be_confirmed do
       sequence(:email) { |i| "order-#{i}@email.email" }
-      first_name { "John" }
-      last_name { "Doe" }
 
       line_items_count { 1 }
 
-      before(:create) do |order, evaluator|
-        if order.primary_address.nil? && !evaluator.digital_only
-          order.primary_address = build(:boutique_folio_primary_address)
+      after(:build) do |order, evaluator|
+        unless evaluator.digital_only
+          order.first_name ||= "John"
+          order.last_name ||= "Doe"
+          order.primary_address ||= build(:boutique_folio_primary_address)
         end
       end
     end

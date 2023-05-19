@@ -222,8 +222,6 @@ class Boutique::Order < Boutique::ApplicationRecord
                   using: { tsearch: { prefix: true } }
 
   validates :email,
-            :first_name,
-            :last_name,
             :base_number,
             :number,
             :line_items,
@@ -244,6 +242,11 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   validate :validate_voucher_code
   validate :validate_email_not_already_registered, unless: :pending?
+
+  validates :first_name,
+            :last_name,
+            presence: true,
+            if: -> { requires_address? && !pending? }
 
   validates :gift_recipient_email,
             :gift_recipient_notification_scheduled_for,
