@@ -6,10 +6,13 @@
           class="b-orders-invoice__table-th--item"
           colspan=3
         ]
+
         th.b-orders-invoice__table-th.text-right [
           class="b-orders-invoice__table-th--price"
         ]
-          = t('.vat')
+          - unless hide_vat?
+            = t('.vat')
+
         th.b-orders-invoice__table-th.text-right [
           class="b-orders-invoice__table-th--commission"
         ]
@@ -22,8 +25,11 @@
         tr
           td.b-orders-invoice__table-td colspan=3
             = line_item.to_full_label
+
           td.b-orders-invoice__table-td.text-right
-            = "#{line_item.vat_rate_value} %"
+            - unless hide_vat?
+              = "#{line_item.vat_rate_value} %"
+
           td.b-orders-invoice__table-td.text-right
             = price(line_item.price + shipping_price_part, precision: 2,
                                                            zero_as_number: true)
@@ -36,32 +42,8 @@
             = price(model.discount * -1, precision: 2, zero_as_number: true)
 
     tbody.b-orders-invoice__table-summary
-      tr.b-orders-invoice__table-dark-border.border-top
-        td.b-orders-invoice__table-td [
-          class="pt-4 d-none d-sm-table-cell"
-          colspan=3
-        ]
-
-        td.b-orders-invoice__table-td [
-          class="font-weight-bold pt-4 d-none d-sm-table-cell"
-        ]
-          .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
-            = t('.total_price_without_vat')
-
-        td.b-orders-invoice__table-td [
-          class="font-weight-bold pt-4 d-sm-none"
-          colspan=4
-        ]
-          .h3.m-0.text-nowrap = t('.total_price_without_vat')
-
-        td.b-orders-invoice__table-td [
-          class="text-right font-weight-bold pt-4"
-        ]
-          .h3.m-0
-            = price(total_price_without_vat, precision: 2, zero_as_number: true)
-
-      - vat_amounts.each do |vat_rate_value, amount|
-        tr
+      - unless hide_vat?
+        tr.b-orders-invoice__table-dark-border.border-top
           td.b-orders-invoice__table-td [
             class="pt-4 d-none d-sm-table-cell"
             colspan=3
@@ -71,20 +53,45 @@
             class="font-weight-bold pt-4 d-none d-sm-table-cell"
           ]
             .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
-              = t('.total_price_vat', value: vat_rate_value)
+              = t('.total_price_without_vat')
 
           td.b-orders-invoice__table-td [
             class="font-weight-bold pt-4 d-sm-none"
             colspan=4
           ]
-            .h3.m-0.text-nowrap
-              = t('.total_price_vat', value: vat_rate_value)
+            .h3.m-0.text-nowrap = t('.total_price_without_vat')
 
           td.b-orders-invoice__table-td [
             class="text-right font-weight-bold pt-4"
-            colspan=2
           ]
-            .h3.m-0 = price(amount, precision: 2, zero_as_number: true)
+            .h3.m-0
+              = price(total_price_without_vat, precision: 2, zero_as_number: true)
+
+        - vat_amounts.each do |vat_rate_value, amount|
+          tr
+            td.b-orders-invoice__table-td [
+              class="pt-4 d-none d-sm-table-cell"
+              colspan=3
+            ]
+
+            td.b-orders-invoice__table-td [
+              class="font-weight-bold pt-4 d-none d-sm-table-cell"
+            ]
+              .b-orders-invoice__table-td-total-price.h3.m-0.text-nowrap
+                = t('.total_price_vat', value: vat_rate_value)
+
+            td.b-orders-invoice__table-td [
+              class="font-weight-bold pt-4 d-sm-none"
+              colspan=4
+            ]
+              .h3.m-0.text-nowrap
+                = t('.total_price_vat', value: vat_rate_value)
+
+            td.b-orders-invoice__table-td [
+              class="text-right font-weight-bold pt-4"
+              colspan=2
+            ]
+              .h3.m-0 = price(amount, precision: 2, zero_as_number: true)
 
       tr.b-orders-invoice__table-dark-border.border-top
         td.b-orders-invoice__table-td [

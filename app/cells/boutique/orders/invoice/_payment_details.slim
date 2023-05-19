@@ -25,13 +25,14 @@ table.b-orders-invoice__plain-table
         .mt-4.mt-md-0.w-100
           table.w-100
             tbody
-              tr
-                td.b-orders-invoice__payment-cell.pr-2
-                  = t('.taxable_fulfillment_due_date')
+              - unless hide_vat?
+                tr
+                  td.b-orders-invoice__payment-cell.pr-2
+                    = t('.taxable_fulfillment_due_date')
 
-                - if model.paid_at.present?
-                  td.b-orders-invoice__payment-cell
-                    = l(model.paid_at, format: :as_date)
+                  - if model.paid_at.present?
+                    td.b-orders-invoice__payment-cell
+                      = l(model.paid_at, format: :as_date)
 
               - if model.paid_at.present?
                 tr

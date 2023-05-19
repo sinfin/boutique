@@ -51,4 +51,9 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
       model.total_price - vat_amounts.values.sum
     end
   end
+
+  def hide_vat?
+    return @hide_vat unless @hide_vat.nil?
+    @hide_vat = model.try(:hide_invoice_vat?) == true
+  end
 end
