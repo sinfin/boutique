@@ -20,7 +20,7 @@
           = price(line_item.price)
           br
           a.b-orders-edit-summary__remove-btn[
-            href=controller.remove_item_order_url(line_item)
+            href=controller.remove_item_checkout_url(line_item)
             data-method="delete"
           ] = t('.remove')
 

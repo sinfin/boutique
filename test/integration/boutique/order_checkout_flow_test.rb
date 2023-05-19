@@ -14,8 +14,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   end
 
   test "anonymous - successful payment" do
-    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
-    assert_redirected_to edit_order_url
+    post add_item_checkout_url(@product), params: { product_variant_id: @product.master_variant.id }
+    assert_redirected_to cart_checkout_url
 
     params = {
       order: {
@@ -26,7 +26,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       }
     }
 
-    post confirm_order_url, params: params
+    post confirm_checkout_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_check_transaction_api_call_mock(state: :paid)
@@ -38,8 +38,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   end
 
   test "anonymous - offline payment" do
-    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
-    assert_redirected_to edit_order_url
+    post add_item_checkout_url(@product), params: { product_variant_id: @product.master_variant.id }
+    assert_redirected_to cart_checkout_url
 
     params = {
       order: {
@@ -50,7 +50,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       }
     }
 
-    post confirm_order_url, params: params
+    post confirm_checkout_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_check_transaction_api_call_mock(state: :payment_method_chosen)
@@ -61,8 +61,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
   end
 
   test "anonymous - unsuccessful payment" do
-    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
-    assert_redirected_to edit_order_url
+    post add_item_checkout_url(@product), params: { product_variant_id: @product.master_variant.id }
+    assert_redirected_to cart_checkout_url
 
     params = {
       order: {
@@ -73,7 +73,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       }
     }
 
-    post confirm_order_url, params: params
+    post confirm_checkout_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_check_transaction_api_call_mock(state: :cancelled)
@@ -87,8 +87,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     user = create(:folio_user)
     sign_in user
 
-    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
-    assert_redirected_to edit_order_url
+    post add_item_checkout_url(@product), params: { product_variant_id: @product.master_variant.id }
+    assert_redirected_to cart_checkout_url
 
     params = {
       order: {
@@ -99,7 +99,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       }
     }
 
-    post confirm_order_url, params: params
+    post confirm_checkout_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_check_transaction_api_call_mock(state: :paid)
@@ -113,8 +113,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     user = create(:folio_user)
     sign_in user
 
-    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
-    assert_redirected_to edit_order_url
+    post add_item_checkout_url(@product), params: { product_variant_id: @product.master_variant.id }
+    assert_redirected_to cart_checkout_url
 
     params = {
       order: {
@@ -125,7 +125,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       }
     }
 
-    post confirm_order_url, params: params
+    post confirm_checkout_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_check_transaction_api_call_mock(state: :payment_method_chosen)
@@ -139,8 +139,8 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     user = create(:folio_user)
     sign_in user
 
-    post add_order_url(@product), params: { product_variant_id: @product.master_variant.id }
-    assert_redirected_to edit_order_url
+    post add_item_checkout_url(@product), params: { product_variant_id: @product.master_variant.id }
+    assert_redirected_to cart_checkout_url
 
     params = {
       order: {
@@ -151,7 +151,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
       }
     }
 
-    post confirm_order_url, params: params
+    post confirm_checkout_url, params: params
     assert_redirected_to mocked_go_pay_payment_gateway_url
 
     go_pay_check_transaction_api_call_mock(state: :cancelled)

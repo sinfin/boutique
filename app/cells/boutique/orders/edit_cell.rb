@@ -12,7 +12,7 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
 
   def form(&block)
     opts = {
-      url: controller.boutique.confirm_order_path,
+      url: controller.boutique.confirm_checkout_path,
       method: :post,
       html: { class: "b-orders-edit__form" },
     }
