@@ -1,4 +1,9 @@
 ---
 cs:
   routes:
+    add_item: pridat
+    cart: kosik
+    confirm: potvrdit
+    checkout: nakup
+    order: objednavka
     products: produkt
