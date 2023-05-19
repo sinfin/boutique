@@ -31,15 +31,18 @@
               = "#{line_item.vat_rate_value} %"
 
           td.b-orders-invoice__table-td.text-right
-            = price(line_item.price + shipping_price_part, precision: 2,
-                                                           zero_as_number: true)
+            = price(line_item.price + shipping_price_part,
+                    precision: 2,
+                    zero_as_number: true)
 
       - if model.voucher_code.present?
         tr
           td.b-orders-invoice__table-td colspan=4
             = t(".discount", code: model.voucher_code.upcase)
           td.b-orders-invoice__table-td.text-right
-            = price(model.discount * -1, precision: 2, zero_as_number: true)
+            = price(model.discount * -1,
+                    precision: 2,
+                    zero_as_number: true)
 
     tbody.b-orders-invoice__table-summary
       - unless hide_vat?
@@ -65,7 +68,9 @@
             class="text-right font-weight-bold pt-4"
           ]
             .h3.m-0
-              = price(total_price_without_vat, precision: 2, zero_as_number: true)
+              = price(total_price_without_vat,
+                      precision: 2,
+                      zero_as_number: true)
 
         - vat_amounts.each do |vat_rate_value, amount|
           tr
@@ -91,7 +96,9 @@
               class="text-right font-weight-bold pt-4"
               colspan=2
             ]
-              .h3.m-0 = price(amount, precision: 2, zero_as_number: true)
+              .h3.m-0 = price(amount,
+                              precision: 2,
+                              zero_as_number: true)
 
       tr.b-orders-invoice__table-dark-border.border-top
         td.b-orders-invoice__table-td [
@@ -115,7 +122,9 @@
           class="text-right font-weight-bold pt-4"
           colspan=2
         ]
-          .h3.m-0 = price(model.total_price, precision: 2, zero_as_number: true)
+          .h3.m-0 = price(model.total_price,
+                          precision: 2,
+                          zero_as_number: true)
 
       tr.font-weight-bold
         td.b-orders-invoice__table-td [

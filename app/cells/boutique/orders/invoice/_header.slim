@@ -3,7 +3,8 @@ table.b-orders-invoice__plain-table
     tr
       td.b-orders-invoice__header-td-first
         ul
-          li.font-weight-bold = current_site.billing_name
+          li.font-weight-bold = t('.supplier')
+          li = current_site.billing_name
           li = current_site.billing_address_line_1
           li = current_site.billing_address_line_2
           li
@@ -15,7 +16,7 @@ table.b-orders-invoice__plain-table
       td.b-orders-invoice__header-td-second
         ul.mt-4.mt-sm-0
           li.font-weight-bold = t('.customer')
-          li.font-weight-bold
+          li
             = billing_name
 
           - if billing_address.present?

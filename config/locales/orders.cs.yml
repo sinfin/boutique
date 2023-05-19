@@ -91,6 +91,7 @@ cs:
         title: "Faktura – daňový doklad č. %{number}"
         title_free: "Faktura č. %{number}"
         customer: Odběratel
+        supplier: Dodavatel
         country_name:
           CZ: Česká republika
           SK: Slovenská republika

@@ -85,8 +85,9 @@ en:
         waiting_for_offline_payment_notice: Expecting payment by bank transfer
 
       invoice:
-        title: "Invoice n. %{number}"
         customer: Customer
+        supplier: Suplier
+        title: "Invoice n. %{number}"
 
         payment_method: "Payment method: "
         payment_method_card: Card
