@@ -21,9 +21,10 @@ Boutique::Engine.routes.draw do
         post :payment
       end
     end
+
+    get "invoice/:secret_hash", to: "invoices#show", as: :invoice
   end
 
-  get "invoice/:secret_hash", to: "invoices#show", as: :invoice
 
   get "after_payment", to: "payment_gateways#after_payment", as: :return_after_pay # URL address for return to e-shop (with protocol)
   match "payment_callback", to: "payment_gateways#payment_callback", via: [:get, :post], as: :payment_callback # URL address for sending asynchronous notification in the case of changes in the payment status (with protocol)

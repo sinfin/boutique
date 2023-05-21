@@ -5,6 +5,7 @@ cs:
     cart: kosik
     confirm: potvrdit
     checkout: nakup
+    invoice: faktura
     order: objednavka
     products: produkt
     remote_item: odebrat
