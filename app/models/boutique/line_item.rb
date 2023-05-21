@@ -44,14 +44,12 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def to_full_label
-    return to_label unless subscription? && subscription_starts_at?
+    return to_label unless subscription_starts_at && subscription_period
 
-    from = product.issue_at(subscription_starts_at)
-    to = product.issue_at(subscription_starts_at + 11.months)
+    from = I18n.l(subscription_starts_at, format: :as_date)
+    to = I18n.l(subscription_starts_at + subscription_period.months, format: :as_date)
 
-    return to_label unless from && to
-
-    "#{to_label} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
+    "#{to_label} (#{from} – #{to})"
   end
 
   def to_console_label
