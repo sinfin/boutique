@@ -55,13 +55,8 @@ class Boutique::Subscription < ApplicationRecord
   scope :ordered, -> { order(active_until: :asc, active_from: :asc) }
 
   validates :active_from,
-            # :active_until,
             :period,
             presence: true
-
-  # validates :payment,
-  #           presence: true,
-  #           unless: :cancelled?
 
   validate :validate_primary_address_attributes
 
@@ -124,18 +119,23 @@ class Boutique::Subscription < ApplicationRecord
   end
 
   def cancel!
-    if cancelled_at.nil?
-      now = current_time_from_proper_timezone
-      update_columns(cancelled_at: now,
-                     updated_at: now)
-      true
-    else
-      errors.add(:base, :already_cancelled)
-      false
+    if !recurrent?
+      errors.add(:base, :non_recurrent)
+      return false
     end
+
+    if cancelled?
+      errors.add(:base, :already_cancelled)
+      return false
+    end
+
+    now = current_time_from_proper_timezone
+    update_columns(recurrent: false,
+                   cancelled_at: now,
+                   updated_at: now)
   end
 
-  def prolong!
+  def extend!
     update!(active_until: active_until + period.months)
   end
 

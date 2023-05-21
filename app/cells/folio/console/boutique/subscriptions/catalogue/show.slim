@@ -1,5 +1,6 @@
 .f-c-b-subscriptions-catalogue
-  = catalogue(model, collection_actions: options[:collection_actions])
+  = catalogue(model, address: model.any?(&:primary_address),
+                     collection_actions: options[:collection_actions])
     ruby:
       attribute :product do
         record.product_variant.to_console_label
@@ -12,9 +13,11 @@
         end
       end
 
-      attribute :primary_address, small: true do
-        if record.primary_address.present?
-          record.primary_address.to_label
+      if options[:address]
+        attribute :primary_address, small: true do
+          if record.primary_address.present?
+            record.primary_address.to_label
+          end
         end
       end
 
@@ -24,11 +27,9 @@
 
       attribute :cancelled_at do
         if record.cancelled_at?
-          if record.cancelled_at == record.active_from
-            t(".boutique/subscription.non_recurring_subscription")
-          else
-            l(record.cancelled_at, format: :short)
-          end
+          l(record.cancelled_at, format: :short)
+        elsif !record.recurrent?
+          t(".boutique/subscription.non_recurring_subscription")
         end
       end
 

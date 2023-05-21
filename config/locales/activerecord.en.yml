@@ -82,3 +82,4 @@ en:
         boutique/subscription:
           base:
             already_cancelled: Automatic renewal is already cancelled.
+            non_recurrent: Automatic renewal isn't active.

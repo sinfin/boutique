@@ -169,8 +169,9 @@ cs:
             gift_recipient_notification_scheduled_for:
               in_the_past: nesmí být v minulosti
             line_items:
-              missing_subscription_recurring: nemají vybraný způsob obnovy
+              missing_subscription_recurrence: nemají vybraný způsob obnovy
 
         boutique/subscription:
           base:
             already_cancelled: Automatická obnova již zrušena.
+            non_recurrent: Automatická obnova není aktivní.

@@ -182,7 +182,7 @@ class Boutique::CheckoutController < Boutique::ApplicationController
                                   boutique_product_variant_id
                                   subscription_starts_at
                                   subscription_recurring
-                                  subscription_recurring_period]
+                                  subscription_period]
       ]
     end
 

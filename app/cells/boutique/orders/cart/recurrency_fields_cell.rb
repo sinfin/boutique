@@ -12,14 +12,7 @@ class Boutique::Orders::Cart::RecurrencyFieldsCell < ApplicationCell
   end
 
   def nonrecurring_visible?
-    params["nonrecurring_payment_visible"].present?
-  end
-
-  def collection
-    [
-      [true, t(".title_true"), true_title],
-      [false, t(".title_false"), "<p>#{t(".text_false")}</p>"],
-    ]
+    params["nonrecurring_payment_visible"].present? || subscription_line_item.subscription_period.present?
   end
 
   def text_true
@@ -27,13 +20,26 @@ class Boutique::Orders::Cart::RecurrencyFieldsCell < ApplicationCell
                            .orders_edit_recurrency_title_proc
                            .call(context: self,
                                  current_site:,
-                                 period: model.object.subscription_period_to_human,
-                                 price: model.object.total_price,
-                                 product: model.object.line_items.first.product)
+                                 period: subscription_period_to_human,
+                                 price: subscription_line_item.unit_price,
+                                 product: subscription_line_item.product)
+  end
+
+  def subscription_line_item
+    @subscription_line_item ||= model.object.subscription_line_item
+  end
+
+  def subscription_period_to_human
+    case months = subscription_line_item.product_variant.subscription_period
+    when 12
+      I18n.t("datetime.each.year")
+    else
+      I18n.t("datetime.each.month", count: months)
+    end
   end
 
   def show_error_message?
-    model.object.errors && model.object.errors.where(:line_items, :missing_subscription_recurring).present?
+    model.object.errors && model.object.errors.where(:line_items, :missing_subscription_recurrence).present?
   end
 
   def nonrecurring_payment_option_input_class_name

@@ -228,7 +228,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             unless: :pending?
 
-  validate :validate_line_items_subscription_recurring,
+  validate :validate_line_items_subscription_recurrence,
            unless: :pending?
 
   validates :site,
@@ -329,7 +329,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after do
         if subsequent?
-          subscription.prolong!
+          subscription.extend!
         else
           invite_user!
           set_up_subscription! unless subsequent?
@@ -535,19 +535,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.find(&:subscription?)
   end
 
-  def subscription_period_to_human
-    subscription_period = line_items.first.try(:subscription_period)
-
-    return unless subscription_period.present?
-
-    case subscription_period
-    when 12
-      I18n.t("datetime.each.year")
-    else
-      I18n.t("datetime.each.month", count: subscription_period)
-    end
-  end
-
   def invoice_note
     nil
   end
@@ -565,8 +552,6 @@ class Boutique::Order < Boutique::ApplicationRecord
                        payment_method: transaction.hash[:payment][:method])
     rescue Boutique::PaymentGateway::Error => error
       if error.stopped_recurrence?
-        # 342: PAYMENT_RECURRENCE_STOPPED
-        # cancel subscription if recurrence was stopped in GoPay admin
         subscription.cancel!
       else
         raise error
@@ -695,14 +680,11 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def set_up_subscription!
-      li = line_items.select(&:subscription?)
+      li = subscription_line_item
 
-      return if li.empty?
+      return if li.nil?
 
-      fail "multiple subscriptions in one order are not implemented" if li.size > 1
-
-      line_item = li.first
-      period = line_item.product_variant.subscription_period
+      period = li.subscription_period || li.product_variant.subscription_period
 
       if requires_address?
         address = primary_address.try(:dup)
@@ -710,26 +692,25 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       if renewed_subscription.present?
-        renewed_subscription.cancelled_at = nil if line_item.subscription_recurring?
+        renewed_subscription.cancelled_at = nil if li.subscription_recurring?
 
         renewed_subscription.update!(payment: paid_payment,
                                      active_until: renewed_subscription.active_until + period.months,
                                      primary_address: address)
         update!(subscription: renewed_subscription)
       else
-        active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
+        active_from = li.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
         active_until = active_from + period.months
-        cancelled_at = active_from unless line_item.subscription_recurring?
         subscriber = user unless gift?
 
         create_subscription!(payment: paid_payment,
-                             product_variant: line_item.product_variant,
+                             product_variant: li.product_variant,
                              user: subscriber,
                              payer: user,
                              period:,
                              active_from:,
                              active_until:,
-                             cancelled_at:,
+                             recurrent: li.subscription_recurring?,
                              primary_address: address)
       end
     end
@@ -816,11 +797,12 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def validate_line_items_subscription_recurring
+    def validate_line_items_subscription_recurrence
       return unless recurrent_payment_available?
 
-      if line_items.any? { |line_item| !line_item.marked_for_destruction? && line_item.requires_subscription_recurring? && [true, false].exclude?(line_item.subscription_recurring) }
-        errors.add(:line_items, :missing_subscription_recurring)
+      li = subscription_line_item
+      if li && !li.marked_for_destruction? && li.requires_subscription_recurring? && !li.subscription_recurring? && li.subscription_period.nil?
+        errors.add(:line_items, :missing_subscription_recurrence)
       end
     end
 end

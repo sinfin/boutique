@@ -139,6 +139,7 @@ FactoryBot.define do
   factory :boutique_subscription, class: "Boutique::Subscription" do
     active_from { 1.minute.ago }
     active_until { 1.minute.ago + 12.months }
+    recurrent { true }
 
     association :primary_address, factory: :folio_address_primary, name: "name"
 

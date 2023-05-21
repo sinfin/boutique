@@ -54,13 +54,13 @@
     {ORDER_SUMMARY_PLAIN}
   body_html_en: |
     <p>Hi</p>
-    <p>We thank you for your payment, your subscription has been prolonged.</p>
+    <p>We thank you for your payment, your subscription has been extended.</p>
     <p>Here is summary of your order #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_en: |
     Hi
-    We thank you for your payment, your subscription has been prolonged.
+    We thank you for your payment, your subscription has been extended.
     Here is summary of your order #{ORDER_NUMBER}:
 
     {ORDER_SUMMARY_PLAIN}

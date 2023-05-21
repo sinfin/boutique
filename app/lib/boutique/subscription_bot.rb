@@ -72,7 +72,8 @@ class Boutique::SubscriptionBot
 
       Boutique::Subscription.includes(:orders, :payment)
                             .where(active_until:,
-                                   cancelled_at: nil)
+                                   cancelled_at: nil,
+                                   recurrent: true)
     end
 
     def now
