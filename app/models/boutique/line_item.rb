@@ -86,14 +86,20 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     (unit_price - unit_price_vat.to_d).to_f
   end
 
-  # def subscription_period
-  #   super || product_variant.subscription_period
-  # end
+  def subscription_starts_at
+    super || order.gift_recipient_notification_scheduled_for || order.confirmed_at
+  end
 
   def imprint
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
-    # self.subscription_period = subscription_period
+
+    if subscription?
+      self.subscription_starts_at = subscription_starts_at
+      self.subscription_period ||= 1
+    end
+
+    self
   end
 
   def summary_text

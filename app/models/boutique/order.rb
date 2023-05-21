@@ -699,17 +699,15 @@ class Boutique::Order < Boutique::ApplicationRecord
                                      primary_address: address)
         update!(subscription: renewed_subscription)
       else
-        active_from = li.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
-        active_until = active_from + period.months
         subscriber = user unless gift?
 
         create_subscription!(payment: paid_payment,
                              product_variant: li.product_variant,
                              user: subscriber,
                              payer: user,
+                             active_from: li.subscription_starts_at,
+                             active_until: li.subscription_starts_at + period.months,
                              period:,
-                             active_from:,
-                             active_until:,
                              recurrent: li.subscription_recurring?,
                              primary_address: address)
       end
