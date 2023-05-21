@@ -1,4 +1,5 @@
 h3.b-orders-payment-methods-price
   span = t('.title', price: price(model))
-  span.b-orders-payment-methods-price__quantity
-    = t('.monthly')
+  - if options[:recurrent]
+    span.b-orders-payment-methods-price__quantity
+      = t('.monthly')

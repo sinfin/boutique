@@ -1,6 +1,8 @@
 .b-orders-payment-methods
   - if options[:title] != false
-    == cell('boutique/orders/payment_methods/price', f.object.total_price)
+    == cell('boutique/orders/payment_methods/price',
+            f.object.total_price,
+            recurrent: recurrent?)
 
   input.b-orders-payment-methods__hidden-method[
     type="hidden"
