@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_16_074403) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_17_230958) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -183,6 +183,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_074403) do
     t.datetime "updated_at", null: false
     t.bigint "primary_address_id"
     t.bigint "payer_id"
+    t.boolean "recurrent", default: false
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"
@@ -191,6 +192,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_074403) do
     t.index ["folio_user_id"], name: "index_boutique_subscriptions_on_folio_user_id"
     t.index ["payer_id"], name: "index_boutique_subscriptions_on_payer_id"
     t.index ["primary_address_id"], name: "index_boutique_subscriptions_on_primary_address_id"
+    t.index ["recurrent"], name: "index_boutique_subscriptions_on_recurrent"
   end
 
   create_table "boutique_vat_rates", force: :cascade do |t|

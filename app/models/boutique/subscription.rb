@@ -183,6 +183,7 @@ end
 #  updated_at                  :datetime         not null
 #  primary_address_id          :bigint(8)
 #  payer_id                    :bigint(8)
+#  recurrent                   :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -194,6 +195,7 @@ end
 #  index_boutique_subscriptions_on_folio_user_id                (folio_user_id)
 #  index_boutique_subscriptions_on_payer_id                     (payer_id)
 #  index_boutique_subscriptions_on_primary_address_id           (primary_address_id)
+#  index_boutique_subscriptions_on_recurrent                    (recurrent)
 #
 # Foreign Keys
 #
