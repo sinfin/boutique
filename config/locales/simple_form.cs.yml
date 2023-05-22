@@ -2,13 +2,16 @@
 cs:
   simple_form:
     hints:
+      product:
+        variants:
+          title: Nepovinný údaj. Pokud má produkt pouze jednu variantu, není potřeba vyplňovat.
+
       voucher:
         code: Libovolný řetězec znaků, nerozlišují se velká a malá písmena.
         code_prefix: 3-5 znaků (pro plně generovaný kód ponechte prázdné).
         number_of_allowed_uses: Pro neomezený počet použití ponechte prázdné.
         product_code: Vícero kódů oddělte čárkou.
         title: ''
-
 
       site:
         recurring_payment_disclaimer: Zobrazuje se v checkoutu při aktivní rekurentní platbě, použijte klíčová slova {AMOUNT} pro vložení dané částky a {TERMS_URL} pro adresu obchodních podmínek.

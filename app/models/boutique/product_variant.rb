@@ -16,10 +16,6 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     joins(:product).where(boutique_products: { type: "Boutique::Product::Subscription" })
   }
 
-  def title
-    super || product.title
-  end
-
   def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],

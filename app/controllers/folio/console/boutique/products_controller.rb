@@ -3,6 +3,10 @@
 class Folio::Console::Boutique::ProductsController < Folio::Console::BaseController
   folio_console_controller_for "Boutique::Product"
 
+  def new
+    @product.variants.build(master: true)
+  end
+
   private
     def product_params
       params.require(:product)
