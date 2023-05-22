@@ -52,7 +52,8 @@ class Boutique::MailerBot
 
     def subscriptions_for_will_be_paid_in_a_week
       Boutique::Subscription.where(active_until: (now + 1.week - 1.hour)..(now + 1.week),
-                                   cancelled_at: nil)
+                                   cancelled_at: nil,
+                                   period: 12)
     end
 
     def subscriptions_for_failure

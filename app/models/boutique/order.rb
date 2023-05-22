@@ -333,7 +333,9 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after_commit do
         if subsequent?
-          mailer_paid_subsequent.deliver_later
+          if subscription && subscription.period == 12
+            mailer_paid_subsequent.deliver_later
+          end
         else
           mailer_paid.deliver_later
         end
