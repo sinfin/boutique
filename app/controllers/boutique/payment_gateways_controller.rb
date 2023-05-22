@@ -2,6 +2,7 @@
 
   class Boutique::PaymentGatewaysController < Boutique::ApplicationController
     include Boutique::RedirectAfterOrderPaid
+    skip_before_action :verify_authenticity_token
 
     before_action :update_payment
     # for GO PAY it is returning at "http://folio-1.com/after_payment?order_id=joQNtFWDudZAxk9gOmFEUA&id=3186828749"
