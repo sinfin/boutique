@@ -48,7 +48,9 @@
 
             .b-orders-cart__box[
               class="b-orders-cart__addresses-fields"
+              class="b-orders-cart__addresses-fields--company"
             ]
+              - current_order.force_address_validation = true
               == cell('folio/addresses/fields',
                       f,
                       title: false,
@@ -56,6 +58,9 @@
                       names: false,
                       primary_address: false,
                       use_secondary_address_label: t(".use_secondary_address"))
+
+              == cell('boutique/ui/scroll_icon',
+                      class: 'b-orders-cart__scroll-icon')
 
             - unless current_order.voucher_code.nil? && current_order.free?
               .b-orders-cart__voucher-fields

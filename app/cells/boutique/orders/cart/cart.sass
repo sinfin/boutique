@@ -26,6 +26,7 @@ $white-beige: #F9F8F4 !default
 
     .f-addresses-fields
       margin: 0
+      width: 100%
 
     .form-control
       background: none !important
@@ -49,6 +50,27 @@ $white-beige: #F9F8F4 !default
 
       .f-togglable-fields__label
         cursor: pointer
+
+  &__addresses-fields--company
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    .f-togglable-fields__label
+      background: none !important
+      padding-top: 0 !important
+      padding-bottom: 0 !important
+      padding-left: 30px !important
+      font-weight: $font-weight-bold!important
+
+    .f-togglable-fields__input
+      margin-top: 0.1rem !important
+      margin-left: 0 !important
+
+  &__scroll-icon
+    position: absolute
+    right: 30px
+    top: 31px
 
   &__product-variant-description
     margin: 20px 0
@@ -137,3 +159,8 @@ $white-beige: #F9F8F4 !default
 
     &__voucher-fields
       margin-bottom: 10px
+
+    &__scroll-icon
+      position: absolute
+      right: 15px
+      top: 12px
