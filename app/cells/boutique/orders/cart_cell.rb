@@ -79,7 +79,7 @@ class Boutique::Orders::CartCell < Boutique::ApplicationCell
 
   private
     def assign_name_and_addresses
-      if current_user.present? && !current_order.changed?
+      if current_user && current_order && !current_order.changed?
 
         if current_order.renewed_subscription.try(:primary_address).present?
           names = current_order.renewed_subscription.primary_address.name.split(" ", 2)
