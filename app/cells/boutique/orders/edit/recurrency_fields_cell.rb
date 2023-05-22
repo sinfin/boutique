@@ -17,13 +17,13 @@ class Boutique::Orders::Edit::RecurrencyFieldsCell < ApplicationCell
   end
 
   def true_title
-    Boutique.config
-            .orders_edit_recurrency_title_proc
-            .call(context: self,
-                  current_site:,
-                  period: model.object.subscription_period_to_human,
-                  price: model.object.total_price,
-                  product: model.object.line_items.first.product)
+    @true_title ||= Boutique.config
+                            .orders_edit_recurrency_title_proc
+                            .call(context: self,
+                                  current_site:,
+                                  period: model.object.subscription_period_to_human,
+                                  price: model.object.total_price,
+                                  product: model.object.line_items.first.product)
   end
 
   def show_error_message?
