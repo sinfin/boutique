@@ -4,6 +4,7 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
   folio_console_controller_for "Boutique::Product"
 
   def new
+    @product.type = Boutique::Product::Basic
     @product.variants.build(master: true)
   end
 
