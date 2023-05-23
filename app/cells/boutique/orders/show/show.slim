@@ -2,38 +2,40 @@
   .container-fluid
     .row
       .col-lg-8
-        .b-orders-show__box
-          h1 = t(".title", number: model.number)
+        h1.b-orders-show__h1
+          = t(".title", number: model.number)
 
+        .b-orders-show__box
           - if model.confirmed?
             h2 = t('.unpaid_notice')
           - elsif model.waiting_for_offline_payment?
             h2 = t('.waiting_for_offline_payment_notice')
 
-          .d-flex.align-items-center.mt-g
-            h4.my-0.mr-g
+          .d-flex.align-items-center
+            h4.b-orders-show__price
               = price(model.total_price, zero_as_number: true)
 
-            .text-muted.mr-g
+            .mr-g
               = l(model.confirmed_at, format: :as_date)
 
-            .text-muted.mr-g
+            .mr-g
               = model.is_paid? ? t('.paid') : t('.unpaid')
 
             - if model.is_paid?
 
-        .mt-4
-          - if model.is_unpaid?
-            = payment_methods_form do |f|
-              = cell('boutique/orders/payment_methods',
-                     f,
-                     title: false,
-                     info: false)
-          - else
-            a.btn.btn-primary[
-              href=controller.boutique.invoice_path(model.secret_hash)
-              target="_blank"
-            ] = t('.invoice')
+          .mt-4
+            - if model.is_unpaid?
+              = payment_methods_form do |f|
+                = cell('boutique/orders/payment_methods',
+                       f,
+                       title: false,
+                       info: false)
+            - else
+              a.btn.btn-primary[
+                href=controller.boutique.invoice_path(model.secret_hash)
+                target="_blank"
+              ] = t('.invoice')
 
       .col-lg-4
-        = cell('boutique/orders/summary', model)
+        .b-orders-show__summary
+          = cell('boutique/orders/summary', model)

@@ -1,0 +1,32 @@
+.b-orders-show
+  &__h1
+    margin: 0 0 $grid-gutter-width
+
+  &__box
+    padding: $grid-gutter-width
+    padding-top: 35px
+    border-radius: 20px
+    background: $white
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(47, 61, 69, 0.15)
+
+  &__price
+    font-size: $font-size-base
+    font-weight: $font-weight-bold
+    font-family: $font-family-base
+    margin: 0
+    margin-right: $grid-gutter-width
+
+  +media-breakpoint-down(md)
+    &__h1
+      margin-bottom: 20px
+
+    &__box
+      margin-bottom: $grid-gutter-width
+
+    &__summary
+      padding-bottom: map-get($spacers, s)
+
+  +media-breakpoint-down(xs)
+    &__box
+      padding: 15px
+      padding-top: 20px
