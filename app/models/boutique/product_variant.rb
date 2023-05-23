@@ -84,7 +84,7 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
 
     [
       Boutique::LineItems::SummaryCell::THUMB_SIZE,
-      Boutique::Orders::Cart::SummaryCell::THUMB_SIZE,
+      Boutique::Orders::SummaryCell::THUMB_SIZE,
     ].uniq.each do |size|
       h["Folio::FilePlacement::Cover"] << size
       h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
