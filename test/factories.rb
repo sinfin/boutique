@@ -105,7 +105,8 @@ FactoryBot.define do
     before(:create) do |order, evaluator|
       if order.line_items.empty?
         evaluator.line_items_count.times do
-          product = evaluator.subscription_product ? create(:boutique_product_subscription) : create(:boutique_product)
+          product_factory = evaluator.subscription_product ? :boutique_product_subscription : :boutique_product
+          product = create(product_factory, price: order.total_price)
           li = build(:boutique_line_item, product:)
           li.product.update_column(:digital_only, true) if evaluator.digital_only
           order.line_items << li

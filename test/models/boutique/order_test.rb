@@ -199,7 +199,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
     Boutique::Order.stub_any_instance(:invoice_number_prefix, "99") do
       order = create(:boutique_order, :paid)
-      assert_equal "992200003", order.invoice_number
+      assert_equal "229900003", order.invoice_number
     end
 
     Boutique.config.stub(:invoice_number_with_year_prefix, false) do

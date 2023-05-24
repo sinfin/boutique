@@ -649,8 +649,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       self.invoice_number = [
-        invoice_number_prefix,
         year_prefix,
+        invoice_number_prefix,
         invoice_number_base.to_s.rjust(Boutique.config.invoice_number_base_length, "0")
       ].compact.join
     end

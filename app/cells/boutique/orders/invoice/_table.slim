@@ -24,7 +24,7 @@
       - model.line_items.each do |line_item|
         tr
           td.b-orders-invoice__table-td colspan=3
-            = line_item.to_full_label
+            = line_item.invoice_title
 
           td.b-orders-invoice__table-td.text-right
             - unless hide_vat?

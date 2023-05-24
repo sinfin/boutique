@@ -56,6 +56,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     to_full_label
   end
 
+  def invoice_title
+    to_full_label
+  end
+
   def price
     (subscription_period || 1) * amount * unit_price
   end
