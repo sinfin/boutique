@@ -98,7 +98,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
     if subscription?
       self.subscription_starts_at = subscription_starts_at
-      self.subscription_period ||= 1
+      self.subscription_period = product_variant.subscription_period if subscription_recurring?
     end
 
     self
