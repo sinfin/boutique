@@ -35,22 +35,24 @@ Boutique::Engine.routes.draw do
 end
 
 Folio::Engine.routes.draw do
-  namespace :console do
-    scope module: :boutique do
-      resources :orders, only: %i[index show edit update] do
-        collection do
-          get :invoices
+  scope constraints: Boutique.config.console_routes_constraints do
+    namespace :console do
+      scope module: :boutique do
+        resources :orders, only: %i[index show edit update] do
+          collection do
+            get :invoices
+          end
         end
-      end
 
-      resources :products, except: %i[show]
-      resources :vat_rates, except: %i[show]
-      resources :vouchers, except: %i[show]
+        resources :products, except: %i[show]
+        resources :vat_rates, except: %i[show]
+        resources :vouchers, except: %i[show]
 
-      resources :users, only: [] do
-        resources :subscriptions, except: %i[show destroy], controller: :subscriptions do
-          member do
-            delete :cancel
+        resources :users, only: [] do
+          resources :subscriptions, except: %i[show destroy], controller: :subscriptions do
+            member do
+              delete :cancel
+            end
           end
         end
       end
