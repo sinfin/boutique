@@ -747,7 +747,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       if voucher_code.blank?
         errors.add(:voucher_code, :blank) unless ignore_blank
       else
-        found_voucher = Boutique::Voucher.find_by_token_case_insensitive(voucher_code)
+        found_voucher = accessible_vouchers.find_by_token_case_insensitive(voucher_code)
 
         if found_voucher.nil? || found_voucher.used_up?
           errors.add(:voucher_code, :invalid)
@@ -763,6 +763,10 @@ class Boutique::Order < Boutique::ApplicationRecord
           self.voucher = nil
         end
       end
+    end
+
+    def accessible_vouchers
+      Boutique::Voucher.all
     end
 
     def should_validate_address?
