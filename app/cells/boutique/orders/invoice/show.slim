@@ -9,10 +9,7 @@
                       class: "b-orders-invoice__logo-img")
       .col.text-right
         h3.mt-0
-          - if model.free?
-            = t('.title_free', number: model.invoice_number)
-          - else
-            = t('.title', number: model.invoice_number)
+          = model.invoice_title
 
     = render(:_header)
     hr.my-s

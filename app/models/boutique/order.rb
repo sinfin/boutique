@@ -474,6 +474,11 @@ class Boutique::Order < Boutique::ApplicationRecord
     !is_paid?
   end
 
+  def invoice_title
+    key = free? ? "title_free" : "title"
+    I18n.t("boutique.orders.invoice.#{key}", number: invoice_number)
+  end
+
   def shipping_info
     # TODO: move to Shipping model
     line_items.first.product_variant.product.shipping_info

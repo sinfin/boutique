@@ -6,7 +6,7 @@ class Boutique::InvoicesController < ApplicationController
                             .includes(line_items: { product_variant: :product })
                             .find_by_secret_hash!(params[:secret_hash])
 
-    @public_page_title = t("boutique.orders.invoice.title", number: @order.invoice_number)
+    @public_page_title = @order.invoice_title
 
     render layout: "boutique/invoice"
   end
