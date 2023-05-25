@@ -73,6 +73,7 @@ FactoryBot.define do
       before(:create) do |order|
         order.send(:set_numbers)
         order.send(:imprint_prices)
+        order.send(:before_confirm)
       end
     end
 
