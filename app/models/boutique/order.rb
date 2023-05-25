@@ -489,6 +489,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         # TODO: add line item count validation
         if line_item = line_items.first
           line_item.update!(product:,
+                            product_variant: nil,
                             amount:,
                             subscription_recurring: nil)
 
