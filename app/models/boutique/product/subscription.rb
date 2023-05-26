@@ -93,6 +93,7 @@ end
 #  shipping_info                           :text
 #  digital_only                            :boolean          default(FALSE)
 #  subscription_recurrent_payment_disabled :boolean          default(FALSE)
+#  preview_token                           :string
 #  code                                    :string(32)
 #  checkout_sidebar_content                :text
 #  description                             :text
