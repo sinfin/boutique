@@ -16,6 +16,18 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     joins(:product).where(boutique_products: { type: "Boutique::Product::Subscription" })
   }
 
+  def to_line_item_full_label(html_context: nil, product_for_label: nil, subscription_starts_at: nil, order: nil)
+    if product_for_label && product_for_label.title.present?
+      if title.present?
+        "#{product_for_label.title} / #{title}"
+      else
+        product_for_label.title
+      end
+    else
+      title
+    end
+  end
+
   def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],

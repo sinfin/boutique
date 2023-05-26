@@ -148,6 +148,14 @@ class Boutique::Product < Boutique::ApplicationRecord
     ]
   end
 
+  def to_line_item_full_label(html_context: nil, product_variant: nil, subscription_starts_at: nil, order: nil)
+    if product_variant
+      product_variant.to_line_item_full_label(html_context:, product_for_label: self, subscription_starts_at:)
+    else
+      title
+    end
+  end
+
   private
     def set_default_vat_rate
       self.vat_rate = Boutique::VatRate.default if self.boutique_vat_rate_id.nil?

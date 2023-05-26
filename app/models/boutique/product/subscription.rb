@@ -72,6 +72,19 @@ class Boutique::Product::Subscription < Boutique::Product
       [human_attribute_name("subscription_frequency/#{value}"), value]
     end
   end
+
+  def to_line_item_full_label(html_context: nil, product_variant: nil, subscription_starts_at: nil, order: nil)
+    if subscription_starts_at
+      from = issue_at(subscription_starts_at)
+      to = issue_at(subscription_starts_at + 11.months)
+
+      return super unless from && to
+
+      "#{title} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
+    else
+      super
+    end
+  end
 end
 
 # == Schema Information
