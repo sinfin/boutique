@@ -24,4 +24,21 @@ class Boutique::OrderMailerTest < ActionMailer::TestCase
     assert_equal ["test@test.test"], mail.to
     assert_match order.number, mail.text_part.body.decoded
   end
+
+  test "gift_notification" do
+    order = create(:boutique_order, :paid, :gift, gift_recipient_email: "test@test.test")
+
+    mail = Boutique::OrderMailer.gift_notification(order)
+    assert_equal ["test@test.test"], mail.to
+    assert_match order.number, mail.text_part.body.decoded
+  end
+
+  test "gift_notification_with_invitation" do
+    order = create(:boutique_order, :paid, :gift, gift_recipient_email: "test@test.test")
+
+    mail = Boutique::OrderMailer.gift_notification_with_invitation(order, "INVITATION_TOKEN")
+    assert_equal ["test@test.test"], mail.to
+    assert_match order.number, mail.text_part.body.decoded
+    assert_match "INVITATION_TOKEN", mail.text_part.body.decoded
+  end
 end

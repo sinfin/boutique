@@ -1,6 +1,9 @@
 - mailer: Boutique::OrderMailer
   action: paid
   optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
     - ORDER_NUMBER
     - ORDER_SUMMARY_HTML
     - ORDER_SUMMARY_PLAIN
@@ -20,12 +23,12 @@
 
     {ORDER_SUMMARY_PLAIN}
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>We thank you for your order #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_en: |
-    Hi
+    Hello,
     We thank you for your order #{ORDER_NUMBER}:
 
     {ORDER_SUMMARY_PLAIN}
@@ -33,6 +36,9 @@
 - mailer: Boutique::OrderMailer
   action: paid_subsequent
   optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
     - ORDER_NUMBER
     - ORDER_SUMMARY_HTML
     - ORDER_SUMMARY_PLAIN
@@ -53,13 +59,13 @@
 
     {ORDER_SUMMARY_PLAIN}
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>We thank you for your payment, your subscription has been extended.</p>
     <p>Here is summary of your order #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_en: |
-    Hi
+    Hello,
     We thank you for your payment, your subscription has been extended.
     Here is summary of your order #{ORDER_NUMBER}:
 
@@ -68,9 +74,10 @@
 - mailer: Boutique::OrderMailer
   action: unpaid_reminder
   optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
     - ORDER_NUMBER
-    - ORDER_SUMMARY_HTML
-    - ORDER_SUMMARY_PLAIN
   required_keywords:
     - ORDER_URL
   title_cs: Objednávka - přípomínka nezaplacené objednávky
@@ -91,18 +98,113 @@
     {ORDER_URL}
 
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>your order n. {ORDER_NUMBER} hasn't been paid. </p>
     <p>You can fix that if you click on the following link.</p>
 
     <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Finish order</a></p>
 
   body_text_en: |
-    Hi
+    Hello,
     your order n. {ORDER_NUMBER} hasn't been paid.
     You can fix that if you click on the following link.
 
     {ORDER_URL}
+
+- mailer: Boutique::OrderMailer
+  action: gift_notification
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
+    - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
+  title_cs: Objednávka - upozornění pro obdarovaného
+  subject_cs: Dárek pro vás
+  subject_en: Gift for you
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>gratulujeme, jistá milá duše Vám na našem webu zakoupila dárek. Při přihlášení do vašeho profilu na stránkách <a href="{ROOT_URL}">{DOMAIN}</a> můžete hned využívat nově nabitých výhod.</p>
+
+    <p>Shrnutí objednávky č. {ORDER_NUMBER}:</p>
+    {ORDER_SUMMARY_HTML}
+
+  body_text_cs: |
+    Dobrý den,
+    gratulujeme, jistá milá duše Vám na našem webu zakoupila dárek. Při přihlášení do vašeho profilu na stránkách {DOMAIN} můžete hned využívat nově nabitých výhod.
+
+    Shrnutí objednávky č. {ORDER_NUMBER}:
+
+    {ORDER_SUMMARY_PLAIN}
+
+  body_html_en: |
+    <p>Hello,</p>
+    <p>congratulations, a certain kind soul has purchased a gift for you on our website. When you log in to your profile on <a href="{ROOT_URL}">{DOMAIN}</a> you can enjoy the new benefits right away.</p>
+    <p>Here is summary of the order #{ORDER_NUMBER}:</p>
+
+    {ORDER_SUMMARY_HTML}
+
+  body_text_en: |
+    Hello,
+    congratulations, a certain kind soul has purchased a gift for you on our website. When you log in to your profile on {DOMAIN} you can enjoy the new benefits right away.
+
+    Here is summary of the order #{ORDER_NUMBER}:
+
+    {ORDER_SUMMARY_PLAIN}
+
+- mailer: Boutique::OrderMailer
+  action: gift_notification_with_invitation
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
+    - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
+  required_keywords:
+    - USER_ACCEPT_INVITATION_URL
+  title_cs: Objednávka - pozvánka pro obdarovaného
+  subject_cs: Dárek a pozvánka pro vás
+  subject_en: Gift and invitation for you
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>gratulujeme, jistá milá duše Vám na našem webu zakoupila dárek.</p>
+    <p>Klikněte na tlačítko níže, založte si profil na stránkách <a href="{ROOT_URL}">{DOMAIN}</a> a užívejte si nově nabitých výhod.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
+
+    <p>Shrnutí objednávky č. {ORDER_NUMBER}:</p>
+    {ORDER_SUMMARY_HTML}
+
+  body_text_cs: |
+    Dobrý den,
+    gratulujeme, jistá milá duše Vám na našem webu zakoupila dárek.
+    Klikněte na tlačítko níže, založte si profil na stránkách {DOMAIN} a užívejte si nově nabitých výhod.
+
+    {USER_ACCEPT_INVITATION_URL}
+
+    Shrnutí objednávky č. {ORDER_NUMBER}:
+    {ORDER_SUMMARY_PLAIN}
+
+  body_html_en: |
+    <p>Hello,</p>
+    <p>congratulations, a certain kind soul has purchased a gift for you on our website.</p>
+    <p>Click the button below to create a profile on <a href="{ROOT_URL}">{DOMAIN}</a> and enjoy the new benefits.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Confirm registration</a></p>
+
+    <p>Shrnutí objednávky č. {ORDER_NUMBER}:</p>
+    {ORDER_SUMMARY_HTML}
+  body_text_en: |
+    Hello,
+    congratulations, a certain kind soul has purchased a gift for you on our website.
+    Click the button below to create a profile on {DOMAIN} and enjoy the new benefits.
+
+    {USER_ACCEPT_INVITATION_URL}
+
+    Order Summary No. {ORDER_NUMBER}:
+    {ORDER_SUMMARY_PLAIN}
 
 - mailer: Boutique::SubscriptionMailer
   action: failure
@@ -131,11 +233,11 @@
     Pokud si nepřejete předplatné prodloužit, můžete ho snadno zrušit ve Vašem uživatelském profilu.
 
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>TODO</p>
 
   body_text_en: |
-    Hi
+    Hello,
     TODO
 
 - mailer: Boutique::SubscriptionMailer
@@ -155,11 +257,11 @@
     Pokud nechcete prodloužit předplatné, mrzí nás to. Dejte nám, prosím, vědět, proč jste se tak rozhodli, abychom mohli náš obsah a služby dále vylepšovat a vycházet vstříc všem čtenářům.
 
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>TODO</p>
 
   body_text_en: |
-    Hi
+    Hello,
     TODO
 
 - mailer: Boutique::SubscriptionMailer
@@ -176,11 +278,11 @@
     Vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.
 
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>TODO</p>
 
   body_text_en: |
-    Hi
+    Hello,
     TODO
 
 - mailer: Boutique::SubscriptionMailer
@@ -200,9 +302,9 @@
     Prosíme, myslete na to, abyste měli na účtu dostatečný zůstatek.
 
   body_html_en: |
-    <p>Hi</p>
+    <p>Hello,</p>
     <p>TODO</p>
 
   body_text_en: |
-    Hi
+    Hello,
     TODO

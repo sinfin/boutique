@@ -100,7 +100,6 @@ FactoryBot.define do
       sequence(:gift_recipient_email) { |i| "gift-#{i}@email.email" }
       gift_recipient_first_name { "John" }
       gift_recipient_last_name { "Doe" }
-      gift_recipient_notification_scheduled_for { 1.hour.from_now }
     end
 
     before(:create) do |order, evaluator|

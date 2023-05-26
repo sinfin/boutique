@@ -11,7 +11,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   end
 
   def paid_subsequent(order)
-    data = order_data(order, address: false)
+    data = order_data(order)
     email_template_mail(data,
                         to: order.email,
                         site: order.site,
@@ -20,7 +20,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   end
 
   def unpaid_reminder(order)
-    data = order_data(order, address: false)
+    data = order_data(order, summary: false)
     email_template_mail(data,
                         to: order.email,
                         site: order.site,
@@ -28,7 +28,16 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
                         reply_to: ::Boutique.config.mailers_reply_to)
   end
 
-  def gift_notification(order, token = nil)
+  def gift_notification(order)
+    data = order_data(order, gift_notification: true)
+    email_template_mail(data,
+                        to: order.gift_recipient_email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
+  end
+
+  def gift_notification_with_invitation(order, token = nil)
     data = order_data(order, gift_notification: true)
     data[:USER_ACCEPT_INVITATION_URL] = main_app.accept_user_invitation_url(invitation_token: token)
     email_template_mail(data,
@@ -39,16 +48,14 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   end
 
   private
-    def order_data(order, address: true, gift_notification: false)
+    def order_data(order, summary: true, gift_notification: false)
       h = {
         ORDER_NUMBER: order.number,
-        ORDER_SUMMARY_HTML: render(partial: "summary_html", locals: { order:, gift_notification: }),
-        ORDER_SUMMARY_PLAIN: render(partial: "summary_plain", locals: { order:, gift_notification: }),
       }
 
-      if address
-        h[:ORDER_SHIPPING_ADDRESS_HTML] = order_shipping_address(order, html: true)
-        h[:ORDER_SHIPPING_ADDRESS_PLAIN] = order_shipping_address(order)
+      if summary
+        h[:ORDER_SUMMARY_HTML] = render(partial: "summary_html", locals: { order:, gift_notification: })
+        h[:ORDER_SUMMARY_PLAIN] = render(partial: "summary_plain", locals: { order:, gift_notification: })
       end
 
       unless gift_notification
@@ -56,21 +63,5 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
       end
 
       h
-    end
-
-    def order_shipping_address(order, html: false)
-      a = order.primary_address
-
-      return order.full_name if a.nil?
-
-      new_line = html ? "<br>" : "\n"
-
-      [
-        a.name || order.gift ? order.gift_recipient_full_name : order.full_name,
-        [a.address_line_1, a.address_line_2].join(" "),
-        [a.zip, a.city].join(" "),
-        a.country_code,
-        a.phone
-      ].join(new_line)
     end
 end
