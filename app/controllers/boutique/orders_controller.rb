@@ -10,8 +10,12 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def payment
-    # TODO: check if order has been paid
-    create_payment_and_redirect_to_payment_gateway(@order)
+    if @order.confirmed?
+      create_payment_and_redirect_to_payment_gateway(@order)
+    else
+      flash[:error] = t(".error")
+      redirect_back fallback_location: main_app.root_url
+    end
   end
 
   private

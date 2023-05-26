@@ -76,6 +76,9 @@ cs:
         unpaid_notice: Prosíme prověřte stav platby
         waiting_for_offline_payment_notice: Očekáváme platbu převodem
 
+      payment:
+        error: Platba nelze provést.
+
       summary:
         title: Rekapitulace objednávky
         automatic_renewal: Automatická obnova
