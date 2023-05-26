@@ -267,6 +267,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   before_validation :unset_unwanted_gift_attributes
 
+  after_validation :imprint_if_valid
+
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
 
@@ -292,7 +294,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       before do
         set_numbers
-        imprint_prices
         set_site
 
         self.email ||= user.try(:email)
@@ -738,7 +739,15 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def imprint_prices
+    def imprint_if_valid
+      return if errors.present?
+
+      if aasm.from_state == :pending && aasm.to_state == :confirmed
+        imprint
+      end
+    end
+
+    def imprint
       line_items.each { |li| li.imprint }
 
       self.line_items_price = line_items_price

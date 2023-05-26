@@ -72,8 +72,8 @@ FactoryBot.define do
 
       before(:create) do |order|
         order.send(:set_numbers)
-        order.send(:imprint_prices)
         order.send(:before_confirm)
+        order.send(:imprint)
       end
     end
 
@@ -87,7 +87,7 @@ FactoryBot.define do
       before(:create) do |order|
         order.paid_at = Time.current
         order.send(:set_invoice_number)
-        order.send(:imprint_prices)
+        order.send(:imprint)
       end
 
       after(:create) do |order|
