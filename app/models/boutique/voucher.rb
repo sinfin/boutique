@@ -50,6 +50,8 @@ class Boutique::Voucher < Boutique::ApplicationRecord
   before_validation :set_token
   before_validation :upcase_token
 
+  after_validation :unset_code_if_invalid
+
   after_create :create_additional_vouchers
 
   def self.find_by_token_case_insensitive(code)
@@ -119,6 +121,10 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     def generate_token(length)
       # https://gist.github.com/mbajur/2aba832a6df3fc31fe7a82d3109cb626
       Array.new(length).map { CODE_CHARS[rand(CODE_CHARS.size)] }.join
+    end
+
+    def unset_code_if_invalid
+      self.code = nil if errors.present? && code_type == "generated"
     end
 end
 
