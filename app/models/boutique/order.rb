@@ -449,19 +449,20 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def discount
     super || begin
-      return 0 unless voucher.present? &&
-                      voucher.applicable?
-
-      if voucher.discount_in_percentages?
-        (line_items_price + shipping_price) * (0.01 * voucher.discount)
+      if voucher.present? && voucher.applicable?
+        if voucher.discount_in_percentages?
+          (line_items_price + shipping_price) * (0.01 * voucher.discount)
+        else
+          voucher.discount
+        end
       else
-        voucher.discount
+        0
       end
     end
   end
 
   def total_price
-    super || [line_items_price + shipping_price - discount.to_i, 0].max
+    super || [line_items_price + shipping_price - discount, 0].max
   end
 
   def free?
@@ -758,6 +759,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       line_items.each { |li| li.imprint }
 
       self.line_items_price = line_items_price
+      self.shipping_price = shipping_price
       self.discount = discount
       self.total_price = total_price
     end
