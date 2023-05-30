@@ -19,9 +19,12 @@
               = l(model.confirmed_at, format: :as_date)
 
             .mr-g
-              = model.is_paid? ? t('.paid') : t('.unpaid')
-
-            - if model.is_paid?
+              - if model.cancelled?
+                = t('.cancelled')
+              - elsif model.is_paid?
+                = t('.paid')
+              - else
+                = t('.unpaid')
 
           .mt-4
             - if model.is_unpaid?

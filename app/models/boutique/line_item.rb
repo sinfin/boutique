@@ -23,8 +23,17 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   after_initialize :set_default_subscription_recurring
   before_validation :unset_unwanted_subscription_starts_at
 
+  def title
+    super || product_variant.title
+  end
+
   def to_label
-    product_variant.title
+    return title unless subscription_starts_at && subscription_period
+
+    from = I18n.l(subscription_starts_at, format: :as_date)
+    to = I18n.l(subscription_starts_at + subscription_period.months, format: :as_date)
+
+    "#{title} (#{from} – #{to})"
   end
 
   def cover_placement_from_variant_or_product
@@ -41,23 +50,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def summary_cover_placement
     cover_placement_from_variant_or_product
-  end
-
-  def to_full_label
-    return to_label unless subscription_starts_at && subscription_period
-
-    from = I18n.l(subscription_starts_at, format: :as_date)
-    to = I18n.l(subscription_starts_at + subscription_period.months, format: :as_date)
-
-    "#{to_label} (#{from} – #{to})"
-  end
-
-  def to_console_label
-    to_full_label
-  end
-
-  def invoice_title
-    to_full_label
   end
 
   def price
@@ -93,6 +85,8 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def imprint
+    self.title = title
+
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
 
@@ -155,6 +149,7 @@ end
 #  boutique_product_variant_id :bigint(8)        not null
 #  vat_rate_value              :integer
 #  subscription_period         :integer
+#  title                       :string
 #
 # Indexes
 #
