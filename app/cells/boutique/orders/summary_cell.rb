@@ -2,6 +2,7 @@
 
 class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include Boutique::SubscriptionHelper
 
   THUMB_SIZE = "50x50#"
 
@@ -23,6 +24,23 @@ class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
   def fields_for_line_item(f, line_item, &block)
     f.simple_fields_for :line_items, line_item do |subfields|
       (yield subfields).html_safe
+    end
+  end
+
+  def line_item_tag_additional_class(line_item)
+    if line_item.subscription_recurring? || line_item.subscription_period.nil?
+      "b-orders-summary__tag--recurring"
+    end
+  end
+
+  def line_item_tag_label(line_item)
+    if line_item.subscription_recurring? || line_item.subscription_period.nil?
+      [
+        image_tag("boutique/refresh.svg", class: "b-orders-summary__tag-img"),
+        t(".recurring_payment")
+      ].join
+    else
+      t(".single_payment", months: duration_to_human(line_item.subscription_period))
     end
   end
 

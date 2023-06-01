@@ -75,7 +75,8 @@ en:
 
       summary:
         title: Order summary
-        automatic_renewal: Automatic renewal
+        recurring_payment: Automatic renewal
+        single_payment: Single payment %{months}
         shipping: Shipping
         voucher: Discount voucher
         total_price: Total

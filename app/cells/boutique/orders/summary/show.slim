@@ -3,7 +3,7 @@
     = t('.title')
 
   = form do |f|
-    - f.object.line_items.each do |line_item|
+    - model.line_items.each do |line_item|
       .b-orders-summary__line-item
         .row
           - if line_item.summary_cover_placement.present?
@@ -29,11 +29,10 @@
 
           - if line_item.subscription?
             .col-12.b-orders-summary__col
-              .b-orders-summary__renewal-tag
-                = image_tag("boutique/refresh.svg",
-                            class: 'b-orders-summary__renewal-tag-img')
-
-                = t(".automatic_renewal")
+              .b-orders-summary__tag[
+                class=line_item_tag_additional_class(line_item)
+              ]
+                = line_item_tag_label(line_item)
 
           - if f.present? && line_item.product.variants.size > 1
             .col-12.b-orders-summary__col

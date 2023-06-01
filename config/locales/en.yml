@@ -4,9 +4,13 @@ en:
     free: free
     issue: issue
 
-  datetime:
-    each:
-      year: each year
+  duration:
+    months:
+      one: "%{count} month"
+      other: "%{count} months"
+
+  recurrence:
+    months:
       month:
         one: each month
         other: each %{count} months

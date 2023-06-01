@@ -4,13 +4,17 @@ cs:
     free: zdarma
     issue: číslo
 
-  datetime:
-    each:
-      year: každý rok
-      month:
-        one: každý měsíc
-        few: každé %{count} měsíce
-        other: každých %{count} měsíců
+  duration:
+    months:
+      one: "%{count} měsíc"
+      few: "%{count} měsíce"
+      other: "%{count} měsíců"
+
+  recurrence:
+    months:
+      one: každý měsíc
+      few: každé %{count} měsíce
+      other: každých %{count} měsíců
 
   time:
     formats:

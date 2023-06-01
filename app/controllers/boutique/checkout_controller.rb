@@ -73,9 +73,8 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
     render json: {
       data: {
-        # FIXME
-        # summary: cell("boutique/orders/summary", current_order).show,
-        price: cell("boutique/orders/payment_methods/price", current_order.total_price).show,
+        summary: cell("boutique/orders/summary", current_order).show,
+        price: cell("boutique/orders/payment_methods/price", current_order.total_price, recurrent: current_order.recurrent_payment?).show,
       }
     }
   end

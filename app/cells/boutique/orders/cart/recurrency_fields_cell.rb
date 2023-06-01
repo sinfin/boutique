@@ -2,6 +2,7 @@
 
 class Boutique::Orders::Cart::RecurrencyFieldsCell < ApplicationCell
   include Folio::Cell::HtmlSafeFieldsFor
+  include Boutique::SubscriptionHelper
 
   class_name "b-orders-cart-recurrency-fields", :nonrecurring_visible?
 
@@ -20,22 +21,13 @@ class Boutique::Orders::Cart::RecurrencyFieldsCell < ApplicationCell
                            .orders_edit_recurrency_title_proc
                            .call(context: self,
                                  current_site:,
-                                 period: subscription_period_to_human,
+                                 period: recurrence_to_human(subscription_line_item.product_variant.subscription_period),
                                  price: subscription_line_item.unit_price,
                                  product: subscription_line_item.product)
   end
 
   def subscription_line_item
     @subscription_line_item ||= model.object.subscription_line_item
-  end
-
-  def subscription_period_to_human
-    case months = subscription_line_item.product_variant.subscription_period
-    when 12
-      I18n.t("datetime.each.year")
-    else
-      I18n.t("datetime.each.month", count: months)
-    end
   end
 
   def show_error_message?

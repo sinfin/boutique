@@ -81,7 +81,8 @@ cs:
 
       summary:
         title: Rekapitulace objednávky
-        automatic_renewal: Automatická obnova
+        recurring_payment: Automatická obnova
+        single_payment: Jednorázová platba %{months}
         shipping: Doprava
         voucher: Slevový kupón
         total: Celkem
