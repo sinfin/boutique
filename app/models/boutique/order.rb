@@ -451,7 +451,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || begin
       if voucher.present? && voucher.applicable?
         if voucher.discount_in_percentages?
-          (line_items_price + shipping_price) * (0.01 * voucher.discount)
+          ((line_items_price + shipping_price) * (0.01 * voucher.discount)).floor
         else
           voucher.discount
         end
