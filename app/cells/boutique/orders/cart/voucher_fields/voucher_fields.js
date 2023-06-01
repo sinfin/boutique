@@ -29,9 +29,9 @@ $(document)
             'input[name="authenticity_token"]',
             '.b-orders-cart-voucher-fields',
             '.b-orders-cart-sidebar__ajax-replacable',
-            '.b-orders-cart-summary',
             '.b-orders-cart-recurrency-fields',
-            '.b-orders-cart__payment'
+            '.b-orders-cart__payment',
+            '.b-orders-summary'
           ]
 
           selectors.forEach((selector) => {

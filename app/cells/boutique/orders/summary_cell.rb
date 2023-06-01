@@ -5,10 +5,6 @@ class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
 
   THUMB_SIZE = "50x50#"
 
-  def line_items
-    @line_items ||= model.line_items.includes(product_variant: { product: { cover_placement: :file } }).load
-  end
-
   def form(&block)
     if model.pending?
       opts = {

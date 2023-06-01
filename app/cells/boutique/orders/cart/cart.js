@@ -17,7 +17,7 @@ $(document)
       },
       success: (res) => {
         if (res && res.data) {
-          $wrap.find('.b-orders-cart-sidebar-bottom').replaceWith(res.data.sidebarBottom)
+          $wrap.find('.b-orders-summary').replaceWith(res.data.summary)
           $wrap.find('.b-orders-payment-methods-price').replaceWith(res.data.price)
         }
         const $res = $(res)

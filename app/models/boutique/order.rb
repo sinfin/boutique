@@ -523,6 +523,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     save(validate: false) if errors.empty?
   end
 
+  def recurrent_payment?
+    return false if voucher.present?
+
+    li = subscription_line_item
+    li.present? && li.subscription_period.nil?
+  end
+
   def recurrent_payment_available?
     voucher.nil? && line_items.any?(&:subscription?)
   end

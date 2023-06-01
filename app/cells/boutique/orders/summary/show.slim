@@ -3,7 +3,7 @@
     = t('.title')
 
   = form do |f|
-    - line_items.each do |line_item|
+    - f.object.line_items.each do |line_item|
       .b-orders-summary__line-item
         .row
           - if line_item.summary_cover_placement.present?
@@ -68,4 +68,4 @@
         = t('.total')
 
       .col.text-right
-        = price(model.line_items_price)
+        = price(model.total_price)

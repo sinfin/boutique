@@ -42,11 +42,6 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
     ]
   end
 
-  def recurrent?
-    li = model.object.subscription_line_item
-    li.present? && li.subscription_period.nil?
-  end
-
   def payment_button(f, method, i)
     f.button :submit,
              method[:title],
