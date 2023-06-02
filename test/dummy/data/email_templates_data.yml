@@ -13,23 +13,23 @@
   subject_en: Order #{ORDER_NUMBER} paid
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>Děkujeme, zde je souhrn vaší objednávky č. #{ORDER_NUMBER}:</p>
+    <p>děkujeme, zde je souhrn vaší objednávky č. #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_cs: |
     Dobrý den,
 
-    Děkujeme, zde je souhrn vaší objednávky č. #{ORDER_NUMBER}:
+    děkujeme, zde je souhrn vaší objednávky č. #{ORDER_NUMBER}:
 
     {ORDER_SUMMARY_PLAIN}
   body_html_en: |
     <p>Hello,</p>
-    <p>We thank you for your order #{ORDER_NUMBER}:</p>
+    <p>we thank you for your order #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_en: |
     Hello,
-    We thank you for your order #{ORDER_NUMBER}:
+    we thank you for your order #{ORDER_NUMBER}:
 
     {ORDER_SUMMARY_PLAIN}
 
@@ -48,26 +48,74 @@
   subject_en: Order #{ORDER_NUMBER} paid
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>Děkujeme za platbu, vaše předplatné bylo prodlouženo.</p>
+    <p>děkujeme za platbu, vaše předplatné bylo prodlouženo.</p>
     <p>Zde je souhrn vaší objednávky č. #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_cs: |
     Dobrý den,
-    Děkujeme za platbu, vaše předplatné bylo prodlouženo.
+    děkujeme za platbu, vaše předplatné bylo prodlouženo.
     Zde je souhrn vaší objednávky č. #{ORDER_NUMBER}:
 
     {ORDER_SUMMARY_PLAIN}
   body_html_en: |
     <p>Hello,</p>
-    <p>We thank you for your payment, your subscription has been extended.</p>
+    <p>we thank you for your payment, your subscription has been extended.</p>
     <p>Here is summary of your order #{ORDER_NUMBER}:</p>
 
     {ORDER_SUMMARY_HTML}
   body_text_en: |
     Hello,
-    We thank you for your payment, your subscription has been extended.
+    we thank you for your payment, your subscription has been extended.
     Here is summary of your order #{ORDER_NUMBER}:
+
+    {ORDER_SUMMARY_PLAIN}
+
+- mailer: Boutique::OrderMailer
+  action: dispatched
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
+    - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
+    - ORDER_URL
+    - TRACKING_NUMBER
+    - TRACKING_URL
+  title_cs: Objednávka - Odeslána
+  subject_cs: Objednávka #{ORDER_NUMBER} odeslána
+  subject_en: Order #{ORDER_NUMBER} dispatched
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>vaší objednávku jsme předali dopravci.</p>
+    <p>Zásilku můžete sledovat pod číslem <a href="{TRACKING_URL}">{TRACKING_NUMBER}</a>.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{TRACKING_URL}">Sledovat zásilku</a></p>
+
+    {ORDER_SUMMARY_HTML}
+  body_text_cs: |
+    Dobrý den,
+    vaší objednávku jsme předali dopravci.
+    Zásilku můžete sledovat pod číslem {TRACKING_NUMBER}.
+
+    {TRACKING_URL}
+
+    {ORDER_SUMMARY_PLAIN}
+  body_html_en: |
+    <p>Hello,</p>
+    <p>we have forwarded your order to the carrier.</p>
+    <p>You can track your package under <a href="{TRACKING_URL}">{TRACKING_NUMBER}</a>.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{TRACKING_URL}">Track package</a></p>
+
+    {ORDER_SUMMARY_HTML}
+  body_text_en: |
+    Hello,
+    we have forwarded your order to the carrier.
+    You can track your package under {TRACKING_NUMBER}.
+
+    {TRACKING_URL}
 
     {ORDER_SUMMARY_PLAIN}
 

@@ -13,7 +13,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                        after_dispatch]
 
   MAILER_ACTIONS = %i[paid
-                      paid_subsequent]
+                      paid_subsequent
+                      dispatched]
 
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
@@ -360,6 +361,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after do
         after_dispatch
+      end
+
+      after_commit do
+        unless digital_only?
+          mailer_dispatched.deliver_later
+        end
       end
     end
 

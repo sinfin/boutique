@@ -19,6 +19,20 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
                         reply_to: ::Boutique.config.mailers_reply_to)
   end
 
+  def dispatched(order)
+    data = order_data(order)
+
+    # TODO: add tracking
+    data[:TRACKING_NUMBER] = "12345678"
+    data[:TRACKING_URL] = "https://trackingcompany.com/12345678"
+
+    email_template_mail(data,
+                        to: order.email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
+  end
+
   def unpaid_reminder(order)
     data = order_data(order, summary: false)
     email_template_mail(data,

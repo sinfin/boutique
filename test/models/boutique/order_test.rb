@@ -124,6 +124,20 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
+  test "dispatch" do
+    order = create(:boutique_order, :paid)
+
+    assert_enqueued_jobs(1, only: ActionMailer::MailDeliveryJob) do
+      order.dispatch!
+    end
+
+    order = create(:boutique_order, :paid, digital_only: true)
+
+    assert_enqueued_jobs(0, only: ActionMailer::MailDeliveryJob) do
+      order.dispatch!
+    end
+  end
+
   test "assign voucher by code" do
     order = create(:boutique_order, line_items_count: 1)
     order.line_items.first.product_variant.update_column(:regular_price, 100)

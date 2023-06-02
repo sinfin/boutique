@@ -14,6 +14,12 @@ class Boutique::OrderMailerPreview < ActionMailer::Preview
     Boutique::OrderMailer.paid_subsequent(order)
   end
 
+  def dispatched
+    order = Boutique::Order.dispatched.last
+
+    Boutique::OrderMailer.dispatched(order)
+  end
+
   def unpaid_reminder
     order = Boutique::Order.confirmed.last
 
