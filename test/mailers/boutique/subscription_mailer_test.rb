@@ -33,11 +33,11 @@ class Boutique::SubscriptionMailerTest < ActionMailer::TestCase
     assert_equal ["test@test.test"], mail.to
   end
 
-  test "will_be_paid_in_a_week" do
+  test "will_end_in_a_week" do
     user = create(:folio_user, email: "test@test.test")
     subscription = create(:boutique_subscription, user:)
 
-    mail = Boutique::SubscriptionMailer.will_be_paid_in_a_week(subscription)
+    mail = Boutique::SubscriptionMailer.will_end_in_a_week(subscription)
     assert_equal ["test@test.test"], mail.to
   end
 end

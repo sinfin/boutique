@@ -83,7 +83,7 @@
     - ORDER_URL
     - TRACKING_NUMBER
     - TRACKING_URL
-  title_cs: Objednávka - Odeslána
+  title_cs: Objednávka - odeslána
   subject_cs: Objednávka #{ORDER_NUMBER} odeslána
   subject_en: Order #{ORDER_NUMBER} dispatched
   body_html_cs: |
@@ -257,7 +257,9 @@
 - mailer: Boutique::SubscriptionMailer
   action: failure
   optional_keywords:
-    - ORDER_URL
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
   title_cs: Předplatné - prodloužení neúspěšná platba 1
   subject_cs: Předplatné - neúspěšná platba
   subject_en: Subscription - payment failed
@@ -290,6 +292,10 @@
 
 - mailer: Boutique::SubscriptionMailer
   action: unpaid
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
   title_cs: Předplatné - nezaplaceno
   subject_cs: Předplatné - nezaplaceno
   subject_en: Subscription - unpaid
@@ -314,6 +320,10 @@
 
 - mailer: Boutique::SubscriptionMailer
   action: ended
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
   title_cs: Předplatné - vypršelo
   subject_cs: Předplatné - vypršelo
   subject_en: Subscription - ended
@@ -334,25 +344,26 @@
     TODO
 
 - mailer: Boutique::SubscriptionMailer
-  action: will_be_paid_in_a_week
-  title_cs: Předplatné - připomenutí týden předem
+  action: will_end_in_a_week
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
+  title_cs: Předplatné - připomenutí týden před koncem
   subject_cs: Předplatné - blíží se konec předplaceného období
-  subject_en: Subscription - will be paid in a week
+  subject_en: Subscription - your subscription will expire soon
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>doufáme, že jste se svým předplatným stále spokojeni. Za týden vyprší předplacené období. Pokud jej chcete prodloužit, a my věříme, že chcete, nemusíte nic dělat - peníze si automaticky strhneme z Vaší platební karty.</p>
-    <p><strong>Prosíme, myslete na to, abyste měli na účtu dostatečný zůstatek.</strong></p>
+    <p>doufáme, že jste se svým předplatným spokojeni. Za týden vyprší předplacené období. Předplatné si můžete snadno prodloužit na našem webu.</p>
 
   body_text_cs: |
     Dobrý den,
-    doufáme, že jste se svým předplatným stále spokojeni. Za týden vyprší předplacené období. Pokud jej chcete prodloužit, a my věříme, že chcete, nemusíte nic dělat - peníze si automaticky strhneme z Vaší platební karty.
-
-    Prosíme, myslete na to, abyste měli na účtu dostatečný zůstatek.
+    doufáme, že jste se svým předplatným spokojeni. Za týden vyprší předplacené období. Předplatné si můžete snadno prodloužit na našem webu.
 
   body_html_en: |
     <p>Hello,</p>
-    <p>TODO</p>
+    <p>we hope you're happy with your subscription. Your prepaid period expires in one week. You can easily renew your subscription on our website.</p>
 
   body_text_en: |
     Hello,
-    TODO
+    we hope you're happy with your subscription. Your prepaid period expires in one week. You can easily renew your subscription on our website.

@@ -9,7 +9,7 @@ class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
                         reply_to: ::Boutique.config.mailers_reply_to)
   end
 
-  def will_be_paid_in_a_week(subscription)
+  def will_end_in_a_week(subscription)
     email_template_mail({},
                         to: subscription.user.email,
                         site: subscription.product_variant.product.site,

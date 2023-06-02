@@ -8,10 +8,10 @@ class Boutique::SubscriptionMailerPreview < ActionMailer::Preview
     Boutique::SubscriptionMailer.ended(subscription)
   end
 
-  def will_be_paid_in_a_week
+  def will_end_in_a_week
     subscription = Boutique::Subscription.last
 
-    Boutique::SubscriptionMailer.will_be_paid_in_a_week(subscription)
+    Boutique::SubscriptionMailer.will_end_in_a_week(subscription)
   end
 
   def failure
