@@ -5,15 +5,6 @@ require "test_helper"
 class Boutique::OrderTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
-  def setup_emails
-    site = create(:folio_site)
-    Rails.application.load_tasks
-    Rake::Task["folio:email_templates:idp_seed"].execute
-
-    Rails.application.routes.default_url_options[:host] = site.domain
-    Rails.application.routes.default_url_options[:only_path] = false
-  end
-
   test "add_line_item" do
     product_basic = create(:boutique_product)
     order = create(:boutique_order)
@@ -82,29 +73,23 @@ class Boutique::OrderTest < ActiveSupport::TestCase
   end
 
   test "wait_for_offline_payment" do
-    setup_emails
     order = create(:boutique_order, :confirmed)
 
     # user invite
-    assert_difference("ActionMailer::Base.deliveries.size", 1) do
-      perform_enqueued_jobs do
-        order.wait_for_offline_payment!
-      end
+    assert_enqueued_jobs(1, only: ActionMailer::MailDeliveryJob) do
+      order.wait_for_offline_payment!
     end
   end
 
   test "pay without user" do
-    setup_emails
     order = create(:boutique_order, :confirmed, email: "foo@test.test")
 
     assert_nil order.user
     assert order.primary_address.present?
 
     # user invite + order confirmation
-    assert_difference("ActionMailer::Base.deliveries.size", 2) do
-      perform_enqueued_jobs do
-        order.pay!
-      end
+    assert_enqueued_jobs(2, only: ActionMailer::MailDeliveryJob) do
+      order.pay!
     end
 
     assert_equal "foo@test.test", order.user.email
@@ -112,15 +97,11 @@ class Boutique::OrderTest < ActiveSupport::TestCase
   end
 
   test "pay with user" do
-    setup_emails
-
     order = create(:boutique_order, :confirmed, :with_user)
 
     # order confirmation
-    assert_difference("ActionMailer::Base.deliveries.size", 1) do
-      perform_enqueued_jobs do
-        order.pay!
-      end
+    assert_enqueued_jobs(1, only: ActionMailer::MailDeliveryJob) do
+      order.pay!
     end
   end
 
