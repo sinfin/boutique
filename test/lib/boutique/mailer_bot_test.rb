@@ -21,6 +21,28 @@ class Boutique::MailerBotTest < ActiveSupport::TestCase
     assert_equal [target.id], @bot.send(:orders_for_unpaid_reminder).map(&:id)
   end
 
+  test "subscriptions_ended" do
+    assert_equal [], @bot.send(:subscriptions_for_ended).map(&:id)
+
+    target = create(:boutique_subscription, active_until: now - 1.day, recurrent: false)
+    active = create(:boutique_subscription, active_until: now - 1.day, recurrent: true)
+    too_old = create(:boutique_subscription, active_until: now - 2.days, recurrent: false)
+    too_fresh = create(:boutique_subscription, active_until: now - 1.hour, recurrent: false)
+
+    assert_equal [target.id], @bot.send(:subscriptions_for_ended).map(&:id)
+  end
+
+  test "subscriptions_failed_payment" do
+    assert_equal [], @bot.send(:subscriptions_for_failed_payment).map(&:id)
+
+    target = create(:boutique_subscription, active_until: now - 1.day, recurrent: true)
+    cancelled = create(:boutique_subscription, active_until: now - 1.day, recurrent: false)
+    too_old = create(:boutique_subscription, active_until: now - 2.days, recurrent: true)
+    too_fresh = create(:boutique_subscription, active_until: now - 1.hour, recurrent: true)
+
+    assert_equal [target.id], @bot.send(:subscriptions_for_failed_payment).map(&:id)
+  end
+
   test "subscriptions_will_end_in_a_week" do
     assert_equal [], @bot.send(:subscriptions_for_will_end_in_a_week).map(&:id)
 
@@ -30,17 +52,6 @@ class Boutique::MailerBotTest < ActiveSupport::TestCase
     too_fresh = create(:boutique_subscription, active_until: now + 1.week + 1.day, recurrent: false)
 
     assert_equal [target.id], @bot.send(:subscriptions_for_will_end_in_a_week).map(&:id)
-  end
-
-  test "subscriptions_failure" do
-    assert_equal [], @bot.send(:subscriptions_for_failure).map(&:id)
-
-    target = create(:boutique_subscription, active_until: now - 1.day)
-    cancelled = create(:boutique_subscription, active_until: now - 1.day, cancelled_at: 1.minute.ago)
-    too_old = create(:boutique_subscription, active_until: now - 2.days)
-    too_fresh = create(:boutique_subscription, active_until: now - 1.hour)
-
-    assert_equal [target.id], @bot.send(:subscriptions_for_failure).map(&:id)
   end
 
   test "subscriptions_unpaid" do

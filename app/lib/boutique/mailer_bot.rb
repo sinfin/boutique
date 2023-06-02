@@ -21,15 +21,21 @@ class Boutique::MailerBot
     end
   end
 
-  def subscriptions_will_end_in_a_week
-    subscriptions_for_will_end_in_a_week.each do |subscription|
-      Boutique::SubscriptionMailer.will_end_in_a_week(subscription).deliver_later
+  def subscriptions_ended
+    subscriptions_for_ended.each do |subscription|
+      Boutique::SubscriptionMailer.ended(subscription).deliver_later
     end
   end
 
-  def subscriptions_failure
-    subscriptions_for_failure.each do |subscription|
-      Boutique::SubscriptionMailer.failure(subscription).deliver_later
+  def subscriptions_failed_payment
+    subscriptions_for_failed_payment.each do |subscription|
+      Boutique::SubscriptionMailer.failed_payment(subscription).deliver_later
+    end
+  end
+
+  def subscriptions_will_end_in_a_week
+    subscriptions_for_will_end_in_a_week.each do |subscription|
+      Boutique::SubscriptionMailer.will_end_in_a_week(subscription).deliver_later
     end
   end
 
@@ -50,14 +56,19 @@ class Boutique::MailerBot
                      .except_subsequent
     end
 
+    def subscriptions_for_ended
+      Boutique::Subscription.where(active_until: (now - 1.day - 1.hour)..(now - 1.day),
+                                   recurrent: false)
+    end
+
+    def subscriptions_for_failed_payment
+      Boutique::Subscription.where(active_until: (now - 1.day - 1.hour)..(now - 1.day),
+                                   recurrent: true)
+    end
+
     def subscriptions_for_will_end_in_a_week
       Boutique::Subscription.where(active_until: (now + 1.week - 1.hour)..(now + 1.week))
                             .where(recurrent: false)
-    end
-
-    def subscriptions_for_failure
-      Boutique::Subscription.where(active_until: (now - 1.day - 1.hour)..(now - 1.day),
-                                   cancelled_at: nil)
     end
 
     def subscriptions_for_unpaid

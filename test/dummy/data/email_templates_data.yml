@@ -255,18 +255,19 @@
     {ORDER_SUMMARY_PLAIN}
 
 - mailer: Boutique::SubscriptionMailer
-  action: failure
+  action: failed_payment
   optional_keywords:
     - ROOT_URL
     - SITE_TITLE
     - DOMAIN
-  title_cs: Předplatné - prodloužení neúspěšná platba 1
+    - ORDER_URL
+  title_cs: Předplatné - neúspěšná platba
   subject_cs: Předplatné - neúspěšná platba
   subject_en: Subscription - payment failed
   body_html_cs: |
     <p>Dobrý den,</p>
     <p>doufáme, že jste s předplatným stále spokojeni.</p>
-    <p>Pokusili jsme se prodloužit Vaše předplatné na další období, ale automatické platba neproběhla úspěšně. Zkusíme to v dalších dnech znovu, ale prosíme Vás, jen pro jistotu, o kontrolu, zda je na platební kartě k dispozici dostatek prostředků a zda karta stále platí. Kdyby se to opět nepovedlo, ozveme se Vám.</p>
+    <p>Pokusili jsme se prodloužit vaše předplatné na další období, ale automatické platba neproběhla úspěšně. Zkusíme to v dalších dnech znovu, ale zkontrolujte si, zda je na platební kartě k dispozici dostatek prostředků a zda karta stále platí.</p>
 
     <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Prověřte stav platby</a></p>
 
@@ -276,19 +277,32 @@
     Dobrý den,
     doufáme, že jste s předplatným stále spokojeni.
 
-    Pokusili jsme se prodloužit Vaše předplatné na další období, ale automatická platba neproběhla úspěšně. Zkusíme to v dalších dnech znovu, ale prosíme Vás, jen pro jistotu, o kontrolu, zda je na platební kartě k dispozici dostatek prostředků a zda karta stále platí. Kdyby se to opět nepovedlo, ozveme se Vám.
+    Pokusili jsme se prodloužit vaše předplatné na další období, ale automatické platba neproběhla úspěšně. Zkusíme to v dalších dnech znovu, ale zkontrolujte si, zda je na platební kartě k dispozici dostatek prostředků a zda karta stále platí.
 
+    Zkontrolavat stav platby můžete zde:
     {ORDER_URL}
 
     Pokud si nepřejete předplatné prodloužit, můžete ho snadno zrušit ve Vašem uživatelském profilu.
 
   body_html_en: |
     <p>Hello,</p>
-    <p>TODO</p>
+    <p>we hope you're still happy with your subscription.</p>
+    <p>We have tried to extend your subscription for another period, but the automatic payment was not successful. We will try again in the next few days, but please check if there are sufficient funds available on your credit card and if the card is still valid.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Check payment status</a></p>
+
+    <p>If you do not wish to renew your subscription, you can easily cancel it in your user profile.</p>
 
   body_text_en: |
     Hello,
-    TODO
+
+    we hope you're still happy with your subscription.
+    We have tried to extend your subscription for another period, but the automatic payment was not successful. We will try again in the next few days, but please check if there are sufficient funds available on your credit card and if the card is still valid.
+
+    You can check your payment status here
+    {ORDER_URL}
+
+    If you do not wish to renew your subscription, you can easily cancel it in your user profile.
 
 - mailer: Boutique::SubscriptionMailer
   action: unpaid
@@ -329,19 +343,19 @@
   subject_en: Subscription - ended
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>Vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.</p>
+    <p>vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.</p>
 
   body_text_cs: |
     Dobrý den,
-    Vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.
+    vaše předplatné před nedávnem vypršelo a nebylo obnoveno. Předplatné si můžete pohodlně prodloužit na našem webu.
 
   body_html_en: |
     <p>Hello,</p>
-    <p>TODO</p>
+    <p>your subscription recently expired and has not been renewed. You can conveniently renew your subscription on our website.</p>
 
   body_text_en: |
     Hello,
-    TODO
+    your subscription recently expired and has not been renewed. You can conveniently renew your subscription on our website.
 
 - mailer: Boutique::SubscriptionMailer
   action: will_end_in_a_week

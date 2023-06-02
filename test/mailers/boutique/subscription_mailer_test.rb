@@ -17,11 +17,11 @@ class Boutique::SubscriptionMailerTest < ActionMailer::TestCase
     assert_equal ["test@test.test"], mail.to
   end
 
-  test "failure" do
+  test "failed_payment" do
     user = create(:folio_user, email: "test@test.test")
     subscription = create(:boutique_subscription, user:)
 
-    mail = Boutique::SubscriptionMailer.failure(subscription)
+    mail = Boutique::SubscriptionMailer.failed_payment(subscription)
     assert_equal ["test@test.test"], mail.to
   end
 
