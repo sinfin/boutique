@@ -22,17 +22,17 @@ class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
                         reply_to: ::Boutique.config.mailers_reply_to)
   end
 
-  def will_end_in_a_week(subscription)
+  def unpaid(subscription)
     email_template_mail({},
-                        to: subscription.user.email,
+                        to: subscription.payer.email,
                         site: subscription.product_variant.product.site,
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)
   end
 
-  def unpaid(subscription)
+  def will_end_in_a_week(subscription)
     email_template_mail({},
-                        to: subscription.payer.email,
+                        to: subscription.user.email,
                         site: subscription.product_variant.product.site,
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)

@@ -72,7 +72,7 @@ class Boutique::MailerBot
     end
 
     def subscriptions_for_unpaid
-      Boutique::Subscription.where(active_until: (now - 15.days - 1.hour)..(now - 15.days),
+      Boutique::Subscription.where(active_until: (now - 7.days - 1.hour)..(now - 7.days),
                                    cancelled_at: nil)
     end
 end

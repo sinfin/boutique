@@ -315,22 +315,23 @@
   subject_en: Subscription - unpaid
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>Vaše předplatné před nedávnem vypršelo a nebylo obnoveno.</p>
-    <p>Pokud nechcete prodloužit předplatné, mrzí nás to. Dejte nám, prosím, vědět, proč jste se tak rozhodli, abychom mohli náš obsah a služby dále vylepšovat a vycházet vstříc všem čtenářům.</p>
+    <p>i přes naše předchozí pokusy vyřešit problém s platbou za vaše předplatné se nám nepodařilo platbu úspěšně zpracovat.</p>
+    <p>V důsledku toho vás musíme informovat, že vaše předplatné bylo ukončeno.</p>
 
   body_text_cs: |
     Dobrý den,
-    Vaše předplatné před nedávnem vypršelo a nebylo obnoveno.
-
-    Pokud nechcete prodloužit předplatné, mrzí nás to. Dejte nám, prosím, vědět, proč jste se tak rozhodli, abychom mohli náš obsah a služby dále vylepšovat a vycházet vstříc všem čtenářům.
+    i přes naše předchozí pokusy vyřešit problém s platbou za vaše předplatné se nám nepodařilo platbu úspěšně zpracovat.
+    V důsledku toho vás musíme informovat, že vaše předplatné bylo ukončeno.
 
   body_html_en: |
     <p>Hello,</p>
-    <p>TODO</p>
+    <p>despite our previous attempts to resolve the issue with your subscription payment, we have not been able to process the payment successfully.</p>
+    <p>As a result, we must inform you that your subscription has been terminated.</p>
 
   body_text_en: |
     Hello,
-    TODO
+    despite our previous attempts to resolve the issue with your subscription payment, we have not been able to process the payment successfully.
+    As a result, we must inform you that your subscription has been terminated.
 
 - mailer: Boutique::SubscriptionMailer
   action: ended
