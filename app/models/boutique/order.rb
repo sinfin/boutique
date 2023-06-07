@@ -491,7 +491,8 @@ class Boutique::Order < Boutique::ApplicationRecord
           line_item.update!(product:,
                             product_variant: nil,
                             amount:,
-                            subscription_recurring: nil)
+                            subscription_recurring: nil,
+                            subscription_starts_at: nil)
 
           if voucher.present? && !voucher.relevant_for?(product)
             # TODO: show message that voucher has been removed
@@ -716,6 +717,14 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       if renewed_subscription.present?
         renewed_subscription.cancelled_at = nil if line_item.subscription_recurring?
+
+        subscription_starts_at = renewed_subscription.active_until
+        if line_item.product.has_subscription_frequency?
+          # fixes badly imported subscriptions
+          subscription_starts_at = (subscription_starts_at + 1.hour).beginning_of_day
+        end
+
+        line_item.update!(subscription_starts_at:)
 
         renewed_subscription.update!(payment: paid_payment,
                                      active_until: renewed_subscription.active_until + period.months,
