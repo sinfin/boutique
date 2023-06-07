@@ -255,7 +255,6 @@ module Boutique
               amount: item_hash[:price_in_cents],
               count: item_hash[:count],
               vat_rate: item_hash[:vat_rate_percent] }
-
           end
         end
     end

@@ -22,6 +22,7 @@
 h2.mt-0 = Boutique::Order.model_name.human(count: 2)
 
 == cell('folio/console/boutique/orders/catalogue',
-        @subscription.orders.ordered \
-                            .includes(line_items: { product_variant: :product }),
+        @subscription.orders \
+                     .ordered \
+                     .includes(line_items: { product_variant: :product }),
         collection_actions: [])

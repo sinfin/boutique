@@ -34,6 +34,8 @@ group :test do
   gem "mocha", "~> 1.14.0"
   gem "minitest-stub_any_instance"
   gem "factory_bot"
+  gem "vcr"
+  gem "webmock"
   gem "capybara", "~> 2.13"
 end
 
