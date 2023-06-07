@@ -195,6 +195,15 @@ class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
            shop_return_url: "https://eshop.cz/order/asdaARFEG56",
            callback_url: "https://eshop.cz/callbacks/gopay",
         },
+        items: [
+          {
+            type: "ITEM",
+            name: "Je to kulatý – Měsíční (6. 6. 2023 – 6. 7. 2023)",
+            price_in_cents: 9900,
+            count: 1,
+            vat_rate_percent: 21
+          }
+        ],
         test: true
       }
     end
@@ -218,7 +227,7 @@ class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
         #   type: "ACCOUNT",
         #   goid: gateway_params[:merchant_gateway_id]
         # },
-        items: nil,
+        items: gopay_items_array(payment_data[:items]),
         amount: payment_data[:payment][:amount_in_cents],
         currency: payment_data[:payment][:currency],
         order_number: payment_data[:payment][:reference_id],
@@ -232,7 +241,6 @@ class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
         },
       }
     end
-
 
     def gopay_response_for(transaction_id:, state: "PAID")
       {
@@ -288,45 +296,61 @@ class GoPay::UniversalGatewayTest < ActiveSupport::TestCase
     end
 
     # corresponds to `gopay_response_for(transaction_id: , state: "PAID")`
-    def expected_result_hash_for(transaction_id:, state: :paid) = {
-      code: 0,
-      message: "OK",
-      transaction_id:,
-      state:,
-      # recurrence: {
-      #   cycle: resp.dig("recurrence", "recurrence_cycle"),
-      #   period: resp.dig("recurrence", "recurrence_period"),
-      #   valid_to: resp.dig("recurrence", "recurrence_date_to"),
-      #   state:  convert_state(resp.dig("recurrence", "recurrence_state"))
-      # },
-      # preauthorization: {
-      #   requested: resp.dig("preauthorization", "requested"),
-      #   state:  convert_state(resp.dig("preauthorization", "state"))
-      # },
-      # redirect_to: nil,
-      payment: {
-        amount_in_cents: 139950,
-        currency: "CZK",
-        label: "",
-        reference_id: "OBJ20200825",
-        method: "PAYMENT_CARD",
-        product_name: "",
-        fee: nil,
-        variable_symbol: nil,
-        description: nil
-      },
-      payer: {
-        email: "test@test.cz",
-        phone: "+420777456123",
-        first_name: "Zbyněk",
-        last_name: "Žák",
-        street_line: "Planá 67",
-        city: "České Budějovice",
-        postal_code: "37301",
-        country_code2: nil,
-        country_code3: "CZE",
-        account_number: nil,
-        account_name: nil
+    def expected_result_hash_for(transaction_id:, state: :paid)
+      {
+        code: 0,
+        message: "OK",
+        transaction_id:,
+        state:,
+        # recurrence: {
+        #   cycle: resp.dig("recurrence", "recurrence_cycle"),
+        #   period: resp.dig("recurrence", "recurrence_period"),
+        #   valid_to: resp.dig("recurrence", "recurrence_date_to"),
+        #   state:  convert_state(resp.dig("recurrence", "recurrence_state"))
+        # },
+        # preauthorization: {
+        #   requested: resp.dig("preauthorization", "requested"),
+        #   state:  convert_state(resp.dig("preauthorization", "state"))
+        # },
+        # redirect_to: nil,
+        payment: {
+          amount_in_cents: 139950,
+          currency: "CZK",
+          label: "",
+          reference_id: "OBJ20200825",
+          method: "PAYMENT_CARD",
+          product_name: "",
+          fee: nil,
+          variable_symbol: nil,
+          description: nil
+        },
+        payer: {
+          email: "test@test.cz",
+          phone: "+420777456123",
+          first_name: "Zbyněk",
+          last_name: "Žák",
+          street_line: "Planá 67",
+          city: "České Budějovice",
+          postal_code: "37301",
+          country_code2: nil,
+          country_code3: "CZE",
+          account_number: nil,
+          account_name: nil
+        }
       }
-    }
+    end
+
+
+    def gopay_items_array(payment_data_items)
+      return nil if payment_data_items.blank?
+
+      payment_data_items.collect do |item_hash|
+        { type: item_hash[:type],
+          name: item_hash[:name],
+          amount: item_hash[:price_in_cents],
+          count: item_hash[:count],
+          vat_rate: item_hash[:vat_rate_percent] }
+
+      end
+    end
 end

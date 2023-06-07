@@ -110,38 +110,6 @@ module Boutique
 
       private
         def payment_hash(payment_data)
-          # payment_data = {
-          #   payer: { email: "john@example.com",
-          #            phone: "+420777888999",
-          #            first_name:,
-          #           last_name:,
-          #          street_line:,
-          #          city:,
-          #         postal_code:,
-          #         country_code:  },
-          #   merchant: { target_shop_account: "12345678/1234" }
-          #   payment: { currency: "CZK",
-          #              amount_in_cents: 100, # 1 CZK
-          #              label: "#2023-0123",
-          #              reference_id: "#2023-0123",
-          #              description:,
-          #              method: "ALL"
-          #              apple_pay_payload: "apple pay payload",
-          #              dynamic_expiration: false,
-          #              expiration_time: "10h",
-          #              # init_reccuring_payments: true,
-          #              product_name: "Usefull things" },
-          #   options: {
-          #     country_code: "DE",
-          #     # embedded_iframe: false, # redirection after payment  # gateway variable
-          #     language_code: "sk",
-          #      shop_return_url:,
-          #      callback_url:,
-          #   },
-          #   test: true
-          # }
-
-
           contact = {
             first_name: payment_data[:payer][:first_name],
             last_name: payment_data[:payer][:last_name],
@@ -158,7 +126,7 @@ module Boutique
               default_payment_instrument: payment_data[:payment][:method].presence || DEFAULT_PAYMENT_METHOD,
               contact:
             },
-            items: nil,
+            items: gopay_items_array(payment_data[:items]),
             amount: payment_data[:payment][:amount_in_cents],
             currency: payment_data[:payment][:currency],
             order_number: payment_data[:payment][:reference_id],
@@ -274,6 +242,20 @@ module Boutique
             :pending
           else
             state_str.downcase.to_sym
+          end
+        end
+
+
+        def gopay_items_array(payment_data_items)
+          return nil if payment_data_items.blank?
+
+          payment_data_items.collect do |item_hash|
+            { type: item_hash[:type],
+              name: item_hash[:name],
+              amount: item_hash[:price_in_cents],
+              count: item_hash[:count],
+              vat_rate: item_hash[:vat_rate_percent] }
+
           end
         end
     end

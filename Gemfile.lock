@@ -238,7 +238,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorize (0.8.1)
-    comgate_ruby (0.7.1)
+    comgate_ruby (0.8.0)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.0)
     countries (5.4.0)

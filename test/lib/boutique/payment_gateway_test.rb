@@ -312,9 +312,9 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
         {
           type: "ITEM",
           name: line_item.to_label,
-          amount: line_item.price * 100,
+          price_in_cents: line_item.price * 100,
           count: line_item.amount,
-          vat_rate: line_item.vat_rate_value.to_i,
+          vat_rate_percent: line_item.vat_rate_value.to_i,
         }
       end
     end
