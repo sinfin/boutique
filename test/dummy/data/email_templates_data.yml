@@ -126,6 +126,8 @@
     - SITE_TITLE
     - DOMAIN
     - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
   required_keywords:
     - ORDER_URL
   title_cs: Objednávka - přípomínka nezaplacené objednávky
@@ -134,6 +136,9 @@
   body_html_cs: |
     <p>Dobrý den,</p>
     <p>rádi bychom Vám připomněli, že Vaše objednávka č. {ORDER_NUMBER} dosud nebyla uhrazena.</p>
+
+    {ORDER_SUMMARY_HTML}
+
     <p>Napravit to můžete snadno pár kliknutími na následujícím odkazu.</p>
 
     <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Dokončit objednávku</a></p>
@@ -141,6 +146,9 @@
   body_text_cs: |
     Dobrý den,
     rádi bychom Vám připomněli, že Vaše objednávka č. {ORDER_NUMBER} dosud nebyla uhrazena.
+
+    {ORDER_SUMMARY_PLAIN}
+
     Napravit to můžete snadno pár kliknutími na následujícím odkazu.
 
     {ORDER_URL}
@@ -148,6 +156,9 @@
   body_html_en: |
     <p>Hello,</p>
     <p>your order n. {ORDER_NUMBER} hasn't been paid. </p>
+
+    {ORDER_SUMMARY_HTML}
+
     <p>You can fix that if you click on the following link.</p>
 
     <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{ORDER_URL}">Finish order</a></p>
@@ -155,6 +166,9 @@
   body_text_en: |
     Hello,
     your order n. {ORDER_NUMBER} hasn't been paid.
+
+    {ORDER_SUMMARY_PLAIN}
+
     You can fix that if you click on the following link.
 
     {ORDER_URL}

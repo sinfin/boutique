@@ -34,7 +34,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   end
 
   def unpaid_reminder(order)
-    data = order_data(order, summary: false)
+    data = order_data(order, summary: true)
     email_template_mail(data,
                         to: order.email,
                         site: order.site,
