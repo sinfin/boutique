@@ -16,12 +16,12 @@
       .col-md-3 = f.input :active_from, as: :date
       .col-md-3 = f.input :active_until, as: :date
 
-    .row
-      .col-md-6
-        == cell('folio/console/addresses/fields',
-                f,
-                cols: [[Folio::Address::Primary, :primary_address, nil]],
-                fields_layout: { primary_address: f.object.class.primary_address_fields_layout },
-                required: %i[name address_line_2])
+    / .row
+    /   .col-md-6
+    /     == cell('folio/console/addresses/fields',
+    /             f,
+    /             cols: [[Folio::Address::Primary, :primary_address, nil]],
+    /             fields_layout: { primary_address: f.object.class.primary_address_fields_layout },
+    /             required: %i[name address_line_2])
 
 = form_footer f

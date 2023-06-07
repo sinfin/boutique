@@ -1,58 +1,26 @@
 .f-c-b-subscriptions-catalogue
-  = catalogue(model, address: model.any?(&:primary_address),
-                     collection_actions: options[:collection_actions])
+  = catalogue(model, collection_actions: options[:collection_actions],
+                     hide_user: options[:hide_user])
     ruby:
+      show_link :number
+
+      unless options[:hide_user]
+        association(:user, link: %i[console])
+      end
+
       attribute :product do
         record.product_variant.to_console_label
       end
 
-      attribute :order do
-        order = record.original_order
-        if order.present?
-          link_to(order.to_label, url_for([:console, order]))
+      date :active_from
+      date :active_until
+
+      attribute :state do
+        if record.active?
+          record.class.human_attribute_name("state/active")
+        else
+          record.class.human_attribute_name("state/inactive")
         end
       end
 
-      if options[:address]
-        attribute :primary_address, small: true do
-          if record.primary_address.present?
-            record.primary_address.to_label
-          end
-        end
-      end
-
-      attribute :active do
-        record.active_range
-      end
-
-      attribute :cancelled_at do
-        if record.cancelled_at?
-          l(record.cancelled_at, format: :short)
-        elsif !record.recurrent?
-          t(".boutique/subscription.non_recurring_subscription")
-        end
-      end
-
-      attribute nil, nil, compact: true, class_name: "actions" do
-        a = [
-          link_to("",
-                  controller.folio.edit_console_user_subscription_path(record.user, record),
-                  class: "btn btn-secondary fa fa-edit",
-                  title: t("folio.console.actions.edit"))
-        ]
-
-        if record.cancelled_at.nil?
-          a << link_to("",
-                       controller.folio.cancel_console_user_subscription_path(record.user, record),
-                       method: :delete,
-                       class: "btn btn-danger fa fa-times",
-                       title: t("folio.console.boutique.subscriptions.catalogue.cancel"),
-                       data: {
-                         confirm: t("folio.console.boutique.subscriptions.catalogue.cancel_confirm"),
-                       })
-        end
-
-        content_tag(:div, class: "f-c-index-actions") do
-          a.join
-        end
-      end
+      actions(:show, :edit)

@@ -11,14 +11,15 @@ h2 = Boutique::Order.model_name.human(count: 2)
     h2.mt-g
       = Boutique::Subscription.model_name.human(count: 2)
 
-  .col.text-right.mt-g
-    a.btn.btn-success[
-      href=new_console_user_subscription_url(user_id: @user.id)
-    ]
-      i.fa.fa-plus
-      = t(".new_subscription")
+  / .col.text-right.mt-g
+  /   a.btn.btn-success[
+  /     href=new_console_user_subscription_url(user_id: @user.id)
+  /   ]
+  /     i.fa.fa-plus
+  /     = t(".new_subscription")
 
 == cell('folio/console/boutique/subscriptions/catalogue',
         @user.subscriptions.ordered \
                            .includes(:orders, product_variant: :product),
-        collection_actions: [])
+        collection_actions: [],
+        hide_user: true)

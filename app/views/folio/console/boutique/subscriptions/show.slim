@@ -1,0 +1,27 @@
+= show_header @subscription
+
+.row
+  .col-lg-6.mb-5
+    = show_for @subscription do |s|
+      = s.attribute(:user)
+        - if s.object.user.present?
+          a[
+            href=folio.url_for([:console, s.object.user])
+            target='_blank'
+          ] = s.object.user.to_label
+
+      = s.email
+
+      = s.attribute(:active_from, if_blank: "–")
+      = s.attribute(:active_until, if_blank: "–")
+      = s.attribute(:cancelled_at, if_blank: "–")
+
+      = s.attribute(:product_variant)
+        = s.object.product_variant.to_console_label
+
+h2.mt-0 = Boutique::Order.model_name.human(count: 2)
+
+== cell('folio/console/boutique/orders/catalogue',
+        @subscription.orders.ordered \
+                            .includes(line_items: { product_variant: :product }),
+        collection_actions: [])

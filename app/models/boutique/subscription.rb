@@ -52,7 +52,18 @@ class Boutique::Subscription < ApplicationRecord
     inactive_at(Time.current)
   }
 
-  scope :ordered, -> { order(active_until: :asc, active_from: :asc) }
+  scope :by_active, -> (bool) {
+    case bool
+    when true, "true"
+      active
+    when false, "false"
+      inactive
+    else
+      all
+    end
+  }
+
+  scope :ordered, -> { order(id: :desc) }
 
   validates :active_from,
             :period,
@@ -60,12 +71,19 @@ class Boutique::Subscription < ApplicationRecord
 
   validate :validate_primary_address_attributes
 
+  def number
+    id
+  end
+
+  def email
+    user.email
+  end
+
   def to_label
     [
-      product_variant.to_label,
-      ("(#{active_range})" if active_from.present?),
-    ].compact
-     .join(" ")
+      "#{self.class.model_name.human} #{number}",
+      user.try(:to_label),
+    ].compact.join(" – ")
   end
 
   def active_at?(time)

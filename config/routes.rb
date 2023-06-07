@@ -44,16 +44,17 @@ Folio::Engine.routes.draw do
           end
         end
 
+        resources :subscriptions, except: %i[destroy], controller: :subscriptions do
+          member do
+            delete :cancel
+          end
+        end
+
         resources :products, except: %i[show]
         resources :vat_rates, except: %i[show]
         resources :vouchers, except: %i[show]
 
         resources :users, only: [] do
-          resources :subscriptions, except: %i[show destroy], controller: :subscriptions do
-            member do
-              delete :cancel
-            end
-          end
         end
       end
     end

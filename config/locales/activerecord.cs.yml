@@ -79,9 +79,12 @@ cs:
         active_from: Aktivní od
         active_until: Aktivní do
         cancelled_at: Zrušeno
+        number: Číslo
         order: Objednávka
         product: Produkt
         product_variant: Varianta produktu
+        state/active: Aktivní
+        state/inactive: Neaktivní
 
       boutique/vat_rate:
         value: Výše daně
@@ -137,7 +140,7 @@ cs:
 
       boutique/subscription:
         one: Předplatné
-        few: Předplatné
+        few: Předplatná
         other: Předplatných
 
       boutique/vat_rate:
