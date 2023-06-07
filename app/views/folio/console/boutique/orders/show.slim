@@ -30,18 +30,29 @@
           - else
             = s.object.gift_recipient_full_name
         = s.email(:gift_recipient_email)
-        = s.attribute(:gift_recipient_notification_scheduled_for)
+
+        - if s.object.gift_recipient_notification_scheduled_for?
+          = s.attribute(:gift_recipient_notification_scheduled_for)
 
       = s.attribute(:line_items)
         ul
           - s.object.line_items.each do |li|
-            li = li.to_label
+            li = li.to_console_label
 
       = s.attribute(:line_items_price)
         = price(s.object.line_items_price)
-      = s.attribute(:shipping_price)
-        = price(s.object.shipping_price)
+
+      - if s.object.requires_address?
+        = s.attribute(:shipping_price)
+          = price(s.object.shipping_price)
+
       = s.attribute(:total_price)
         = price(s.object.total_price)
+
+      - if s.object.invoice_number?
+        = s.attribute(:invoice)
+          = link_to(s.object.invoice_number,
+                    boutique.invoice_path(s.object.secret_hash),
+                    target: "_blank")
 
 == cell("folio/console/addresses/show_for_model", @order)

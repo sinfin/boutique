@@ -4,7 +4,7 @@
     ruby:
       show_link(:number)
 
-      attribute(:email)
+      association(:user, link: %i[console])
 
       attribute(:line_items) do
         content_tag(:div, class: "d-flex align-items-center") do
