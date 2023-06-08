@@ -4,10 +4,10 @@ cs:
     payment_gateways:
       after_payment:
         success:
-          with_order_url: Platba proběhla úspěšně. Detail objednávky naleznete ve <a href="%{order_url}">vašem uživatelském profilu</a>.
+          with_order_url: Platba proběhla úspěšně. Podrobnosti o objednávce naleznete ve svém <a href="%{order_url}">uživatelském profilu</a>.
           without_order_url: Platba proběhla úspěšně.
         success_free:
-          with_order_url: Objednávka proběhla úspěšně. Detail objednávky naleznete ve <a href="%{order_url}">vašem uživatelském profilu</a>.
+          with_order_url: Objednávka proběhla úspěšně. Podrobnosti naleznete ve svém <a href="%{order_url}">uživatelském profilu</a>.
           without_order_url: Objednávka proběhla úspěšně.
         failure: Platba selhala.
 

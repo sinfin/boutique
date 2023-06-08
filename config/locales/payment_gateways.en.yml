@@ -3,8 +3,13 @@ en:
   boutique:
     payment_gateways:
       after_payment:
-        success: Payment successful
-        failure: Payment failure
+        success:
+          with_order_url: Payment successful. Please see your <a href="%{order_url}">user profile</a> for order details.
+          without_order_url: Payment successful.
+        success_free:
+          with_order_url: Order was successful. Please see your <a href="%{order_url}">user profile</a> for order details.
+          without_order_url: Order was successful.
+        failure: Payment failure.
 
       payment_method:
         PAYMENT_CARD: Payment card
