@@ -55,9 +55,9 @@ class Boutique::CheckoutControllerTest < Boutique::ControllerTest
   end
 
   test "refreshed_cart" do
-    assert_raises(ActionController::ParameterMissing) do
-      get refreshed_cart_checkout_url
-    end
+    get refreshed_cart_checkout_url
+    assert_response :success
+    assert_empty response.parsed_body
 
     get refreshed_cart_checkout_url(country_code: "SK")
     assert_response :success

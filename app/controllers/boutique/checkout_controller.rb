@@ -58,17 +58,25 @@ class Boutique::CheckoutController < Boutique::ApplicationController
   end
 
   def refreshed_cart
-    country_code = params.require(:country_code)
-
     if current_order.nil? || current_order.line_items.empty?
       render json: {}
       return
     end
 
-    if current_order.primary_address.blank?
-      current_order.build_primary_address(country_code:)
-    else
-      current_order.primary_address.country_code = country_code
+    if country_code = params[:country_code].presence
+      if current_order.primary_address.blank?
+        current_order.build_primary_address(country_code:)
+      else
+        current_order.primary_address.country_code = country_code
+      end
+    end
+
+    subscription_period = params[:subscription_period] || nil
+    subscription_recurring = params[:subscription_recurring] == "true"
+
+    current_order.line_items.each do |line_item|
+      line_item.subscription_period = subscription_period
+      line_item.subscription_recurring = subscription_recurring
     end
 
     render json: {

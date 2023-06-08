@@ -9,6 +9,11 @@
     const $otherInputs = $base.find(`.${recurringSelector}, .${nonrecurringSelector}`).not($input)
 
     $otherInputs.prop('checked', false)
+
+
+    $base
+      .closest('form')
+      .trigger('boutiqueSubscriptionRecurringCheckboxesUpdated')
   }
 
   const onOptionInputChange = (e) => {
