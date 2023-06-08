@@ -5,7 +5,8 @@ module Boutique
     attr_accessor :logo_path,
                   :products_belong_to_site,
                   :parent_controller,
-                  :after_order_paid_user_url_name,
+                  :after_order_paid_order_url_proc,
+                  :after_order_paid_redirect_url_proc,
                   :checkout_routes_constraints,
                   :console_routes_constraints,
                   :invoice_number_base_length,
@@ -24,7 +25,8 @@ module Boutique
       @logo_path = nil
       @products_belong_to_site = false
       @parent_controller = "ApplicationController"
-      @after_order_paid_user_url_name = :root_url
+      @after_order_paid_order_url_proc = -> (controller:, order:) { nil }
+      @after_order_paid_redirect_url_proc = -> (controller:, order:) { nil }
       @checkout_routes_constraints = {}
       @console_routes_constraints = {}
       @invoice_number_base_length = 5

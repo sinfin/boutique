@@ -11,6 +11,13 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
 
     @product = create(:boutique_product)
     go_pay_start_transaction_api_call_mock
+
+    @default_after_order_paid_redirect_url_proc = Boutique.config.after_order_paid_redirect_url_proc
+    Boutique.config.after_order_paid_redirect_url_proc = -> (controller:, order:) { "/custom-url" }
+  end
+
+  teardown do
+    Boutique.config.after_order_paid_redirect_url_proc = @default_after_order_paid_redirect_url_proc
   end
 
   test "anonymous - successful payment" do
@@ -105,7 +112,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     go_pay_check_transaction_api_call_mock(state: :paid)
 
     get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
+    assert_redirected_to "/custom-url"
     assert current_order.reload.paid?
   end
 
@@ -131,7 +138,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     go_pay_check_transaction_api_call_mock(state: :payment_method_chosen)
 
     get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to send(Boutique.config.after_order_paid_user_url_name)
+    assert_redirected_to "/custom-url"
     assert_not current_order.reload.paid?
   end
 
@@ -157,7 +164,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     go_pay_check_transaction_api_call_mock(state: :cancelled)
 
     get return_after_pay_url(id: 123, order_id: current_order.secret_hash)
-    assert_redirected_to order_url(Boutique::Order.first.secret_hash)
+    assert_redirected_to order_url(current_order.secret_hash)
     assert_not current_order.reload.paid?
   end
 

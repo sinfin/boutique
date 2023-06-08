@@ -108,7 +108,7 @@ FactoryBot.define do
       if order.line_items.empty?
         evaluator.line_items_count.times do
           product_factory = evaluator.subscription_product ? :boutique_product_subscription : :boutique_product
-          product_price = (order.total_price / evaluator.line_items_count)
+          product_price = (order.read_attribute(:total_price) || 100) / evaluator.line_items_count
           product_price = product_price / 12 if product_factory == :boutique_product_subscription
           product = create(product_factory, price: product_price)
 

@@ -1,0 +1,20 @@
+---
+cs:
+  boutique:
+    payment_gateways:
+      after_payment:
+        success:
+          with_order_url: Platba proběhla úspěšně. Detail objednávky naleznete ve <a href="%{order_url}">vašem uživatelském profilu</a>.
+          without_order_url: Platba proběhla úspěšně.
+        success_free:
+          with_order_url: Objednávka proběhla úspěšně. Detail objednávky naleznete ve <a href="%{order_url}">vašem uživatelském profilu</a>.
+          without_order_url: Objednávka proběhla úspěšně.
+        failure: Platba selhala.
+
+      payment_method:
+        PAYMENT_CARD: Platba kartou
+        BANK_ACCOUNT: Bankovní převod
+        APPLE_PAY: Apple Pay
+        GPAY: Google Pay
+        PAYPAL: Paypal
+        BITCOIN: Bitcoin

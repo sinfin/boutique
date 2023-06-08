@@ -20,7 +20,7 @@ class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
     assert_redirected_to main_app.user_invitation_url
     assert @payment.reload.paid?
     assert @order.reload.paid?
-    assert_equal "Platba proběhla úspěšně", flash[:success]
+    assert_equal "Platba proběhla úspěšně.", flash[:success]
   end
 
   test "comeback with failed payment" do
@@ -31,7 +31,7 @@ class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
     assert_redirected_to order_url(@order.secret_hash)
     assert @payment.reload.cancelled?
     assert @order.reload.confirmed?
-    assert_equal "Platba selhala", flash[:alert]
+    assert_equal "Platba selhala.", flash[:alert]
   end
 
   test "comeback with offline payment" do
@@ -42,7 +42,7 @@ class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
     assert_redirected_to main_app.user_invitation_url
     assert @payment.reload.pending?
     assert @order.reload.waiting_for_offline_payment?
-    assert_equal "Platba proběhla úspěšně", flash[:success]
+    assert_equal "Platba proběhla úspěšně.", flash[:success]
   end
 
   test "payment callback" do

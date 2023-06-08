@@ -9,35 +9,9 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
   def crossdomain_add_item
     add_item_to_order_and_redirect
-
-    if custom_url = custom_boutique_after_order_paid_user_url
-      session[:boutique_after_order_paid_user_url] = custom_url
-    else
-      if request.referrer.present?
-        clean_referrer_domain = request.referrer.gsub(%r{\Ahttps?://}, "").gsub(%r{/.*\z}, "")
-
-        if Folio::Site.all.any? { |site| site.env_aware_domain == clean_referrer_domain }
-          if url_name = ::Boutique.config.after_order_paid_user_url_name
-            session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
-                                                                         host: clean_referrer_domain,
-                                                                         only_path: false)
-          end
-        end
-      end
-    end
   end
 
   def add_item
-    if custom_url = custom_boutique_after_order_paid_user_url
-      session[:boutique_after_order_paid_user_url] = custom_url
-    else
-      if url_name = ::Boutique.config.after_order_paid_user_url_name
-        session[:boutique_after_order_paid_user_url] = main_app.send(url_name,
-                                                                     host: current_site.env_aware_domain,
-                                                                     only_path: false)
-      end
-    end
-
     add_item_to_order_and_redirect
   end
 
@@ -135,8 +109,6 @@ class Boutique::CheckoutController < Boutique::ApplicationController
       if current_order.confirm!
         if current_order.free?
           current_order.pay!
-
-          flash[:success] = t(".success_free")
           redirect_after_order_paid(current_order)
         else
           create_payment_and_redirect_to_payment_gateway(current_order)
@@ -199,10 +171,6 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
     def redirect_if_current_order_is_empty
       redirect_back fallback_location: main_app.root_url if current_order.nil?
-    end
-
-    def custom_boutique_after_order_paid_user_url
-      nil
     end
 
     def add_item_to_order_and_redirect
