@@ -56,7 +56,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
   alias_attribute :refunded_at, :cancelled_at
 
   def amount_in_cents
-    order.total_price * 100
+    order.total_price * 100 # TODO: make this attribute, initialized with order.total_price
   end
 
   def payment_gateway

@@ -19,7 +19,9 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
   end
 
   test "payment" do
-    order = create(:boutique_order, :ready_to_be_confirmed)
+    order = create(:boutique_order, :ready_to_be_confirmed, subscription_product: false)
+    order.line_items.update_all(subscription_recurring:  false)
+
     assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
 
     order.confirm!

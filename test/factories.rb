@@ -18,7 +18,8 @@ FactoryBot.define do
       end
 
       if product.variants.blank?
-        product.variants << build(:boutique_product_variant, { regular_price: evaluator.price,
+        product.variants << build(:boutique_product_variant, { product:,
+                                                               regular_price: evaluator.price,
                                                                code: evaluator.code,
                                                                title: "#{evaluator.title} - variant A",
                                                                master: true }.compact)
@@ -37,6 +38,7 @@ FactoryBot.define do
     sequence(:code) { |i| "CODE#{i}" }
     title { "ProductVariant title" }
     regular_price { 99 }
+    subscription_period { product.subscription? ? 12 : 0 }
   end
 
   factory :boutique_order, class: "Boutique::Order" do
@@ -106,9 +108,13 @@ FactoryBot.define do
       if order.line_items.empty?
         evaluator.line_items_count.times do
           product_factory = evaluator.subscription_product ? :boutique_product_subscription : :boutique_product
-          product = create(product_factory, price: order.total_price)
+          product_price = (order.total_price / evaluator.line_items_count)
+          product_price = product_price / 12 if product_factory == :boutique_product_subscription
+          product = create(product_factory, price: product_price)
+
           li = build(:boutique_line_item, product:)
           li.product.update_column(:digital_only, true) if evaluator.digital_only
+
           order.line_items << li
         end
       end
@@ -146,7 +152,7 @@ FactoryBot.define do
 
     after(:build) do |subscription|
       unless subscription.product_variant.present?
-        order_attrs = { subscription:, subscription_product: true, user: subscription.user }.compact
+        order_attrs = { subscription:, subscription_product: true, user: subscription.user, total_price: 60 }.compact
         order = create(:boutique_order, :paid, order_attrs)
         subscription.payment = order.payments.paid.first
         subscription.product_variant = order.line_items.first.product_variant

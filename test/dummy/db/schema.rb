@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_30_115653) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_06_082852) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -185,6 +185,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_30_115653) do
     t.bigint "primary_address_id"
     t.bigint "payer_id"
     t.boolean "recurrent", default: false
+    t.string "recurrent_payments_init_id"
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"

@@ -32,4 +32,4 @@ end
 
 require "mocha/minitest"
 require "minitest/mock"
-require "minitest/stub_any_instance"
+require "minitest/stub_any_instance" # Mocha Obj.any_instance.stubs().returns() is not limited to block, but test

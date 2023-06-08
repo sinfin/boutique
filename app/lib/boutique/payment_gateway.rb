@@ -51,12 +51,12 @@ class Boutique::PaymentGateway
   end
 
   def start_recurring_transaction(order, options = {})
-    unless order.line_items.reload.any?(&:requires_subscription_recurring?)
+    unless order.first_of_subsequent?
       fail "cannot create recurrence for non-recurrent order"
     end
 
     params = payment_params(order, options)
-    params[:payment][:recurrence][:period] = 1
+    params[:payment].deep_merge!({ recurrence: { period: 1 } })
 
     provider_gateway.start_recurring_transaction(params)
   end
@@ -153,7 +153,7 @@ class Boutique::PaymentGateway
       order.line_items.map do |line_item|
         {
           type: "ITEM",
-          name: line_item.to_label,
+          name: line_item.title,
           price_in_cents: line_item.price * 100,
           count: line_item.amount,
           vat_rate_percent: line_item.vat_rate_value.to_i,
@@ -165,7 +165,3 @@ class Boutique::PaymentGateway
       "#{order.model_name.human} #{order.to_label}"
     end
 end
-# rescue Boutique::PaymentGateway::Error => error
-# if error.stopped_recurrence?
-#   # 342: PAYMENT_RECURRENCE_STOPPED
-#   # cancel subscription if recurrence was stopped in GoPay admin

@@ -502,6 +502,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     Boutique::Order.transaction do
       if product_variant.product.subscription? && li = subscription_line_item
         # only one product of subscription type is allowed in the order
+        # so we override existing subscription
         li.amount = 1
         li.product_variant = product_variant
       elsif li = line_items.all.find { |li| li.boutique_product_variant_id == product_variant.id }
@@ -545,6 +546,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.all?(&:digital_only?)
   end
 
+  def first_of_subsequent?
+    line_items.any?(&:subscription_recurring?) && original_payment_id.blank?
+  end
+
   def subsequent?
     original_payment_id?
   end
@@ -571,7 +576,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     begin
       transaction = payment_gateway.repeat_recurring_transaction(self)
       payments.create!(remote_id: transaction.transaction_id,
-                       payment_method: transaction.hash[:payment][:method])
+                       payment_method: transaction.hash.dig(:payment, :method),
+                       payment_gateway_provider: payment_gateway.provider)
     rescue Boutique::PaymentGateway::Error => error
       if error.stopped_recurrence?
         subscription.cancel!

@@ -202,6 +202,7 @@ end
 #  primary_address_id          :bigint(8)
 #  payer_id                    :bigint(8)
 #  recurrent                   :boolean          default(FALSE)
+#  recurrent_payments_init_id  :string
 #
 # Indexes
 #

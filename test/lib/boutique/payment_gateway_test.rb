@@ -75,8 +75,10 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
   end
 
   test "#start_recurring_transaction(order)" do
-    order = create(:boutique_order, :confirmed)
-    assert order.line_items.reload.none?(&:requires_subscription_recurring?)
+    order = create(:boutique_order, :confirmed, subscription_product: false)
+    order.line_items.update_all(subscription_recurring:  false)
+
+    assert_not order.first_of_subsequent?
 
     gw = Boutique::PaymentGateway.new
 
@@ -84,8 +86,8 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
       gw.start_recurring_transaction(order)
     end
 
-    order.line_items << create(:boutique_line_item, product: create(:boutique_product_subscription))
-    assert order.line_items.reload.any?(&:requires_subscription_recurring?)
+    order.line_items << build(:boutique_line_item, product: create(:boutique_product_subscription))
+    assert order.first_of_subsequent?
 
     options = {
       payment_method: "PAYMENT_CARD",
