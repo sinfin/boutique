@@ -52,7 +52,7 @@ en:
           error: Please select your renewal policy!
 
           nonrecurring_payment:
-            link: I don't want a recurring payment, I'll remember to renew my subscription.
+            link: I don't want a recurring payment, I'll make a one-time payment.
             title: Nonrecurring payment
             months:
               one: 1 month

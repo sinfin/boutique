@@ -54,7 +54,7 @@ cs:
           error: Zvolte prosím způsob obnovy!
 
           nonrecurring_payment:
-            link: Nechci opakovanou platbu, budu si pamatovat, že mám prodloužit předplatné
+            link: Nechci opakovanou platbu, zaplatím jednorázově.
             title: Jednorázová platba
             months:
               one: 1 měsíc
