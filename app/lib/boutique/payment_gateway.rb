@@ -65,10 +65,11 @@ class Boutique::PaymentGateway
     fail "cannot create recurrence for non-recurrent order" unless order.subsequent?
 
     params = payment_params(order, {})
-    params[:payment][:recurrence] = {
+    params[:payment][:recurrence] = (params[:payment][:recurrence] || {}).merge({
       init_transaction_id: order.original_payment.remote_id,
       period: order.subscription.orders.count
-    }
+    })
+
     provider_gateway.repeat_recurring_transaction(params)
   end
 

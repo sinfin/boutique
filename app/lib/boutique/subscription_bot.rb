@@ -115,6 +115,7 @@ class Boutique::SubscriptionBot
                                                             payment_method: "fake_init_payment",
                                                             paid_at: subscription.active_from,
                                                             payment_gateway_provider: "import")
+      subscription.update(payment: new_order.original_payment) if subscription.payment.nil?
 
       new_order
     end
