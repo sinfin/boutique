@@ -39,6 +39,16 @@
   &__input
     padding-right: 93px
 
+    &.is-invalid
+      border-color: $red
+      color: $red
+
+    .b-orders-cart-voucher-fields--applied &
+      color: $solid-blue
+
+  .invalid-feedback
+    color: $red
+
   &__loader
     height: $input-height
     position: absolute
@@ -51,3 +61,10 @@
   &:not(&--applied) &__applied,
   &--applied &__apply
     display: none
+
+  &__discount-value-text
+    margin-top: 10px
+    font-family: $font-family-heading
+    font-weight: $font-weight-bold
+    font-size: px-to-rem(15px)
+    line-height: 18/15

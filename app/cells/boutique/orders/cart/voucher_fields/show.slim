@@ -18,5 +18,5 @@ div class=class_name
     span.folio-loader.folio-loader--small.b-orders-cart-voucher-fields__loader
 
   - if model.object.discount && model.object.discount > 0
-    p.font-weight-bold
+    p.b-orders-cart-voucher-fields__discount-value-text
       ' #{t('.discount')}: #{price(model.object.discount)}
