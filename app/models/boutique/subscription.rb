@@ -3,6 +3,8 @@
 class Boutique::Subscription < ApplicationRecord
   include Folio::HasAddresses
 
+  NOT_CANCELLED_AT_THRESHOLD = 7.days
+
   belongs_to :payment, class_name: "Boutique::Payment",
                        foreign_key: :boutique_payment_id,
                        inverse_of: :subscription,
@@ -31,10 +33,17 @@ class Boutique::Subscription < ApplicationRecord
                     inverse_of: :subscription
 
   scope :active_at, -> (time) {
-    where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?) AND "\
-          "(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
-          time,
-          time)
+    base = where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?)", time)
+
+    recurrent = base.where(recurrent: true)
+                    .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
+                           time - NOT_CANCELLED_AT_THRESHOLD)
+
+    onetime = base.where(recurrent: false)
+                  .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
+                         time)
+
+    recurrent.or(onetime)
   }
 
   scope :active, -> {
@@ -42,10 +51,17 @@ class Boutique::Subscription < ApplicationRecord
   }
 
   scope :inactive_at, -> (time) {
-    where("(#{table_name}.active_from IS NOT NULL AND #{table_name}.active_from > ?) OR "\
-          "(#{table_name}.active_until IS NOT NULL AND #{table_name}.active_until < ?)",
-          time,
-          time)
+    base = all
+
+    future = base.where("#{table_name}.active_from > ?", time)
+
+    recurrent = base.where(recurrent: true)
+                    .where("#{table_name}.active_until < ?", time - NOT_CANCELLED_AT_THRESHOLD)
+
+    cancelled = base.where(recurrent: false)
+                    .where("#{table_name}.active_until < ?", time)
+
+    future.or(recurrent).or(cancelled)
   }
 
   scope :inactive, -> {
@@ -87,12 +103,16 @@ class Boutique::Subscription < ApplicationRecord
   end
 
   def active_at?(time)
-    if active_from.present? && active_from >= time
+    if active_from.present? && active_from > time
       return false
     end
 
-    if active_until.present? && active_until <= time
-      return false
+    if active_until.present?
+      if recurrent?
+        return false if active_until < time - NOT_CANCELLED_AT_THRESHOLD
+      else
+        return false if active_until < time
+      end
     end
 
     true
