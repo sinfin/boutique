@@ -10,9 +10,10 @@ class Boutique::MailerBot
 
   def all
     orders_unpaid_reminder
-    subscriptions_will_be_paid_in_a_week
-    subscriptions_failure
+    subscriptions_ended
+    subscriptions_failed_payment
     subscriptions_unpaid
+    subscriptions_will_end_in_a_week
   end
 
   def orders_unpaid_reminder
@@ -33,15 +34,15 @@ class Boutique::MailerBot
     end
   end
 
-  def subscriptions_will_end_in_a_week
-    subscriptions_for_will_end_in_a_week.each do |subscription|
-      Boutique::SubscriptionMailer.will_end_in_a_week(subscription).deliver_later
-    end
-  end
-
   def subscriptions_unpaid
     subscriptions_for_unpaid.each do |subscription|
       Boutique::SubscriptionMailer.unpaid(subscription).deliver_later
+    end
+  end
+
+  def subscriptions_will_end_in_a_week
+    subscriptions_for_will_end_in_a_week.each do |subscription|
+      Boutique::SubscriptionMailer.will_end_in_a_week(subscription).deliver_later
     end
   end
 
@@ -66,13 +67,13 @@ class Boutique::MailerBot
                                    recurrent: true)
     end
 
-    def subscriptions_for_will_end_in_a_week
-      Boutique::Subscription.where(active_until: (now + 1.week - 1.hour)..(now + 1.week))
-                            .where(recurrent: false)
-    end
-
     def subscriptions_for_unpaid
       Boutique::Subscription.where(active_until: (now - 7.days - 1.hour)..(now - 7.days),
                                    cancelled_at: nil)
+    end
+
+    def subscriptions_for_will_end_in_a_week
+      Boutique::Subscription.where(active_until: (now + 1.week - 1.hour)..(now + 1.week))
+                            .where(recurrent: false)
     end
 end
