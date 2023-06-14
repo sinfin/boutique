@@ -159,7 +159,7 @@ FactoryBot.define do
         subscription.user = order.user
         subscription.payer = order.user
       else
-        subscription.user = create(:folio_user)
+        subscription.user ||= create(:folio_user)
       end
     end
   end
