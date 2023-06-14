@@ -26,7 +26,6 @@ $(document)
           const $oldCovers = $oldEdit.find('.b-orders-cart-summary__line-item-cover-wrap').detach()
 
           const selectors = [
-            'input[name="authenticity_token"]',
             '.b-orders-cart-voucher-fields',
             '.b-orders-cart-sidebar__ajax-replacable',
             '.b-orders-cart-recurrency-fields',
