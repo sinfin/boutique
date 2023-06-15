@@ -5,7 +5,8 @@
         label.b-orders-edit-recurrency-fields__option
           = g.radio_button :subscription_recurring,
                            bool,
-                           class: "b-orders-edit-recurrency-fields__option-input"
+                           class: "b-orders-edit-recurrency-fields__option-input",
+                           checked: checked?(g.object, bool)
 
           .b-orders-edit-recurrency-fields__option-content
             .b-orders-edit-recurrency-fields__option-title

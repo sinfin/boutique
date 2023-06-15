@@ -43,6 +43,6 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
   end
 
   def recurrence_required?
-    @recurrence_required ||= f.object.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
+    @recurrence_required ||= f.object.recurrent_payment_enabled_by_default? || f.object.line_items.any? { |li| li.subscription? && li.subscription_recurring? }
   end
 end

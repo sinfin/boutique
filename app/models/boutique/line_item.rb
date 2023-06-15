@@ -93,6 +93,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product.subscription? && !product.subscription_recurrent_payment_disabled?
   end
 
+  def subscription_recurrent_by_default?
+    false
+  end
+
   def subscription_starts_at_options_for_select
     product.current_and_upcoming_issues.map do |issue|
       date = Date.new(issue[:year], issue[:month])
