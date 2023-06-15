@@ -28,6 +28,13 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
     end
   end
 
+  def to_console_label
+    [
+      product.try(:to_label),
+      to_label
+    ].compact.join(" - ")
+  end
+
   def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],
