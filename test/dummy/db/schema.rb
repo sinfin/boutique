@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_02_065439) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_15_084024) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -92,7 +92,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_065439) do
     t.string "invoice_number"
     t.boolean "gift", default: false
     t.string "gift_recipient_email"
-    t.datetime "gift_recipient_notification_scheduled_for", precision: nil
+    t.datetime "gift_recipient_notification_scheduled_for"
     t.datetime "gift_recipient_notification_sent_at"
     t.datetime "gtm_data_sent_at"
     t.bigint "site_id"
@@ -152,7 +152,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_065439) do
     t.text "shipping_info"
     t.boolean "digital_only", default: false
     t.boolean "subscription_recurrent_payment_disabled", default: false
-    t.string "preview_token"
     t.string "code", limit: 32
     t.text "checkout_sidebar_content"
     t.text "description"
@@ -163,6 +162,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_065439) do
     t.datetime "discounted_until"
     t.boolean "best_offer", default: false
     t.string "variant_type_title"
+    t.string "preview_token"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
@@ -379,7 +379,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_065439) do
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
     t.string "default_gravity"
-    t.integer "file_track_duration"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
