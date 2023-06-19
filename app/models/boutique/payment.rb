@@ -55,6 +55,30 @@ class Boutique::Payment < Boutique::ApplicationRecord
   alias_attribute :timeouted_at, :cancelled_at
   alias_attribute :refunded_at, :cancelled_at
 
+  def update_state_from_gateway_check(gateway_result_hash)
+    self.with_lock do
+      self.order.lock!
+      binding.pry
+      if pending?
+        self.payment_method = gateway_result_hash[:method]
+
+        case gateway_result_hash[:state]
+        when :paid
+          pay!
+        when :payment_method_chosen
+          unless order.waiting_for_offline_payment?
+            order.wait_for_offline_payment!
+            touch
+          end
+        when :cancelled
+          cancel!
+        when :expired, :timeouted
+          timeout!
+        end
+      end
+    end
+  end
+
   def amount_in_cents
     order.total_price * 100 # TODO: make this attribute, initialized with order.total_price
   end

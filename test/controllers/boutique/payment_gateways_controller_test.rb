@@ -48,8 +48,11 @@ class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
   test "payment callback" do
     go_pay_check_transaction_api_call_mock
 
+    assert_not @order.paid?
+
     get payment_callback_url(id: 123, order_id: @order.secret_hash)
 
     assert_response :success
+    assert @order.reload.paid?
   end
 end

@@ -71,7 +71,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     expected_created_order = subscription.original_order.dup.tap { |o| o.number = o.number.to_i + 1 } # new order number created during charge
     expected_created_order.line_items = subscription.original_order.line_items.map(&:dup)
     expected_payment_data = payment_data_for(expected_created_order)
-    expected_payment_data[:payment][:recurrence] = { init_transaction_id: init_payment.remote_id, period: 2 }
+    expected_payment_data[:payment][:recurrence] = { init_transaction_id: init_payment.remote_id, period: 2, cycle: :on_demand, valid_to: Date.new(2099, 12, 31) }
 
     payment_result = Boutique::PaymentGateway::ResponseStruct.new(
       transaction_id: "new_payment_id",
@@ -110,7 +110,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
 
     expected_created_order = build_new_order_from(subscription)
     expected_payment_data = payment_data_for(expected_created_order)
-    expected_payment_data[:payment][:recurrence] = { init_transaction_id: subscription.recurrent_payments_init_id, period: 1 }
+    expected_payment_data[:payment][:recurrence] = { init_transaction_id: subscription.recurrent_payments_init_id, period: 1, cycle: :on_demand, valid_to: Date.new(2099, 12, 31) }
 
     payment_result = Boutique::PaymentGateway::ResponseStruct.new(
       transaction_id: "new_payment_id",

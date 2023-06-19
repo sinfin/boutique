@@ -35,27 +35,6 @@
       result_hash = transaction_result.hash
 
       @payment = Boutique::Payment.find_by_remote_id!(result_hash[:transaction_id])
-
-      @payment.with_lock do
-        @payment.order.lock!
-
-        if @payment.pending?
-          @payment.payment_method = result_hash[:method]
-
-          case result_hash[:state]
-          when :paid
-            @payment.pay!
-          when :payment_method_chosen
-            unless @payment.order.waiting_for_offline_payment?
-              @payment.order.wait_for_offline_payment!
-              @payment.touch
-            end
-          when :cancelled
-            @payment.cancel!
-          when :expired, :timeouted
-            @payment.timeout!
-          end
-        end
-      end
+      @payment.update_state_from_gateway_check(result_hash)
     end
   end
