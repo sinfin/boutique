@@ -66,3 +66,6 @@ e-shop plugin for [Folio](http://github.com/sinfin/folio)
 }
 
 ```
+
+## Scheduled jobs
+For correct funcionality, you have to schedule `Boutique::MailerBotJob` , `Boutique::SubscriptionBotJob` to run every 1 hour.
