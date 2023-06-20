@@ -12,7 +12,7 @@ class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
   def failed_payment(subscription)
     order = subscription.current_order
     data = {
-      ORDER_URL: boutique.order_url(order.secret_hash),
+      ORDER_URL: order ? boutique.order_url(order.secret_hash) : "",
     }
 
     email_template_mail(data,

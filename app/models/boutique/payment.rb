@@ -58,7 +58,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
   def update_state_from_gateway_check(gateway_result_hash)
     self.with_lock do
       self.order.lock!
-      binding.pry
+
       if pending?
         self.payment_method = gateway_result_hash[:method]
 
