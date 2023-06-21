@@ -69,7 +69,7 @@ class Boutique::MailerBot
 
     def subscriptions_for_unpaid
       Boutique::Subscription.where(active_until: (now - 7.days - 1.hour)..(now - 7.days),
-                                   cancelled_at: nil)
+                                   recurrent: true)
     end
 
     def subscriptions_for_will_end_in_a_week

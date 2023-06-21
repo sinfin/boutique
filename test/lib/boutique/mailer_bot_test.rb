@@ -46,10 +46,10 @@ class Boutique::MailerBotTest < ActiveSupport::TestCase
   test "subscriptions_unpaid" do
     assert_equal [], @bot.send(:subscriptions_for_unpaid).map(&:id)
 
-    target = create(:boutique_subscription, active_until: now - 7.days)
-    cancelled = create(:boutique_subscription, active_until: now - 7.days, cancelled_at: 1.minute.ago)
-    too_old = create(:boutique_subscription, active_until: now - 8.days)
-    too_fresh = create(:boutique_subscription, active_until: now - 1.day)
+    target = create(:boutique_subscription, active_until: now - 7.days, recurrent: true)
+    cancelled = create(:boutique_subscription, active_until: now - 7.days, recurrent: false)
+    too_old = create(:boutique_subscription, active_until: now - 8.days, recurrent: true)
+    too_fresh = create(:boutique_subscription, active_until: now - 1.day, recurrent: true)
 
     assert_equal [target.id], @bot.send(:subscriptions_for_unpaid).map(&:id)
   end
