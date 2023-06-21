@@ -12,7 +12,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
                          inverse_of: :payment
 
   has_many :subsequent_orders, class_name: "Boutique::Order",
-                               foreign_key: :original_order_id,
+                               foreign_key: :original_payment_id,
                                inverse_of: :original_payment
 
   scope :ordered, -> { order(id: :desc) }
