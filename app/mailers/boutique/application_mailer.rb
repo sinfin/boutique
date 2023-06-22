@@ -3,4 +3,9 @@
 class Boutique::ApplicationMailer < Folio::ApplicationMailer
   helper Boutique::PriceHelper
   helper Boutique::SubscriptionHelper
+
+  private
+    def email_template_data_defaults(model)
+      Boutique.config.email_template_data_defaults_proc.call(model)
+    end
 end

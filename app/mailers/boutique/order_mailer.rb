@@ -76,6 +76,6 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
         h[:ORDER_URL] = boutique.order_url(order.secret_hash)
       end
 
-      h
+      email_template_data_defaults(order).merge(h)
     end
 end

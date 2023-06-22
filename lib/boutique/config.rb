@@ -18,7 +18,8 @@ module Boutique
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
                   :orders_edit_recurrency_title_proc,
-                  :payment_gateways
+                  :payment_gateways,
+                  :email_template_data_defaults_proc
 
     def initialize
       # set defaults here
@@ -47,6 +48,7 @@ module Boutique
         default: :go_pay,
         go_pay: nil
       }
+      @email_template_data_defaults_proc = -> (model) { {} }
     end
   end
 
