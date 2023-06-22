@@ -326,8 +326,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         options = args.extract_options!
 
         # paid_at timestamp is needed to generate the invoice number
-        set_aasm_state_timestamp(state: "paid",
-                                 timestamp: options[:timestamp])
+        set_aasm_state_timestamp(at: options[:at], state: "paid")
 
         set_invoice_number
 
@@ -670,7 +669,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       options = args.extract_options!
 
       ts_setter = "#{options[:state] || aasm.to_state}_at="
-      respond_to?(ts_setter) && send(ts_setter, options[:timestamp] || Time.current)
+      respond_to?(ts_setter) && send(ts_setter, options[:at] || Time.current)
     end
 
     def set_numbers
