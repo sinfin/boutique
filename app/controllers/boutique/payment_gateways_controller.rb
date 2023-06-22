@@ -33,8 +33,11 @@
     def update_payment
       transaction_result = Boutique::PaymentGateway.process_callback(params.to_unsafe_h)
       result_hash = transaction_result.hash
-
-      @payment = Boutique::Payment.find_by_remote_id!(result_hash[:transaction_id])
-      @payment.update_state_from_gateway_check(result_hash)
+      begin
+        @payment = Boutique::Payment.find_by_remote_id!(result_hash[:transaction_id])
+        @payment.update_state_from_gateway_check(result_hash)
+      rescue ActiveRecord::RecordNotFound => error
+        Raven.capture_error(error, extra: { params: })
+      end
     end
   end
