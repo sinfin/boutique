@@ -49,6 +49,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     }.each do |event, state|
       order.aasm.fire!(event)
       assert_equal state, order.aasm_state
+      assert order.send("#{state}_at")
 
       order.cancel!
       assert_equal "cancelled", order.aasm_state

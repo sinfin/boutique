@@ -279,13 +279,15 @@ class Boutique::Order < Boutique::ApplicationRecord
                        :gift_recipient_last_name,
                        :gift_recipient_email
 
-  aasm timestamps: true do
+  aasm do
     state :pending, initial: true
     state :confirmed, color: "red"
     state :waiting_for_offline_payment, color: "red"
     state :paid, color: "yellow"
     state :dispatched, color: "green"
     state :cancelled, color: "dark"
+
+    after_all_transitions :set_aasm_state_timestamp
 
     states = Boutique::Order.aasm.states.map(&:name)
 
@@ -320,8 +322,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     event :pay, private: true do
       transitions from: %i[confirmed waiting_for_offline_payment], to: :paid
 
-      before do
-        self.paid_at = current_time_from_proper_timezone
+      before do |*args|
+        options = args.extract_options!
+
+        # paid_at timestamp is needed to generate the invoice number
+        set_aasm_state_timestamp(state: "paid",
+                                 timestamp: options[:timestamp])
 
         set_invoice_number
 
@@ -660,6 +666,13 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   private
+    def set_aasm_state_timestamp(*args)
+      options = args.extract_options!
+
+      ts_setter = "#{options[:state] || aasm.to_state}_at="
+      respond_to?(ts_setter) && send(ts_setter, options[:timestamp] || Time.current)
+    end
+
     def set_numbers
       return if base_number.present?
 
