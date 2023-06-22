@@ -104,6 +104,7 @@ class Boutique::SubscriptionBot
       new_order.line_items.build(product_variant: subscription.product_variant,
                                  amount: 1,
                                  subscription_recurring: true,
+                                 subscription_starts_at: subscription.active_until,
                                  subscription_period: subscription.period)
       new_order.site = subscription.product.site
       new_order.primary_address = user.primary_address.dup
