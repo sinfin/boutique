@@ -79,7 +79,7 @@ class Boutique::Subscription < ApplicationRecord
     end
   }
 
-  scope :ordered, -> { order(id: :desc) }
+  scope :ordered, -> { order(active_from: :desc) }
 
   validates :active_from,
             :period,
