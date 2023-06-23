@@ -35,7 +35,7 @@ module Boutique
       @invoice_number_resets_each_year = true
       @mailers_bcc = nil
       @mailers_reply_to = nil
-      @folio_console_collection_includes_for_orders = [line_items: { product_variant: :product }]
+      @folio_console_collection_includes_for_orders = [:user, line_items: { product_variant: :product }]
       @folio_console_collection_includes_for_products = [cover_placement: :file]
       @folio_console_additional_filters_for_orders = {}
       @orders_edit_recurrency_title_proc = -> (context:, current_site:, period:, price:, product:) do

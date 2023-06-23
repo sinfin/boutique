@@ -5,7 +5,14 @@
       show_link :number
 
       unless options[:hide_user]
-        association(:user, link: %i[console])
+        attribute(:user) do
+          if record.user.present?
+            link_to(record.user.email,
+                    controller.folio.url_for([:console, record.user]))
+          else
+            record.email
+          end
+        end
       end
 
       attribute :product do

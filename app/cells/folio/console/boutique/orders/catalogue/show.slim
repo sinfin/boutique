@@ -4,7 +4,14 @@
     ruby:
       show_link(:number)
 
-      association(:user, link: %i[console])
+      attribute(:user) do
+        if record.user.present?
+          link_to(record.user.email,
+                  controller.folio.url_for([:console, record.user]))
+        else
+          record.email
+        end
+      end
 
       attribute(:line_items) do
         content_tag(:div, class: "d-flex align-items-center") do
