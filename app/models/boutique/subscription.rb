@@ -3,6 +3,9 @@
 class Boutique::Subscription < ApplicationRecord
   include Folio::HasAddresses
 
+  EVENT_CALLBACKS = %i[before_cancel
+                       after_cancel]
+
   NOT_CANCELLED_AT_THRESHOLD = 7.days
 
   belongs_to :payment, class_name: "Boutique::Payment",
@@ -87,6 +90,12 @@ class Boutique::Subscription < ApplicationRecord
 
   validate :validate_primary_address_attributes
 
+  EVENT_CALLBACKS.each do |cb|
+    define_method cb do
+      # override in main app if needed
+    end
+  end
+
   def number
     id
   end
@@ -157,20 +166,26 @@ class Boutique::Subscription < ApplicationRecord
   end
 
   def cancel!
-    if !recurrent?
-      errors.add(:base, :non_recurrent)
-      return false
-    end
-
     if cancelled?
       errors.add(:base, :already_cancelled)
-      return false
     end
+
+    if !recurrent?
+      errors.add(:base, :non_recurrent)
+    end
+
+    before_cancel
+
+    return false if errors.present?
 
     now = current_time_from_proper_timezone
     update_columns(recurrent: false,
                    cancelled_at: now,
                    updated_at: now)
+
+    after_cancel
+
+    true
   end
 
   def extend!

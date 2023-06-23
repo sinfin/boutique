@@ -27,4 +27,29 @@ class Boutique::SubscripionTest < ActiveSupport::TestCase
     assert_not expired_but_in_threshold.reload.active?
     assert_not expired.reload.active?
   end
+
+  test "cancel" do
+    subscription = create(:boutique_subscription, recurrent: true)
+
+    assert subscription.cancel!
+    assert subscription.cancelled?
+
+    assert_not subscription.cancel!
+    assert subscription.errors.added?(:base, :already_cancelled)
+
+    subscription = create(:boutique_subscription, recurrent: false)
+
+    assert_not subscription.cancel!
+    assert subscription.errors.added?(:base, :non_recurrent)
+
+    subscription = create(:boutique_subscription, recurrent: true)
+    subscription.instance_eval do
+      def before_cancel
+        errors.add(:base, :foo)
+      end
+    end
+
+    assert_not subscription.cancel!
+    assert subscription.errors.added?(:base, :foo)
+  end
 end
