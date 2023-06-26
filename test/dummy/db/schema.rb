@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_06_082852) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -102,6 +102,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_082852) do
     t.bigint "renewed_subscription_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
+    t.index ["confirmed_at"], name: "index_boutique_orders_on_confirmed_at"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
     t.index ["gift_recipient_id"], name: "index_boutique_orders_on_gift_recipient_id"
     t.index ["number"], name: "index_boutique_orders_on_number"
@@ -386,6 +387,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_082852) do
     t.integer "file_track_duration"
     t.string "aasm_state"
     t.json "remote_services_data", default: {}
+    t.integer "preview_track_duration_in_seconds"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

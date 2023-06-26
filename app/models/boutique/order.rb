@@ -65,7 +65,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                          class_name: "Boutique::Payment",
                          foreign_key: :boutique_order_id
 
-  scope :ordered, -> { order(base_number: :desc, id: :desc) }
+  scope :ordered, -> { order(confirmed_at: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
   scope :except_subsequent, -> { where(original_payment_id: nil) }
   scope :with_invoice, -> { where.not(invoice_number: nil) }
@@ -915,6 +915,7 @@ end
 #
 #  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
 #  index_boutique_orders_on_boutique_voucher_id       (boutique_voucher_id)
+#  index_boutique_orders_on_confirmed_at              (confirmed_at)
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
 #  index_boutique_orders_on_gift_recipient_id         (gift_recipient_id)
 #  index_boutique_orders_on_number                    (number)
