@@ -58,22 +58,22 @@ class Boutique::MailerBot
     end
 
     def subscriptions_for_ended
-      Boutique::Subscription.where(active_until: (now - 1.day - 1.hour)..(now - 1.day),
-                                   recurrent: false)
+      Boutique::Subscription.non_recurring
+                            .where(active_until: (now - 1.day - 1.hour)..(now - 1.day))
     end
 
     def subscriptions_for_failed_payment
-      Boutique::Subscription.where(active_until: (now - 1.day - 1.hour)..(now - 1.day),
-                                   recurrent: true)
+      Boutique::Subscription.recurring
+                            .where(active_until: (now - 1.day - 1.hour)..(now - 1.day))
     end
 
     def subscriptions_for_unpaid
-      Boutique::Subscription.where(active_until: (now - 7.days - 1.hour)..(now - 7.days),
-                                   recurrent: true)
+      Boutique::Subscription.recurring
+                            .where(active_until: (now - 7.days - 1.hour)..(now - 7.days))
     end
 
     def subscriptions_for_will_end_in_a_week
-      Boutique::Subscription.where(active_until: (now + 1.week - 1.hour)..(now + 1.week))
-                            .where(recurrent: false)
+      Boutique::Subscription.non_recurring
+                            .where(active_until: (now + 1.week - 1.hour)..(now + 1.week))
     end
 end

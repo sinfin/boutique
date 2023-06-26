@@ -38,15 +38,15 @@ class Boutique::Subscription < ApplicationRecord
   scope :active_at, -> (time) {
     base = where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?)", time)
 
-    recurrent = base.where(recurrent: true)
-                    .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
-                           time - NOT_CANCELLED_AT_THRESHOLD)
+    rec = base.recurring
+              .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
+                     time - NOT_CANCELLED_AT_THRESHOLD)
 
-    onetime = base.where(recurrent: false)
+    non_rec = base.non_recurring
                   .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
                          time)
 
-    recurrent.or(onetime)
+    rec.or(non_rec)
   }
 
   scope :active, -> {
@@ -58,13 +58,13 @@ class Boutique::Subscription < ApplicationRecord
 
     future = base.where("#{table_name}.active_from > ?", time)
 
-    recurrent = base.where(recurrent: true)
-                    .where("#{table_name}.active_until < ?", time - NOT_CANCELLED_AT_THRESHOLD)
+    rec = base.recurring
+              .where("#{table_name}.active_until < ?", time - NOT_CANCELLED_AT_THRESHOLD)
 
-    cancelled = base.where(recurrent: false)
-                    .where("#{table_name}.active_until < ?", time)
+    non_rec = base.non_recurring
+                  .where("#{table_name}.active_until < ?", time)
 
-    future.or(recurrent).or(cancelled)
+    future.or(rec).or(non_rec)
   }
 
   scope :inactive, -> {
@@ -80,6 +80,14 @@ class Boutique::Subscription < ApplicationRecord
     else
       all
     end
+  }
+
+  scope :recurring, -> {
+    where(recurrent: true, cancelled_at: nil)
+  }
+
+  scope :non_recurring, -> {
+    where(recurrent: false).or(where.not(cancelled_at: nil))
   }
 
   scope :ordered, -> { order(active_from: :desc) }
@@ -117,7 +125,7 @@ class Boutique::Subscription < ApplicationRecord
     end
 
     if active_until.present?
-      if recurrent?
+      if recurrent? && !cancelled?
         return false if active_until < time - NOT_CANCELLED_AT_THRESHOLD
       else
         return false if active_until < time
@@ -179,8 +187,7 @@ class Boutique::Subscription < ApplicationRecord
     return false if errors.present?
 
     now = current_time_from_proper_timezone
-    update_columns(recurrent: false,
-                   cancelled_at: now,
+    update_columns(cancelled_at: now,
                    updated_at: now)
 
     after_cancel

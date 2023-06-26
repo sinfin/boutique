@@ -50,9 +50,8 @@ class Boutique::SubscriptionBot
       active_until = (now + 6.hours - repeated_attempt.day)..(now + 7.hours - repeated_attempt.day)
 
       Boutique::Subscription.includes(:orders, :payment)
-                            .where(active_until:,
-                                   cancelled_at: nil,
-                                   recurrent: true)
+                            .recurring
+                            .where(active_until:)
     end
 
     def now

@@ -11,6 +11,8 @@ class Boutique::SubscripionTest < ActiveSupport::TestCase
     expired_but_in_threshold = create(:boutique_subscription, active_until: 1.day.ago, recurrent: true)
     expired = create(:boutique_subscription, active_until: 8.day.ago, recurrent: true)
 
+    # recurrent subscriptions
+
     assert_equal [active.id, expired_but_in_threshold.id].sort, Boutique::Subscription.active.ids.sort
     assert_equal [yet_not_active.id, expired.id].sort, Boutique::Subscription.inactive.ids.sort
     assert_not yet_not_active.active?
@@ -18,14 +20,21 @@ class Boutique::SubscripionTest < ActiveSupport::TestCase
     assert expired_but_in_threshold.active?
     assert_not expired.active?
 
-    Boutique::Subscription.update_all(recurrent: false)
+    [
+      { cancelled_at: 1.minute.ago },
+      { recurrent: false, cancelled_at: nil }
+    ].each do |attrs|
+      Boutique::Subscription.update_all(attrs)
 
-    assert_equal [active.id].sort, Boutique::Subscription.active.ids.sort
-    assert_equal [yet_not_active.id, expired_but_in_threshold.id, expired.id].sort, Boutique::Subscription.inactive.ids.sort
-    assert_not yet_not_active.reload.active?
-    assert active.reload.active?
-    assert_not expired_but_in_threshold.reload.active?
-    assert_not expired.reload.active?
+      # onetime & cancelled subscriptions
+
+      assert_equal [active.id].sort, Boutique::Subscription.active.ids.sort
+      assert_equal [yet_not_active.id, expired_but_in_threshold.id, expired.id].sort, Boutique::Subscription.inactive.ids.sort
+      assert_not yet_not_active.reload.active?
+      assert active.reload.active?
+      assert_not expired_but_in_threshold.reload.active?
+      assert_not expired.reload.active?
+    end
   end
 
   test "cancel" do
