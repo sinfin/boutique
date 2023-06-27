@@ -61,7 +61,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def price_without_vat
-    price - price_vat
+    (price - price_vat.to_d).to_f
   end
 
   def unit_price
