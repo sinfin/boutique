@@ -265,6 +265,10 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
+  validates :original_payment,
+            presence: true,
+            allow_nil: true
+
   before_validation :unset_unwanted_gift_attributes
 
   after_validation :imprint_if_valid
@@ -560,7 +564,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def subsequent?
-    original_payment_id?
+    original_payment_id.present? # this will pass even if :id leads to nonexisting payment
   end
 
   def giftable?
@@ -582,17 +586,16 @@ class Boutique::Order < Boutique::ApplicationRecord
   def charge_recurrent_payment!
     return unless confirmed? && subsequent?
 
-    begin
-      transaction = payment_gateway.repeat_recurring_transaction(self)
-      payments.create!(remote_id: transaction.transaction_id,
-                       payment_method: transaction.hash.dig(:payment, :method),
-                       payment_gateway_provider: payment_gateway.provider)
-    rescue Boutique::PaymentGateway::Error => error
-      if error.stopped_recurrence?
-        subscription.cancel!
-      else
-        raise error
-      end
+    transaction = payment_gateway.repeat_recurring_transaction(self)
+    payments.create!(remote_id: transaction.transaction_id,
+                      payment_method: transaction.hash.dig(:payment, :method),
+                      payment_gateway_provider: payment_gateway.provider)
+  rescue StandardError => error
+    if error.is_a?(Boutique::PaymentGateway::Error) && error.stopped_recurrence?
+      subscription.cancel!
+    else
+      self.save
+      report_exception(error, self)
     end
   end
 

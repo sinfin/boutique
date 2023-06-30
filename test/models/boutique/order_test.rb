@@ -73,6 +73,45 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert order.read_attribute(:total_price)
   end
 
+  test "confirm on first_of_subsequent order will not trigger payment" do
+    order = create(:boutique_order, :ready_to_be_confirmed, subscription_product: true)
+
+    assert_not order.subsequent?
+
+    def order.charge_recurrent_payment!
+      raise "This should not be called!"
+    end
+
+    order.confirm!
+  end
+
+  test "confirm on subsequent order will trigger payment" do
+    order = create(:boutique_order, :ready_to_be_confirmed, subscription_product: true)
+
+    order.stubs(:subsequent?).returns(true)
+    order.expects(:charge_recurrent_payment!).returns(true)
+
+    order.confirm!
+  end
+
+  test "exception during charge_recurrent_payment! is not raised, just reported" do
+    # so order can be saved to correct state
+    order = create(:boutique_order, :ready_to_be_confirmed, subscription_product: true)
+
+    failing_gateway = Boutique::PaymentGateway.new
+    def failing_gateway.repeat_recurring_transaction(order)
+      raise "Some error during payment"
+    end
+
+    order.stubs(:subsequent?).returns(true)
+    order.stubs(:payment_gateway).returns(failing_gateway)
+    order.expects(:report_exception) # .with(StandardError, order)
+
+    order.confirm!
+
+    assert order.reload.confirmed?
+  end
+
   test "wait_for_offline_payment" do
     order = create(:boutique_order, :confirmed)
 
