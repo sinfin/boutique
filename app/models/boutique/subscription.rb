@@ -109,7 +109,7 @@ class Boutique::Subscription < ApplicationRecord
   end
 
   def email
-    user.email
+    user.try(:email)
   end
 
   def to_label
