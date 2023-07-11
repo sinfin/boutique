@@ -74,6 +74,9 @@ cs:
         master: Hlavní varianta
         subscription_period: Délka předplatného
 
+      boutique/shipping_method:
+        price: Cena
+
       boutique/subscription:
         active: Aktivní
         active_from: Aktivní od
@@ -137,6 +140,11 @@ cs:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+      boutique/shipping_method:
+        one: Způsob dopravy
+        few: Způsoby dopravy
+        other: Způsobů dopravy
 
       boutique/subscription:
         one: Předplatné

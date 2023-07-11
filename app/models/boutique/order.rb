@@ -28,6 +28,10 @@ class Boutique::Order < Boutique::ApplicationRecord
   belongs_to :site, class_name: "Folio::Site",
                     optional: true
 
+  belongs_to :shipping_method, class_name: "Boutique::ShippingMethod",
+                               inverse_of: :order,
+                               optional: true
+
   belongs_to :subscription, class_name: "Boutique::Subscription",
                             foreign_key: :boutique_subscription_id,
                             inverse_of: :orders,
@@ -441,26 +445,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def shipping_price
     super || begin
-      return 0 if digital_only?
-      return 0 if shipping_price_per_package.zero?
+      # return 0 if digital_only?
 
-      packages_count * shipping_price_per_package
+      shipping_method.try(:price) || 0
     end
-  end
-
-  def packages_count
-    # TODO: implement for order with multiple line items
-    product = line_items.first.product_variant.product
-
-    if product.subscription? && product.has_subscription_frequency?
-      product.subscription_frequency_in_issues_per_year
-    else
-      1
-    end
-  end
-
-  def shipping_price_per_package
-    0
   end
 
   def discount
