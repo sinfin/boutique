@@ -62,6 +62,7 @@ FactoryBot.define do
           order.first_name ||= "John"
           order.last_name ||= "Doe"
           order.primary_address ||= build(:boutique_folio_primary_address)
+          order.shipping_method ||= Boutique::ShippingMethod.published.first || create(:boutique_shipping_method)
         end
       end
     end
@@ -141,6 +142,12 @@ FactoryBot.define do
     remote_id { 12345678 }
     aasm_state { "paid" }
     paid_at { 1.minute.ago }
+  end
+
+  factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do
+    title { "ShippingMethod title" }
+    price { 99 }
+    published { true }
   end
 
   factory :boutique_subscription, class: "Boutique::Subscription" do

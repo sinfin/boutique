@@ -250,6 +250,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   validates :first_name,
             :last_name,
+            :shipping_method,
             presence: true,
             if: -> { requires_address? && !pending? }
 
@@ -275,6 +276,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   before_validation :unset_unwanted_gift_attributes
 
+  after_initialize :set_default_shipping_method
   after_validation :imprint_if_valid
 
   attr_accessor :force_address_validation
@@ -656,6 +658,14 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   private
+    def set_default_shipping_method
+      if digital_only?
+        self.shipping_method = nil
+      else
+        self.shipping_method ||= Boutique::ShippingMethod.published.ordered.first
+      end
+    end
+
     def set_aasm_state_timestamp(*args)
       options = args.extract_options!
 

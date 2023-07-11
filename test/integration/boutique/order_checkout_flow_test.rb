@@ -10,6 +10,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
     super
 
     @product = create(:boutique_product)
+    @shipping_method = create(:boutique_shipping_method)
     go_pay_start_transaction_api_call_mock
 
     @default_after_order_paid_redirect_url_proc = Boutique.config.after_order_paid_redirect_url_proc

@@ -45,6 +45,11 @@ class Boutique::CheckoutController < Boutique::ApplicationController
       end
     end
 
+    if shipping_method_id = params[:shipping_method_id].presence
+      shipping_method = Boutique::ShippingMethod.published.find_by_id(shipping_method_id)
+      current_order.shipping_method = shipping_method if shipping_method.present?
+    end
+
     subscription_period = params[:subscription_period] || nil
     subscription_recurring = params[:subscription_recurring] == "true"
 
@@ -130,6 +135,7 @@ class Boutique::CheckoutController < Boutique::ApplicationController
                                     :gift_recipient_first_name,
                                     :gift_recipient_last_name,
                                     :gift_recipient_notification_scheduled_for,
+                                    :shipping_method_id,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end
