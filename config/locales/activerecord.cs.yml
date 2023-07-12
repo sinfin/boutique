@@ -130,7 +130,11 @@ cs:
         other: Produktů
 
       boutique/product/basic: Základní
-      boutique/product/subscription: Předplatné
+
+      boutique/product/subscription:
+        one: Předplatné
+        few: Předplatná
+        other: Předplatných
 
       boutique/product_variant:
         one: Varianta produktu
