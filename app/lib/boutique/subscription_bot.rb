@@ -106,7 +106,7 @@ class Boutique::SubscriptionBot
                                  subscription_starts_at: subscription.active_until,
                                  subscription_period: subscription.period)
       new_order.site = subscription.product.site
-      new_order.primary_address = user.primary_address.dup
+      new_order.primary_address = user.primary_address.dup unless new_order.digital_only?
       new_order.secondary_address = user.secondary_address.dup
       new_order.save!
 

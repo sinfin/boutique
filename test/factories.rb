@@ -155,11 +155,20 @@ FactoryBot.define do
     active_until { 1.minute.ago + 12.months }
     recurrent { true }
 
-    association :primary_address, factory: :folio_address_primary, name: "name"
+    transient do
+      digital_only { true }
+    end
 
-    after(:build) do |subscription|
+    after(:build) do |subscription, evaluator|
       unless subscription.product_variant.present?
-        order_attrs = { subscription:, subscription_product: true, user: subscription.user, total_price: 60 }.compact
+        order_attrs = {
+          digital_only: evaluator.digital_only,
+          subscription:,
+          subscription_product: true,
+          user: subscription.user,
+          total_price: 60
+        }.compact
+
         order = create(:boutique_order, :paid, order_attrs)
         subscription.payment = order.payments.paid.first
         subscription.product_variant = order.line_items.first.product_variant
@@ -167,6 +176,10 @@ FactoryBot.define do
         subscription.payer = order.user
       else
         subscription.user ||= create(:folio_user)
+      end
+
+      unless evaluator.digital_only
+        subscription.primary_address = build(:folio_address_primary)
       end
     end
   end
