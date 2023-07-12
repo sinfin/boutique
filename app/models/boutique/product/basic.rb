@@ -23,6 +23,7 @@ end
 #  digital_only                            :boolean          default(FALSE)
 #  subscription_recurrent_payment_disabled :boolean          default(FALSE)
 #  preview_token                           :string
+#  stock                                   :integer
 #
 # Indexes
 #

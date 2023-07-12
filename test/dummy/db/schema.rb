@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_10_224834) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_075317) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -167,6 +167,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_10_224834) do
     t.boolean "digital_only", default: false
     t.boolean "subscription_recurrent_payment_disabled", default: false
     t.string "preview_token"
+    t.integer "stock"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"

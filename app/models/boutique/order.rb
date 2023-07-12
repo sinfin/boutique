@@ -911,6 +911,7 @@ end
 #  gift_recipient_id                         :bigint(8)
 #  shipping_price                            :integer
 #  renewed_subscription_id                   :bigint(8)
+#  shipping_method_id                        :bigint(8)
 #
 # Indexes
 #
@@ -922,6 +923,7 @@ end
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_renewed_subscription_id   (renewed_subscription_id)
+#  index_boutique_orders_on_shipping_method_id        (shipping_method_id)
 #  index_boutique_orders_on_site_id                   (site_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
 #
@@ -930,4 +932,5 @@ end
 #  fk_rails_...  (boutique_subscription_id => boutique_subscriptions.id)
 #  fk_rails_...  (boutique_voucher_id => boutique_vouchers.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
+#  fk_rails_...  (shipping_method_id => boutique_shipping_methods.id)
 #
