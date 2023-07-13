@@ -912,6 +912,8 @@ end
 #  shipping_price                            :integer
 #  renewed_subscription_id                   :bigint(8)
 #  shipping_method_id                        :bigint(8)
+#  pickup_point_remote_id                    :integer
+#  pickup_point_title                        :string
 #
 # Indexes
 #

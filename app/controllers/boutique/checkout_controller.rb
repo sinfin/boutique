@@ -136,6 +136,8 @@ class Boutique::CheckoutController < Boutique::ApplicationController
                                     :gift_recipient_last_name,
                                     :gift_recipient_notification_scheduled_for,
                                     :shipping_method_id,
+                                    :pickup_point_remote_id,
+                                    :pickup_point_title,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end

@@ -4,6 +4,9 @@ linters:
 
   LineLength:
     exclude:
+      - app/views/boutique/checkout/cart.slim
+      - app/cells/boutique/checkout/cart/shipping_methods/show.slim
+      - app/cells/boutique/checkout/cart/shipping_methods/zasilkovna/pickup_point/show.slim
       - app/cells/boutique/orders/cart/recurrency_fields/show.slim
       - app/cells/boutique/orders/cart/show.slim
       - app/cells/boutique/subscriptions/recurrent_payment_label/show.slim
