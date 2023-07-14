@@ -53,7 +53,6 @@ cs:
         digital_only: Digitální produkt
         shipping_info: Doprava
         site: Web
-        stock: Skladem
         subscription_frequency/none: žádná
         subscription_frequency/bimonthly: dvouměsíční
         subscription_frequency/monthly: měsíční
@@ -73,6 +72,7 @@ cs:
         discounted_from: Akce od
         discounted_until: Akce do
         master: Hlavní varianta
+        stock: Skladem
         subscription_period: Délka předplatného
 
       boutique/shipping_method:
