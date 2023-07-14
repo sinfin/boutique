@@ -1,16 +1,6 @@
 # frozen_string_literal: true
 
-class Boutique::ShippingMethod < ApplicationRecord
-  include Folio::Publishable::Basic
-  include Folio::Positionable
-
-  has_one :order, class_name: "Boutique::Order",
-                  inverse_of: :shipping_method
-
-  def self.use_preview_tokens?
-    false
-  end
-
+class Boutique::ShippingMethod::Zasilkovna::HomeDelivery < Boutique::ShippingMethod::Zasilkovna::Default
   def requires_address?
     true
   end
@@ -20,15 +10,7 @@ class Boutique::ShippingMethod < ApplicationRecord
   end
 
   def register(order)
-    nil
-  end
-
-  def tracking_url_for(order)
-    nil
-  end
-
-  def get_labels(orders, format: :pdf)
-    nil
+    Boutique::Carrier::Zasilkovna.new.register!(order, home_delivery: true)
   end
 end
 
