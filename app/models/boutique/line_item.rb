@@ -40,6 +40,11 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product_variant.cover_placement || product_variant.product.cover_placement
   end
 
+  def weight
+    # TODO: add column to DB
+    0.24
+  end
+
   def summary_title
     product.title
   end
