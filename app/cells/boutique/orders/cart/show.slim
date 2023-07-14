@@ -33,10 +33,16 @@
               .b-orders-cart__box[
                 class="b-orders-cart__addresses-fields"
               ]
-                h3.mt-0
-                  = addresses_fields_title
+                .b-orders-cart__box-header
+                  h3.m-0
+                    = addresses_fields_title
 
-                = cell('boutique/checkout/cart/shipping_methods', f)
+                  img.b-orders-cart__shipping-logo[
+                    src=image_path("boutique/zasilkovna.svg")
+                  ]
+
+                .b-orders-cart__box-shipping
+                  = cell('boutique/checkout/cart/shipping_methods', f)
 
                 - current_order.force_address_validation = true
                 == cell('folio/addresses/fields',
