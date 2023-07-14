@@ -339,6 +339,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_aasm_state_timestamp(at: options[:at], state: "paid")
 
         set_invoice_number
+        register_package
 
         before_pay
       end
@@ -576,6 +577,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.find(&:subscription?)
   end
 
+  def package_tracking_url
+    shipping_method.tracking_url_for(self) if shipping_method.present?
+  end
+
   def invoice_note
     nil
   end
@@ -715,6 +720,12 @@ class Boutique::Order < Boutique::ApplicationRecord
         invoice_number_prefix,
         invoice_number_base.to_s.rjust(Boutique.config.invoice_number_base_length, "0")
       ].compact.join
+    end
+
+    def register_package
+      return unless shipping_method.present?
+
+      shipping_method.register(self)
     end
 
     def invite_user!

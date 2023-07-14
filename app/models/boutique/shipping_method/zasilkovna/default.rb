@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
-class Boutique::ShippingMethod < ApplicationRecord
-  include Folio::Publishable::Basic
-  include Folio::Positionable
-
-  has_one :order, class_name: "Boutique::Order",
-                  inverse_of: :shipping_method
-
-  def self.use_preview_tokens?
-    false
-  end
-
+class Boutique::ShippingMethod::Zasilkovna::Default < Boutique::ShippingMethod
   def requires_address?
-    true
+    false
   end
 
   def requires_pickup_point?
-    false
+    true
   end
 
   def register(order)
-    nil
+    carrier.register!(order)
   end
 
   def tracking_url_for(order)
-    nil
+    "https://tracking.packeta.com/cs_CZ/?id=#{order.package_tracking_id}"
   end
 
   def get_labels(orders, format: :pdf)
-    nil
+    case format.to_sym
+    when :pdf
+      carrier.get_pdf_labels(orders)
+    else
+      "unsupported label format!"
+    end
   end
+
+  private
+    def carrier
+      @carrier ||= Boutique::Carrier::Zasilkovna.new
+    end
 end
 
 # == Schema Information
