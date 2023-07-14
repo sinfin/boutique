@@ -8,7 +8,7 @@
   const $modal = $('.b-checkout-cart-shipping-methods-zasilkovna-pickup-point__modal')
   const $wrap = $('.b-checkout-cart-shipping-methods-zasilkovna-pickup-point')
 
-  const callback = function(point) {
+  const callback = (point) => {
     $modal.removeClass('b-checkout-cart-shipping-methods-zasilkovna-pickup-point__modal--visible')
     $('html').removeClass('b--no-scroll')
 
@@ -25,7 +25,7 @@
          .text(title)
   };
 
-  $btn.on('click', function() {
+  $btn.on('click', () => {
     const apiKey = $(this).data('api-key')
 
     const opts = {
