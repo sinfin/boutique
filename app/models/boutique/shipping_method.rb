@@ -10,6 +10,26 @@ class Boutique::ShippingMethod < ApplicationRecord
   def self.use_preview_tokens?
     false
   end
+
+  def requires_address?
+    true
+  end
+
+  def requires_pickup_point?
+    false
+  end
+
+  def register(order)
+    nil
+  end
+
+  def tracking_url_for(order)
+    nil
+  end
+
+  def get_labels(orders, format: :pdf)
+    nil
+  end
 end
 
 # == Schema Information
