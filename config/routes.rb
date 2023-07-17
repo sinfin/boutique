@@ -44,7 +44,7 @@ Folio::Engine.routes.draw do
           end
         end
 
-        resources :subscriptions, except: %i[destroy], controller: :subscriptions do
+        resources :subscriptions, except: %i[new create destroy], controller: :subscriptions do
           member do
             delete :cancel
           end
@@ -62,6 +62,12 @@ Folio::Engine.routes.draw do
         resources :users, only: [] do
         end
       end
+    end
+  end
+
+  namespace :console do
+    scope module: :boutique do
+      resources :subscriptions, only: %i[index show], controller: :subscriptions
     end
   end
 end
