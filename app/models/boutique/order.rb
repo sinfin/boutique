@@ -658,6 +658,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     "CZK"
   end
 
+  def self.console_sidebar_count
+    paid.count
+  end
+
   private
     def set_default_shipping_method
       if digital_only?
