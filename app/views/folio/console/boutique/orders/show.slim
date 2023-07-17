@@ -30,7 +30,7 @@
               target='_blank'
             ] = s.object.gift_recipient.to_label
           - else
-            = s.object.gift_recipient_full_name
+            = s.object.gift_recipient_email
         = s.email(:gift_recipient_email)
 
         - if s.object.gift_recipient_notification_scheduled_for?

@@ -52,8 +52,8 @@ class Boutique::Carrier::Zasilkovna
     data = {
       attributes: {
         number: order.number,
-        name: order.recipient_first_name,
-        surname: order.recipient_last_name,
+        name: order.first_name,
+        surname: order.last_name,
         email:,
         phone: order.primary_address.try(:phone).try(:strip),
         value: order.line_items_price,

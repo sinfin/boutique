@@ -101,8 +101,6 @@ FactoryBot.define do
     trait :gift do
       gift { true }
       sequence(:gift_recipient_email) { |i| "gift-#{i}@email.email" }
-      gift_recipient_first_name { "John" }
-      gift_recipient_last_name { "Doe" }
     end
 
     before(:create) do |order, evaluator|

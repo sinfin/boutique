@@ -132,8 +132,6 @@ class Boutique::CheckoutController < Boutique::ApplicationController
                                     :voucher_code,
                                     :gift,
                                     :gift_recipient_email,
-                                    :gift_recipient_first_name,
-                                    :gift_recipient_last_name,
                                     :gift_recipient_notification_scheduled_for,
                                     :shipping_method_id,
                                     :pickup_point_remote_id,

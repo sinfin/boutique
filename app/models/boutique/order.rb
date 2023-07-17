@@ -261,11 +261,6 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             if: -> { gift? && !pending? }
 
-  validates :gift_recipient_first_name,
-            :gift_recipient_last_name,
-            presence: true,
-            if: -> { gift? && requires_address? && !pending? }
-
   validate :validate_gift_recipient_notification_scheduled_for_is_in_future
 
   validates :gift_recipient_email,
@@ -425,22 +420,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       "#{first_name} #{last_name}".strip
     else
       email
-    end
-  end
-
-  def gift_recipient_full_name
-    return unless gift?
-
-    if gift_recipient_first_name.present? || gift_recipient_last_name.present?
-      "#{gift_recipient_first_name} #{gift_recipient_last_name}".strip
-    else
-      gift_recipient_email
-    end
-  end
-
-  %i[email first_name last_name full_name].each do |a|
-    define_method "recipient_#{a}" do
-      gift? ? send("gift_recipient_#{a}") : send(a)
     end
   end
 
