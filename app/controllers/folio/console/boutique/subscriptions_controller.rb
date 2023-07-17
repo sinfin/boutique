@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseController
-  folio_console_controller_for "Boutique::Subscription"
+  folio_console_controller_for "Boutique::Subscription", csv: true
 
   # def create
   #   @subscription.creating_in_console = true
@@ -27,6 +27,11 @@ class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseCo
     def index_filters
       {
         by_active: [true, false],
+        by_recurrent: [true, false],
       }
+    end
+
+    def folio_console_collection_includes
+      [:product_variant, :user]
     end
 end

@@ -22,6 +22,8 @@
       date :active_from
       date :active_until
 
+      boolean :recurrent
+
       attribute :state do
         if record.active?
           record.class.human_attribute_name("state/active")

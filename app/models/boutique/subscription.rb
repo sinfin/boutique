@@ -82,6 +82,17 @@ class Boutique::Subscription < ApplicationRecord
     end
   }
 
+  scope :by_recurrent, -> (bool) {
+    case bool
+    when true, "true"
+      where(recurrent: true)
+    when false, "false"
+      where(recurrent: false)
+    else
+      all
+    end
+  }
+
   scope :recurring, -> {
     where(recurrent: true, cancelled_at: nil)
   }
@@ -217,6 +228,31 @@ class Boutique::Subscription < ApplicationRecord
       :country_code,
       :phone,
     ]
+  end
+
+  def self.csv_attribute_names
+    %i[id email title price active_from active_until state]
+  end
+
+  def csv_attributes(controller = nil)
+    self.class.csv_attribute_names.map do |attr|
+      csv_attribute(attr)
+    end
+  end
+
+  def csv_attribute(attr)
+    case attr
+    when :email
+      user&.email
+    when :title
+      product_variant&.to_console_label
+    when :price
+      product_variant&.price
+    when :state
+      self.class.human_attribute_name(active? ? "state/active" : "state/inactive")
+    else
+      send(attr)
+    end
   end
 
   private

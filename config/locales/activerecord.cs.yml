@@ -87,6 +87,7 @@ cs:
         order: Objednávka
         product: Produkt
         product_variant: Varianta produktu
+        recurrent: Rekurentní
         state/active: Aktivní
         state/inactive: Neaktivní
 
