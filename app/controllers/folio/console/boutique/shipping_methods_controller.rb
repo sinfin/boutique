@@ -4,7 +4,7 @@ class Folio::Console::Boutique::ShippingMethodsController < Folio::Console::Base
   folio_console_controller_for "Boutique::ShippingMethod"
 
   private
-    def vat_rate_params
+    def shipping_method_params
       params.require(:shipping_method)
             .permit(*(@klass.column_names - ["id"]))
     end

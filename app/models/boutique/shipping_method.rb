@@ -1,11 +1,22 @@
 # frozen_string_literal: true
 
 class Boutique::ShippingMethod < ApplicationRecord
+  extend Folio::InheritenceBaseNaming
+
   include Folio::Publishable::Basic
   include Folio::Positionable
+  include Folio::RecursiveSubclasses
 
   has_one :order, class_name: "Boutique::Order",
                   inverse_of: :shipping_method
+
+  validates :title,
+            :price,
+            presence: true
+
+  validates :price,
+            numericality: { greater_than_or_equal_to: 0 },
+            allow_nil: true
 
   def self.use_preview_tokens?
     false

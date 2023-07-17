@@ -48,6 +48,13 @@ en:
         one: Order
         other: Orders
 
+      boutique/order:
+        one: Shipping method
+        other: Shipping methods
+
+      boutique/shipping_method/zasilkovna/home_delivery: Zásilkovna – Home Delivery
+      boutique/shipping_method/zasilkovna/pickup_point: Zásilkovna – Pick-up Point
+
       boutique/subscription:
         one: Subscription
         other: Subscriptions
