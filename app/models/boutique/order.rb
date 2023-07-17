@@ -676,6 +676,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   private
     def set_default_shipping_method
+      return unless pending? && shipping_method_id.nil?
+
       if digital_only?
         self.shipping_method = nil
       else
