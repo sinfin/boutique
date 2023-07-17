@@ -22,9 +22,8 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   def dispatched(order)
     data = order_data(order)
 
-    # TODO: add tracking
-    data[:TRACKING_NUMBER] = "12345678"
-    data[:TRACKING_URL] = "https://trackingcompany.com/12345678"
+    data[:TRACKING_NUMBER] = order.package_tracking_id
+    data[:TRACKING_URL] = order.package_tracking_url
 
     email_template_mail(data,
                         to: order.email,
