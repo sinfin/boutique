@@ -515,6 +515,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     li = nil
 
     Boutique::Order.transaction do
+      before_add_line_item(product_variant)
+
       if product_variant.product.subscription? && li = subscription_line_item
         # only one product of subscription type is allowed in the order
         # so we override existing subscription
@@ -854,6 +856,10 @@ class Boutique::Order < Boutique::ApplicationRecord
           self.voucher = nil
         end
       end
+    end
+
+    def before_add_line_item(product_variant)
+      nil
     end
 
     def accessible_vouchers
