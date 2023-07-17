@@ -731,7 +731,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     def register_package
       return unless shipping_method.present?
 
-      shipping_method.register(self)
+      Boutique::ShippingMethod::RegisterPackageJob.perform_later(self)
     end
 
     def reduce_stock

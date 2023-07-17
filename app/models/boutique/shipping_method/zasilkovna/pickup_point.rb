@@ -9,7 +9,7 @@ class Boutique::ShippingMethod::Zasilkovna::PickupPoint < Boutique::ShippingMeth
     true
   end
 
-  def register(order)
+  def register!(order)
     carrier.register!(order)
   end
 

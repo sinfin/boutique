@@ -30,7 +30,7 @@ class Boutique::ShippingMethod < ApplicationRecord
     false
   end
 
-  def register(order)
+  def register!(order)
     nil
   end
 

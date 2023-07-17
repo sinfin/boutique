@@ -9,8 +9,8 @@ class Boutique::ShippingMethod::Zasilkovna::HomeDelivery < Boutique::ShippingMet
     false
   end
 
-  def register(order)
-    Boutique::Carrier::Zasilkovna.new.register!(order, home_delivery: true)
+  def register!(order)
+    carrier.register!(order, home_delivery: true)
   end
 
   def get_labels(orders, format: :pdf)
