@@ -276,7 +276,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   before_validation :unset_unwanted_gift_attributes
 
-  after_initialize :set_default_shipping_method
   after_validation :imprint_if_valid
 
   attr_accessor :force_address_validation
@@ -533,6 +532,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       li.subscription_recurring = nil
       li.subscription_period = nil
 
+      set_default_shipping_method
       self.site = product_variant.product.site
 
       save!
@@ -676,8 +676,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   private
     def set_default_shipping_method
-      return unless pending? && shipping_method_id.nil?
-
       if digital_only?
         self.shipping_method = nil
       else
