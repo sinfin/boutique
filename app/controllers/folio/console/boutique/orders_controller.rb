@@ -43,6 +43,16 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
     send_data data, filename:
   end
 
+  def download_label
+    raise ActiveRecord::RecordNotFound if @order.shipping_method.nil?
+
+    data = @order.shipping_method.get_label(@order, format: :pdf)
+
+    send_data data,
+              filename: "#{@order.number}.pdf",
+              type: "application/pdf"
+  end
+
   private
     def order_params
       params.require(:order)
