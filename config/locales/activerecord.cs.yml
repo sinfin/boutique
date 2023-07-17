@@ -27,6 +27,8 @@ cs:
         non_pending_order_count_range: Počet objednávek
         number: Číslo
         number_range: Číslo
+        package_label: Dodací štítek
+        package_tracking_url: Tracking odkaz
         paid_at: Zaplaceno
         paid_at_range: Zaplaceno
         price: Cena

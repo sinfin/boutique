@@ -57,4 +57,17 @@
                     boutique.invoice_path(s.object.secret_hash),
                     target: "_blank")
 
+      - if s.object.shipping_method.present?
+        = s.attribute(:package_label, if_blank: "–")
+          - if s.object.package_remote_id.present?
+            a href=download_label_console_order_path(s.object)
+              = s.object.package_remote_id
+              '
+              i.fa.fa-file-download
+
+          = s.attribute(:package_tracking_url, if_blank: "–")
+            - if s.object.package_tracking_id.present?
+              a href=s.object.package_tracking_url target="_blank"
+                = s.object.package_tracking_id
+
 == cell("folio/console/addresses/show_for_model", @order)

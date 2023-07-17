@@ -17,7 +17,7 @@ class Boutique::ShippingMethod::Zasilkovna::PickupPoint < Boutique::ShippingMeth
     "https://tracking.packeta.com/cs_CZ/?id=#{order.package_tracking_id}"
   end
 
-  def get_labels(orders, format: :pdf)
+  def get_label(order, format: :pdf)
     case format.to_sym
     when :pdf
       carrier.get_pdf_label(order)
