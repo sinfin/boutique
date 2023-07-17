@@ -19,8 +19,6 @@
           = t('.price')
 
     tbody
-      - shipping_price_part = model.shipping_price.to_f / model.line_items.size
-
       - model.line_items.each do |line_item|
         tr
           td.b-orders-invoice__table-td colspan=3
@@ -31,7 +29,21 @@
               = "#{line_item.vat_rate_value} %"
 
           td.b-orders-invoice__table-td.text-right
-            = price(line_item.price + shipping_price_part,
+            = price(line_item.price,
+                    precision: 2,
+                    zero_as_number: true)
+
+      - if model.shipping_price.present?
+        tr
+          td.b-orders-invoice__table-td colspan=3
+            = t(".shipping")
+
+          td.b-orders-invoice__table-td.text-right
+            - unless hide_vat?
+              = "#{Boutique::VatRate.default.value} %"
+
+          td.b-orders-invoice__table-td.text-right
+            = price(model.shipping_price,
                     precision: 2,
                     zero_as_number: true)
 
