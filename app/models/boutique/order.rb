@@ -254,6 +254,9 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             if: -> { requires_address? && !pending? }
 
+  validate :validate_phone,
+           if: -> { requires_address? && !pending? }
+
   validates :gift_recipient_email,
             presence: true,
             if: -> { gift? && !pending? }
@@ -894,6 +897,12 @@ class Boutique::Order < Boutique::ApplicationRecord
          gift_recipient_notification_scheduled_for <= Time.current &&
         errors.add(:gift_recipient_notification_scheduled_for, :in_the_past)
       end
+    end
+
+    def validate_phone
+      return unless primary_address.present?
+
+      primary_address.errors.add(:phone, :blank) if primary_address.phone.nil?
     end
 
     def validate_line_items_subscription_recurrence
