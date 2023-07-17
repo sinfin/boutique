@@ -42,6 +42,9 @@ Folio::Engine.routes.draw do
           collection do
             get :invoices
           end
+          member do
+            get :download_label
+          end
         end
 
         resources :subscriptions, except: %i[new create destroy], controller: :subscriptions do

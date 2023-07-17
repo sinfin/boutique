@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Boutique::ShippingMethod::Zasilkovna::Default < Boutique::ShippingMethod
+class Boutique::ShippingMethod::Zasilkovna::PickupPoint < Boutique::ShippingMethod
   def requires_address?
     false
   end
@@ -20,7 +20,7 @@ class Boutique::ShippingMethod::Zasilkovna::Default < Boutique::ShippingMethod
   def get_labels(orders, format: :pdf)
     case format.to_sym
     when :pdf
-      carrier.get_pdf_labels(orders)
+      carrier.get_pdf_label(order)
     else
       "unsupported label format!"
     end

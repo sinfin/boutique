@@ -70,17 +70,15 @@ class Boutique::Carrier::Zasilkovna
     order
   end
 
-  def get_pdf_labels(orders)
-    return unless orders.present?
-
+  def get_pdf_label(order)
     data = {
-      packetIds: { id: orders.map(&:package_remote_id) },
-      format: "A6 on A6",
+      packetId: order.package_remote_id,
+      format: "A7 on A7",
       offset: 0
     }
-    response = call(:packets_labels_pdf, data)
+    response = call(:packet_label_pdf, data)
 
-    file_content = response.body[:packets_labels_pdf_response][:packets_labels_pdf_result]
+    file_content = response.body[:packet_label_pdf_response][:packet_label_pdf_result]
     Base64.decode64(file_content).force_encoding("utf-8")
   end
 
