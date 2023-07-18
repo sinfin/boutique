@@ -336,7 +336,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
         set_invoice_number
         register_package
-        reduce_stock
 
         before_pay
       end
@@ -350,6 +349,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
           deliver_gift!
         end
+
+        reduce_stock!
 
         after_pay
       end
@@ -718,9 +719,9 @@ class Boutique::Order < Boutique::ApplicationRecord
       Boutique::ShippingMethod::RegisterPackageJob.perform_later(self)
     end
 
-    def reduce_stock
+    def reduce_stock!
       line_items.each do |li|
-        li.product_variant.stock -= li.amount if li.product_variant.stock.present?
+        li.product_variant.decrement!(:stock, li.amount) if li.product_variant.stock.present?
       end
 
       true
