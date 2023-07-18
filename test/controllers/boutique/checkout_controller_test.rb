@@ -99,7 +99,7 @@ class Boutique::CheckoutControllerTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         email: "test-1@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
         shipping_method_id: create(:boutique_shipping_method).id
       }
     }

@@ -30,7 +30,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         email: "order@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
       }
     }
 
@@ -54,7 +54,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         email: "order@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
       }
     }
 
@@ -77,7 +77,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         email: "order@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
       }
     }
 
@@ -103,7 +103,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         # not needed for signed in user:    email: "order@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
       }
     }
 
@@ -129,7 +129,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         # not needed for signed in user:    email: "order@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
       }
     }
 
@@ -155,7 +155,7 @@ class Boutique::OrderCheckoutFlowTest < Boutique::ControllerTest
         first_name: "John",
         last_name: "Doe",
         # not needed for signed in user:    email: "order@test.test",
-        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        primary_address_attributes: build(:boutique_folio_primary_address, :with_phone).serializable_hash,
       }
     }
 

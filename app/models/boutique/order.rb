@@ -9,6 +9,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                        after_confirm
                        before_pay
                        after_pay
+                       after_pay_commit
                        before_dispatch
                        after_dispatch]
 
@@ -254,9 +255,6 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             if: -> { requires_address? && !pending? }
 
-  validate :validate_phone,
-           if: -> { requires_address? && !pending? }
-
   validates :gift_recipient_email,
             presence: true,
             if: -> { gift? && !pending? }
@@ -273,6 +271,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             allow_nil: true
 
   before_validation :unset_unwanted_gift_attributes
+  before_validation :force_primary_address_phone_validation, unless: :pending?
 
   after_validation :imprint_if_valid
 
@@ -658,10 +657,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def after_pay_commit
-      # override in main app if needed
-    end
-
     MAILER_ACTIONS.each do |a|
       define_method "mailer_#{a}" do
         # override in main app if needed
@@ -888,12 +883,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    def validate_phone
-      return unless primary_address.present?
-
-      primary_address.errors.add(:phone, :blank) if primary_address.phone.nil?
-    end
-
     def validate_line_items_subscription_recurrence
       return unless recurrent_payment_available?
 
@@ -901,6 +890,13 @@ class Boutique::Order < Boutique::ApplicationRecord
       if li && !li.marked_for_destruction? && li.requires_subscription_recurring? && !li.subscription_recurring? && li.subscription_period.nil?
         errors.add(:line_items, :missing_subscription_recurrence)
       end
+    end
+
+    def force_primary_address_phone_validation
+      return unless requires_address?
+      return unless primary_address.present?
+
+      primary_address.force_phone_validation = true
     end
 end
 # == Schema Information

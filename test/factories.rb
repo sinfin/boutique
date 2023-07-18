@@ -61,7 +61,7 @@ FactoryBot.define do
         unless evaluator.digital_only
           order.first_name ||= "John"
           order.last_name ||= "Doe"
-          order.primary_address ||= build(:boutique_folio_primary_address)
+          order.primary_address ||= build(:boutique_folio_primary_address, :with_phone)
           order.shipping_method ||= Boutique::ShippingMethod.published.first || create(:boutique_shipping_method)
         end
       end
@@ -203,6 +203,10 @@ FactoryBot.define do
     city { "city" }
     zip { "12345" }
     country_code { "US" }
+
+    trait :with_phone do
+      phone { "+420604123456" }
+    end
   end
 end
 
