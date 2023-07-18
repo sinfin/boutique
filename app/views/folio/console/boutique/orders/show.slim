@@ -65,9 +65,11 @@
               '
               i.fa.fa-file-download
 
-          = s.attribute(:package_tracking_url, if_blank: "–")
-            - if s.object.package_tracking_id.present?
-              a href=s.object.package_tracking_url target="_blank"
-                = s.object.package_tracking_id
+        = s.attribute(:package_tracking_url, if_blank: "–")
+          - if s.object.package_tracking_id.present?
+            a href=s.object.package_tracking_url target="_blank"
+              = s.object.package_tracking_id
 
 == cell("folio/console/addresses/show_for_model", @order)
+
+= render partial: "folio/console/boutique/orders/show_bottom"
