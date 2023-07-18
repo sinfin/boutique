@@ -362,6 +362,8 @@ class Boutique::Order < Boutique::ApplicationRecord
           mailer_paid.deliver_later
         end
 
+        after_pay_commit
+
         dispatch! if digital_only?
       end
     end
@@ -395,19 +397,6 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :cancelled, to: :pending
 
       before { self.cancelled_at = nil }
-    end
-  end
-
-  EVENT_CALLBACKS.each do |cb|
-    define_method cb do
-      # override in main app if needed
-    end
-  end
-
-  MAILER_ACTIONS.each do |a|
-    define_method "mailer_#{a}" do
-      # override in main app if needed
-      Boutique::OrderMailer.send(a, self)
     end
   end
 
@@ -663,6 +652,23 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   private
+    EVENT_CALLBACKS.each do |cb|
+      define_method cb do
+        # override in main app if needed
+      end
+    end
+
+    def after_pay_commit
+      # override in main app if needed
+    end
+
+    MAILER_ACTIONS.each do |a|
+      define_method "mailer_#{a}" do
+        # override in main app if needed
+        Boutique::OrderMailer.send(a, self)
+      end
+    end
+
     def set_default_shipping_method
       if digital_only?
         self.shipping_method = nil
@@ -943,6 +949,8 @@ end
 #  shipping_method_id                        :bigint(8)
 #  pickup_point_remote_id                    :integer
 #  pickup_point_title                        :string
+#  package_remote_id                         :string
+#  package_tracking_id                       :string
 #
 # Indexes
 #
