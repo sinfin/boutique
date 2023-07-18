@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_14_132107) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_18_094704) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -239,11 +239,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_14_132107) do
     t.datetime "published_until"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "product_variant_code"
     t.index "upper((code)::text)", name: "index_boutique_vouchers_on_upper_code", unique: true
     t.index ["published"], name: "index_boutique_vouchers_on_published"
     t.index ["published_from"], name: "index_boutique_vouchers_on_published_from"
     t.index ["published_until"], name: "index_boutique_vouchers_on_published_until"
+  end
+
+  create_table "boutique_vouchers_products", id: false, force: :cascade do |t|
+    t.bigint "voucher_id", null: false
+    t.bigint "product_id", null: false
+    t.index ["product_id", "voucher_id"], name: "index_boutique_vouchers_products_on_product_id_and_voucher_id"
+    t.index ["voucher_id", "product_id"], name: "index_boutique_vouchers_products_on_voucher_id_and_product_id"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -715,4 +721,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_14_132107) do
   add_foreign_key "boutique_products", "boutique_vat_rates"
   add_foreign_key "boutique_subscriptions", "boutique_payments"
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
+  add_foreign_key "boutique_vouchers_products", "boutique_products", column: "product_id"
+  add_foreign_key "boutique_vouchers_products", "boutique_vouchers", column: "voucher_id"
 end

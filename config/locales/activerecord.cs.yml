@@ -104,9 +104,9 @@ cs:
         discount: Sleva
         discount_in_percentages: Sleva v procentech
         number_of_allowed_uses: Max. počet použití
+        products: Uplatnitelné pro produkty
         published: Aktivní
         quantity: Počet voucherů k vygenerování
-        product_variant_code: Kód produktu/produktů
         use_count: Počet použití
 
       folio/email_template:

@@ -7,6 +7,7 @@ en:
         title: ''
         number_of_allowed_uses: Leave blank for unlimited number of uses.
         code_prefix: 3-5 characters (leave blank for fully generated code).
+        products: Leave blank for unrestricted use.
 
       site:
         recurring_payment_disclaimer: Displayed in the checkout when a recurring payment is active, use the {AMOUNT} keyword to insert the order amount and {TERMS_URL} for privacy policy url.

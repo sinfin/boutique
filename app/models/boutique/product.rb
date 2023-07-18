@@ -34,6 +34,17 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   has_many :subscriptions, through: :variants
 
+  has_and_belongs_to_many :vouchers, join_table: :boutique_vouchers_products
+
+  scope :ordered_by_regular_price_asc, -> { joins(:variants).order("boutique_product_variants.regular_price asc") }
+
+  pg_search_scope :by_query,
+                against: %i[title],
+                ignoring: :accents,
+                using: {
+                  tsearch: { prefix: true }
+                }
+
   validates :title,
             :type,
             presence: true
@@ -42,13 +53,6 @@ class Boutique::Product < Boutique::ApplicationRecord
                    allow_nil: true
 
   validate :validate_master_variant_presence
-
-  pg_search_scope :by_query,
-                against: %i[title],
-                ignoring: :accents,
-                using: {
-                  tsearch: { prefix: true }
-                }
 
   after_initialize :set_default_vat_rate
 

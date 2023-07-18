@@ -18,8 +18,7 @@
         = f.input :number_of_allowed_uses
 
     .row
-      .col-xl-8
-        = f.input :product_variant_code,
-                  autocomplete: Boutique::ProductVariant.pluck(:code).sort
+      .col-12
+        = f.association :products
 
 = form_footer f

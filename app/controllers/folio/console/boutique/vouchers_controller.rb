@@ -19,7 +19,8 @@ class Folio::Console::Boutique::VouchersController < Folio::Console::BaseControl
       params.require(:voucher)
             .permit(*(@klass.column_names - ["id"]),
                     :code_type,
-                    :quantity)
+                    :quantity,
+                    product_ids: [])
     end
 
     def index_filters

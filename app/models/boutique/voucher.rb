@@ -12,6 +12,8 @@ class Boutique::Voucher < Boutique::ApplicationRecord
   attribute :quantity, :integer, default: 1
   attribute :code_type, :string, default: CODE_TYPES.first
 
+  has_and_belongs_to_many :products, join_table: :boutique_vouchers_products
+
   has_many :orders, class_name: "Boutique::Order",
                     foreign_key: :boutique_voucher_id,
                     dependent: :nullify,
@@ -70,18 +72,16 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     published? && !used_up?
   end
 
-  def applicable_for?(product_variant)
+  def applicable_for?(product)
     return false unless applicable?
 
-    relevant_for?(product_variant)
+    relevant_for?(product)
   end
 
-  def relevant_for?(product_variant)
-    return true if product_variant_code.blank?
+  def relevant_for?(product)
+    return true if product_ids.empty?
 
-    product_variant_code.split(",")
-                        .map(&:strip)
-                        .include?(product_variant.code)
+    product.id.in?(product_ids)
   end
 
   def upcase_token
@@ -145,7 +145,6 @@ end
 #  published_until         :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  product_variant_code    :string
 #
 # Indexes
 #

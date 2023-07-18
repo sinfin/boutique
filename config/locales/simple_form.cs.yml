@@ -6,7 +6,7 @@ cs:
         code: Libovolný řetězec znaků, nerozlišují se velká a malá písmena.
         code_prefix: 3-5 znaků (pro plně generovaný kód ponechte prázdné).
         number_of_allowed_uses: Pro neomezený počet použití ponechte prázdné.
-        product_variant_code: Vícero kódů oddělte čárkou.
+        products: Pro neomezené použití ponechte prázdné.
         title: ''
 
 

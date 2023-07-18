@@ -27,6 +27,15 @@ en:
         voucher_code: Code
         voucher_title: Voucher title
 
+      boutique/voucher:
+        code_prefix: Prefix
+        code_type: Type
+        number_of_allowed_uses: Max. number of uses
+        products: Applicable for products
+        published: Active
+        quantity: Number of vouchers to generate
+        use_count: Number of uses
+
       folio/email_template:
         keyword/ORDER_NUMBER: Order number
         keyword/ORDER_SHIPPING_ADDRESS_HTML: Shipping address in HTML
