@@ -419,6 +419,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     ].compact.join(" – ")
   end
 
+  def recipient_email
+    gift ? gift_recipient_email : email
+  end
+
   def line_items_price
     super || line_items.sum(&:price)
   end
