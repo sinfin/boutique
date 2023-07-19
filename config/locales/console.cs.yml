@@ -38,7 +38,19 @@ cs:
             cancel_confirm: Opravdu si přejete zrušit automatickou obnovu předplatného?
 
         vouchers:
+          form:
+            hints:
+              title: Název voucheru, který slouží pro Vaší orientaci. Uživateli se nezobrazí.
+              number_of_allowed_uses: Lze zadat opakované využití jednoho kódu voucheru. Pro neomezený počet použití nechte pole prázdné.
+
+          discount_inputs:
+            regular: Sleva v Kč
+            percentage: Sleva v procentech
+
           code_input:
+            hints:
+              code_type: Máme kód vytvořit automaticky?
+              quantity: Automatické vygenerování více různých voucherů.
             code_types:
               generated: Generovaný
               custom: Ručně zadaný

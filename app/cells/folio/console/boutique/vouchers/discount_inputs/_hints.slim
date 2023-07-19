@@ -1,0 +1,15 @@
+span[
+  class="f-c-b-vouchers-discount-inputs__hint"
+  class="f-c-b-vouchers-discount-inputs__hint--regular"
+  data-f-c-b-vouchers-discount-inputs-target="regularHint"
+  hidden=model.object.discount_in_percentages
+]
+  = t('.regular')
+
+span[
+  class="f-c-b-vouchers-discount-inputs__hint"
+  class="f-c-b-vouchers-discount-inputs__hint--percentage"
+  data-f-c-b-vouchers-discount-inputs-target="percentageHint"
+  hidden=!model.object.discount_in_percentages
+]
+  = t('.percentage')

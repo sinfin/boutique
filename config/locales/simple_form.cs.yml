@@ -4,11 +4,7 @@ cs:
     hints:
       voucher:
         code: Libovolný řetězec znaků, nerozlišují se velká a malá písmena.
-        code_prefix: 3-5 znaků (pro plně generovaný kód ponechte prázdné).
-        number_of_allowed_uses: Pro neomezený počet použití ponechte prázdné.
         products: Pro neomezené použití ponechte prázdné.
-        title: ''
-
 
       site:
         recurring_payment_disclaimer: Zobrazuje se v checkoutu při aktivní rekurentní platbě, použijte klíčová slova {AMOUNT} pro vložení dané částky a {TERMS_URL} pro adresu obchodních podmínek.
