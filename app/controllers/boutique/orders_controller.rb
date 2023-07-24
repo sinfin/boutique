@@ -3,8 +3,8 @@
 class Boutique::OrdersController < Boutique::ApplicationController
   include Boutique::RedirectAfterOrderPaid
 
-  before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
-  before_action :find_order_by_secret_hash, only: %i[show payment]
+  before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment payment_redirect]
+  before_action :find_order_by_secret_hash, only: %i[show payment payment_redirect]
 
   def crossdomain_add
     add_to_order_and_redirect
@@ -131,6 +131,11 @@ class Boutique::OrdersController < Boutique::ApplicationController
   def payment
     # TODO: check if order has been paid
     create_payment_and_redirect_to_payment_gateway(@order)
+  end
+
+  def payment_redirect
+    # TODO @dedekm
+    @boutique_redirect_url = "#TODO"
   end
 
   private

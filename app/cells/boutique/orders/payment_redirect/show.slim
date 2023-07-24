@@ -1,0 +1,11 @@
+.b-orders-payment-redirect
+  .container-fluid
+    h1 = t('.title')
+
+    p.b-orders-payment-redirect__text
+      == text
+
+      span.folio-loader.b-orders-payment-redirect__loader
+
+  javascript:
+    window.location.href = "#{model}";

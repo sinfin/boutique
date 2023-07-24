@@ -8,6 +8,9 @@ html[
 
     = boutique_adaptive_css_for_head(@boutique_adaptive_css_model)
 
+    - if @boutique_redirect_url
+        meta http-equiv="refresh" content="0; url=#{@boutique_redirect_url}">
+
   body class=(@use_boutique_adaptive_css ? "b-adaptive-css-background" : nil)
     == cell('dummy/ui/header')
     == cell('dummy/ui/flash', flash)
