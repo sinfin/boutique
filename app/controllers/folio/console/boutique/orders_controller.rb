@@ -3,7 +3,6 @@
 class Folio::Console::Boutique::OrdersController < Folio::Console::BaseController
   folio_console_controller_for "Boutique::Order", csv: true
 
-  before_action :filter_folio_console_collection, only: %i[index invoices]
   before_action :filter_orders_by_tab, only: %i[index invoices]
   before_action :filter_orders_with_invoices, only: %i[invoices]
 

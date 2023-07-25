@@ -103,7 +103,51 @@ class Boutique::Subscription < ApplicationRecord
     where(recurrent: false).or(where.not(cancelled_at: nil))
   }
 
+  scope :by_gift, -> (bool) {
+    case bool
+    when true, "true"
+      gifted
+    when false, "false"
+      not_gifted
+    else
+      all
+    end
+  }
+
+  scope :gifted, -> {
+    id = Boutique::Order.where(gift: true).select(:boutique_subscription_id)
+    where(id:)
+  }
+
+  scope :not_gifted, -> {
+    id = Boutique::Order.where(gift: false).select(:boutique_subscription_id)
+    where(id:)
+  }
+
+  scope :by_ordered_at_range, -> (range_str) {
+    from, to = range_str.split(/ ?- ?/)
+
+    runner = self
+
+    if from.present?
+      from_date_time = DateTime.parse(from)
+      runner = runner.where("created_at >= ?", from_date_time)
+    end
+
+    if to.present?
+      to = "#{to} 23:59" if to.exclude?(":")
+      to_date_time = DateTime.parse(to)
+      runner = runner.where("created_at <= ?", to_date_time)
+    end
+
+    runner
+  }
+
   scope :ordered, -> { order(active_from: :desc) }
+
+  scope :by_product_variant_id, -> (boutique_product_variant_id) {
+    where(boutique_product_variant_id:)
+  }
 
   validates :active_from,
             :period,

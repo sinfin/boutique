@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 67f6bb09f047240c1b99f83f83bf75b72388f23a
+  revision: ee05b9d553617caec0398a5534726525bdfc4f3c
   branch: petr/bootstrap-5
   specs:
     folio (3.0.0)

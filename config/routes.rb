@@ -48,6 +48,11 @@ Folio::Engine.routes.draw do
         end
 
         resources :subscriptions, except: %i[new create destroy], controller: :subscriptions do
+          collection do
+            get :active
+            get :inactive
+          end
+
           member do
             delete :cancel
           end

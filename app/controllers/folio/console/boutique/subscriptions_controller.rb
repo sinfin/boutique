@@ -39,6 +39,11 @@ class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseCo
     def index_filters
       {
         by_recurrent: [true, false],
+        by_product_variant_id: {
+          klass: "Boutique::ProductVariant",
+        },
+        by_gift: [true, false],
+        by_ordered_at_range: { as: :date_range },
       }
     end
 

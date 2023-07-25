@@ -82,17 +82,19 @@ cs:
 
       boutique/subscription:
         active: Aktivní
-        active_from: Aktivní od
-        active_until: Aktivní do
+        active_from: Od
+        active_until: Do
         cancelled_at: Zrušeno
+        email_notifications: E-maily
+        gift: Dárek
         number: Číslo
         order: Objednávka
+        ordered_at_range: Objednáno od–do...
         product: Produkt
         product_variant: Varianta produktu
         recurrent: Rekurentní
         state/active: Aktivní
         state/inactive: Neaktivní
-        email_notifications: E-maily
 
       boutique/vat_rate:
         value: Výše daně
