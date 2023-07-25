@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_051716) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_075520) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -160,7 +160,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_051716) do
     t.string "title", null: false
     t.string "slug", null: false
     t.boolean "published", default: false
-    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
@@ -174,7 +173,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_051716) do
     t.string "preview_token"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
-    t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["site_id"], name: "index_boutique_products_on_site_id"
     t.index ["slug"], name: "index_boutique_products_on_slug"
     t.index ["type"], name: "index_boutique_products_on_type"

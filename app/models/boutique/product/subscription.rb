@@ -82,7 +82,6 @@ end
 #  title                                   :string           not null
 #  slug                                    :string           not null
 #  published                               :boolean          default(FALSE)
-#  published_at                            :datetime
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  type                                    :string
@@ -99,7 +98,6 @@ end
 #
 #  index_boutique_products_on_boutique_vat_rate_id  (boutique_vat_rate_id)
 #  index_boutique_products_on_published             (published)
-#  index_boutique_products_on_published_at          (published_at)
 #  index_boutique_products_on_site_id               (site_id)
 #  index_boutique_products_on_slug                  (slug)
 #  index_boutique_products_on_type                  (type)
