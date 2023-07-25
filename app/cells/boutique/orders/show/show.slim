@@ -13,7 +13,7 @@
 
           .d-flex.align-items-center
             h4.b-orders-show__price
-              = price(model.total_price, zero_as_number: true)
+              = folio_price(model.total_price, zero_as_number: true)
 
             .mr-g
               = l(model.confirmed_at, format: :as_date)

@@ -100,7 +100,11 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
             [@klass.human_attribute_name("subsequent_subscription/subsequent"), "subsequent"],
           ],
           width: 220,
-        }
+        },
+        by_product_type_keyword: [
+          [I18n.t("folio.console.boutique.orders.index.filters.by_product_type_keyword/subscription"), "subscription"],
+          [I18n.t("folio.console.boutique.orders.index.filters.by_product_type_keyword/basic"), "basic"],
+        ],
       }.merge(Boutique.config.folio_console_additional_filters_for_orders).merge(
         by_confirmed_at_range: {
           as: :date_range,

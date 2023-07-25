@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Boutique::ApplicationCell < Folio::ApplicationCell
-  include Boutique::PriceHelper
-
   def current_order
     get_from_options_or_controller(:current_order)
   end

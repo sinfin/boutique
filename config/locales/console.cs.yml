@@ -7,6 +7,10 @@ cs:
           index:
             by_query_placeholder: "Hledat: Číslo objednávky, Jméno, Adresa, IČO, e-mail ..."
 
+            filters:
+              by_product_type_keyword/basic: Merch
+              by_product_type_keyword/subscription: Předplatné
+
             invoices_button:
               label: Faktury
 

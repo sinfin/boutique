@@ -13,27 +13,27 @@
         end
       end
 
-      attribute(:line_items) do
-        content_tag(:div, class: "d-flex align-items-center") do
-          ary = []
+      attribute(:line_items, small: true) do
+        record.line_items.map do |line_item|
+          content_tag(:div, class: "d-flex align-items-center") do
+            label = [
+              line_item.product_variant.product.to_console_label,
+              line_item.product_variant.to_console_label,
+            ].join("<br>")
 
-          if record.gift?
-            ary <<  cell('boutique/ui/gift_icon',
-                         class: 'mr-2 flex-shrink-0',
-                         size: 18).show
+            if record.gift?
+              cell("folio/console/ui/with_icon",
+                   label,
+                   icon: :gift,
+                   icon_options: { height: 16 }).show
+            else
+              label
+            end
           end
-
-          ary << content_tag(:div,
-                             record.line_items.map(&:to_console_label).join(", "),
-                             class: "flex-grow-1 flex-shrink-1")
-
-          ary.join(" ")
-        end
+        end.join(" ")
       end
 
-      attribute(:price) do
-        price(record.total_price)
-      end
+      price(:total_price)
 
       date :confirmed_at
       date :paid_at

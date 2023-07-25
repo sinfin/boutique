@@ -85,6 +85,19 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   scope :by_state, -> (state) { where(aasm_state: state) }
 
+  scope :by_product_type_keyword, -> (keyword) {
+    case keyword
+    when "subscription"
+      by_product_class(Boutique::Product::Subscription)
+    when "basic"
+      by_product_class(Boutique::Product::Basic)
+    when nil
+      all
+    else
+      none
+    end
+  }
+
   scope :by_number_query, -> (q) {
     where("number ILIKE ?", "%#{q}%")
   }
@@ -152,6 +165,18 @@ class Boutique::Order < Boutique::ApplicationRecord
     else
       none
     end
+  }
+
+  scope :by_product_class, -> (product_class) {
+    boutique_product_id = product_class.select(:id)
+
+    product_variants_subselect = Boutique::ProductVariant.where(boutique_product_id:)
+                                                         .select(:id)
+
+    ids_subselect = Boutique::LineItem.where(boutique_product_variant_id: product_variants_subselect)
+                                      .select(:boutique_order_id)
+
+    where(id: ids_subselect)
   }
 
   scope :by_product_id, -> (product_id) {

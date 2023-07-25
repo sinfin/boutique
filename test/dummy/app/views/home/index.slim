@@ -7,7 +7,7 @@
         = simple_form_for("", url: boutique.add_item_checkout_path(product.slug)) do |f|
           h5 = product.title
           h5
-            = price(product.master_variant.price)
+            = folio_price(product.master_variant.price)
 
             / - if variant.best_offer?
             /   span.text-red.ml-2 Best offer

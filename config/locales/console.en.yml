@@ -3,6 +3,12 @@ en:
   folio:
     console:
       boutique:
+        orders:
+          index:
+            filters:
+              product_type_keyword/basic: Merch
+              product_type_keyword/subscription: Subscription
+
         vouchers:
           form:
             hints:

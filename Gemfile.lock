@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: ee05b9d553617caec0398a5534726525bdfc4f3c
+  revision: 1489b20385ba4c0fca0605613468724c41e6762a
   branch: petr/bootstrap-5
   specs:
     folio (3.0.0)
@@ -692,7 +692,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.8)
+    zeitwerk (2.6.9)
 
 PLATFORMS
   x86_64-linux

@@ -5,12 +5,12 @@
     attribute :code
     edit_link :title
 
-    attribute :discount do
-      if record.discount_in_percentages?
+    if record.discount_in_percentages?
+      attribute :discount do
         "#{record.discount} %"
-      else
-        price(record.discount)
       end
+    else
+      price(:discount)
     end
 
     attribute :use_count do
