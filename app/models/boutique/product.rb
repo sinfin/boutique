@@ -64,10 +64,6 @@ class Boutique::Product < Boutique::ApplicationRecord
     Folio::Site.ordered
   end
 
-  def self.additional_columns_for_console_index_table
-    []
-  end
-
   def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],

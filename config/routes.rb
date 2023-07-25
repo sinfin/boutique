@@ -58,7 +58,12 @@ Folio::Engine.routes.draw do
           end
         end
 
-        resources :products, except: %i[show]
+        resources :products, except: %i[show] do
+          collection do
+            get :basic
+            get :subscription
+          end
+        end
 
         resources :shipping_methods, except: %i[show] do
           post :set_positions, on: :collection

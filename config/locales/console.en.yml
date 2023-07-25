@@ -33,3 +33,10 @@ en:
               all: All
               active: Active
               inactive: Inactive
+
+        products:
+          index:
+            tabs:
+              all: All
+              basic: Merch
+              subscription: Subscriptions

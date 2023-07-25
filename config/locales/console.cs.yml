@@ -78,6 +78,12 @@ cs:
           form:
             copy_link: Kopírovat odkaz
 
+          index:
+            tabs:
+              all: Vše
+              basic: Merch
+              subscription: Předplatná
+
       catalogue:
         boutique/subscription:
           non_recurring_subscription: Jednorázové předplatné
