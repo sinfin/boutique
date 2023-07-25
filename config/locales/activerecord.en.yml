@@ -1,5 +1,8 @@
 ---
 en:
+  attributes:
+    payment_info: Method
+
   activerecord:
     attributes:
       boutique/order:

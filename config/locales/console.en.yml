@@ -4,6 +4,9 @@ en:
     console:
       boutique:
         orders:
+          payment_info:
+            no_payment: No payment
+
           index:
             filters:
               product_type_keyword/basic: Merch

@@ -4,6 +4,9 @@ cs:
     console:
       boutique:
         orders:
+          payment_info:
+            no_payment: Žádná platba
+
           index:
             by_query_placeholder: "Hledat: Číslo objednávky, Jméno, Adresa, IČO, e-mail ..."
 

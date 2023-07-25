@@ -35,6 +35,10 @@
 
       price(:total_price)
 
+      attribute(:payment_info) do
+        cell('folio/console/boutique/orders/payment_info', record)
+      end
+
       date :confirmed_at
       date :paid_at
 

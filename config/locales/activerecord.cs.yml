@@ -1,5 +1,8 @@
 ---
 cs:
+  attributes:
+    payment_info: Metoda
+
   activerecord:
     attributes:
       boutique/line_item:
