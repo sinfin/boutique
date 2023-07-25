@@ -92,6 +92,7 @@ cs:
         recurrent: Rekurentní
         state/active: Aktivní
         state/inactive: Neaktivní
+        email_notifications: E-maily
 
       boutique/vat_rate:
         value: Výše daně

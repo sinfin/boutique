@@ -44,6 +44,9 @@ en:
         keyword/ORDER_SUMMARY_PLAIN: Order summary in plain text
         keyword/ORDER_URL: Order URL
 
+      boutique/subscription:
+        email_notifications: E-mails
+
     models:
       boutique/product:
         one: Product

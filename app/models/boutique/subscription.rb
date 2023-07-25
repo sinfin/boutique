@@ -35,6 +35,8 @@ class Boutique::Subscription < ApplicationRecord
                     dependent: :nullify,
                     inverse_of: :subscription
 
+  scope :with_email_notifications_enabled, -> { where(email_notifications: true) }
+
   scope :active_at, -> (time) {
     base = where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?)", time)
 
@@ -281,6 +283,7 @@ end
 #  payer_id                    :bigint(8)
 #  recurrent                   :boolean          default(FALSE)
 #  recurrent_payments_init_id  :string
+#  email_notifications         :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -289,6 +292,7 @@ end
 #  index_boutique_subscriptions_on_boutique_payment_id          (boutique_payment_id)
 #  index_boutique_subscriptions_on_boutique_product_variant_id  (boutique_product_variant_id)
 #  index_boutique_subscriptions_on_cancelled_at                 (cancelled_at)
+#  index_boutique_subscriptions_on_email_notifications          (email_notifications)
 #  index_boutique_subscriptions_on_folio_user_id                (folio_user_id)
 #  index_boutique_subscriptions_on_payer_id                     (payer_id)
 #  index_boutique_subscriptions_on_primary_address_id           (primary_address_id)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_19_105456) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_051716) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -206,11 +206,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_105456) do
     t.bigint "payer_id"
     t.boolean "recurrent", default: false
     t.string "recurrent_payments_init_id"
+    t.boolean "email_notifications", default: true
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_subscriptions_on_boutique_product_variant_id"
     t.index ["cancelled_at"], name: "index_boutique_subscriptions_on_cancelled_at"
+    t.index ["email_notifications"], name: "index_boutique_subscriptions_on_email_notifications"
     t.index ["folio_user_id"], name: "index_boutique_subscriptions_on_folio_user_id"
     t.index ["payer_id"], name: "index_boutique_subscriptions_on_payer_id"
     t.index ["primary_address_id"], name: "index_boutique_subscriptions_on_primary_address_id"
@@ -413,6 +415,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_105456) do
     t.string "aasm_state"
     t.json "remote_services_data", default: {}
     t.integer "preview_track_duration_in_seconds"
+    t.string "alt"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
