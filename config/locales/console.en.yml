@@ -17,3 +17,10 @@ en:
             hints:
               code_type: Create code automatically?
               quantity: Automatic generation of multiple vouchers.
+
+        subscriptions:
+          index:
+            tabs:
+              all: All
+              active: Active
+              inactive: Inactive

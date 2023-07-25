@@ -70,7 +70,12 @@ Folio::Engine.routes.draw do
 
   namespace :console do
     scope module: :boutique do
-      resources :subscriptions, only: %i[index show], controller: :subscriptions
+      resources :subscriptions, only: %i[index show], controller: :subscriptions do
+        collection do
+          get :active
+          get :inactive
+        end
+      end
     end
   end
 end

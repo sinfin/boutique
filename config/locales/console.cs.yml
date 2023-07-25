@@ -37,6 +37,12 @@ cs:
             cancel: Zrušit
             cancel_confirm: Opravdu si přejete zrušit automatickou obnovu předplatného?
 
+          index:
+            tabs:
+              all: Vše
+              active: Aktivní
+              inactive: Neaktivní
+
         vouchers:
           form:
             hints:
