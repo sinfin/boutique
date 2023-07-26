@@ -14,4 +14,11 @@
       .col-lg-8
         == cell('folio/console/addresses/fields', f)
 
+    .row
+      - if f.object.requires_address?
+        .col-lg-8
+          = f.association :shipping_method,
+                          collection: Boutique::ShippingMethod.ordered,
+                          include_blank: false
+
 = form_footer f

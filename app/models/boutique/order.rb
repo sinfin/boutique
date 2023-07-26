@@ -278,6 +278,9 @@ class Boutique::Order < Boutique::ApplicationRecord
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
 
+  after_save :check_for_shipping_method_update
+
+
   has_sanitized_fields :first_name,
                        :last_name,
                        :email,
@@ -666,6 +669,12 @@ class Boutique::Order < Boutique::ApplicationRecord
       define_method "mailer_#{a}" do
         # override in main app if needed
         Boutique::OrderMailer.send(a, self)
+      end
+    end
+
+    def check_for_shipping_method_update
+      if saved_change_to_attribute?(:shipping_method_id)
+        register_package
       end
     end
 
