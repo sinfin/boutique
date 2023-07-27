@@ -145,6 +145,113 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
+  test "pay (subscription) without previous subscription - auto prolonging" do
+    # creates new subscription
+    order = create(:boutique_order, :confirmed, subscription_product: true)
+    payment = create(:boutique_payment, order:)
+    sub_li = order.line_items.first
+    assert sub_li.subscription?
+    assert sub_li.subscription_recurring?
+
+    assert_not order.subsequent?
+    assert order.subscription.blank?
+    assert order.first_of_subsequent?
+
+    assert_difference("Boutique::Subscription.count", 1) do
+      order.pay!
+    end
+
+    new_subscription = order.subscription.reload
+    assert new_subscription.present?
+    assert_equal sub_li.product_variant, new_subscription.product_variant
+    assert_equal order.user, new_subscription.payer
+    assert_equal order.user, new_subscription.user
+    assert new_subscription.recurrent?
+    assert_equal order.confirmed_at, new_subscription.active_from
+    assert_equal order.confirmed_at + new_subscription.period.months, new_subscription.active_until
+    assert_equal payment, new_subscription.payment
+  end
+
+  test "pay (subscription) without previous subscription - no auto prolonging" do
+    # create new subscription
+    order = create(:boutique_order, :confirmed, subscription_product: true)
+    payment = create(:boutique_payment, order:)
+    sub_li = order.line_items.first
+    sub_li.update(subscription_recurring: false)
+    assert sub_li.subscription?
+    assert_not sub_li.subscription_recurring?
+
+    assert_not order.subsequent?
+    assert order.subscription.blank?
+    assert_not order.first_of_subsequent?
+
+    assert_difference("Boutique::Subscription.count", 1) do
+      order.pay!
+    end
+
+    new_subscription = order.subscription.reload
+    assert new_subscription.present?
+    assert_equal sub_li.product_variant, new_subscription.product_variant
+    assert_equal order.user, new_subscription.payer
+    assert_equal order.user, new_subscription.user
+    assert_not new_subscription.recurrent?
+    assert_equal order.confirmed_at, new_subscription.active_from
+    assert_equal order.confirmed_at + new_subscription.period.months, new_subscription.active_until
+    assert_equal payment, new_subscription.payment
+  end
+
+  test "pay (subscription) with previous subscription - auto prolonging for subsequent order" do
+    sub_active_until = 1.day.from_now
+    subscription = create(:boutique_subscription, recurrent: true, period: 1, active_until: sub_active_until)
+
+    order = create_confirmed_order_from_subscription(subscription)
+
+    sub_li = order.line_items.first
+    assert sub_li.subscription?
+    assert sub_li.subscription_recurring?
+
+    assert order.subsequent?
+    assert order.subscription.present?
+    assert_not order.first_of_subsequent?
+    assert_equal sub_active_until.to_date, subscription.reload.active_until.to_date
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.pay!
+    end
+
+    assert_equal (sub_active_until + subscription.period.months).to_date, subscription.reload.active_until.to_date
+  end
+
+  test "pay (subscription) with previous active subscription - new user order for fixed period" do
+    skip "should extend current subscription?"
+  end
+
+  test "pay (subscription) with previous active subscription - new user order with auto prolonging" do
+    sub_active_until = 1.day.from_now
+    subscription = create(:boutique_subscription, recurrent: true, period: 1, active_until: sub_active_until)
+
+    order = create_confirmed_order_from_subscription(subscription)
+
+    sub_li = order.line_items.first
+    assert sub_li.subscription?
+    assert sub_li.subscription_recurring?
+
+    assert order.subsequent?
+    assert order.subscription.present?
+    assert_not order.first_of_subsequent?
+    assert_equal sub_active_until.to_date, subscription.reload.active_until.to_date
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.pay!
+    end
+
+    assert_equal (sub_active_until + subscription.period.months).to_date, subscription.reload.active_until.to_date
+  end
+
+  test "pay (subscription) with previous active subscription (different tier) - new user order for fixed period" do
+    skip "should create second subscription or upgrade existing, and from what time?"
+  end
+
   test "dispatch" do
     order = create(:boutique_order, :paid)
 
@@ -581,5 +688,29 @@ class Boutique::OrderTest < ActiveSupport::TestCase
       order.gift_recipient_notification_scheduled_for = 1.minute.from_now
       assert order.valid?
     end
+  end
+
+  # from SubscriptionBot + confirm
+  def create_confirmed_order_from_subscription(subscription)
+    original_order = subscription.original_order
+    new_order = subscription.orders.build(original_order.attributes.slice(*%w[folio_user_id
+                                                                            first_name
+                                                                            last_name
+                                                                            email
+                                                                            use_secondary_address
+                                                                            ]))
+    # TODO: update product prices if needed
+    new_order.line_items = original_order.line_items.map(&:dup)
+    new_order.primary_address = original_order.primary_address.dup
+    new_order.secondary_address = original_order.secondary_address.dup
+    new_order.original_payment = subscription.payment
+
+    def new_order.charge_recurrent_payment!
+      payments.create!(remote_id: "transaction_id",
+        payment_method: "CREDIT_CARD",
+        payment_gateway_provider: :comgate)
+    end
+    new_order.confirm!
+    new_order
   end
 end
