@@ -33,7 +33,7 @@
                     precision: 2,
                     zero_as_number: true)
 
-      - if model.shipping_price.present?
+      - if model.requires_address?
         tr
           td.b-orders-invoice__table-td colspan=3
             = t(".shipping")
