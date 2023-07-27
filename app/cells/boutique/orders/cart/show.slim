@@ -91,4 +91,4 @@
         aside.b-orders-cart__col.b-orders-cart__col--aside
           == cell('boutique/orders/cart/sidebar', current_order, form: true)
     - else
-      h3 = t('.empty')
+      = render(:_empty_content)

@@ -54,6 +54,7 @@ cs:
         user: Uživatel
         voucher_code: Kód
         voucher_title: Typ slevy
+        shipping_method: Způsob dopravy
 
       boutique/product:
         digital_only: Digitální produkt
