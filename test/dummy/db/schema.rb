@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.string "aasm_state"
     t.datetime "paid_at"
     t.datetime "cancelled_at"
+    t.string "payment_method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["boutique_order_id"], name: "index_boutique_order_refunds_on_boutique_order_id"

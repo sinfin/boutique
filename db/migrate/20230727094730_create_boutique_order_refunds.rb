@@ -11,6 +11,7 @@ class CreateBoutiqueOrderRefunds < ActiveRecord::Migration[7.0]
       t.string :aasm_state
       t.datetime :paid_at
       t.datetime :cancelled_at
+      t.string :payment_method
 
       t.timestamps
     end

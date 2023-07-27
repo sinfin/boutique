@@ -52,9 +52,14 @@ Folio::Engine.routes.draw do
             get :active
             get :inactive
           end
-
           member do
             delete :cancel
+          end
+        end
+
+        resources :order_refunds do
+          collection do
+            get :corrective_tax_documents
           end
         end
 

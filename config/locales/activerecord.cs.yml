@@ -56,6 +56,36 @@ cs:
         voucher_title: Typ slevy
         shipping_method: Způsob dopravy
 
+      boutique/order_refund:
+        address_identification_number: IČO
+        addresses: Adresa
+        boutique_order: Objednávka
+        canceled_at: Stornováno
+        created_at: Vytvořeno
+        corrective_tax_document: Opravný daňový doklad
+        corrective_tax_document_number: Číslo opravného dokladu
+        date_of_taxable_supply: Datum zdanitelného plnění
+        due_date: Datum splatnosti
+        items: Předměty
+        issue_date: Datum vystavení
+        line_items: Položky
+        line_items_price: Cena položek
+        number: Číslo
+        number_range: Číslo
+        paid_at: Zaplaceno
+        paid_at_range: Zaplaceno
+        payment_method: Způsob refundace
+        price: Cena
+        primary_address_country_code/CZ: Česká republika
+        primary_address_country_code/other: Jiná
+        primary_address_country_code/SK: Slovensko
+        primary_address_country_code: Země odběru
+        product: Produkt
+        reason: Důvod opravy
+        total_price: Cena celkem
+        total_price_range: Cena
+        user: Uživatel
+
       boutique/product:
         digital_only: Digitální produkt
         shipping_info: Doprava
@@ -165,6 +195,11 @@ cs:
 
       boutique/shipping_method/zasilkovna/home_delivery: Zásilkovna – Doručení na adresu
       boutique/shipping_method/zasilkovna/pickup_point: Zásilkovna – Doručení na pobočku
+
+      boutique/order_refund:
+        one: Vratka
+        few: Vratky
+        other: Vratek
 
       boutique/subscription:
         one: Předplatné

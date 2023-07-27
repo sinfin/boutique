@@ -63,13 +63,13 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
   end
 
   test "destroy" do
-    bo_refund = create(:boutique_order_refund)
+    model = create(:boutique_order_refund)
 
-    delete url_for([:console, bo_refund])
+    delete url_for([:console, model])
 
     assert_redirected_to url_for([:edit, :console, model])
     assert response.include?("nelze smazat, jen stornovat")
-    assert bo_refund.class.find(bo_refund.id).present?
+    assert model.class.find(model.id).present?
   end
 
   test "corrective tax documents" do
