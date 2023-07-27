@@ -18,4 +18,5 @@ linters:
       - app/views/folio/console/boutique/shipping_methods/_form.slim
       - app/views/folio/console/boutique/subscriptions/_form.slim
       - app/views/folio/console/boutique/subscriptions/index.slim
+      - app/views/folio/console/boutique/vouchers/_form.slim
       - test/dummy/app/views/home/index.slim

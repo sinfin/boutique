@@ -9,6 +9,7 @@
       .col-xl-8
         = f.input :title
         == cell('folio/console/boutique/vouchers/code_input', f)
+
     .row
       .col-lg-6.col-xl-4
         = f.input :discount, input_html: { min: 1 }
@@ -17,6 +18,11 @@
       .col-lg-6.col-xl-4
         = f.input :number_of_allowed_uses
 
+    .row
+      .col-lg-6.col-xl-4
+        = f.input :subscription_period,
+                  collection: Boutique::LineItem.subscription_period_options_for_select,
+                  include_blank: false
     .row
       .col-12
         = f.association :products

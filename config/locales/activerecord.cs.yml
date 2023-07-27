@@ -109,6 +109,7 @@ cs:
         published: Aktivní
         quantity: Počet voucherů k vygenerování
         use_count: Počet použití
+        subscription_period: Délka předplatného
 
       folio/email_template:
         keyword/ORDER_NUMBER: Číslo objednávky

@@ -145,6 +145,7 @@ end
 #  published_until         :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  subscription_period     :integer          default(1)
 #
 # Indexes
 #

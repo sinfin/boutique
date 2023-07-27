@@ -27,13 +27,13 @@ div class=class_name
           .b-orders-cart-recurrency-fields__nonrecurring-payment-title
             = t('.nonrecurring_payment.title')
 
-          - [1, 3, 6, 12].each do |i|
+          - Boutique::LineItem.subscription_period_options.each do |i|
             label.b-orders-cart-recurrency-fields__nonrecurring-payment-option
               = g.radio_button :subscription_period,
                                i,
                                class: nonrecurring_payment_option_input_class_name
 
-              span = t('.nonrecurring_payment.months', count: i)
+              span = t('duration.months', count: i)
 
         - if show_error_message?
           .b-orders-cart-recurrency-fields__error.text-danger

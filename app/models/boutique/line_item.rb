@@ -122,6 +122,16 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     end
   end
 
+  def self.subscription_period_options
+    [1, 3, 6, 12]
+  end
+
+  def self.subscription_period_options_for_select
+    subscription_period_options.map do |n|
+      [I18n.t("duration.months", count: n), n]
+    end
+  end
+
   private
     def subscription_starts_at_label(date, number)
       "#{I18n.t('boutique.issue').capitalize} #{number} / #{date.year}"

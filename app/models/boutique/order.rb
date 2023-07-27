@@ -853,8 +853,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
         if errors[:voucher_code].empty?
           self.voucher = found_voucher
+          subscription_line_item&.assign_attributes(subscription_period: voucher.subscription_period,
+                                                         subscription_recurring: false)
         else
           self.voucher = nil
+          subscription_line_item&.assign_attributes(subscription_period: nil,
+                                                    subscription_recurring: nil)
         end
       end
     end
