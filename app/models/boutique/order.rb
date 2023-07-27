@@ -70,6 +70,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                          class_name: "Boutique::Payment",
                          foreign_key: :boutique_order_id
 
+  has_many :refunds, class_name: "Boutique::OrderRefund", foreign_key: :boutique_order_id, inverse_of: :order
+
   scope :ordered, -> { order(confirmed_at: :desc, id: :desc) }
   scope :except_pending, -> { where.not(aasm_state: "pending") }
   scope :except_subsequent, -> { where(original_payment_id: nil) }
@@ -371,6 +373,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       after do
         if subsequent?
           subscription.extend!
+        # elsif (subscription = same_active_subscription).present?
+        #   subscription.extend!
         else
           invite_user!
           set_up_subscription! unless subsequent?
@@ -491,6 +495,14 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def total_price
     super || total_price_without_discount - discount
+  end
+
+  def total_price_in_cents
+    total_price * 100
+  end
+
+  def currency_code
+    "CZK"
   end
 
   def free?
@@ -740,9 +752,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       nil
     end
 
-    def set_invoice_number
-      return if invoice_number.present?
-
+    def new_invoice_number
       if Boutique.config.invoice_number_resets_each_year && !Boutique::Order.where("paid_at >= ?", paid_at.beginning_of_year).exists?
         Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
       end
@@ -752,7 +762,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         year_prefix = paid_at.year.to_s.last(2)
       end
 
-      self.invoice_number = [
+      [
         year_prefix,
         invoice_number_prefix,
         invoice_number_base.to_s.rjust(Boutique.config.invoice_number_base_length, "0")
@@ -772,6 +782,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       true
     end
+
+    def set_invoice_number
+      return if invoice_number.present?
+      self.invoice_number =  new_invoice_number
+    end
+
 
     def invite_user!
       return if user.present?

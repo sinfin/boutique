@@ -209,6 +209,35 @@ FactoryBot.define do
       phone { "+420604123456" }
     end
   end
+
+  factory :boutique_order_refund, class: "Boutique::OrderRefund" do
+    association :order, factory: :boutique_order
+
+    number { "123456" }
+    issue_date { Date.yesterday }
+    due_date { issue_date + 14.days }
+    date_of_taxable_supply { issue_date }
+    reason { "Something was wrong" }
+    total_price_in_cents { order.total_price_in_cents }
+
+    trait :created do
+      aasm_state { "created" }
+    end
+
+    trait :approved_to_pay do
+      aasm_state { "approved_to_pay" }
+    end
+
+    trait :paid do
+      aasm_state { "paid" }
+      paid_at { 1.minute.ago }
+    end
+
+    trait :cancelled do
+      aasm_state { "cancelled" }
+      cancelled_at { 1.minute.ago }
+    end
+  end
 end
 
 FactoryBot.modify do

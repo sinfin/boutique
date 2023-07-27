@@ -61,6 +61,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.index ["boutique_product_variant_id"], name: "index_boutique_line_items_on_boutique_product_variant_id"
   end
 
+  create_table "boutique_order_refunds", force: :cascade do |t|
+    t.string "number"
+    t.date "issue_date"
+    t.date "due_date"
+    t.date "date_of_taxable_supply"
+    t.bigint "boutique_order_id", null: false
+    t.text "reason"
+    t.integer "total_price_in_cents"
+    t.string "aasm_state"
+    t.datetime "paid_at"
+    t.datetime "cancelled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["boutique_order_id"], name: "index_boutique_order_refunds_on_boutique_order_id"
+  end
+
   create_table "boutique_orders", force: :cascade do |t|
     t.bigint "folio_user_id"
     t.string "web_session_id"
