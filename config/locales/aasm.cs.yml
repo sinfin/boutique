@@ -9,9 +9,18 @@ cs:
         aasm_state/paid: Zaplacená
         aasm_state/dispatched: Vyřízeno
         aasm_state/cancelled: Stornovaná
+      boutique/order_refund:
+        aasm_state/created: Vytvořená
+        aasm_state/approved_to_pay: K výplatě
+        aasm_state/paid: Vyplacená
+        aasm_state/cancelled: Stornovaná
 
     events:
       boutique/order:
         dispatch: Označit za vyřízenou
         cancel: Stornovat
         revert_cancelation: Vrátit storno
+      boutique/order_refund:
+        approve: Schválit k výplatě
+        pay: Vyplatit
+        cancel: Stornovat
