@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateBoutiqueOrderRefunds < ActiveRecord::Migration[7.0]
   def change
     create_table :boutique_order_refunds do |t|

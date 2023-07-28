@@ -785,7 +785,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def set_invoice_number
       return if invoice_number.present?
-      self.invoice_number =  new_invoice_number
+      self.invoice_number = new_invoice_number
     end
 
 

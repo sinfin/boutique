@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Boutique::OrderRefund < Boutique::ApplicationRecord
   include Folio::HasAasmStates
 
@@ -10,9 +12,15 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     VOUCHER
   ]
 
-  belongs_to :boutique_order, class_name: "Boutique::Order", foreign_key: :boutique_order_id, inverse_of: :refunds
+  belongs_to :order, class_name: "Boutique::Order", foreign_key: :boutique_order_id, inverse_of: :refunds
 
   delegate :user, :currency_code, to: :order
+
+  validates :number, :order, :issue_date, :due_date, :date_of_taxable_supply, presence: true
+  validates :number, uniqueness: true
+  validates :due_date, comparison: { greater_than_or_equal_to: :issue_date }
+  validates :payment_method, inclusion: { in: ALLOWED_PAYMENT_METHODS }
+  validates :total_price, numericality: { less_than: 0 }
 
   aasm do
     state :created, initial: true, color: "yellow"
@@ -37,10 +45,10 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   end
 
   def self.next_number(d_day)
-    #self.base_number = ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
+    # self.base_number = ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
     last = Boutique::OrderRefund.where("issue_date > ?", d_day.beginning_of_year).order(:issue_date).last
     if last
-      last.number.to_i +1
+      last.number.to_i(+1)
     else
       year_prefix = d_day.year.to_s.last(2)
       # format: 2200001, 2200002 ... 2309998, 2309999
@@ -75,7 +83,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   end
 
   def total_price=(f_value)
-    total_price_in_cents = f_value.to_f * 100
+    self.total_price_in_cents = f_value.to_f * 100
   end
 end
 

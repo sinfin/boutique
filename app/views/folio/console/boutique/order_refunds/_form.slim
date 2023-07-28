@@ -8,7 +8,7 @@
     = f.input :issue_date
     = f.input :due_date
     = f.input :date_of_taxable_supply
-    = f.association :boutique_order
+    = f.association :order
     = f.input :reason, required: true
     = f.input :total_price
     = f.input :payment_method, as: :select, collection: Boutique::OrderRefund.payment_method_options
