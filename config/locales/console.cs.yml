@@ -36,9 +36,16 @@ cs:
               dispatched: Expedovaná
               cancelled: Stornovaná
 
+          show:
+            create_order_refund_button:
+              label: Vratka
+
           invoices:
             filename: faktury
-
+        order_refunds:
+          index:
+            corrective_tax_documents_button:
+              label: Doklady
         subscriptions:
           catalogue:
             cancel: Zrušit
