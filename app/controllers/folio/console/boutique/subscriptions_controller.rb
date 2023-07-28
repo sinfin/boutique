@@ -6,13 +6,11 @@ class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseCo
   def active
     @subscriptions = @subscriptions.active
     index
-    render :index
   end
 
   def inactive
     @subscriptions = @subscriptions.inactive
     index
-    render :index
   end
 
   # def create

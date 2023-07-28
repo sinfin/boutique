@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 1489b20385ba4c0fca0605613468724c41e6762a
+  revision: e554ba93f3ecd9785ec8a073657cabec24ffcaef
   branch: petr/bootstrap-5
   specs:
     folio (3.0.0)
@@ -191,8 +191,8 @@ GEM
       activerecord (>= 5.0, < 7.1)
       request_store (~> 1.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.792.0)
-    aws-sdk-core (3.179.0)
+    aws-partitions (1.793.0)
+    aws-sdk-core (3.180.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)

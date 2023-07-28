@@ -6,13 +6,11 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
   def basic
     @products = @products.where(type: "Boutique::Product::Basic")
     index
-    render :index
   end
 
   def subscription
     @products = @products.where(type: "Boutique::Product::Subscription")
     index
-    render :index
   end
 
   private
