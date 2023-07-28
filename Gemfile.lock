@@ -17,10 +17,9 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 1e8f2f048877ba2a5248dba87e1d44316cd8a42a
-  branch: petr/bootstrap-5
+  revision: d1ef4fe0390d70cc19f9f9ecc6624924685b4a4a
   specs:
-    folio (3.0.0)
+    folio (4.0.0)
       aasm
       acts-as-taggable-on
       after_commit_everywhere
@@ -708,7 +707,7 @@ DEPENDENCIES
   dragonfly_libvips!
   factory_bot
   faker
-  folio (~> 3.0)!
+  folio (~> 4.0)!
   guard-rubocop
   guard-slimlint
   letter_opener
