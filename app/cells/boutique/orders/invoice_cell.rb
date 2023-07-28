@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Boutique::Orders::InvoiceCell < ApplicationCell
-  include Boutique::PriceHelper
-
   def billing_address
     @billing_address ||= model.secondary_address || model.primary_address
   end

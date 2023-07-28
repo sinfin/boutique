@@ -17,8 +17,8 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: 39a9f2c5e70364d1bf9a586be28f127614f6dc9b
-  branch: petr/files-sti
+  revision: 1e8f2f048877ba2a5248dba87e1d44316cd8a42a
+  branch: petr/bootstrap-5
   specs:
     folio (3.0.0)
       aasm
@@ -191,8 +191,8 @@ GEM
       activerecord (>= 5.0, < 7.1)
       request_store (~> 1.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.786.0)
-    aws-sdk-core (3.178.0)
+    aws-partitions (1.793.0)
+    aws-sdk-core (3.180.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -200,8 +200,8 @@ GEM
     aws-sdk-kms (1.71.0)
       aws-sdk-core (~> 3, >= 3.177.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.130.0)
-      aws-sdk-core (~> 3, >= 3.177.0)
+    aws-sdk-s3 (1.132.0)
+      aws-sdk-core (~> 3, >= 3.179.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.6)
     aws-sigv4 (1.6.0)
@@ -419,7 +419,7 @@ GEM
     mux_ruby (3.9.0)
       typhoeus (~> 1.0, >= 1.0.1)
     nenv (0.3.0)
-    net-imap (0.3.6)
+    net-imap (0.3.7)
       date
       net-protocol
     net-pop (0.1.2)
@@ -685,14 +685,14 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket-driver (0.7.5)
+    websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     whenever (1.0.0)
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.8)
+    zeitwerk (2.6.9)
 
 PLATFORMS
   x86_64-linux

@@ -160,7 +160,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_125153) do
     t.string "title", null: false
     t.string "slug", null: false
     t.boolean "published", default: false
-    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
@@ -174,7 +173,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_125153) do
     t.string "preview_token"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
-    t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["site_id"], name: "index_boutique_products_on_site_id"
     t.index ["slug"], name: "index_boutique_products_on_slug"
     t.index ["type"], name: "index_boutique_products_on_type"
@@ -206,11 +204,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_125153) do
     t.bigint "payer_id"
     t.boolean "recurrent", default: false
     t.string "recurrent_payments_init_id"
+    t.boolean "email_notifications", default: true
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_subscriptions_on_boutique_product_variant_id"
     t.index ["cancelled_at"], name: "index_boutique_subscriptions_on_cancelled_at"
+    t.index ["email_notifications"], name: "index_boutique_subscriptions_on_email_notifications"
     t.index ["folio_user_id"], name: "index_boutique_subscriptions_on_folio_user_id"
     t.index ["payer_id"], name: "index_boutique_subscriptions_on_payer_id"
     t.index ["primary_address_id"], name: "index_boutique_subscriptions_on_primary_address_id"
@@ -234,7 +234,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_125153) do
     t.boolean "discount_in_percentages", default: false
     t.integer "number_of_allowed_uses", default: 1
     t.integer "use_count", default: 0
-    t.boolean "published", default: false
+    t.boolean "published", default: true
     t.datetime "published_from"
     t.datetime "published_until"
     t.datetime "created_at", null: false
@@ -414,6 +414,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_125153) do
     t.string "aasm_state"
     t.json "remote_services_data", default: {}
     t.integer "preview_track_duration_in_seconds"
+    t.string "alt"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

@@ -1,5 +1,8 @@
 ---
 en:
+  attributes:
+    payment_info: Method
+
   activerecord:
     attributes:
       boutique/order:
@@ -16,6 +19,7 @@ en:
         primary_address_country_code/other: Other
         primary_address_country_code/SK: Slovakia
         primary_address_country_code: Country
+        product_type_keyword: Product type
         subscription_state/active: Active
         subscription_state/inactive: Inactive
         subscription_state/none: None
@@ -43,6 +47,11 @@ en:
         keyword/ORDER_SUMMARY_HTML: Order summary in HTML
         keyword/ORDER_SUMMARY_PLAIN: Order summary in plain text
         keyword/ORDER_URL: Order URL
+
+      boutique/subscription:
+        email_notifications: E-mails
+        gift: Gift
+        ordered_at_range: Ordered from-to...
 
     models:
       boutique/product:

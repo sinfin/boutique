@@ -1,0 +1,8 @@
+.f-c-b-vouchers-discount-inputs[
+  data-controller="f-c-b-vouchers-discount-inputs"
+]
+  = model.input :discount,
+                input_html: discount_input_html,
+                hint: render(:_hints).html_safe
+
+  = model.input :discount_in_percentages, input_html: checkbox_input_html

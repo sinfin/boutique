@@ -4,8 +4,15 @@ cs:
     console:
       boutique:
         orders:
+          payment_info:
+            no_payment: Žádná platba
+
           index:
             by_query_placeholder: "Hledat: Číslo objednávky, Jméno, Adresa, IČO, e-mail ..."
+
+            filters:
+              by_product_type_keyword/basic: Merch
+              by_product_type_keyword/subscription: Předplatné
 
             invoices_button:
               label: Faktury
@@ -37,8 +44,26 @@ cs:
             cancel: Zrušit
             cancel_confirm: Opravdu si přejete zrušit automatickou obnovu předplatného?
 
+          index:
+            tabs:
+              all: Vše
+              active: Aktivní
+              inactive: Neaktivní
+
         vouchers:
+          form:
+            hints:
+              title: Název voucheru, který slouží pro Vaší orientaci. Uživateli se nezobrazí.
+              number_of_allowed_uses: Lze zadat opakované využití jednoho kódu voucheru. Pro neomezený počet použití nechte pole prázdné.
+
+          discount_inputs:
+            regular: Sleva v Kč
+            percentage: Sleva v procentech
+
           code_input:
+            hints:
+              code_type: Máme kód vytvořit automaticky?
+              quantity: Automatické vygenerování více různých voucherů.
             code_types:
               generated: Generovaný
               custom: Ručně zadaný
@@ -52,6 +77,12 @@ cs:
         products:
           form:
             copy_link: Kopírovat odkaz
+
+          index:
+            tabs:
+              all: Vše
+              basic: Merch
+              subscription: Předplatná
 
       catalogue:
         boutique/subscription:

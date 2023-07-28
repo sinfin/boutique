@@ -15,7 +15,7 @@
             = shipping_method.to_label
 
           .b-checkout-cart-shipping-methods__option-price
-            = price(shipping_method.price)
+            = folio_price(shipping_method.price)
 
         / TODO @dedekm: use STI for shipping methods
         - if shipping_method.title.include?("Doručení na pobočku")

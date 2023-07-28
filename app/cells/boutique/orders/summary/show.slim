@@ -18,7 +18,7 @@
             = line_item.summary_subtitle
 
           .col-3.b-orders-summary__line-item-right
-            = price(line_item.price)
+            = folio_price(line_item.price)
 
             - if f.present?
               br
@@ -50,7 +50,7 @@
           = t('.shipping')
 
         .col.text-right
-          = price(model.shipping_price)
+          = folio_price(model.shipping_price)
 
   - if model.voucher.present?
     .b-orders-summary__price-row
@@ -59,7 +59,7 @@
           = t('.voucher')
 
         .col.text-right
-          = price(model.discount * -1)
+          = folio_price(model.discount * -1)
 
   .b-orders-summary__price-row
     .row.font-weight-bold
@@ -67,4 +67,4 @@
         = t('.total')
 
       .col.text-right
-        = price(model.total_price)
+        = folio_price(model.total_price)

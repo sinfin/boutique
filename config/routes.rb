@@ -48,12 +48,22 @@ Folio::Engine.routes.draw do
         end
 
         resources :subscriptions, except: %i[new create destroy], controller: :subscriptions do
+          collection do
+            get :active
+            get :inactive
+          end
+
           member do
             delete :cancel
           end
         end
 
-        resources :products, except: %i[show]
+        resources :products, except: %i[show] do
+          collection do
+            get :basic
+            get :subscription
+          end
+        end
 
         resources :shipping_methods, except: %i[show] do
           post :set_positions, on: :collection
@@ -70,7 +80,12 @@ Folio::Engine.routes.draw do
 
   namespace :console do
     scope module: :boutique do
-      resources :subscriptions, only: %i[index show], controller: :subscriptions
+      resources :subscriptions, only: %i[index show], controller: :subscriptions do
+        collection do
+          get :active
+          get :inactive
+        end
+      end
     end
   end
 end

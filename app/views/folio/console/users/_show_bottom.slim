@@ -9,7 +9,8 @@ h2 = Boutique::Order.model_name.human(count: 2)
 .row
   .col
     h2.mt-g
-      = Boutique::Subscription.model_name.human(count: 2)
+      = t('.subscriptions',
+          default: Boutique::Subscription.model_name.human(count: 2))
 
   / .col.text-right.mt-g
   /   a.btn.btn-success[

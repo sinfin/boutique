@@ -3,6 +3,16 @@
 class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseController
   folio_console_controller_for "Boutique::Subscription", csv: true
 
+  def active
+    @subscriptions = @subscriptions.active
+    index
+  end
+
+  def inactive
+    @subscriptions = @subscriptions.inactive
+    index
+  end
+
   # def create
   #   @subscription.creating_in_console = true
   #   @subscription.recurrent = false
@@ -26,12 +36,36 @@ class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseCo
 
     def index_filters
       {
-        by_active: [true, false],
         by_recurrent: [true, false],
+        by_product_variant_id: {
+          klass: "Boutique::ProductVariant",
+        },
+        by_gift: [true, false],
+        by_ordered_at_range: { as: :date_range },
       }
     end
 
     def folio_console_collection_includes
       [:product_variant, :user]
+    end
+
+    def index_tabs
+      [
+        {
+          label: t("folio.console.boutique.subscriptions.index.tabs.all"),
+          href: url_for([:console, @klass]),
+          force_active: action_name == "index",
+        },
+        {
+          label: t("folio.console.boutique.subscriptions.index.tabs.active"),
+          href: url_for([:active, :console, @klass]),
+          force_active: action_name == "active",
+        },
+        {
+          label: t("folio.console.boutique.subscriptions.index.tabs.inactive"),
+          href: url_for([:inactive, :console, @klass]),
+          force_active: action_name == "inactive",
+        },
+      ]
     end
 end

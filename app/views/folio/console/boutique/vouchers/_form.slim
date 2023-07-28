@@ -7,16 +7,17 @@
     == cell('folio/console/publishable_inputs', f)
     .row
       .col-xl-8
-        = f.input :title
+        = f.input :title, hint: t('.hints.title')
+
         == cell('folio/console/boutique/vouchers/code_input', f)
 
     .row
       .col-lg-6.col-xl-4
-        = f.input :discount, input_html: { min: 1 }
-        = f.input :discount_in_percentages
+        == cell('folio/console/boutique/vouchers/discount_inputs', f)
 
       .col-lg-6.col-xl-4
-        = f.input :number_of_allowed_uses
+        = f.input :number_of_allowed_uses,
+                  hint: t('.hints.number_of_allowed_uses')
 
     .row
       .col-lg-6.col-xl-4

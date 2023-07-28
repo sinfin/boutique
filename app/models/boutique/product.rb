@@ -5,7 +5,7 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   include Folio::HasAttachments
   include Folio::FriendlyId
-  include Folio::Publishable::WithDate
+  include Folio::Publishable::Basic
   include Folio::RecursiveSubclasses
   include Folio::StiPreload
 
@@ -62,10 +62,6 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   def self.sites_for_select
     Folio::Site.ordered
-  end
-
-  def self.additional_columns_for_console_index_table
-    []
   end
 
   def self.pregenerated_thumbnails_base
@@ -129,7 +125,6 @@ end
 #  title                                   :string           not null
 #  slug                                    :string           not null
 #  published                               :boolean          default(FALSE)
-#  published_at                            :datetime
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  type                                    :string
@@ -146,7 +141,6 @@ end
 #
 #  index_boutique_products_on_boutique_vat_rate_id  (boutique_vat_rate_id)
 #  index_boutique_products_on_published             (published)
-#  index_boutique_products_on_published_at          (published_at)
 #  index_boutique_products_on_site_id               (site_id)
 #  index_boutique_products_on_slug                  (slug)
 #  index_boutique_products_on_type                  (type)

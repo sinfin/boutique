@@ -3,7 +3,6 @@
 class Folio::Console::Boutique::OrdersController < Folio::Console::BaseController
   folio_console_controller_for "Boutique::Order", csv: true
 
-  before_action :filter_folio_console_collection, only: %i[index invoices]
   before_action :filter_orders_by_tab, only: %i[index invoices]
   before_action :filter_orders_with_invoices, only: %i[invoices]
 
@@ -101,7 +100,11 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
             [@klass.human_attribute_name("subsequent_subscription/subsequent"), "subsequent"],
           ],
           width: 220,
-        }
+        },
+        by_product_type_keyword: [
+          [I18n.t("folio.console.boutique.orders.index.filters.by_product_type_keyword/subscription"), "subscription"],
+          [I18n.t("folio.console.boutique.orders.index.filters.by_product_type_keyword/basic"), "basic"],
+        ],
       }.merge(Boutique.config.folio_console_additional_filters_for_orders).merge(
         by_confirmed_at_range: {
           as: :date_range,

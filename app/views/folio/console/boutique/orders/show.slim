@@ -42,14 +42,14 @@
             li = li.to_console_label
 
       = s.attribute(:line_items_price)
-        = price(s.object.line_items_price)
+        = folio_price(s.object.line_items_price)
 
       - if s.object.requires_address?
         = s.attribute(:shipping_price)
-          = price(s.object.shipping_price)
+          = folio_price(s.object.shipping_price)
 
       = s.attribute(:total_price)
-        = price(s.object.total_price)
+        = folio_price(s.object.total_price)
 
       - if s.object.invoice_number?
         = s.attribute(:invoice)

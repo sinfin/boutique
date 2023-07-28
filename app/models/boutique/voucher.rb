@@ -140,7 +140,7 @@ end
 #  discount_in_percentages :boolean          default(FALSE)
 #  number_of_allowed_uses  :integer          default(1)
 #  use_count               :integer          default(0)
-#  published               :boolean          default(FALSE)
+#  published               :boolean          default(TRUE)
 #  published_from          :datetime
 #  published_until         :datetime
 #  created_at              :datetime         not null
