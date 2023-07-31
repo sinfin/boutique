@@ -31,7 +31,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     return title unless subscription_starts_at && subscription_period
 
     from = I18n.l(subscription_starts_at, format: :as_date)
-    to = I18n.l(subscription_starts_at + subscription_period.months, format: :as_date)
+    to = I18n.l(subscription_ends_at, format: :as_date)
 
     "#{title} (#{from} – #{to})"
   end
@@ -89,6 +89,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     super || order.gift_recipient_notification_scheduled_for || order.confirmed_at
   end
 
+  def subscription_ends_at
+    subscription_starts_at + subscription_period.months
+  end
+
   def imprint
     self.title = title
 
@@ -130,6 +134,11 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     subscription_period_options.map do |n|
       [I18n.t("duration.months", count: n), n]
     end
+  end
+
+  def price_per_day
+    return nil unless subscription?
+    (unit_price.to_f / (subscription_ends_at.to_date - subscription_starts_at.to_date).to_i).round(2)
   end
 
   private

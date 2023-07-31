@@ -213,7 +213,7 @@ FactoryBot.define do
   factory :boutique_order_refund, class: "Boutique::OrderRefund" do
     order { create(:boutique_order, :paid, total_price: 123) }
 
-    sequence(:number)
+    sequence(:document_number) { |i| "23" + i.to_s.rjust(4, "0") }
     issue_date { Date.yesterday }
     due_date { issue_date + 14.days }
     date_of_taxable_supply { issue_date }
