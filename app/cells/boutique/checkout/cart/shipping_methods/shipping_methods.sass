@@ -1,0 +1,43 @@
+.b-checkout-cart-shipping-methods
+  border-top: 1px solid $beige
+
+  &__option
+    border-bottom: 1px solid $beige
+    padding-top: px-to-rem(15px)
+    padding-bottom: px-to-rem(15px)
+    width: 100%
+    display: flex
+    align-items: flex-start
+
+  &__option-input
+    accent-color: $black
+
+  &__option-wrap
+    flex: 1 1 auto
+    margin-top: -3px
+
+  &__option-label
+    font-size: $font-size-base !important
+    font-weight: $font-weight-bold
+    flex: 1 0 auto
+    display: flex
+    justify-content: space-between
+    margin-bottom: 0
+    padding-left: 8px
+
+  &__option-price
+    float: right
+    margin-left: $grid-gutter-half
+    flex-shrink: 0
+
+  &__option-content
+    display: none
+    width: 100%
+    margin-top: $grid-gutter-half
+
+  &__option-input:checked ~ &__option-wrap &__option-content
+    display: block
+
+  +media-breakpoint-down(sm)
+    &__option-label
+      font-size: $mobile-font-size-base !important

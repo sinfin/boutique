@@ -42,19 +42,48 @@ Folio::Engine.routes.draw do
           collection do
             get :invoices
           end
+          member do
+            get :download_label
+          end
         end
 
-        resources :subscriptions, except: %i[destroy], controller: :subscriptions do
+        resources :subscriptions, except: %i[new create destroy], controller: :subscriptions do
+          collection do
+            get :active
+            get :inactive
+          end
+
           member do
             delete :cancel
           end
         end
 
-        resources :products, except: %i[show]
+        resources :products, except: %i[show] do
+          collection do
+            get :basic
+            get :subscription
+          end
+        end
+
+        resources :shipping_methods, except: %i[show] do
+          post :set_positions, on: :collection
+        end
+
         resources :vat_rates, except: %i[show]
         resources :vouchers, except: %i[show]
 
         resources :users, only: [] do
+        end
+      end
+    end
+  end
+
+  namespace :console do
+    scope module: :boutique do
+      resources :subscriptions, only: %i[index show], controller: :subscriptions do
+        collection do
+          get :active
+          get :inactive
         end
       end
     end

@@ -9,6 +9,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                        after_confirm
                        before_pay
                        after_pay
+                       after_pay_commit
                        before_dispatch
                        after_dispatch]
 
@@ -27,6 +28,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   belongs_to :site, class_name: "Folio::Site",
                     optional: true
+
+  belongs_to :shipping_method, class_name: "Boutique::ShippingMethod",
+                               inverse_of: :order,
+                               optional: true
 
   belongs_to :subscription, class_name: "Boutique::Subscription",
                             foreign_key: :boutique_subscription_id,
@@ -79,6 +84,19 @@ class Boutique::Order < Boutique::ApplicationRecord
   }
 
   scope :by_state, -> (state) { where(aasm_state: state) }
+
+  scope :by_product_type_keyword, -> (keyword) {
+    case keyword
+    when "subscription"
+      by_product_class(Boutique::Product::Subscription)
+    when "basic"
+      by_product_class(Boutique::Product::Basic)
+    when nil
+      all
+    else
+      none
+    end
+  }
 
   scope :by_number_query, -> (q) {
     where("number ILIKE ?", "%#{q}%")
@@ -147,6 +165,18 @@ class Boutique::Order < Boutique::ApplicationRecord
     else
       none
     end
+  }
+
+  scope :by_product_class, -> (product_class) {
+    boutique_product_id = product_class.select(:id)
+
+    product_variants_subselect = Boutique::ProductVariant.where(boutique_product_id:)
+                                                         .select(:id)
+
+    ids_subselect = Boutique::LineItem.where(boutique_product_variant_id: product_variants_subselect)
+                                      .select(:boutique_order_id)
+
+    where(id: ids_subselect)
   }
 
   scope :by_product_id, -> (product_id) {
@@ -246,17 +276,13 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   validates :first_name,
             :last_name,
+            :shipping_method,
             presence: true,
             if: -> { requires_address? && !pending? }
 
   validates :gift_recipient_email,
             presence: true,
             if: -> { gift? && !pending? }
-
-  validates :gift_recipient_first_name,
-            :gift_recipient_last_name,
-            presence: true,
-            if: -> { gift? && requires_address? && !pending? }
 
   validate :validate_gift_recipient_notification_scheduled_for_is_in_future
 
@@ -270,11 +296,15 @@ class Boutique::Order < Boutique::ApplicationRecord
             allow_nil: true
 
   before_validation :unset_unwanted_gift_attributes
+  before_validation :force_primary_address_phone_validation, unless: :pending?
 
   after_validation :imprint_if_valid
 
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
+
+  after_save :check_for_shipping_method_update
+
 
   has_sanitized_fields :first_name,
                        :last_name,
@@ -333,6 +363,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_aasm_state_timestamp(at: options[:at], state: "paid")
 
         set_invoice_number
+        register_package
 
         before_pay
       end
@@ -347,6 +378,8 @@ class Boutique::Order < Boutique::ApplicationRecord
           deliver_gift!
         end
 
+        reduce_stock!
+
         after_pay
       end
 
@@ -356,6 +389,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         else
           mailer_paid.deliver_later
         end
+
+        after_pay_commit
 
         dispatch! if digital_only?
       end
@@ -393,19 +428,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
-  EVENT_CALLBACKS.each do |cb|
-    define_method cb do
-      # override in main app if needed
-    end
-  end
-
-  MAILER_ACTIONS.each do |a|
-    define_method "mailer_#{a}" do
-      # override in main app if needed
-      Boutique::OrderMailer.send(a, self)
-    end
-  end
-
   def self.secret_hash_length
     16
   end
@@ -418,21 +440,15 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
-  def gift_recipient_full_name
-    return unless gift?
-
-    if gift_recipient_first_name.present? || gift_recipient_last_name.present?
-      "#{gift_recipient_first_name} #{gift_recipient_last_name}".strip
-    else
-      gift_recipient_email
-    end
-  end
-
   def to_label
     [
       number,
       full_name,
     ].compact.join(" – ")
+  end
+
+  def recipient_email
+    gift ? gift_recipient_email : email
   end
 
   def line_items_price
@@ -441,26 +457,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def shipping_price
     super || begin
-      return 0 if digital_only?
-      return 0 if shipping_price_per_package.zero?
+      # return 0 if digital_only?
 
-      packages_count * shipping_price_per_package
+      shipping_method.try(:price) || 0
     end
-  end
-
-  def packages_count
-    # TODO: implement for order with multiple line items
-    product = line_items.first.product_variant.product
-
-    if product.subscription? && product.has_subscription_frequency?
-      product.subscription_frequency_in_issues_per_year
-    else
-      1
-    end
-  end
-
-  def shipping_price_per_package
-    0
   end
 
   def discount
@@ -497,6 +497,11 @@ class Boutique::Order < Boutique::ApplicationRecord
     !is_paid?
   end
 
+  def currency
+    # TODO: configurable currency
+    "CZK"
+  end
+
   def invoice_title
     key = free? ? "title_free" : "title"
     I18n.t("boutique.orders.invoice.#{key}", number: invoice_number)
@@ -513,6 +518,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     li = nil
 
     Boutique::Order.transaction do
+      before_add_line_item(product_variant)
+
       if product_variant.product.subscription? && li = subscription_line_item
         # only one product of subscription type is allowed in the order
         # so we override existing subscription
@@ -530,6 +537,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       li.subscription_recurring = nil
       li.subscription_period = nil
 
+      set_default_shipping_method
       self.site = product_variant.product.site
 
       save!
@@ -573,6 +581,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def subscription_line_item
     line_items.find(&:subscription?)
+  end
+
+  def package_tracking_url
+    shipping_method.tracking_url_for(self) if shipping_method.present?
   end
 
   def invoice_note
@@ -667,7 +679,38 @@ class Boutique::Order < Boutique::ApplicationRecord
     "CZK"
   end
 
+  def self.console_sidebar_count
+    paid.count
+  end
+
   private
+    EVENT_CALLBACKS.each do |cb|
+      define_method cb do
+        # override in main app if needed
+      end
+    end
+
+    MAILER_ACTIONS.each do |a|
+      define_method "mailer_#{a}" do
+        # override in main app if needed
+        Boutique::OrderMailer.send(a, self)
+      end
+    end
+
+    def check_for_shipping_method_update
+      if saved_change_to_attribute?(:shipping_method_id)
+        register_package
+      end
+    end
+
+    def set_default_shipping_method
+      if digital_only?
+        self.shipping_method = nil
+      else
+        self.shipping_method ||= Boutique::ShippingMethod.published.ordered.first
+      end
+    end
+
     def set_aasm_state_timestamp(*args)
       options = args.extract_options!
 
@@ -706,6 +749,20 @@ class Boutique::Order < Boutique::ApplicationRecord
         invoice_number_prefix,
         invoice_number_base.to_s.rjust(Boutique.config.invoice_number_base_length, "0")
       ].compact.join
+    end
+
+    def register_package
+      return unless shipping_method.present?
+
+      Boutique::ShippingMethod::RegisterPackageJob.perform_later(self)
+    end
+
+    def reduce_stock!
+      line_items.each do |li|
+        li.product_variant.decrement!(:stock, li.amount) if li.product_variant.stock.present?
+      end
+
+      true
     end
 
     def invite_user!
@@ -772,12 +829,12 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def use_voucher!
       # TODO: make this work with multiple line items
-      voucher.use! if voucher.try(:applicable_for?, line_items.first.product_variant)
+      voucher.use! if voucher.try(:applicable_for?, line_items.first.product_variant.product)
     end
 
     def apply_voucher
       return unless voucher.present? &&
-                    voucher.applicable_for?(line_items.first.product_variant)
+                    voucher.applicable_for?(line_items.first.product_variant.product)
 
       self.discount = if voucher.discount_in_percentages?
         price * (0.01 * voucher.discount)
@@ -821,10 +878,18 @@ class Boutique::Order < Boutique::ApplicationRecord
 
         if errors[:voucher_code].empty?
           self.voucher = found_voucher
+          subscription_line_item&.assign_attributes(subscription_period: voucher.subscription_period,
+                                                         subscription_recurring: false)
         else
           self.voucher = nil
+          subscription_line_item&.assign_attributes(subscription_period: nil,
+                                                    subscription_recurring: nil)
         end
       end
+    end
+
+    def before_add_line_item(product_variant)
+      nil
     end
 
     def accessible_vouchers
@@ -868,6 +933,13 @@ class Boutique::Order < Boutique::ApplicationRecord
       if li && !li.marked_for_destruction? && li.requires_subscription_recurring? && !li.subscription_recurring? && li.subscription_period.nil?
         errors.add(:line_items, :missing_subscription_recurrence)
       end
+    end
+
+    def force_primary_address_phone_validation
+      return unless requires_address?
+      return unless primary_address.present?
+
+      primary_address.force_phone_validation = true
     end
 end
 # == Schema Information
@@ -913,6 +985,11 @@ end
 #  gift_recipient_id                         :bigint(8)
 #  shipping_price                            :integer
 #  renewed_subscription_id                   :bigint(8)
+#  shipping_method_id                        :bigint(8)
+#  pickup_point_remote_id                    :integer
+#  pickup_point_title                        :string
+#  package_remote_id                         :string
+#  package_tracking_id                       :string
 #
 # Indexes
 #
@@ -924,6 +1001,7 @@ end
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_renewed_subscription_id   (renewed_subscription_id)
+#  index_boutique_orders_on_shipping_method_id        (shipping_method_id)
 #  index_boutique_orders_on_site_id                   (site_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
 #
@@ -932,4 +1010,5 @@ end
 #  fk_rails_...  (boutique_subscription_id => boutique_subscriptions.id)
 #  fk_rails_...  (boutique_voucher_id => boutique_vouchers.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
+#  fk_rails_...  (shipping_method_id => boutique_shipping_methods.id)
 #

@@ -4,6 +4,8 @@ linters:
 
   LineLength:
     exclude:
+      - app/cells/boutique/checkout/cart/shipping_methods/show.slim
+      - app/cells/boutique/checkout/cart/shipping_methods/zasilkovna/pickup_point/show.slim
       - app/cells/boutique/orders/cart/recurrency_fields/show.slim
       - app/cells/boutique/orders/cart/show.slim
       - app/cells/boutique/subscriptions/recurrent_payment_label/show.slim
@@ -11,7 +13,10 @@ linters:
       - app/cells/boutique/ui/scroll_icon/show.slim
       - app/cells/folio/console/boutique/orders/catalogue/show.slim
       - app/cells/folio/console/boutique/subscriptions/catalogue/show.slim
+      - app/views/boutique/checkout/cart.slim
       - app/views/folio/console/boutique/orders/index.slim
+      - app/views/folio/console/boutique/shipping_methods/_form.slim
       - app/views/folio/console/boutique/subscriptions/_form.slim
       - app/views/folio/console/boutique/subscriptions/index.slim
+      - app/views/folio/console/boutique/vouchers/_form.slim
       - test/dummy/app/views/home/index.slim

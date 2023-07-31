@@ -54,9 +54,6 @@ en:
           nonrecurring_payment:
             link: I don't want a recurring payment, I'll make a one-time payment.
             title: Nonrecurring payment
-            months:
-              one: 1 month
-              other: "%{count} months"
 
       payment_methods:
         secured_by: Secured
@@ -97,6 +94,7 @@ en:
 
         vat: VAT
         price: Price
+        shipping: Shipping
         discount: "Discount code: %{code}"
         total_price_without_vat: Total price without VAT
         total_price_vat: VAT %{value} %

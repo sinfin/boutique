@@ -7,19 +7,25 @@
     == cell('folio/console/publishable_inputs', f)
     .row
       .col-xl-8
-        = f.input :title
+        = f.input :title, hint: t('.hints.title')
+
         == cell('folio/console/boutique/vouchers/code_input', f)
-    .row
-      .col-lg-6.col-xl-4
-        = f.input :discount, input_html: { min: 1 }
-        = f.input :discount_in_percentages
-
-      .col-lg-6.col-xl-4
-        = f.input :number_of_allowed_uses
 
     .row
-      .col-xl-8
-        = f.input :product_variant_code,
-                  autocomplete: Boutique::ProductVariant.pluck(:code).sort
+      .col-lg-6.col-xl-4
+        == cell('folio/console/boutique/vouchers/discount_inputs', f)
+
+      .col-lg-6.col-xl-4
+        = f.input :number_of_allowed_uses,
+                  hint: t('.hints.number_of_allowed_uses')
+
+    .row
+      .col-lg-6.col-xl-4
+        = f.input :subscription_period,
+                  collection: Boutique::LineItem.subscription_period_options_for_select,
+                  include_blank: false
+    .row
+      .col-12
+        = f.association :products
 
 = form_footer f

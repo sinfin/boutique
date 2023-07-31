@@ -15,6 +15,7 @@
       method: "GET",
       url: $wrap.data('refreshedUrl'),
       data: {
+        shipping_method_id: $wrap.find('.b-checkout-cart-shipping-methods__option-input:checked').val(),
         country_code: $wrap.find('.f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input').val(),
         subscription_recurring: isRecurring,
         subscription_period: isRecurring ? null : $wrap.find('.b-orders-cart-recurrency-fields__nonrecurring-payment-option-input:checked:not(:disabled)').val(),
@@ -36,5 +37,6 @@
 
   $(document)
     .on('change', '.b-orders-cart .f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input', refresh)
+    .on('change', '.b-orders-cart .b-checkout-cart-shipping-methods__option-input', refresh)
     .on('boutiqueSubscriptionRecurringCheckboxesUpdated', '.b-orders-cart__form', refresh)
 })()

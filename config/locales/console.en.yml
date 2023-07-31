@@ -4,46 +4,39 @@ en:
     console:
       boutique:
         orders:
+          payment_info:
+            no_payment: No payment
+
           index:
-            invoices: Invoices
-            summary:
-              text: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
-
-            confirmed:
-              one: Total <strong>%{count}</strong> order for <strong>%{total}</strong> at ∅ price of %{average}.
-              other: Total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
-
-            paid:
-              one: Paid total <strong>%{count}</strong> order for <strong>%{total}</strong> at ∅ price of %{average}.
-              other: Paid total <strong>%{count}</strong> orders for <strong>%{total}</strong> at ∅ price of %{average}.
-              zero: Nothing was paid.
-
-            by_query_placeholder: "Search: order number, name, address, registration number, e-mail ..."
-            tabs:
-              all: All
-              index: Unpaid
-              paid: Paid
-              dispatched: Dispatched
-              cancelled: Cancelled
-
-          invoices:
-            filename: invoices
-
-        subscriptions:
-          catalogue:
-            cancel: Cancel
-            cancel_confirm: Do you really want to cancel automatic subscription renewal?
+            filters:
+              product_type_keyword/basic: Merch
+              product_type_keyword/subscription: Subscription
 
         vouchers:
+          form:
+            hints:
+              title: Name of the voucher, which serves for your information. It will not be displayed to users.
+              number_of_allowed_uses: Lze zadat opakované využití jednoho kódu voucheru. Pro neomezený počet použití nechte pole prázdné.
+
+          discount_inputs:
+            regular: Discount in CZK
+            percentage: Percentage discount
+
           code_input:
-            code_types:
-              generated: Generated
-              custom: Manually entered
+            hints:
+              code_type: Create code automatically?
+              quantity: Automatic generation of multiple vouchers.
+
+        subscriptions:
+          index:
+            tabs:
+              all: All
+              active: Active
+              inactive: Inactive
 
         products:
-          form:
-            copy_link: Copy link
-
-      sites:
-        boutique_additional_form_fields:
-          billing_details: Billing details
+          index:
+            tabs:
+              all: All
+              basic: Merch
+              subscription: Subscriptions

@@ -40,6 +40,11 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product_variant.cover_placement || product_variant.product.cover_placement
   end
 
+  def weight
+    # TODO: add column to DB
+    0.24
+  end
+
   def summary_title
     product.title
   end
@@ -114,6 +119,16 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product.current_and_upcoming_issues.map do |issue|
       date = Date.new(issue[:year], issue[:month])
       [subscription_starts_at_label(date, issue[:number]), date]
+    end
+  end
+
+  def self.subscription_period_options
+    [1, 3, 6, 12]
+  end
+
+  def self.subscription_period_options_for_select
+    subscription_period_options.map do |n|
+      [I18n.t("duration.months", count: n), n]
     end
   end
 

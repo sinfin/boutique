@@ -19,6 +19,11 @@
       = s.attribute(:product_variant)
         = s.object.product_variant.to_console_label
 
+      = s.attribute(:email_notifications)
+        == cell('folio/console/boolean_toggle',
+                s.object,
+                attribute: :email_notifications)
+
 h2.mt-0 = Boutique::Order.model_name.human(count: 2)
 
 == cell('folio/console/boutique/orders/catalogue',

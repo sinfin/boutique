@@ -35,6 +35,8 @@ class Boutique::Subscription < ApplicationRecord
                     dependent: :nullify,
                     inverse_of: :subscription
 
+  scope :with_email_notifications_enabled, -> { where(email_notifications: true) }
+
   scope :active_at, -> (time) {
     base = where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?)", time)
 
@@ -82,6 +84,17 @@ class Boutique::Subscription < ApplicationRecord
     end
   }
 
+  scope :by_recurrent, -> (bool) {
+    case bool
+    when true, "true"
+      where(recurrent: true)
+    when false, "false"
+      where(recurrent: false)
+    else
+      all
+    end
+  }
+
   scope :recurring, -> {
     where(recurrent: true, cancelled_at: nil)
   }
@@ -90,7 +103,51 @@ class Boutique::Subscription < ApplicationRecord
     where(recurrent: false).or(where.not(cancelled_at: nil))
   }
 
+  scope :by_gift, -> (bool) {
+    case bool
+    when true, "true"
+      gifted
+    when false, "false"
+      not_gifted
+    else
+      all
+    end
+  }
+
+  scope :gifted, -> {
+    id = Boutique::Order.where(gift: true).select(:boutique_subscription_id)
+    where(id:)
+  }
+
+  scope :not_gifted, -> {
+    id = Boutique::Order.where(gift: false).select(:boutique_subscription_id)
+    where(id:)
+  }
+
+  scope :by_ordered_at_range, -> (range_str) {
+    from, to = range_str.split(/ ?- ?/)
+
+    runner = self
+
+    if from.present?
+      from_date_time = DateTime.parse(from)
+      runner = runner.where("created_at >= ?", from_date_time)
+    end
+
+    if to.present?
+      to = "#{to} 23:59" if to.exclude?(":")
+      to_date_time = DateTime.parse(to)
+      runner = runner.where("created_at <= ?", to_date_time)
+    end
+
+    runner
+  }
+
   scope :ordered, -> { order(active_from: :desc) }
+
+  scope :by_product_variant_id, -> (boutique_product_variant_id) {
+    where(boutique_product_variant_id:)
+  }
 
   validates :active_from,
             :period,
@@ -109,7 +166,7 @@ class Boutique::Subscription < ApplicationRecord
   end
 
   def email
-    user.email
+    user.try(:email)
   end
 
   def to_label
@@ -219,6 +276,31 @@ class Boutique::Subscription < ApplicationRecord
     ]
   end
 
+  def self.csv_attribute_names
+    %i[id email title price active_from active_until state]
+  end
+
+  def csv_attributes(controller = nil)
+    self.class.csv_attribute_names.map do |attr|
+      csv_attribute(attr)
+    end
+  end
+
+  def csv_attribute(attr)
+    case attr
+    when :email
+      user&.email
+    when :title
+      product_variant&.to_console_label
+    when :price
+      product_variant&.price
+    when :state
+      self.class.human_attribute_name(active? ? "state/active" : "state/inactive")
+    else
+      send(attr)
+    end
+  end
+
   private
     def validate_primary_address_attributes
       return if primary_address.nil?
@@ -245,6 +327,7 @@ end
 #  payer_id                    :bigint(8)
 #  recurrent                   :boolean          default(FALSE)
 #  recurrent_payments_init_id  :string
+#  email_notifications         :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -253,6 +336,7 @@ end
 #  index_boutique_subscriptions_on_boutique_payment_id          (boutique_payment_id)
 #  index_boutique_subscriptions_on_boutique_product_variant_id  (boutique_product_variant_id)
 #  index_boutique_subscriptions_on_cancelled_at                 (cancelled_at)
+#  index_boutique_subscriptions_on_email_notifications          (email_notifications)
 #  index_boutique_subscriptions_on_folio_user_id                (folio_user_id)
 #  index_boutique_subscriptions_on_payer_id                     (payer_id)
 #  index_boutique_subscriptions_on_primary_address_id           (primary_address_id)

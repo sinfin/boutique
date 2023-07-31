@@ -1,5 +1,8 @@
 ---
 cs:
+  attributes:
+    payment_info: Metoda
+
   activerecord:
     attributes:
       boutique/line_item:
@@ -27,6 +30,8 @@ cs:
         non_pending_order_count_range: Počet objednávek
         number: Číslo
         number_range: Číslo
+        package_label: Dodací štítek
+        package_tracking_url: Tracking odkaz
         paid_at: Zaplaceno
         paid_at_range: Zaplaceno
         price: Cena
@@ -35,6 +40,7 @@ cs:
         primary_address_country_code/SK: Slovensko
         primary_address_country_code: Země odběru
         product: Produkt
+        product_type_keyword: Druh produktu
         shipping_price: Cena dopravy
         subscription_state/active: Aktivní předplatné
         subscription_state/inactive: Neaktivní předplatné
@@ -48,6 +54,7 @@ cs:
         user: Uživatel
         voucher_code: Kód
         voucher_title: Typ slevy
+        shipping_method: Způsob dopravy
 
       boutique/product:
         digital_only: Digitální produkt
@@ -72,17 +79,25 @@ cs:
         discounted_from: Akce od
         discounted_until: Akce do
         master: Hlavní varianta
+        stock: Skladem
         subscription_period: Délka předplatného
+
+      boutique/shipping_method:
+        price: Cena
 
       boutique/subscription:
         active: Aktivní
-        active_from: Aktivní od
-        active_until: Aktivní do
+        active_from: Od
+        active_until: Do
         cancelled_at: Zrušeno
+        email_notifications: E-maily
+        gift: Dárek
         number: Číslo
         order: Objednávka
+        ordered_at_range: Objednáno od–do...
         product: Produkt
         product_variant: Varianta produktu
+        recurrent: Rekurentní
         state/active: Aktivní
         state/inactive: Neaktivní
 
@@ -97,10 +112,11 @@ cs:
         discount: Sleva
         discount_in_percentages: Sleva v procentech
         number_of_allowed_uses: Max. počet použití
+        products: Uplatnitelné pro produkty
         published: Aktivní
         quantity: Počet voucherů k vygenerování
-        product_variant_code: Kód produktu/produktů
         use_count: Počet použití
+        subscription_period: Délka předplatného
 
       folio/email_template:
         keyword/ORDER_NUMBER: Číslo objednávky
@@ -126,7 +142,11 @@ cs:
         other: Produktů
 
       boutique/product/basic: Základní
-      boutique/product/subscription: Předplatné
+
+      boutique/product/subscription:
+        one: Předplatné
+        few: Předplatná
+        other: Předplatných
 
       boutique/product_variant:
         one: Varianta produktu
@@ -137,6 +157,14 @@ cs:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+      boutique/shipping_method:
+        one: Způsob dopravy
+        few: Způsoby dopravy
+        other: Způsobů dopravy
+
+      boutique/shipping_method/zasilkovna/home_delivery: Zásilkovna – Doručení na adresu
+      boutique/shipping_method/zasilkovna/pickup_point: Zásilkovna – Doručení na pobočku
 
       boutique/subscription:
         one: Předplatné

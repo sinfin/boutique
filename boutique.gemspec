@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "slim"
   spec.add_dependency "gopay-ruby"
   spec.add_dependency "route_translator"
+  spec.add_dependency "savon", "~> 2.13.0"
 
   spec.add_development_dependency "pry-rails"
   spec.add_development_dependency "letter_opener"

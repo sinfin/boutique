@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -100,6 +100,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.bigint "gift_recipient_id"
     t.integer "shipping_price"
     t.bigint "renewed_subscription_id"
+    t.bigint "shipping_method_id"
+    t.integer "pickup_point_remote_id"
+    t.string "pickup_point_title"
+    t.string "package_remote_id"
+    t.string "package_tracking_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["confirmed_at"], name: "index_boutique_orders_on_confirmed_at"
@@ -108,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
     t.index ["renewed_subscription_id"], name: "index_boutique_orders_on_renewed_subscription_id"
+    t.index ["shipping_method_id"], name: "index_boutique_orders_on_shipping_method_id"
     t.index ["site_id"], name: "index_boutique_orders_on_site_id"
     t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
   end
@@ -143,6 +149,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.boolean "best_offer", default: false
     t.string "code", limit: 32
     t.integer "subscription_period", default: 12
+    t.integer "stock"
     t.index ["boutique_product_id"], name: "index_boutique_product_variants_on_boutique_product_id"
     t.index ["master"], name: "index_boutique_product_variants_on_master", where: "master"
     t.index ["position"], name: "index_boutique_product_variants_on_position"
@@ -153,7 +160,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.string "title", null: false
     t.string "slug", null: false
     t.boolean "published", default: false
-    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
@@ -167,10 +173,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.string "preview_token"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
-    t.index ["published_at"], name: "index_boutique_products_on_published_at"
     t.index ["site_id"], name: "index_boutique_products_on_site_id"
     t.index ["slug"], name: "index_boutique_products_on_slug"
     t.index ["type"], name: "index_boutique_products_on_type"
+  end
+
+  create_table "boutique_shipping_methods", force: :cascade do |t|
+    t.string "title"
+    t.integer "price"
+    t.string "type"
+    t.boolean "published", default: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_boutique_shipping_methods_on_position"
+    t.index ["published"], name: "index_boutique_shipping_methods_on_published"
   end
 
   create_table "boutique_subscriptions", force: :cascade do |t|
@@ -187,11 +204,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.bigint "payer_id"
     t.boolean "recurrent", default: false
     t.string "recurrent_payments_init_id"
+    t.boolean "email_notifications", default: true
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_subscriptions_on_boutique_product_variant_id"
     t.index ["cancelled_at"], name: "index_boutique_subscriptions_on_cancelled_at"
+    t.index ["email_notifications"], name: "index_boutique_subscriptions_on_email_notifications"
     t.index ["folio_user_id"], name: "index_boutique_subscriptions_on_folio_user_id"
     t.index ["payer_id"], name: "index_boutique_subscriptions_on_payer_id"
     t.index ["primary_address_id"], name: "index_boutique_subscriptions_on_primary_address_id"
@@ -215,16 +234,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.boolean "discount_in_percentages", default: false
     t.integer "number_of_allowed_uses", default: 1
     t.integer "use_count", default: 0
-    t.boolean "published", default: false
+    t.boolean "published", default: true
     t.datetime "published_from"
     t.datetime "published_until"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "product_variant_code"
+    t.integer "subscription_period", default: 1
     t.index "upper((code)::text)", name: "index_boutique_vouchers_on_upper_code", unique: true
     t.index ["published"], name: "index_boutique_vouchers_on_published"
     t.index ["published_from"], name: "index_boutique_vouchers_on_published_from"
     t.index ["published_until"], name: "index_boutique_vouchers_on_published_until"
+  end
+
+  create_table "boutique_vouchers_products", id: false, force: :cascade do |t|
+    t.bigint "voucher_id", null: false
+    t.bigint "product_id", null: false
+    t.index ["product_id", "voucher_id"], name: "index_boutique_vouchers_products_on_product_id_and_voucher_id"
+    t.index ["voucher_id", "product_id"], name: "index_boutique_vouchers_products_on_voucher_id_and_product_id"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -388,6 +414,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.string "aasm_state"
     t.json "remote_services_data", default: {}
     t.integer "preview_track_duration_in_seconds"
+    t.string "alt"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
@@ -479,7 +506,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.text "meta_description"
     t.string "ancestry"
     t.string "type"
-    t.boolean "featured"
     t.integer "position"
     t.boolean "published"
     t.datetime "published_at", precision: nil
@@ -493,7 +519,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
     t.string "preview_token"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
-    t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"
     t.index ["original_id"], name: "index_folio_pages_on_original_id"
     t.index ["position"], name: "index_folio_pages_on_position"
@@ -687,6 +712,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
 
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
+  add_foreign_key "boutique_orders", "boutique_shipping_methods", column: "shipping_method_id"
   add_foreign_key "boutique_orders", "boutique_subscriptions"
   add_foreign_key "boutique_orders", "boutique_vouchers"
   add_foreign_key "boutique_orders", "folio_users"
@@ -695,4 +721,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_073042) do
   add_foreign_key "boutique_products", "boutique_vat_rates"
   add_foreign_key "boutique_subscriptions", "boutique_payments"
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
+  add_foreign_key "boutique_vouchers_products", "boutique_products", column: "product_id"
+  add_foreign_key "boutique_vouchers_products", "boutique_vouchers", column: "voucher_id"
 end

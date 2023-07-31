@@ -1,0 +1,23 @@
+.b-checkout-cart-shipping-methods
+  - shipping_methods.each do |shipping_method|
+    .b-checkout-cart-shipping-methods__option
+      - radio_input_id = "#{RADIO_INPUT_ID}-#{shipping_method.id}"
+
+      = f.radio_button :shipping_method,
+                       shipping_method.id,
+                       class: "b-checkout-cart-shipping-methods__option-input",
+                       checked: f.object.shipping_method == shipping_method,
+                       id: radio_input_id
+
+      .b-checkout-cart-shipping-methods__option-wrap
+        label.b-checkout-cart-shipping-methods__option-label for=radio_input_id
+          .b-checkout-cart-shipping-methods__option-title
+            = shipping_method.to_label
+
+          .b-checkout-cart-shipping-methods__option-price
+            = folio_price(shipping_method.price)
+
+        / TODO @dedekm: use STI for shipping methods
+        - if shipping_method.title.include?("Doručení na pobočku")
+          .b-checkout-cart-shipping-methods__option-content
+            = cell('boutique/checkout/cart/shipping_methods/zasilkovna/pickup_point', model)

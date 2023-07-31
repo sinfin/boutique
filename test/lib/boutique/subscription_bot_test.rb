@@ -97,7 +97,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     assert_nil subscription.recurrent_payments_init_id
   end
 
-  test "charge will create order and payment from subscription if :recurrent_payments_init_id is present " do
+  test "charge will create order and payment from subscription if :recurrent_payments_init_id is present" do
     init_id = "init_payment_id"
     subscription = create(:boutique_subscription, active_until: now + 6.hours, payment: nil, recurrent_payments_init_id: init_id)
     p = subscription.payment
@@ -105,7 +105,6 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     subscription.update(payment: nil)
 
     assert p.destroy
-    subscription.user.primary_address.update!(country_code: "CC") # need 2 chars, not existing "country_code"
     assert subscription.original_order.destroy
 
     expected_created_order = build_new_order_from(subscription)
@@ -120,9 +119,9 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     )
 
     Boutique::GoPay::UniversalGateway.any_instance
-                                      .expects(:repeat_recurring_transaction)
-                                      .with(expected_payment_data)
-                                      .returns(payment_result) # no block here!
+                                     .expects(:repeat_recurring_transaction)
+                                     .with(expected_payment_data)
+                                     .returns(payment_result) # no block here!
     assert_difference("Boutique::Order.count", 1) do
       assert_difference("Boutique::Payment.count", 2) do # one is "fake" original and second for current payment
         @bot.charge(subscription.class.where(id: subscription.id))
@@ -158,15 +157,13 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
       {
         payer: {
           email: order.email,
-          phone: order.primary_address.phone,
-          # first_name: order.user.first_name,
-          # last_name: order.user.last_name,
           first_name: order.first_name,
           last_name: order.last_name,
-          city: order.primary_address.city,
-          street_line: [order.primary_address.address_line_1, order.primary_address.address_line_2].compact.join(", "),
-          postal_code: order.primary_address.zip,
-          country_code2: order.primary_address.country_code
+          phone: order.primary_address.try(:phone),
+          # city: order.primary_address.city,
+          # street_line: [order.primary_address.address_line_1, order.primary_address.address_line_2].compact.join(", "),
+          # postal_code: order.primary_address.zip,
+          # country_code2: order.primary_address.country_code,
         },
         payment: {
           currency: "CZK",
@@ -213,7 +210,7 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
                                  subscription_recurring: true,
                                  subscription_period: subscription.period)
       new_order.site = subscription.product.site
-      new_order.primary_address = user.primary_address.dup
+      new_order.primary_address = nil
       new_order.secondary_address = nil
 
       year_prefix = Date.today.year.to_s.last(2)

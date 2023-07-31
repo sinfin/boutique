@@ -1,0 +1,17 @@
+= form_header f
+
+= tabs [:content]
+
+.tab-content
+  = tab :content
+    == cell('folio/console/publishable_inputs', f)
+
+    .row
+      .col-lg-6 = f.input :title, placeholder: false
+      .col-lg-6 = f.input :price
+
+      - collection = Boutique::ShippingMethod.recursive_subclasses_for_select(include_self: false)
+      .col-lg-6 = f.input :type, collection: collection,
+                                 include_blank: false
+
+= form_footer f

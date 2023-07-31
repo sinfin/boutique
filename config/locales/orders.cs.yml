@@ -56,10 +56,6 @@ cs:
           nonrecurring_payment:
             link: Nechci opakovanou platbu, zaplatím jednorázově.
             title: Jednorázová platba
-            months:
-              one: 1 měsíc
-              few: "%{count} měsíce"
-              other: "%{count} měsíců"
 
       payment_methods:
         secured_by: Zabezpečeno
@@ -108,6 +104,7 @@ cs:
 
         vat: DPH
         price: Cena
+        shipping: Doprava
         discount: "Slevový kód: %{code}"
         total_price_without_vat: Celkem bez DPH
         total_price_vat: DPH %{value} %

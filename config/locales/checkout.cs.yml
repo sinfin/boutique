@@ -5,6 +5,11 @@ cs:
       cart:
         public_page_title: Objednávka
 
+        shipping_methods:
+          zasilkovna:
+            pickup_point:
+              select_point: Vyberte výdejní místo...
+
       confirm:
         success_free: Objednávka proběhla úspěšně
 
