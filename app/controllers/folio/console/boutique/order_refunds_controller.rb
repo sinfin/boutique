@@ -5,7 +5,14 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
 
   def new
     super
+
     folio_console_record.boutique_order_id = params[:order_id]
+    folio_console_record.issue_date = Date.today
+    folio_console_record.due_date = Date.today + 14.days
+    folio_console_record.date_of_taxable_supply = Date.today
+    folio_console_record.setup_subscription_refund(Date.today)
+    folio_console_record.total_price_in_cents = -1 * folio_console_record.order.total_price_in_cents
+    folio_console_record.payment_method = "VOUCHER"
   end
 
   private
