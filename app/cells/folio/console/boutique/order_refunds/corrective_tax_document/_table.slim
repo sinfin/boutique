@@ -1,0 +1,116 @@
+.b-order-refunds-corrective-tax-document__mobile-scroller
+  table.table.b-order-refunds-corrective-tax-document__table.mb-0
+    thead
+      tr
+        th.b-order-refunds-corrective-tax-document__table-th [
+          class="b-order-refunds-corrective-tax-document__table-th--item"
+          colspan=3
+        ]
+
+        th.b-order-refunds-corrective-tax-document__table-th.text-right [
+          class="b-order-refunds-corrective-tax-document__table-th--price"
+        ]
+          - unless hide_vat?
+            = t('.vat')
+
+        th.b-order-refunds-corrective-tax-document__table-th.text-right [
+          class="b-order-refunds-corrective-tax-document__table-th--commission"
+        ]
+          = t('.price')
+
+    tbody
+      - model.line_items.each do |line_item|
+        tr
+          td.b-order-refunds-corrective-tax-document__table-td colspan=3
+            = line_item.to_label
+
+          td.b-order-refunds-corrective-tax-document__table-td.text-right
+            - unless hide_vat?
+              = "#{line_item.vat_rate_value} %"
+
+          td.b-order-refunds-corrective-tax-document__table-td.text-right
+            = folio_price(line_item.price,
+                          precision: 2,
+                          zero_as_number: true)
+
+    tbody.b-order-refunds-corrective-tax-document__table-summary
+      - unless hide_vat?
+        tr.b-order-refunds-corrective-tax-document__table-dark-border.border-top
+          td.b-order-refunds-corrective-tax-document__table-td [
+            class="pt-4 d-none d-sm-table-cell"
+            colspan=3
+          ]
+
+          td.b-order-refunds-corrective-tax-document__table-td [
+            class="font-weight-bold pt-4 d-none d-sm-table-cell"
+          ]
+            .b-order-refunds-corrective-tax-document__table-td-total-price.h3.m-0.text-nowrap
+              = t('.total_price_without_vat')
+
+          td.b-order-refunds-corrective-tax-document__table-td [
+            class="font-weight-bold pt-4 d-sm-none"
+            colspan=4
+          ]
+            .h3.m-0.text-nowrap = t('.total_price_without_vat')
+
+          td.b-order-refunds-corrective-tax-document__table-td [
+            class="text-right font-weight-bold pt-4"
+          ]
+            .h3.m-0
+              = folio_price(total_price_without_vat,
+                            precision: 2,
+                            zero_as_number: true)
+
+        - vat_amounts.each do |vat_rate_value, amount|
+          tr
+            td.b-order-refunds-corrective-tax-document__table-td [
+              class="pt-4 d-none d-sm-table-cell"
+              colspan=3
+            ]
+
+            td.b-order-refunds-corrective-tax-document__table-td [
+              class="font-weight-bold pt-4 d-none d-sm-table-cell"
+            ]
+              .b-order-refunds-corrective-tax-document__table-td-total-price.h3.m-0.text-nowrap
+                = t('.total_price_vat', value: vat_rate_value)
+
+            td.b-order-refunds-corrective-tax-document__table-td [
+              class="font-weight-bold pt-4 d-sm-none"
+              colspan=4
+            ]
+              .h3.m-0.text-nowrap
+                = t('.total_price_vat', value: vat_rate_value)
+
+            td.b-order-refunds-corrective-tax-document__table-td [
+              class="text-right font-weight-bold pt-4"
+              colspan=2
+            ]
+              .h3.m-0 = folio_price(amount,
+                                    precision: 2,
+                                    zero_as_number: true)
+
+      tr.b-order-refunds-corrective-tax-document__table-dark-border.border-top
+        td.b-order-refunds-corrective-tax-document__table-td [
+          class="pt-4 d-none d-sm-table-cell"
+          colspan=3
+        ]
+
+        td.b-order-refunds-corrective-tax-document__table-td [
+          class="font-weight-bold pt-4 d-none d-sm-table-cell"
+        ]
+          .b-order-refunds-corrective-tax-document__table-td-total-price.h3.m-0.text-nowrap
+            = t('.total_price')
+
+        td.b-order-refunds-corrective-tax-document__table-td [
+          class="font-weight-bold pt-4 d-sm-none"
+          colspan=4
+        ]
+          .h3.m-0.text-nowrap = t('.total_price')
+
+        td.b-order-refunds-corrective-tax-document__table-td [
+          class="text-right font-weight-bold pt-4"
+          colspan=2
+        ]
+          .h3.m-0 = folio_price(model.total_price,
+                                precision: 2,
+                                zero_as_number: true)

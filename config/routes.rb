@@ -61,6 +61,9 @@ Folio::Engine.routes.draw do
           collection do
             get :corrective_tax_documents
           end
+          member do
+            get :corrective_tax_document
+          end
         end
 
         resources :products, except: %i[show] do

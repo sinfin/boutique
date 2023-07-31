@@ -732,6 +732,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
 
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
+  add_foreign_key "boutique_order_refunds", "boutique_orders"
   add_foreign_key "boutique_orders", "boutique_shipping_methods", column: "shipping_method_id"
   add_foreign_key "boutique_orders", "boutique_subscriptions"
   add_foreign_key "boutique_orders", "boutique_vouchers"

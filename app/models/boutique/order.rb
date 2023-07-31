@@ -493,10 +493,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     total_price * 100
   end
 
-  def currency_code
-    "CZK"
-  end
-
   def free?
     total_price.zero?
   end

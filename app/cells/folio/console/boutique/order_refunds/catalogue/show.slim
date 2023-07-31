@@ -1,0 +1,33 @@
+.f-c-b-order-refunds-catalogue
+  = catalogue(model, before_lambda: options[:before_lambda],
+                     collection_actions: options[:collection_actions])
+    ruby:
+      show_link(:to_label)
+
+      attribute(:user) do
+        if record.user.present?
+          link_to(record.user.email,
+                  controller.folio.url_for([:console, record.user]))
+        else
+          record.email
+        end
+      end
+
+      price(:total_price)
+
+      attribute(:payment_method)
+
+      date :created_at
+      date :paid_at
+
+      state
+
+      attribute(:corrective_tax_document, compact: true) do
+        if record.document_number?
+          link_to(record.document_number,
+                  controller.folio.corrective_tax_document_console_order_refund_path(record.id),
+                  target: "_blank")
+        end
+      end
+
+      actions :show, :edit
