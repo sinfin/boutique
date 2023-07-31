@@ -55,7 +55,6 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
     assert_redirected_to url_for([:console, created_bor])
     assert_equal(bor.total_price, created_bor.total_price)
     assert_equal(bor.order, created_bor.order)
-
   end
 
   test "edit" do
