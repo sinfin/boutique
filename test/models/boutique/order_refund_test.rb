@@ -18,7 +18,7 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
                  unit_price: price_per_day * (sub_to - sub_from),
                  subscription_period: period)
 
-    subscription = order.send(:set_up_subscription!)
+    _subscription = order.send(:set_up_subscription!)
 
     bor = build(:boutique_order_refund, order:)
 

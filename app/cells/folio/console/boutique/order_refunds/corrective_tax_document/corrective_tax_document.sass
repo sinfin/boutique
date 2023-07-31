@@ -1,0 +1,183 @@
+.b-order-refunds-corrective-tax-document
+  padding: 30px 0 50px
+
+  +media-breakpoint-up(sm)
+    padding: 50px 0 70px
+
+  +media-breakpoint-up(md)
+    padding: 60px 0 100px
+
+  &__container
+    padding: 0 40px
+
+  &__plain-table
+    border-collapse: collapse
+    line-height: 1.6
+    letter-spacing: 0
+    width: 100%
+
+    td, th
+      vertical-align: top
+
+  &__small-text
+    font-size: $font-size-sm
+    line-height: $line-height-sm
+
+  &__header-td-first
+    width: 57%
+
+    +media-breakpoint-up(sm)
+      padding-right: 20px
+
+  &__header-td-second
+    width: 38%
+
+  &__payment-td-first
+    +media-breakpoint-up(sm)
+      padding-right: 4%
+
+  &__payment-td-second
+    width: 40%
+
+  &__header-td-first,
+  &__header-td-second,
+    +media-breakpoint-down(xs)
+      width: 100%
+      display: block
+
+  &__payment-td-first,
+  &__payment-td-second
+    vertical-align: top
+
+    +media-breakpoint-down(sm)
+      width: 100%
+      display: block
+
+  &__payment-qr
+    margin: -15px
+    padding-right: 20px
+
+  &__header-spacer
+    +media-breakpoint-up(xl)
+      width: 190px
+
+  &__payment-cell
+    vertical-align: top
+
+    +media-breakpoint-down(lg)
+      width: 50%
+
+    +media-breakpoint-up(xl)
+      width: 250px
+
+  &__mobile-scroller
+    +media-breakpoint-down(sm)
+      overflow-x: auto
+
+  &__table
+    border-top: 1px solid $border-color
+
+  &__table-th
+    vertical-align: middle !important
+
+  &__table-th,
+  &__table-td
+    font-size: 14px !important
+    +media-breakpoint-up(lg)
+      font-size: 18px !important
+
+  &__table &__table-th,
+  &__table &__table-td
+    padding-top: 20px !important
+    padding-bottom: 20px !important
+
+  &__table-th--item-id,
+  &__table-th--contract-id
+    min-width: 60px
+    width: 8%
+
+  &__table-th--item
+    min-width: 197px
+    width: 50%
+
+  &__table-th--price,
+  &__table-th--commission
+    min-width: 100px
+    width: 18%
+
+  &__table-td-total-price
+    width: 150px
+
+  &__table-spacer
+    width: 0
+
+    +media-breakpoint-up(md)
+      width: 72%
+
+    +media-breakpoint-up(xl)
+      width: 57%
+
+  &__table tr:last-child
+    border-color: #979797
+    border-width: 2px
+
+  &__table &__table-th
+    border-top: 2px solid #979797
+
+  &__table-summary &__table-td
+    border-top: none
+
+  &__table-summary tr:last-child
+    border-bottom: none
+
+  &__table-dark-border
+    border-color: #979797 !important
+    border-width: 2px !important
+
+  &__table &__table-signature
+    padding-top: 130px !important
+    position: relative
+    overflow: hidden
+
+  &__table-signature-text
+    &::before
+      content: '......................................................................................................................'
+      display: block
+      position: absolute
+      bottom: 55px
+      left: 10px
+
+  @media print
+    &__table-summary
+      page-break-inside: avoid
+
+    // firefox only
+    @-moz-document url-prefix()
+      .a-order-refunds-corrective-tax-document__header-td-second
+        width: 40%
+        background: blue
+
+    &__payment-td-first,
+    &__payment-td-second
+      +media-breakpoint-down(sm)
+        width: auto
+        display: table-cell
+
+    &__table-spacer
+      width: 72%
+
+  // safari only
+  @media not all and (min-resolution:.001dpcm)
+    &__plain-table,
+    &__table,
+    &__table-th
+      font-size: 12px !important
+
+    &__table-th--item
+      min-width: 4px
+
+    &__table-td-total-price
+      width: 146px
+
+    &__payment-td-second
+      width: 40%

@@ -1,0 +1,28 @@
+table.b-order-refunds-corrective-tax-document__plain-table
+  tbody
+    tr
+      td.b-order-refunds-corrective-tax-document__header-td-first
+        ul
+          li.font-weight-bold = t('.supplier')
+          li = current_site.billing_name
+          li = current_site.billing_address_line_1
+          li = current_site.billing_address_line_2
+          li
+            | IČO: #{current_site.billing_identification_number},
+            |  DIČ: #{current_site.billing_vat_identification_number}
+          li.b-order-refunds-corrective-tax-document__small-text.pt-2
+            = current_site.billing_note
+
+      td.b-order-refunds-corrective-tax-document__header-td-second
+        ul.mt-4.mt-sm-0
+          li.font-weight-bold = t('.customer')
+          li
+            = billing_name
+
+          - if billing_address.present?
+            li = billing_address_first_line
+            li = billing_address_second_line
+            li = billing_address_country_name
+
+            - if billing_address_identification_numbers
+              li = billing_address_identification_numbers
