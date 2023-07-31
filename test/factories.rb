@@ -211,24 +211,27 @@ FactoryBot.define do
   end
 
   factory :boutique_order_refund, class: "Boutique::OrderRefund" do
-    association :order, factory: :boutique_order
+    order { create(:boutique_order, :paid, total_price: 123) }
 
-    number { "123456" }
+    sequence(:number)
     issue_date { Date.yesterday }
     due_date { issue_date + 14.days }
     date_of_taxable_supply { issue_date }
     reason { "Something was wrong" }
-    total_price_in_cents { order.total_price_in_cents }
+    total_price_in_cents { -1 * order.total_price_in_cents }
+    payment_method { "VOUCHER" }
 
     trait :created do
       aasm_state { "created" }
     end
 
     trait :approved_to_pay do
+      created
       aasm_state { "approved_to_pay" }
     end
 
     trait :paid do
+      approved_to_pay
       aasm_state { "paid" }
       paid_at { 1.minute.ago }
     end

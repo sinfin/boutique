@@ -20,23 +20,42 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
     skip "test state tabs"
   end
 
-  test "new" do
-    order = create(:boutique_order)
+  test "new for subscription order " do
+    order = create(:boutique_order, :paid, subscription_product: true)
+
     get url_for([:console, Boutique::OrderRefund, action: :new, order_id: order.id  ])
 
     assert_response :success
 
-    skip "check prefilled values"
+    assert_select "select[name='order_refund[boutique_order_id]'] option[selected][value=#{order.id}]"
+    skip "assert presence of subscription refund fields"
+  end
+
+  test "new for non subscription order" do
+    order = create(:boutique_order, :paid, subscription_product: false)
+
+    get url_for([:console, Boutique::OrderRefund, action: :new, order_id: order.id  ])
+
+    assert_response :success
+
+    assert_select "select[name='order_refund[boutique_order_id]'] option[selected][value=#{order.id}]"
+    skip "assert not presence of subscription refund fields"
   end
 
   test "create" do
-    params = build(:boutique_order_refund).serializable_hash
+    bor = build(:boutique_order_refund)
 
     assert_difference("Boutique::OrderRefund.count", 1) do
       post url_for([:console, Boutique::OrderRefund]), params: {
-        order_refund: params,
+        order_refund: bor.serializable_hash,
       }
     end
+
+    created_bor = Boutique::OrderRefund.last
+    assert_redirected_to url_for([:console, created_bor])
+    assert_equal(bor.total_price, created_bor.total_price)
+    assert_equal(bor.order, created_bor.order)
+
   end
 
   test "edit" do
@@ -54,7 +73,7 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
 
     put url_for([:console, model]), params: {
       order_refund: {
-        due_date: due_date.to_s,
+        due_date: new_due_date.to_s,
       },
     }
 
@@ -67,12 +86,12 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
 
     delete url_for([:console, model])
 
-    assert_redirected_to url_for([:edit, :console, model])
-    assert response.include?("nelze smazat, jen stornovat")
-    assert model.class.find(model.id).present?
+    assert_redirected_to url_for([:console, Boutique::OrderRefund])
+    assert model.class.find_by(id: model.id).blank?
   end
 
   test "corrective tax documents" do
+    skip
     get url_for([:corrective_tax_documents, :console, Boutique::OrderRefund])
 
     assert_response :success

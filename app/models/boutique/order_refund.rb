@@ -3,6 +3,8 @@
 class Boutique::OrderRefund < Boutique::ApplicationRecord
   include Folio::HasAasmStates
 
+  before_create :set_number
+
   ALLOWED_PAYMENT_METHODS = %w[
     PAYMENT_CARD
     BANK_ACCOUNT
@@ -48,7 +50,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     # self.base_number = ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
     last = Boutique::OrderRefund.where("issue_date > ?", d_day.beginning_of_year).order(:issue_date).last
     if last
-      last.number.to_i(+1)
+      last.number.to_i + 1
     else
       year_prefix = d_day.year.to_s.last(2)
       # format: 2200001, 2200002 ... 2309998, 2309999
@@ -66,17 +68,12 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     nil
   end
 
-  def initialize(*args)
-    super(*args)
-    self.issue_date ||= Date.today
+  def set_number
     self.number ||= Boutique::OrderRefund.next_number(issue_date || Date.today)
-    self.due_date ||= Date.today + 14.days
-    self.date_of_taxable_supply ||= Date.today
-    self.total_price_in_cents ||= 0
-    self.aasm_state ||= "created"
-    self.payment_method ||= "VOUCHER"
   end
 
+  def setup_subscription_refund(date_from, date_to = nil)
+  end
 
   def total_price
     total_price_in_cents.to_f / 100
