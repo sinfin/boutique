@@ -30,8 +30,10 @@ class Boutique::Payment < Boutique::ApplicationRecord
     event :pay do
       transitions from: :pending, to: :paid
 
-      after do
+      after_commit do
         order.pay!
+      rescue AASM::InvalidTransition
+        raise "Order #{order.id} is in state #{order.aasm_state} and cannot be paid by payment ##{self.id}!"
       end
     end
 
