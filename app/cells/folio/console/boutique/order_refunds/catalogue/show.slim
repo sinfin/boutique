@@ -1,5 +1,6 @@
 .f-c-b-order-refunds-catalogue
   = catalogue(model, before_lambda: options[:before_lambda],
+                     new_button: false,
                      collection_actions: options[:collection_actions])
     ruby:
       show_link(:to_label)

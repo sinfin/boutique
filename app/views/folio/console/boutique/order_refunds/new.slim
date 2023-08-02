@@ -1,3 +1,8 @@
-= simple_form_for(@order_refund,
-                  url: through_aware_console_url_for(@order_refund)) do |f|
-  = render 'form', f: f
+.row
+  .col-lg-6.mb-5
+    = simple_form_for(@order_refund,
+                      url: through_aware_console_url_for(@order_refund)) do |f|
+      == cell("folio/console/boutique/order_refunds/form", f)
+
+  .col-lg-6.mb-5
+    == cell("folio/console/boutique/orders/show", @order_refund.order)

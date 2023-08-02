@@ -1,5 +1,6 @@
-= index_header right: cell('folio/console/boutique/order_refunds/index/corrective_tax_documents_button'),
-               filters_cancel_url: url_for([:console, @klass, tab: params[:tab]])
+= index_header  new_button: false,
+                right: cell('folio/console/boutique/order_refunds/index/corrective_tax_documents_button'),
+                filters_cancel_url: url_for([:console, @klass, tab: params[:tab]])
 
 == cell('folio/console/boutique/order_refunds/catalogue',
         @order_refunds)

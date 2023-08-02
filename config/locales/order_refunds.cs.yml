@@ -30,6 +30,9 @@ cs:
             due_date: "Datum splatnosti: "
             paid_at: "Datum vyplacení: "
             reason: "Důvod opravy: "
+            subscription_refund_from: Počáteční den refundovaného období včetně
+            subscription_refund_to: Poslední den refundovaného období včetně
+            subscriptions_price: "Částka vráceného předplatného"
 
             vat: DPH
             price: Cena

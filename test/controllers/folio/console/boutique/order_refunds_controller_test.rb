@@ -27,7 +27,7 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
 
     assert_response :success
 
-    assert_select "select[name='order_refund[boutique_order_id]'] option[selected][value=#{order.id}]"
+    assert_select "input[name='order_refund[boutique_order_id]'][type='hidden'][value=\"#{order.id}\"]"
     skip "assert presence of subscription refund fields"
   end
 
@@ -38,7 +38,7 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
 
     assert_response :success
 
-    assert_select "select[name='order_refund[boutique_order_id]'] option[selected][value=#{order.id}]"
+    assert_select "input[name='order_refund[boutique_order_id]'][type='hidden'][value=\"#{order.id}\"]"
     skip "assert not presence of subscription refund fields"
   end
 

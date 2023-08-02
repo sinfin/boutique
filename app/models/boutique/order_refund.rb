@@ -26,7 +26,8 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   validates :document_number, uniqueness: true, allow_nil: true
   validates :due_date, comparison: { greater_than_or_equal_to: :issue_date }
   validates :payment_method, inclusion: { in: ALLOWED_PAYMENT_METHODS }
-  validates :total_price, numericality: { less_than: 0 }
+  validate :subscription_data_validity
+  validate :total_price_validity
 
   aasm do
     state :created, initial: true, color: "yellow"
@@ -87,22 +88,34 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   def setup_subscription_refund(date_from, date_to = nil)
     return unless subscription.present?
 
-    date_to = [date_to, subscription.active_until].compact.min
+    date_from = [[date_from, subscription_date_range.end].min, subscription_date_range.begin].max
+    date_to ||= subscription_date_range.end
+    date_to = [[date_to, subscription_date_range.begin].max, subscription_date_range.end].min
     price = (date_to.to_date - date_from.to_date) * subscription_price_per_day_in_cents
 
     self.subscription_refund_from = date_from
     self.subscription_refund_to = date_to
-    self.subscriptions_price_in_cents = (-1 * price)
+    self.subscriptions_price_in_cents = price
+    self.total_price_in_cents = price
   end
 
   def subscription_price_per_day_in_cents
     return unless subscription.present?
 
-    order.subscription_line_item.price_per_day * 100
+    @subscription_price_per_day_in_cents ||= order.subscription_line_item.price_per_day * 100
   end
 
   def subscriptions_price
     subscriptions_price_in_cents.to_f / 100
+  end
+
+  def subscriptions_price=(f_value)
+    self.subscriptions_price_in_cents = f_value.to_f * 100
+  end
+
+  def subscription_date_range
+    return nil unless subscription.present?
+    @subscription_date_range ||= (order.subscription_line_item.subscription_starts_at.to_date..order.subscription_line_item.subscription_ends_at.to_date)
   end
 
   def total_price
@@ -142,6 +155,41 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
       end
     end
   end
+
+  private
+    def subscription_data_validity
+      return unless subscription.present?
+
+      if subscription_refund_from.blank? || subscription_refund_to.blank?
+        errors.add(:subscription_refund_from, :blank)
+        errors.add(:subscription_refund_to, :blank)
+      else
+        if subscription_refund_from > subscription_refund_to
+          errors.add(:subscription_refund_from, :greater_than, count: subscription_refund_to)
+        end
+
+        unless subscription_date_range.include?(subscription_refund_from)
+          errors.add(:subscription_refund_from, :inclusion, count: subscription_date_range)
+        end
+
+        unless subscription_date_range.include?(subscription_refund_to)
+          errors.add(:subscription_refund_to, :inclusion, count:  subscription_date_range)
+        end
+      end
+    end
+
+    def total_price_validity
+      if total_price_in_cents.blank?
+        errors.add(:total_price, :blank)
+      else
+        if order.total_price_in_cents < total_price_in_cents
+          errors.add(:total_price, :less_than_or_equal_to, count: order.total_price)
+        end
+        if total_price_in_cents <= 0
+          errors.add(:total_price, :greater_than, count: 0)
+        end
+      end
+    end
 end
 
 # == Schema Information

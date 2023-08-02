@@ -63,27 +63,22 @@ cs:
         canceled_at: Stornováno
         created_at: Vytvořeno
         corrective_tax_document: Opravný daňový doklad
-        corrective_tax_document_number: Číslo opravného dokladu
+        document_number: Číslo opravného dokladu
         date_of_taxable_supply: Datum zdanitelného plnění
         due_date: Datum splatnosti
         items: Předměty
         issue_date: Datum vystavení
-        line_items: Položky
-        line_items_price: Cena položek
-        number: Číslo
-        number_range: Číslo
+        order: Objednávka
         paid_at: Zaplaceno
         paid_at_range: Zaplaceno
+        cancelled_at: Stornováno
         payment_method: Způsob refundace
-        price: Cena
-        primary_address_country_code/CZ: Česká republika
-        primary_address_country_code/other: Jiná
-        primary_address_country_code/SK: Slovensko
-        primary_address_country_code: Země odběru
-        product: Produkt
         reason: Důvod opravy
-        total_price: Cena celkem
-        total_price_range: Cena
+        subscription_refund_from: Počáteční den refundovaného období včetně
+        subscription_refund_to: Poslední den refundovaného období včetně
+        subscriptions_price: "Částka vráceného předplatného"
+        total_price: Částka k vrácení
+        total_price_range: Částka k vrácení
         user: Uživatel
 
       boutique/product:

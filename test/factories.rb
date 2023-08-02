@@ -218,7 +218,7 @@ FactoryBot.define do
     due_date { issue_date + 14.days }
     date_of_taxable_supply { issue_date }
     reason { "Something was wrong" }
-    total_price_in_cents { -1 * order.total_price_in_cents }
+    total_price_in_cents { order.total_price_in_cents }
     payment_method { "VOUCHER" }
 
     trait :created do

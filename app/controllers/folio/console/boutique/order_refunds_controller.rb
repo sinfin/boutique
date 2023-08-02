@@ -10,9 +10,12 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
     folio_console_record.issue_date = Date.today
     folio_console_record.due_date = Date.today + 14.days
     folio_console_record.date_of_taxable_supply = Date.today
-    folio_console_record.setup_subscription_refund(Date.today)
-    folio_console_record.total_price_in_cents = -1 * folio_console_record.order.total_price_in_cents
+    folio_console_record.total_price_in_cents = folio_console_record.order.total_price_in_cents
     folio_console_record.payment_method = "VOUCHER"
+    folio_console_record.setup_subscription_refund(Date.today)
+  end
+
+  def show
   end
 
   def corrective_tax_documents
@@ -47,7 +50,7 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
   private
     def order_refund_params
       params.require(:order_refund)
-            .permit(*(@klass.column_names - %w[id site_id] + %w[total_price]))
+            .permit(*(@klass.column_names - %w[id site_id] + %w[total_price subscriptions_price]))
     end
 
     def index_filters
