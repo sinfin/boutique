@@ -73,6 +73,7 @@ cs:
         paid_at_range: Zaplaceno
         cancelled_at: Stornováno
         payment_method: Způsob refundace
+        payment_method_label: Způsob refundace
         reason: Důvod opravy
         subscription_refund_from: Počáteční den refundovaného období včetně
         subscription_refund_to: Poslední den refundovaného období včetně

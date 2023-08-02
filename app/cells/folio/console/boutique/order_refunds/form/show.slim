@@ -5,14 +5,22 @@
 
   .tab-content
     = tab :content
-      = f.input :issue_date, format: :as_date
-      = f.input :due_date, format: :as_date
-      = f.input :date_of_taxable_supply, format: :as_date
+      = f.input :issue_date, as: :date
+      = f.input :due_date, as: :date
+      = f.input :date_of_taxable_supply, as: :date
       = f.hidden_field :boutique_order_id, hidden: true, readonly: true
       = f.input :reason, required: true
       - if f.object.subscription_refund_from.present?
-        = f.input :subscription_refund_from, input_html: { data: allowed_date_ranges}
-        = f.input :subscription_refund_to, input_html: { data: allowed_date_ranges}
+        = f.input :subscription_refund_from,
+                  as: :date,
+                  min: allowed_date_ranges[:min_date],
+                  max: allowed_date_ranges[:max_date],
+                  input_html: { data: allowed_date_ranges}
+        = f.input :subscription_refund_to,
+                  as: :date,
+                  min: allowed_date_ranges[:min_date],
+                  max: allowed_date_ranges[:max_date],
+                  input_html: { data: allowed_date_ranges}
         = f.input :subscriptions_price, input_html: { readonly: true,
                                                       data: { price_per_day_in_cents: f.object.subscription_price_per_day_in_cents }}
       = f.input :total_price

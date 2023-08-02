@@ -12,7 +12,7 @@
           = folio_price(s.object.subscriptions_price)
       = s.attribute :total_price
         = folio_price(s.object.total_price)
-      = s.attribute :payment_method
+      = s.attribute :payment_method_label
       = s.attribute(:corrective_tax_document)
         - if s.object.document_number.present?
           = link_to(s.object.document_number,
@@ -23,4 +23,5 @@
 
 
   .col-lg-6.mb-5
+    h2 = t(".order_header", order_label: @order_refund.order.to_label)
     == cell("folio/console/boutique/orders/show", @order_refund.order)

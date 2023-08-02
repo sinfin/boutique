@@ -4,6 +4,12 @@ cs:
     console:
       boutique:
         order_refunds:
+          show:
+            order_header: Objednávka %{order_label}
+          edit:
+            order_header: Objednávka %{order_label}
+          new:
+            order_header: Objednávka %{order_label}
           payment_methods:
             PAYMENT_CARD: Platba kartou
             BANK_ACCOUNT: Bankovní převod

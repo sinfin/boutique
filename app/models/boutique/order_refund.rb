@@ -77,8 +77,12 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     end
   end
 
+  def payment_method_label
+    self.class.payment_method_options.detect {|label, key| payment_method == key}&.first
+  end
+
   def to_label
-    "#{order.to_label} - #{document_number || "##{id}"}"
+    "#{document_number || "##{id}"} (#{order.to_label})"
   end
 
   def set_document_number
@@ -91,7 +95,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     date_from = [[date_from, subscription_date_range.end].min, subscription_date_range.begin].max
     date_to ||= subscription_date_range.end
     date_to = [[date_to, subscription_date_range.begin].max, subscription_date_range.end].min
-    price = (date_to.to_date - date_from.to_date) * subscription_price_per_day_in_cents
+    price = ((date_to.to_date - date_from.to_date) + 1) * subscription_price_per_day_in_cents
 
     self.subscription_refund_from = date_from
     self.subscription_refund_to = date_to

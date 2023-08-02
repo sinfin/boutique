@@ -27,7 +27,7 @@ if (bof_form) {
       to_date_input.classList.remove("is-invalid")
     }
 
-    const days = Math.ceil((to - from) / (1000 * 60 * 60 * 24))
+    const days = Math.ceil((to - from) / (1000 * 60 * 60 * 24)) + 1
     var price = ((days * Number(subscriptions_price_input.dataset.pricePerDayInCents)) / 100).toFixed(2)
     if (from_date_input.classList.contains("is-invalid") || to_date_input.classList.contains("is-invalid")) {
       price = 0.0
