@@ -8,7 +8,7 @@ class Boutique::ProductsController < Boutique::ApplicationController
 
   private
     def permitted_params_keys
-      %i[subscription_id] + additional_permitted_params_keys
+      [:subscription_id, Boutique::OrdersController::VOUCHER_GET_PARAM_NAME] + additional_permitted_params_keys
     end
 
     def additional_permitted_params_keys

@@ -3,6 +3,8 @@
 class Boutique::OrdersController < Boutique::ApplicationController
   include Boutique::RedirectAfterOrderPaid
 
+  VOUCHER_GET_PARAM_NAME = :c
+
   before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
 
@@ -43,6 +45,10 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def edit
+    if params[VOUCHER_GET_PARAM_NAME]
+      current_order.assign_voucher_by_code(params[VOUCHER_GET_PARAM_NAME])
+    end
+
     @use_boutique_adaptive_css = true
   end
 
@@ -214,7 +220,11 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                              renewed_subscription: subscription,
                                              additional_options: add_line_item_additional_options)
 
-      redirect_to action: :edit
+      if params[VOUCHER_GET_PARAM_NAME]
+        current_order.assign_voucher_by_code(params[VOUCHER_GET_PARAM_NAME])
+      end
+
+      redirect_to action: :edit, VOUCHER_GET_PARAM_NAME => params[VOUCHER_GET_PARAM_NAME]
     end
 
     def add_line_item_additional_options
