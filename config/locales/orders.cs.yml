@@ -65,6 +65,7 @@ cs:
           monthly: měsíčně
 
       show:
+        refunds: Vratky
         invoice: stáhnout fakturu
         title: Objednávka č. %{number}
         paid: zaplacena

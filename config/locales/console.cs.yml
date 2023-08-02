@@ -39,6 +39,7 @@ cs:
           show:
             create_order_refund_button:
               label: Vratka
+            refunds: Vratky
 
           invoices:
             filename: faktury
