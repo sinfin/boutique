@@ -62,7 +62,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
       self.order.lock!
 
       if pending?
-        self.payment_method = gateway_result_hash[:method]
+        self.payment_method = gateway_result_hash[:payment][:method]
 
         case gateway_result_hash[:state]
         when :paid
@@ -77,6 +77,8 @@ class Boutique::Payment < Boutique::ApplicationRecord
         when :expired, :timeouted
           timeout!
         end
+
+        self.save!
       end
     end
   end
