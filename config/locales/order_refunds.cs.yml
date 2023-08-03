@@ -1,5 +1,10 @@
 ---
 cs:
+  boutique:
+    order_refund:
+      events:
+        pay:
+          email_subject: "Vrácení platby - objednávka %{order_number}"
   folio:
     console:
       boutique:

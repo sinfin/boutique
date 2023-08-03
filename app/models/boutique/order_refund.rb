@@ -15,6 +15,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   belongs_to :order, class_name: "Boutique::Order", foreign_key: :boutique_order_id, inverse_of: :refunds
 
   delegate :user,
+           :email,
            :currency_code,
            :subscription,
            :primary_address,
@@ -44,7 +45,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
       end
     end
 
-    event :pay do
+    event :pay, email_modal: true do
       transitions from: :approved_to_pay, to: :paid
       before do
         self.paid_at = Time.zone.now
@@ -68,6 +69,15 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
       year_prefix = d_day.year.to_s.last(2)
       # format: 2200001, 2200002 ... 2309998, 2309999
       year_prefix + "1".rjust(4, "0")
+    end
+  end
+
+  def aasm_email_default_subject(event)
+    case event.name
+    when :pay
+      I18n.t("boutique.order_refund.events.pay.email_subject", order_number: order.number)
+    else
+      nil
     end
   end
 
