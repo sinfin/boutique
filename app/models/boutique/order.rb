@@ -463,6 +463,14 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  def shipping_vat_rate_value
+    Boutique::VatRate.default.value
+  end
+
+  def shipping_price_vat
+    (shipping_price * (shipping_vat_rate_value.to_d / (100 + shipping_vat_rate_value))).round(2).to_f
+  end
+
   def discount
     super || begin
       if voucher.present? && voucher.applicable?

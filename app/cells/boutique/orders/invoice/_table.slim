@@ -33,17 +33,17 @@
                           precision: 2,
                           zero_as_number: true)
 
-      - if model.requires_address?
+      - if shipping.present?
         tr
           td.b-orders-invoice__table-td colspan=3
             = t(".shipping")
 
           td.b-orders-invoice__table-td.text-right
             - unless hide_vat?
-              = "#{Boutique::VatRate.default.value} %"
+              = "#{shipping[:vat_rate]} %"
 
           td.b-orders-invoice__table-td.text-right
-            = folio_price(model.shipping_price,
+            = folio_price(shipping[:price],
                           precision: 2,
                           zero_as_number: true)
 

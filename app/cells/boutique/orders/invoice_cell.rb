@@ -34,20 +34,28 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
     ].compact.join(", ")
   end
 
+
+  def shipping
+    return nil unless model.requires_address?
+    { vat_rate: model.shipping_vat_rate_value,
+     price: model.shipping_price,
+     price_vat: model.shipping_price_vat }
+  end
+
   def vat_amounts
-    @vat_amounts ||= model.line_items.group_by(&:vat_rate_value)
-                                     .transform_values do |line_items|
-      line_items.sum(&:price_vat)
+    @vat_amounts ||= begin
+      va = model.line_items.group_by(&:vat_rate_value)
+                           .transform_values do |line_items|
+             line_items.sum(&:price_vat)
+           end
+
+      va[shipping[:vat_rate]] = (va[shipping[:vat_rate]] || 0) + shipping[:price_vat] if shipping.present?
+      va
     end
   end
 
   def total_price_without_vat
-    sk = true
-    if sk
-      model.total_price - vat_amounts.values.sum
-    else
-      model.total_price - vat_amounts.values.sum
-    end
+    model.total_price - vat_amounts.values.sum
   end
 
   def hide_vat?
