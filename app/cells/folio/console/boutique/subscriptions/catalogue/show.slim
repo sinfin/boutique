@@ -51,6 +51,14 @@
                        })
         end
 
+        additional_action = record.class.console_additional_index_action(record, self)
+        if additional_action.present?
+            a << link_to("",
+                         additional_action[:url],
+                         title: t("folio.console.actions.#{additional_action[:name]}}"),
+                         class: "btn btn-light fa fa-#{additional_action[:icon]}")
+        end
+
         content_tag(:div, class: "f-c-index-actions") do
           a.join
         end

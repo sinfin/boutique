@@ -620,6 +620,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     !digital_only?
   end
 
+  def self.console_additional_index_action(record, context)
+    nil
+  end
+
   def self.csv_attribute_names
     %i[number email full_name line_items total_price primary_address secondary_address confirmed_at paid_at aasm_state invoice]
   end

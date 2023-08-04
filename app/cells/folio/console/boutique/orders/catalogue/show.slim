@@ -41,4 +41,14 @@
         end
       end
 
-      actions :show, :edit
+      actions(:show, :edit)
+
+      action = record.class.console_additional_index_action(record, self)
+      if action.present?
+        attribute(:actions, compact: true) do
+          link_to("",
+                  action[:url],
+                  title: t("folio.console.actions.#{action[:name]}}"),
+                  class: "btn btn-light fa fa-#{action[:icon]} ml-n3",)
+        end
+      end

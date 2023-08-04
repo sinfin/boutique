@@ -157,6 +157,10 @@ class Boutique::Subscription < ApplicationRecord
     ]
   end
 
+  def self.console_additional_index_action(record, context)
+    nil
+  end
+
   private
     def validate_primary_address_attributes
       return if primary_address.nil?
