@@ -3,11 +3,9 @@
 class Boutique::OrderRefund < Boutique::ApplicationRecord
   include Folio::HasAasmStates
 
-  ALLOWED_PAYMENT_METHODS = %w[
+  PAYMENT_METHODS = %w[
     PAYMENT_CARD
     BANK_ACCOUNT
-    APPLE_PAY
-    GPAY
     PAYPAL
     VOUCHER
   ]
@@ -26,7 +24,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   validates :order, :issue_date, :due_date, :date_of_taxable_supply, presence: true
   validates :document_number, uniqueness: true, allow_nil: true
   validates :due_date, comparison: { greater_than_or_equal_to: :issue_date }
-  validates :payment_method, inclusion: { in: ALLOWED_PAYMENT_METHODS }
+  validates :payment_method, inclusion: { in: PAYMENT_METHODS }
   validate :subscription_data_validity
   validate :total_price_validity
 
@@ -48,6 +46,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     event :pay, email_modal: true do
       transitions from: :approved_to_pay, to: :paid
       before do
+        handle_payout
         self.paid_at = Time.zone.now
       end
     end
@@ -82,13 +81,22 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   end
 
   def self.payment_method_options
-    ALLOWED_PAYMENT_METHODS.collect do |method|
+    PAYMENT_METHODS.collect do |method|
       [I18n.t("folio.console.boutique.order_refunds.payment_methods.#{method}"), method]
     end
   end
 
+  def allowed_payment_methods
+    original_method = original_payment.normalized_payment_method
+    original_method = nil unless PAYMENT_METHODS.include?(original_method)
+    [
+      original_method,
+      "VOUCHER"
+    ].compact
+  end
+
   def payment_method_label
-    self.class.payment_method_options.detect {|label, key| payment_method == key}&.first
+    self.class.payment_method_options.detect { |label, key| payment_method == key }&.first
   end
 
   def to_label
@@ -170,7 +178,40 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     end
   end
 
+  def handle_payout
+    case payment_method.to_s
+    when "BANK_ACCOUNT", "PAYMENT_CARD"
+      if original_payment.present?
+        handle_refund_by_payment_gateway
+      else
+        raise "original_payment is missing for #{self}"
+      end
+    when "PAYPAL"
+      handle_refund_by_paypal
+    when "VOUCHER"
+      handle_refund_by_voucher
+    else
+      raise "Unhandled payout for payment_method #{payment_method}"
+    end
+  end
+
   private
+    def handle_refund_by_payment_gateway
+      original_payment.payment_gateway.payout_order_refund(self)
+    end
+
+    def handle_refund_by_paypal
+      Boutique::OrderRefundMailer.payout_by_paypal(self).deliver_later
+    end
+
+    def handle_refund_by_voucher
+      Boutique::OrderRefundMailer.payout_by_voucher(self).deliver_later
+    end
+
+    def original_payment
+      order.payments.paid.last
+    end
+
     def subscription_data_validity
       return unless subscription.present?
 

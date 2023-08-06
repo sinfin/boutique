@@ -27,16 +27,16 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     assert_equal 0, bor.subscriptions_price_in_cents
 
     refund_from = Date.today - 1.day
-    refund_to = refund_from + 10.days
+    refund_to = refund_from + 10.days # => 11 days
 
     bor.setup_subscription_refund(refund_from, refund_to)
 
     assert_equal refund_from, bor.subscription_refund_from
     assert_equal refund_to, bor.subscription_refund_to
-    assert_equal (100 * 10 * price_per_day),
+    assert_equal (100 * 11 * price_per_day),
                   bor.subscriptions_price_in_cents
 
-    refund_to = sub_to - 2.days
+    refund_to = sub_to - 3.days # so price will be for  all - 2.days
 
     bor.setup_subscription_refund(refund_from, refund_to)
 
@@ -128,5 +128,91 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     bor.total_price_in_cents = -1
     assert_not bor.valid?
     assert_equal ["musí být větší než 0"], bor.errors[:total_price]
+  end
+
+  test "after pay! handle payout through PaymentGateway" do
+    order = create(:boutique_order, :paid)
+    order.payments.create!(payment_gateway_provider: :comgate, remote_id: "987654abc")
+    assert_equal %w[paid pending], order.payments.collect(&:aasm_state).sort
+
+    order_payment = order.payments.paid.first
+    assert_equal "go_pay", order_payment.payment_gateway_provider
+
+    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "BANK_ACCOUNT")
+
+    order_refund.expects(:handle_refund_by_payment_gateway).returns(true).once
+
+    order_refund.pay!
+  end
+
+  test "after pay! handle payout through PayPal" do
+    order = create(:boutique_order, :paid)
+    order_payment = order.payments.paid.first
+    order_payment.update!(payment_gateway_provider: :pay_pal)
+
+    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "PAYPAL")
+
+    order_refund.expects(:handle_refund_by_paypal).returns(true).once
+
+    order_refund.pay!
+  end
+
+  test "after pay! handle payout through Voucher" do
+    order = create(:boutique_order, :paid)
+    order_payment = order.payments.paid.first
+    order_payment.update!(payment_gateway_provider: :pay_pal)
+
+    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "VOUCHER")
+
+    order_refund.expects(:handle_refund_by_voucher).returns(true).once
+    order_refund.expects(:handle_refund_by_paypal).returns(true).never
+
+    order_refund.pay!
+  end
+
+
+  test "#handle_refund_by_payment_gateway" do
+    order = create(:boutique_order, :paid)
+    order.payments.create!(payment_gateway_provider: :comgate, remote_id: "987654abc")
+    assert_equal %w[paid pending], order.payments.collect(&:aasm_state).sort
+
+    order_payment = order.payments.paid.first
+    assert_equal "go_pay", order_payment.payment_gateway_provider
+
+    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "BANK_ACCOUNT")
+
+    gw_mock = mock("PaymentGateway").responds_like_instance_of(Boutique::PaymentGateway)
+    gw_mock.expects(:payout_order_refund).with(order_refund).returns(true).once
+    Boutique::PaymentGateway.expects(:new)
+                            .with(order_payment.payment_gateway_provider.to_sym)
+                            .returns(gw_mock)
+                            .once
+
+    order_refund.send(:handle_refund_by_payment_gateway)
+  end
+
+
+  test "#handle_refund_by_paypal" do
+    # PayPal: instrukce k vrácení prostředků do detailu vratky a e-mailu Admina (e-mail zákazníka, částka)
+    order_refund = create(:boutique_order_refund, :approved_to_pay, payment_method: "PAYPAL")
+
+    mailer_mock = mock("OrderRefundMailerInstance")
+    mailer_mock.expects(:deliver_later).returns(true).once
+    Boutique::OrderRefundMailer.expects(:payout_by_paypal).with(order_refund).returns(mailer_mock).once
+
+    order_refund.send(:handle_refund_by_paypal)
+  end
+
+  test "#handle_refund_by_voucher" do
+    # Voucher: popis poukazu s tokenem a odkaz k vrácení do detailu vratky a e-mailu Admina (e-mail zákazníka, token, částka, platnost)
+    # Platnost poukazů 90 dní s možností změnit v nastavení aplikace.
+
+    order_refund = create(:boutique_order_refund, :approved_to_pay, payment_method: "VOUCHER")
+
+    mailer_mock = mock("OrderRefundMailerInstance")
+    mailer_mock.expects(:deliver_later).returns(true).once
+    Boutique::OrderRefundMailer.expects(:payout_by_voucher).with(order_refund).returns(mailer_mock).once
+
+    order_refund.send(:handle_refund_by_voucher)
   end
 end

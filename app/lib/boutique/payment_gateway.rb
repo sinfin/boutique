@@ -37,7 +37,7 @@ class Boutique::PaymentGateway
   end
 
   def initialize(provider = nil)
-    @provider = provider || Boutique.config.payment_gateways[:default]
+    @provider = (provider || Boutique.config.payment_gateways[:default]).to_sym
     @provider_gateway = Boutique.config.payment_gateways[@provider]
     raise "Gateway instance not found for :#{@provider}, did you set it in `Boutique.config.payment_gateways`?" unless @provider_gateway
   end
@@ -92,6 +92,20 @@ class Boutique::PaymentGateway
         currency: payment.order.currency_code,
         amount_in_cents: amount * 100,
         reference_id: payment.order.number,
+      }
+    }
+
+    provider_gateway.refund_transaction(payment_data)
+  end
+
+  def payout_order_refund(order_refund)
+    payment = order_refund.order.payments.paid.last
+    payment_data = {
+      transaction_id: payment.remote_id,
+      payment: {
+        currency: order_refund.currency_code,
+        amount_in_cents: order_refund.total_price_in_cents,
+        reference_id: order_refund.document_number,
       }
     }
 

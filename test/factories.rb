@@ -140,6 +140,7 @@ FactoryBot.define do
     remote_id { 12345678 }
     aasm_state { "paid" }
     paid_at { 1.minute.ago }
+    payment_gateway_provider { :go_pay }
   end
 
   factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do
@@ -213,7 +214,6 @@ FactoryBot.define do
   factory :boutique_order_refund, class: "Boutique::OrderRefund" do
     order { create(:boutique_order, :paid, total_price: 123) }
 
-    sequence(:document_number) { |i| "23" + i.to_s.rjust(4, "0") }
     issue_date { Date.yesterday }
     due_date { issue_date + 14.days }
     date_of_taxable_supply { issue_date }
@@ -228,6 +228,7 @@ FactoryBot.define do
     trait :approved_to_pay do
       created
       aasm_state { "approved_to_pay" }
+      sequence(:document_number) { |i| "23" + i.to_s.rjust(4, "0") }
     end
 
     trait :paid do
