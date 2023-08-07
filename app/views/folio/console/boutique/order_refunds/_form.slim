@@ -1,0 +1,19 @@
+= form_header f
+
+= tabs %i[content]
+
+.tab-content
+  = tab :content
+    = f.input :issue_date
+    = f.input :due_date
+    = f.input :date_of_taxable_supply
+    = f.association :order
+    = f.input :reason, required: true
+    - if f.object.subscription_refund_from.present?
+      = f.input :subscription_refund_from
+      = f.input :subscription_refund_to
+      = f.input :subscriptions_price, disabled: true
+    = f.input :total_price
+    = f.input :payment_method, as: :select, collection: Boutique::OrderRefund.payment_method_options
+
+= form_footer f
