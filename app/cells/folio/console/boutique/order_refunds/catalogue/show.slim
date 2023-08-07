@@ -5,6 +5,11 @@
     ruby:
       show_link(:to_label)
 
+      attribute(:order) do
+        link_to(record.order.number,
+                controller.folio.url_for([:console, record.order]))
+      end
+
       attribute(:user) do
         if record.user.present?
           link_to(record.user.email,
@@ -19,6 +24,7 @@
       attribute(:payment_method_label)
 
       date :created_at
+      date :approved_at
       date :paid_at
 
       state

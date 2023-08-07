@@ -69,8 +69,10 @@ cs:
         items: Předměty
         issue_date: Datum vystavení
         order: Objednávka
-        paid_at: Zaplaceno
-        paid_at_range: Zaplaceno
+        paid_at: Vyplaceno
+        paid_at_range: Vylaceno
+        approved_at: Schváleno
+        approved_at_range: Schváleno
         cancelled_at: Stornováno
         payment_method: Způsob refundace
         payment_method_label: Způsob refundace
@@ -157,6 +159,7 @@ cs:
         keyword/ORDER_REFUND_URL: Odkaz na vratku
         keyword/TOTAL_PRICE_WITH_CURRENCY: Celková částka s měnou
         keyword/PAID_AT: Datum vyplacení
+        keyword/APPROVED_AT: Datum schválení k vyplacení
 
       folio/site:
         billing_name: Jméno

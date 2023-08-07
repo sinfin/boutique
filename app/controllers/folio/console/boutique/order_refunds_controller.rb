@@ -12,7 +12,7 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
     folio_console_record.date_of_taxable_supply = Date.today
     folio_console_record.total_price_in_cents = folio_console_record.order.total_price_in_cents
     folio_console_record.payment_method = "VOUCHER"
-    folio_console_record.setup_subscription_refund(Date.today)
+    folio_console_record.setup_subscription_refund
   end
 
   def show
@@ -20,17 +20,18 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
 
   def corrective_tax_documents
     data = ::CSV.generate(headers: true, col_sep: ",") do |csv|
-      csv << %i[document_number order paid_at email total_price].map do |a|
+      csv << %i[document_number order approved_at paid_at email total_price].map do |a|
         ::Boutique::OrderRefund.human_attribute_name(a)
       end
 
       @order_refunds.each do |order_refund|
         csv << [
-          order_refund.document_number,
+          order_refund.to_label,
           order_refund.order.number,
-          l(order_refund.paid_at, format: :as_date),
+          order_refund.approved_at.nil? ? "" : l(order_refund.approved_at, format: :as_date),
+          order_refund.paid_at.nil? ? "" : l(order_refund.paid_at, format: :as_date),
           order_refund.email,
-          order_refund.total_price
+          view_context.number_with_precision(order_refund.total_price, precision: 2, delimiter: " ")
         ]
       end
     end

@@ -74,6 +74,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_094730) do
     t.integer "total_price_in_cents", default: 0
     t.string "aasm_state"
     t.datetime "paid_at"
+    t.datetime "approved_at"
     t.datetime "cancelled_at"
     t.string "payment_method"
     t.datetime "created_at", null: false

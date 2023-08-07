@@ -130,7 +130,7 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     assert_equal ["musí být větší než 0"], bor.errors[:total_price]
   end
 
-  test "after pay! handle payout through PaymentGateway" do
+  test "after approve! handle payout through PaymentGateway" do
     order = create(:boutique_order, :paid)
     order.payments.create!(payment_gateway_provider: :comgate, remote_id: "987654abc")
     assert_equal %w[paid pending], order.payments.collect(&:aasm_state).sort
@@ -138,36 +138,36 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     order_payment = order.payments.paid.first
     assert_equal "go_pay", order_payment.payment_gateway_provider
 
-    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "BANK_ACCOUNT")
+    order_refund = create(:boutique_order_refund, :created, order:, payment_method: "BANK_ACCOUNT")
 
     order_refund.expects(:handle_refund_by_payment_gateway).returns(true).once
 
-    order_refund.pay!
+    order_refund.approve!
   end
 
-  test "after pay! handle payout through PayPal" do
+  test "after approve! handle payout through PayPal" do
     order = create(:boutique_order, :paid)
     order_payment = order.payments.paid.first
-    order_payment.update!(payment_gateway_provider: :pay_pal)
+    order_payment.update!(payment_gateway_provider: :paypal)
 
-    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "PAYPAL")
+    order_refund = create(:boutique_order_refund, :created, order:, payment_method: "PAYPAL")
 
     order_refund.expects(:handle_refund_by_paypal).returns(true).once
 
-    order_refund.pay!
+    order_refund.approve!
   end
 
-  test "after pay! handle payout through Voucher" do
+  test "after approve! handle payout through Voucher" do
     order = create(:boutique_order, :paid)
     order_payment = order.payments.paid.first
-    order_payment.update!(payment_gateway_provider: :pay_pal)
+    order_payment.update!(payment_gateway_provider: :paypal)
 
-    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "VOUCHER")
+    order_refund = create(:boutique_order_refund, :created, order:, payment_method: "VOUCHER")
 
     order_refund.expects(:handle_refund_by_voucher).returns(true).once
     order_refund.expects(:handle_refund_by_paypal).returns(true).never
 
-    order_refund.pay!
+    order_refund.approve!
   end
 
 

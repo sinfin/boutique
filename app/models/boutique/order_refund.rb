@@ -41,15 +41,16 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     event :approve do
       transitions from: :created, to: :approved_to_pay
       before do
+        self.approved_at = Time.current
         set_document_number
+        handle_payout
       end
     end
 
     event :pay, email_modal: true do
       transitions from: :approved_to_pay, to: :paid
       before do
-        handle_payout
-        self.paid_at = Time.zone.now
+        self.paid_at = Time.current
       end
     end
 
@@ -101,26 +102,34 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     self.class.payment_method_options.detect { |label, key| payment_method == key }&.first
   end
 
+  def to_long_label
+    "#{to_label} (#{order.to_label})"
+  end
+
   def to_label
-    "#{document_number || "##{id}"} (#{order.to_label})"
+    "#{document_number || "##{id}"}"
   end
 
   def set_document_number
     self.document_number ||= Boutique::OrderRefund.next_number(issue_date || Date.today)
   end
 
-  def setup_subscription_refund(date_from, date_to = nil)
+  def setup_subscription_refund(date_from = nil, date_to = nil)
     return unless subscription.present?
 
-    date_from = [[date_from, subscription_date_range.end].min, subscription_date_range.begin].max
-    date_to ||= subscription_date_range.end
-    date_to = [[date_to, subscription_date_range.begin].max, subscription_date_range.end].min
-    price = ((date_to.to_date - date_from.to_date) + 1) * subscription_price_per_day_in_cents
+    date_from = date_from.blank? ? subscription_date_range.begin : [date_from, subscription_date_range.end].min
+    date_to = date_to.blank? ? subscription_date_range.end : [date_to, subscription_date_range.begin].max
+
+    if [date_from, date_to] == [subscription_date_range.begin, subscription_date_range.end]
+      price_in_cents = order.subscription_line_item.unit_price * 100
+    else
+      price_in_cents = ((date_to.to_date - date_from.to_date) + 1) * subscription_price_per_day_in_cents
+    end
 
     self.subscription_refund_from = date_from
     self.subscription_refund_to = date_to
-    self.subscriptions_price_in_cents = price
-    self.total_price_in_cents = price
+    self.subscriptions_price_in_cents = price_in_cents
+    self.total_price_in_cents = price_in_cents
   end
 
   def subscription_price_per_day_in_cents

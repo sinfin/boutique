@@ -1,17 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::Boutique::OrderRefunds::Index::CorrectiveTaxDocumentsButtonCell < Folio::ConsoleCell
-  def button
-    label = [
-      content_tag(:i, nil, class: "fa fa-file-invoice-dollar"),
-      t(".label")
-    ].join
-
-    link_to(label,
-            url,
-            class: "btn btn-secondary f-c-index-header__btn")
-  end
-
   def url
     h = {
       by_query: controller.params[:by_query],

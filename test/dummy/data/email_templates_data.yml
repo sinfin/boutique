@@ -408,14 +408,14 @@
     - ORDER_REFUND_URL
     - USER_EMAIL
     - TOTAL_PRICE_WITH_CURRENCY
-    - PAID_AT
+    - APPROVED_AT
     - ORDER_REFUND_REASON
   title_cs: Vratka k vyplacení
   subject_cs: Nová vratka {ORDER_REFUND_TITLE} k vyplacení skrz PayPal
   subject_en: New Order Refund {ORDER_REFUND_TITLE} to payout through PayPal
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {PAID_AT} označená jako Vyplacená skrz PayPal.<br />
+    <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {APPROVED_AT} schválena k vyplacení skrz PayPal.<br />
        Prosím proveďte patřičné kroky k vrácení peněz uživateli.</p>
     </p>
 
@@ -426,7 +426,7 @@
     </p>
   body_text_cs: |
     Dobrý den,
-      vratka {ORDER_REFUND_TITLE} byla {PAID_AT} označená jako Vyplacená skrz PayPal.
+      vratka {ORDER_REFUND_TITLE} byla {APPROVED_AT} schválena k vyplacení skrz PayPal.
       Prosím proveďte patřičné kroky k vrácení peněz uživateli.
 
       Vratka: {ORDER_REFUND_URL}
@@ -436,7 +436,7 @@
 
   body_html_en: |
     <p>Hello,</p>
-    <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through PayPal. <br />
+    <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {APPROVED_AT} approved to payout through PayPal. <br />
        Please take the appropriate steps to return the money to the user.
     </p>
     <p>
@@ -446,7 +446,7 @@
     </p>
   body_text_en: |
     Hello,
-    Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through PayPal.
+    Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {APPROVED_AT} approved to payout through PayPal.
     Please take the appropriate steps to return the money to the user.
 
     Refund: {ORDER_REFUND_URL}
@@ -461,14 +461,14 @@
     - ORDER_REFUND_URL
     - USER_EMAIL
     - TOTAL_PRICE_WITH_CURRENCY
-    - PAID_AT
+    - APPROVED_AT
     - ORDER_REFUND_REASON
   title_cs: Vratka k vyplacení
   subject_cs: Nová vratka {ORDER_REFUND_TITLE} k vyplacení skrz Voucher
   subject_en: New Order Refund {ORDER_REFUND_TITLE} to payout through Voucher
   body_html_cs: |
     <p>Dobrý den,</p>
-    <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {PAID_AT} označená jako Vyplacená skrz Voucher.<br />
+    <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {APPROVED_AT} schválena k vyplacení skrz Voucher.<br />
        Prosím proveďte patřičné kroky k vrácení peněz uživateli.</p>
     </p>
 
@@ -479,7 +479,7 @@
     </p>
   body_text_cs: |
     Dobrý den,
-      vratka {ORDER_REFUND_TITLE} byla {PAID_AT} označená jako Vyplacená skrz Voucher.
+      vratka {ORDER_REFUND_TITLE} byla {APPROVED_AT} schválena k vyplacení skrz Voucher.
       Prosím proveďte patřičné kroky k vrácení peněz uživateli.
 
       Vratka: {ORDER_REFUND_URL}
@@ -489,7 +489,7 @@
 
   body_html_en: |
     <p>Hello,</p>
-    <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through Voucher. <br />
+    <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {APPROVED_AT} approved to payout through Voucher. <br />
        Please take the appropriate steps to return the money to the user.
     </p>
     <p>
@@ -499,12 +499,10 @@
     </p>
   body_text_en: |
     Hello,
-    Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through Voucher.
+    Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {APPROVED_AT} approved to payout through Voucher.
     Please take the appropriate steps to return the money to the user.
 
     Refund: {ORDER_REFUND_URL}
     User email: {USER_EMAIL}
     Amount to refund: {TOTAL_PRICE_WITH_CURRENCY}
     Reason of refund: {ORDER_REFUND_REASON}
-
-

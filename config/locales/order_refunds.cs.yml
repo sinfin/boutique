@@ -10,10 +10,13 @@ cs:
       boutique:
         order_refunds:
           show:
+            header: Vratka %{label}
             order_header: Objednávka %{order_label}
           edit:
+            header: Vratka %{label}
             order_header: Objednávka %{order_label}
           new:
+            header: Nová vratka pro objednávku %{order_number}
             order_header: Objednávka %{order_label}
           payment_methods:
             PAYMENT_CARD: Platba kartou
@@ -23,6 +26,8 @@ cs:
             PAYPAL: Paypal
             VOUCHER: Voucher
 
+          corrective_tax_documents:
+            filename: "Seznam_vratek"
           corrective_tax_document:
             title: "Opravný daňový doklad č. %{number}"
             customer: Odběratel

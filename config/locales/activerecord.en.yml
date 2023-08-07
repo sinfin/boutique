@@ -53,6 +53,7 @@ en:
         keyword/ORDER_REFUND_URL: Order Refund URL
         keyword/TOTAL_PRICE_WITH_CURRENCY: Total amount with currency
         keyword/PAID_AT: Date of refund payout
+        keyword/APPROVED_AT: Date of payout approval
 
       boutique/subscription:
         email_notifications: E-mails

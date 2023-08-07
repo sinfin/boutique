@@ -15,6 +15,7 @@ class CreateBoutiqueOrderRefunds < ActiveRecord::Migration[7.0]
       t.integer :total_price_in_cents, default: 0
       t.string :aasm_state
       t.datetime :paid_at
+      t.datetime :approved_at
       t.datetime :cancelled_at
       t.string :payment_method
 
