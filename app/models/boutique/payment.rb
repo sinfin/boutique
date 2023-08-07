@@ -30,8 +30,10 @@ class Boutique::Payment < Boutique::ApplicationRecord
     event :pay do
       transitions from: :pending, to: :paid
 
-      after do
+      after_commit do
         order.pay!
+      rescue AASM::InvalidTransition
+        raise "Order #{order.id} is in state #{order.aasm_state} and cannot be paid by payment ##{self.id}!"
       end
     end
 
@@ -60,7 +62,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
       self.order.lock!
 
       if pending?
-        self.payment_method = gateway_result_hash[:method]
+        self.payment_method = gateway_result_hash[:payment][:method]
 
         case gateway_result_hash[:state]
         when :paid
@@ -75,6 +77,8 @@ class Boutique::Payment < Boutique::ApplicationRecord
         when :expired, :timeouted
           timeout!
         end
+
+        self.save!
       end
     end
   end

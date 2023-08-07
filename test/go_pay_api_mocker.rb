@@ -25,7 +25,8 @@ module Boutique::Test
         response_hash = {
           transaction_id: 123,
           redirect_to: nil,
-          state:
+          state: ,
+          payment: { method: "PAYMENT_CARD" }
         }
 
         result = Boutique::PaymentGateway::ResponseStruct.new(
