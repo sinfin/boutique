@@ -151,6 +151,12 @@ cs:
         keyword/ORDER_SUMMARY_HTML: Shrnutí objednávky v HTML
         keyword/ORDER_SUMMARY_PLAIN: Shrnutí objednávky v plain textu
         keyword/ORDER_URL: Odkaz na objednávku
+        keyword/USER_EMAIL: E-mail uživatele
+        keyword/ORDER_REFUND_REASON: Důvod vrácení
+        keyword/ORDER_REFUND_TITLE: Název vratky
+        keyword/ORDER_REFUND_URL: Odkaz na vratku
+        keyword/TOTAL_PRICE_WITH_CURRENCY: Celková částka s měnou
+        keyword/PAID_AT: Datum vyplacení
 
       folio/site:
         billing_name: Jméno

@@ -400,3 +400,111 @@
   body_text_en: |
     Hello,
     we hope you're happy with your subscription. Your prepaid period expires in one week. You can easily renew your subscription on our website.
+
+- mailer: Boutique::OrderRefundMailer
+  action: payout_by_paypal
+  required_keywords:
+    - ORDER_REFUND_TITLE
+    - ORDER_REFUND_URL
+    - USER_EMAIL
+    - TOTAL_PRICE_WITH_CURRENCY
+    - PAID_AT
+    - ORDER_REFUND_REASON
+  title_cs: Vratka k vyplacení
+  subject_cs: Nová vratka {ORDER_REFUND_TITLE} k vyplacení skrz PayPal
+  subject_en: New Order Refund {ORDER_REFUND_TITLE} to payout through PayPal
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {PAID_AT} označená jako Vyplacená skrz PayPal.<br />
+       Prosím proveďte patřičné kroky k vrácení peněz uživateli.</p>
+    </p>
+
+    <p>
+      Email uživatele: {USER_EMAIL}<br/>
+      Částka k vrácení: {TOTAL_PRICE_WITH_CURRENCY}<br/>
+      Důvod vrácení: {ORDER_REFUND_REASON}
+    </p>
+  body_text_cs: |
+    Dobrý den,
+      vratka {ORDER_REFUND_TITLE} byla {PAID_AT} označená jako Vyplacená skrz PayPal.
+      Prosím proveďte patřičné kroky k vrácení peněz uživateli.
+
+      Vratka: {ORDER_REFUND_URL}
+      Email uživatele: {USER_EMAIL}
+      Částka k vrácení: {TOTAL_PRICE_WITH_CURRENCY}
+      Důvod vrácení: {ORDER_REFUND_REASON}
+
+  body_html_en: |
+    <p>Hello,</p>
+    <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through PayPal. <br />
+       Please take the appropriate steps to return the money to the user.
+    </p>
+    <p>
+      User email: {USER_EMAIL}<br/>
+      Amount to refund: {TOTAL_PRICE_WITH_CURRENCY}
+      Reason of refund: {ORDER_REFUND_REASON}
+    </p>
+  body_text_en: |
+    Hello,
+    Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through PayPal.
+    Please take the appropriate steps to return the money to the user.
+
+    Refund: {ORDER_REFUND_URL}
+    User email: {USER_EMAIL}
+    Amount to refund: {TOTAL_PRICE_WITH_CURRENCY}
+    Reason of refund: {ORDER_REFUND_REASON}
+
+- mailer: Boutique::OrderRefundMailer
+  action: payout_by_voucher
+  required_keywords:
+    - ORDER_REFUND_TITLE
+    - ORDER_REFUND_URL
+    - USER_EMAIL
+    - TOTAL_PRICE_WITH_CURRENCY
+    - PAID_AT
+    - ORDER_REFUND_REASON
+  title_cs: Vratka k vyplacení
+  subject_cs: Nová vratka {ORDER_REFUND_TITLE} k vyplacení skrz Voucher
+  subject_en: New Order Refund {ORDER_REFUND_TITLE} to payout through Voucher
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {PAID_AT} označená jako Vyplacená skrz Voucher.<br />
+       Prosím proveďte patřičné kroky k vrácení peněz uživateli.</p>
+    </p>
+
+    <p>
+      Email uživatele: {USER_EMAIL}<br/>
+      Částka k vrácení: {TOTAL_PRICE_WITH_CURRENCY}<br/>
+      Důvod vrácení: {ORDER_REFUND_REASON}
+    </p>
+  body_text_cs: |
+    Dobrý den,
+      vratka {ORDER_REFUND_TITLE} byla {PAID_AT} označená jako Vyplacená skrz Voucher.
+      Prosím proveďte patřičné kroky k vrácení peněz uživateli.
+
+      Vratka: {ORDER_REFUND_URL}
+      Email uživatele: {USER_EMAIL}
+      Částka k vrácení: {TOTAL_PRICE_WITH_CURRENCY}
+      Důvod vrácení: {ORDER_REFUND_REASON}
+
+  body_html_en: |
+    <p>Hello,</p>
+    <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through Voucher. <br />
+       Please take the appropriate steps to return the money to the user.
+    </p>
+    <p>
+      User email: {USER_EMAIL}<br/>
+      Amount to refund: {TOTAL_PRICE_WITH_CURRENCY}
+      Reason of refund: {ORDER_REFUND_REASON}
+    </p>
+  body_text_en: |
+    Hello,
+    Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {PAID_AT} marked as paid through Voucher.
+    Please take the appropriate steps to return the money to the user.
+
+    Refund: {ORDER_REFUND_URL}
+    User email: {USER_EMAIL}
+    Amount to refund: {TOTAL_PRICE_WITH_CURRENCY}
+    Reason of refund: {ORDER_REFUND_REASON}
+
+

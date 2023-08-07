@@ -518,6 +518,14 @@ class Boutique::Order < Boutique::ApplicationRecord
     "CZK"
   end
 
+  def currency_code
+    "CZK"
+  end
+
+  def currency_unit
+    "Kč"
+  end
+
   def invoice_title
     key = free? ? "title_free" : "title"
     I18n.t("boutique.orders.invoice.#{key}", number: invoice_number)
@@ -689,10 +697,6 @@ class Boutique::Order < Boutique::ApplicationRecord
         send(attr)
       end
     end
-  end
-
-  def currency_code
-    "CZK"
   end
 
   def self.console_sidebar_count

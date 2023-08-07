@@ -14,6 +14,8 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
 
   delegate :user,
            :email,
+           :site,
+           :currency_unit,
            :currency_code,
            :subscription,
            :primary_address,
