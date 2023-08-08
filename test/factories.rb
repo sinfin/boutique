@@ -228,6 +228,7 @@ FactoryBot.define do
     trait :approved_to_pay do
       created
       aasm_state { "approved_to_pay" }
+      approved_at { 1.minute.ago }
       sequence(:document_number) { |i| "23" + i.to_s.rjust(4, "0") }
     end
 

@@ -32,7 +32,8 @@ class Boutique::OrderRefundMailer < Boutique::ApplicationMailer
       TOTAL_PRICE_WITH_CURRENCY: number_to_currency(order_refund.total_price,
                                                     unit: order_refund.currency_unit,
                                                     precision: 2,
-                                                    delimiter: " ")
+                                                    delimiter: " "),
+      VOUCHER_VALID_TO: I18n.l((order_refund.approved_at + Boutique.config.order_refund_voucher_validity_in_days.days).to_date)
     }
     site = find_site(order_refund)
 

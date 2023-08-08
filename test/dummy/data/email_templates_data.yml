@@ -463,13 +463,15 @@
     - TOTAL_PRICE_WITH_CURRENCY
     - APPROVED_AT
     - ORDER_REFUND_REASON
+    - VOUCHER_VALID_TO
   title_cs: Vratka k vyplacení
   subject_cs: Nová vratka {ORDER_REFUND_TITLE} k vyplacení skrz Voucher
   subject_en: New Order Refund {ORDER_REFUND_TITLE} to payout through Voucher
   body_html_cs: |
     <p>Dobrý den,</p>
     <p>vratka <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> byla {APPROVED_AT} schválena k vyplacení skrz Voucher.<br />
-       Prosím proveďte patřičné kroky k vrácení peněz uživateli.</p>
+       Prosím proveďte patřičné kroky k zaslání voucheru uživateli.<br />
+       Platnost voucheru by měla být do {VOUCHER_VALID_TO}.
     </p>
 
     <p>
@@ -480,7 +482,8 @@
   body_text_cs: |
     Dobrý den,
       vratka {ORDER_REFUND_TITLE} byla {APPROVED_AT} schválena k vyplacení skrz Voucher.
-      Prosím proveďte patřičné kroky k vrácení peněz uživateli.
+      Prosím proveďte patřičné kroky k zaslání voucheru uživateli.
+      Platnost voucheru by měla být do {VOUCHER_VALID_TO}.
 
       Vratka: {ORDER_REFUND_URL}
       Email uživatele: {USER_EMAIL}
@@ -490,7 +493,8 @@
   body_html_en: |
     <p>Hello,</p>
     <p>Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {APPROVED_AT} approved to payout through Voucher. <br />
-       Please take the appropriate steps to return the money to the user.
+       Please take the appropriate steps to send voucher to the user.<br />
+       Voucher validity should be to {VOUCHER_VALID_TO}.
     </p>
     <p>
       User email: {USER_EMAIL}<br/>
@@ -500,7 +504,8 @@
   body_text_en: |
     Hello,
     Order Refund <a href="{ORDER_REFUND_URL}">{ORDER_REFUND_TITLE}</a> was at {APPROVED_AT} approved to payout through Voucher.
-    Please take the appropriate steps to return the money to the user.
+    Please take the appropriate steps to send voucher to the user.
+    Voucher validity should be to {VOUCHER_VALID_TO}.
 
     Refund: {ORDER_REFUND_URL}
     User email: {USER_EMAIL}

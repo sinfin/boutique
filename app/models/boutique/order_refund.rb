@@ -179,7 +179,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     if [date_from, date_to] == [subscription_date_range.begin, subscription_date_range.end]
       price_in_cents = order.subscription_line_item.unit_price * 100
     else
-      price_in_cents = ((date_to.to_date - date_from.to_date) + 1) * subscription_price_per_day_in_cents
+      price_in_cents = (date_to.to_date - date_from.to_date) * subscription_price_per_day_in_cents
     end
 
     self.subscription_refund_from = date_from

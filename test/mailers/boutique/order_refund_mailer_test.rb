@@ -12,7 +12,7 @@ class Boutique::OrderRefundMailerTest < ActionMailer::TestCase
   test "payout by paypal" do
     order = create(:boutique_order, :paid, email: "me@home.com", site: @site)
     assert_equal "CZK", order.currency_code
-    order_refund = create(:boutique_order_refund, :paid,
+    order_refund = create(:boutique_order_refund, :approved_to_pay,
                                                   order:,
                                                   payment_method: "PAYPAL",
                                                   total_price_in_cents: 15800,)
@@ -31,7 +31,7 @@ class Boutique::OrderRefundMailerTest < ActionMailer::TestCase
   test "payout by voucher" do
     order = create(:boutique_order, :paid, email: "me@home.com", site: @site)
     assert_equal "CZK", order.currency_code
-    order_refund = create(:boutique_order_refund, :paid,
+    order_refund = create(:boutique_order_refund, :approved_to_pay,
                                                   order:,
                                                   payment_method: "VOUCHER",
                                                   total_price_in_cents: 15800,)

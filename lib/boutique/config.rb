@@ -20,7 +20,8 @@ module Boutique
                   :folio_console_collection_includes_for_order_refunds,
                   :orders_edit_recurrency_title_proc,
                   :payment_gateways,
-                  :email_template_data_defaults_proc
+                  :email_template_data_defaults_proc,
+                  :order_refund_voucher_validity_in_days
 
     def initialize
       # set defaults here
@@ -51,6 +52,7 @@ module Boutique
         go_pay: nil
       }
       @email_template_data_defaults_proc = -> (model) { {} }
+      @order_refund_voucher_validity_in_days = 90
     end
   end
 

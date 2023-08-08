@@ -27,16 +27,16 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     assert_equal 0, bor.subscriptions_price_in_cents
 
     refund_from = Date.today - 1.day
-    refund_to = refund_from + 10.days # => 11 days
+    refund_to = refund_from + 10.days
 
     bor.setup_subscription_refund(refund_from, refund_to)
 
     assert_equal refund_from, bor.subscription_refund_from
     assert_equal refund_to, bor.subscription_refund_to
-    assert_equal (100 * 11 * price_per_day),
+    assert_equal (100 * 10 * price_per_day),
                   bor.subscriptions_price_in_cents
 
-    refund_to = sub_to - 3.days # so price will be for  all - 2.days
+    refund_to = sub_to - 2.days
 
     bor.setup_subscription_refund(refund_from, refund_to)
 
@@ -170,7 +170,6 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     order_refund.approve!
   end
 
-
   test "#handle_refund_by_payment_gateway" do
     order = create(:boutique_order, :paid)
     order.payments.create!(payment_gateway_provider: :comgate, remote_id: "987654abc")
@@ -190,7 +189,6 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
 
     order_refund.send(:handle_refund_by_payment_gateway)
   end
-
 
   test "#handle_refund_by_paypal" do
     # PayPal: instrukce k vrácení prostředků do detailu vratky a e-mailu Admina (e-mail zákazníka, částka)
