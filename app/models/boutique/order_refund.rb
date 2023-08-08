@@ -23,6 +23,52 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
            :full_name,
            to: :order
 
+  scope :ordered, -> { order(approved_at: :desc, id: :desc) }
+
+  scope :by_state, -> (state) { where(aasm_state: state) }
+
+  scope :by_product_type_keyword, -> (keyword) {
+    case keyword
+    when "subscription"
+      where.not(subscription_refund_from: nil)
+    when "basic"
+      where(subscription_refund_from: nil)
+    when nil
+      all
+    else
+      none
+    end
+  }
+
+  scope :by_paid_at_range, -> (range_str) {
+    from, to = range_str.split(/ ?- ?/)
+
+    runner = self
+
+    if from.present?
+      from_date_time = DateTime.parse(from)
+      runner = runner.where("paid_at >= ?", from_date_time)
+    end
+
+    if to.present?
+      to = "#{to} 23:59" if to.exclude?(":")
+      to_date_time = DateTime.parse(to)
+      runner = runner.where("paid_at <= ?", to_date_time)
+    end
+
+    runner
+  }
+
+  scope :by_payment_method, -> (method) { where(payment_method: method) }
+
+  pg_search_scope :by_query,
+                  against: %i[document_number],
+                  associated_against: {
+                    order: %i[number email],
+                  },
+                  ignoring: :accents,
+                  using: { tsearch: { prefix: true } }
+
   validates :order, :issue_date, :due_date, :date_of_taxable_supply, presence: true
   validates :document_number, uniqueness: true, allow_nil: true
   validates :due_date, comparison: { greater_than_or_equal_to: :issue_date }
@@ -112,6 +158,16 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
 
   def set_document_number
     self.document_number ||= Boutique::OrderRefund.next_number(issue_date || Date.today)
+  end
+
+  def setup_from(order)
+    self.boutique_order_id = order.id
+    self.issue_date ||= Date.today
+    self.due_date ||= Date.today + 14.days
+    self.date_of_taxable_supply ||= Date.today
+    self.total_price_in_cents = order.total_price_in_cents
+    self.payment_method ||= "VOUCHER"
+    setup_subscription_refund
   end
 
   def setup_subscription_refund(date_from = nil, date_to = nil)

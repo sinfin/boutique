@@ -18,6 +18,8 @@ cs:
           new:
             header: Nová vratka pro objednávku %{order_number}
             order_header: Objednávka %{order_label}
+          form:
+            maximal_price_is: Maximální částka je %{price}
           payment_methods:
             PAYMENT_CARD: Platba kartou
             BANK_ACCOUNT: Bankovní převod
@@ -55,3 +57,9 @@ cs:
             total_price_without_vat: Celkem bez DPH
             total_price_vat: DPH %{value} %
             total_price: Celkem
+          tabs:
+            index: Vše
+            created: Vytvořené
+            approved: Schválené
+            paid: Vyplacené
+            cancelled: Stornované

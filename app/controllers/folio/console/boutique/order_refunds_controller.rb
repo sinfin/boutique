@@ -3,16 +3,30 @@
 class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseController
   folio_console_controller_for "Boutique::OrderRefund", csv: true
 
+  before_action :filter_order_refunds_by_tab, only: %i[index corrective_tax_documents]
+  before_action :filter_orders_refunds_with_documents, only: %i[corrective_tax_documents]
+
+
+  def index
+    @order_refunds = @order_refunds.ordered
+    @order_refunds_scope = @order_refunds
+
+    respond_with(@order_refunds) do |format|
+      format.html do
+        @pagy, @order_refunds = pagy(@order_refunds)
+        render "folio/console/boutique/order_refunds/index"
+      end
+      format.csv do
+        @order_refunds = @order_refunds.includes(:primary_address, :secondary_address)
+        render_csv(@order_refunds)
+      end
+    end
+  end
+
   def new
     super
 
-    folio_console_record.boutique_order_id = params[:order_id]
-    folio_console_record.issue_date = Date.today
-    folio_console_record.due_date = Date.today + 14.days
-    folio_console_record.date_of_taxable_supply = Date.today
-    folio_console_record.total_price_in_cents = folio_console_record.order.total_price_in_cents
-    folio_console_record.payment_method = "VOUCHER"
-    folio_console_record.setup_subscription_refund
+    folio_console_record.setup_from(Boutique::Order.find(params[:order_id]))
   end
 
   def show
@@ -54,11 +68,70 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
             .permit(*(@klass.column_names - %w[id site_id] + %w[total_price subscriptions_price]))
     end
 
+    def index_tabs
+      base_hash = {}
+
+      index_filters_keys.each do |key|
+        if params[key].present?
+          base_hash[key] = params[key]
+        end
+      end
+
+      tab = params[:tab]
+
+      [nil, "created", "approved", "paid", "cancelled"].map do |tab_param|
+        {
+          force_href: url_for([:console, @klass, base_hash.merge(tab: tab_param)]),
+          force_active: tab_param == tab,
+          label: t(".tabs.#{tab_param || "index"}")
+        }
+      end
+    end
+
     def index_filters
-      {}
+      @index_filters ||= {
+        tab: {
+          as: :hidden,
+        },
+      }.merge(Boutique.config.folio_console_additional_filters_for_orders)
+       .merge(
+        by_product_type_keyword: [
+          [I18n.t("folio.console.boutique.orders.index.filters.by_product_type_keyword/subscription"), "subscription"],
+          [I18n.t("folio.console.boutique.orders.index.filters.by_product_type_keyword/basic"), "basic"],
+        ],
+        by_payment_method: {
+          as: :collection,
+          collection: Boutique::OrderRefund.payment_method_options,
+          width: 220,
+        },
+        by_paid_at_range: {
+          as: :date_range,
+        },
+
+      )
+    end
+
+    def filter_order_refunds_by_tab
+      case params[:tab]
+      when nil
+        @order_refunds = @order_refunds
+      when "created"
+        @order_refunds = @order_refunds.created
+      when "approved"
+        @order_refunds = @order_refunds.approved_to_pay
+      when "paid"
+        @order_refunds = @order_refunds.paid
+      when "cancelled"
+        @order_refunds = @order_refunds.cancelled
+      end
+    end
+
+    def filter_orders_refunds_with_documents
+      @order_refunds = @order_refunds.reorder(document_number: :asc)
+                       .where.not(document_number: nil)
     end
 
     def folio_console_collection_includes
-      []
+      Boutique.config.folio_console_collection_includes_for_order_refunds
     end
 end

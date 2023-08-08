@@ -70,12 +70,13 @@ cs:
         issue_date: Datum vystavení
         order: Objednávka
         paid_at: Vyplaceno
-        paid_at_range: Vylaceno
+        paid_at_range: Vyplaceno
         approved_at: Schváleno
         approved_at_range: Schváleno
         cancelled_at: Stornováno
         payment_method: Způsob refundace
         payment_method_label: Způsob refundace
+        product_type_keyword: Druh produktu
         reason: Důvod opravy
         subscription_refund_from: Počáteční den refundovaného období včetně
         subscription_refund_to: Poslední den refundovaného období včetně

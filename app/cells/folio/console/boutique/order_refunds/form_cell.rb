@@ -2,6 +2,7 @@
 
 class Folio::Console::Boutique::OrderRefunds::FormCell < Folio::ConsoleCell
   include Folio::Console::TabsHelper
+  include ActionView::Helpers::NumberHelper
 
   def f
     model
@@ -9,6 +10,10 @@ class Folio::Console::Boutique::OrderRefunds::FormCell < Folio::ConsoleCell
 
   def order_refund
     model.object
+  end
+
+  def order
+    order_refund.order
   end
 
   def allowed_payment_method_options
