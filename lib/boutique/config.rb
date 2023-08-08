@@ -17,9 +17,11 @@ module Boutique
                   :folio_console_collection_includes_for_orders,
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
+                  :folio_console_collection_includes_for_order_refunds,
                   :orders_edit_recurrency_title_proc,
                   :payment_gateways,
-                  :email_template_data_defaults_proc
+                  :email_template_data_defaults_proc,
+                  :order_refund_voucher_validity_in_days
 
     def initialize
       # set defaults here
@@ -38,6 +40,7 @@ module Boutique
       @folio_console_collection_includes_for_orders = [:user, line_items: { product_variant: :product }]
       @folio_console_collection_includes_for_products = [cover_placement: :file]
       @folio_console_additional_filters_for_orders = {}
+      @folio_console_collection_includes_for_order_refunds = [:order]
       @orders_edit_recurrency_title_proc = -> (context:, current_site:, period:, price:, product:) do
         current_site.recurring_payment_disclaimer
                     .to_s
@@ -49,6 +52,7 @@ module Boutique
         go_pay: nil
       }
       @email_template_data_defaults_proc = -> (model) { {} }
+      @order_refund_voucher_validity_in_days = 90
     end
   end
 

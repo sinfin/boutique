@@ -47,6 +47,13 @@ en:
         keyword/ORDER_SUMMARY_HTML: Order summary in HTML
         keyword/ORDER_SUMMARY_PLAIN: Order summary in plain text
         keyword/ORDER_URL: Order URL
+        keyword/USER_EMAIL: User e-mail address
+        keyword/ORDER_REFUND_REASON: Refund reason
+        keyword/ORDER_REFUND_TITLE: Order refund title
+        keyword/ORDER_REFUND_URL: Order Refund URL
+        keyword/TOTAL_PRICE_WITH_CURRENCY: Total amount with currency
+        keyword/PAID_AT: Date of refund payout
+        keyword/APPROVED_AT: Date of payout approval
 
       boutique/subscription:
         email_notifications: E-mails

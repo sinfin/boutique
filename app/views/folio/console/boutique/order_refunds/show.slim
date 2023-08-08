@@ -1,0 +1,28 @@
+= show_header @order_refund, title: t(".header", label: @order_refund.to_label)
+.row
+  .col-lg-6.mb-5
+    = show_for(@order_refund) do |s|
+      = s.attribute :issue_date, format: :default
+      = s.attribute :due_date, format: :default
+      = s.attribute :date_of_taxable_supply, format: :default
+      = s.attribute :reason, required: true
+      - if s.object.subscription_refund_from.present?
+        = s.attribute :subscription_refund_from, format: :default
+        = s.attribute :subscription_refund_to, format: :default
+        = s.attribute :subscriptions_price
+          = folio_price(s.object.subscriptions_price)
+      = s.attribute :total_price
+        = folio_price(s.object.total_price)
+      = s.attribute :payment_method_label
+      = s.attribute(:corrective_tax_document)
+        - if s.object.document_number.present?
+          = link_to(s.object.document_number,
+                    controller.boutique.corrective_tax_document_path(s.object.secret_hash),
+                    target: "_blank")
+      = s.attribute :paid_at
+      = s.attribute :cancelled_at
+
+
+  .col-lg-6.mb-5
+    h2 = t(".order_header", order_label: @order_refund.order.to_label)
+    == cell("folio/console/boutique/orders/show", @order_refund.order)

@@ -1,0 +1,52 @@
+table.b-order-refunds-corrective-tax-document__plain-table
+  tbody
+    tr
+      td.b-order-refunds-corrective-tax-document__payment-td-first
+        .mt-4.mt-md-0
+          table.w-100
+            tbody
+              tr
+                td.b-order-refunds-corrective-tax-document__payment-cell.pr-2
+                  = t('.payment_method')
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  = payment_method_text
+              tr
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  .pr-2 = t('.variable_symbol')
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  = model.document_number
+              tr
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  .pr-2 = t('.order_number')
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  = model.order.number
+
+      td.b-order-refunds-corrective-tax-document__payment-td-second
+        .mt-4.mt-md-0.w-100
+          table.w-100
+            tbody
+              tr
+                td.b-order-refunds-corrective-tax-document__payment-cell.pr-2
+                  = t('.taxable_fulfillment_due_date')
+
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  = l(model.date_of_taxable_supply)
+
+              tr
+                td.b-order-refunds-corrective-tax-document__payment-cell.pr-2
+                  = t('.issued_on_date')
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  = l(model.issue_date)
+
+              tr
+                td.b-order-refunds-corrective-tax-document__payment-cell.pr-2
+                  = t('.due_date')
+                td.b-order-refunds-corrective-tax-document__payment-cell
+                  = l(model.due_date)
+
+              - if model.paid_at.present?
+                tr
+                  td.b-order-refunds-corrective-tax-document__payment-cell.pr-2
+                    = t('.paid_at')
+                  td.b-order-refunds-corrective-tax-document__payment-cell
+                    = l(model.paid_at, format: :as_date)

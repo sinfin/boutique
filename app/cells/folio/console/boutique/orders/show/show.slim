@@ -1,0 +1,72 @@
+= show_for model do |s|
+  = s.attribute(:user)
+    - if s.object.user.present?
+      a[
+        href=controller.folio.url_for([:console, s.object.user])
+        target='_blank'
+      ] = s.object.user.to_label
+
+  = s.attribute(:email)
+    = mail_to s.object.email, s.object.email
+
+
+  = s.attribute(:created_at)
+  = s.attribute(:confirmed_at, if_blank: "–")
+  = s.attribute(:paid_at, if_blank: "–")
+
+  - unless s.object.digital_only?
+    = s.attribute(:dispatched_at, if_blank: "–")
+
+  - if s.object.cancelled_at.present?
+    = s.attribute(:cancelled_at)
+
+  - if s.object.gift?
+    = s.attribute(:gift_recipient)
+      - if s.object.gift_recipient.present?
+        a[
+          href=controller.folio.url_for([:console, s.object.gift_recipient])
+          target='_blank'
+        ] = s.object.gift_recipient.to_label
+      - else
+        = s.object.gift_recipient_full_name
+
+    = s.attribute(:gift_recipient_email)
+      = mail_to s.object.gift_recipient_email, s.object.gift_recipient_email
+
+    - if s.object.gift_recipient_notification_scheduled_for?
+      = s.attribute(:gift_recipient_notification_scheduled_for)
+
+
+  = s.attribute(:line_items)
+    ul
+      - s.object.line_items.each do |li|
+        li = li.to_console_label
+
+  = s.attribute(:line_items_price)
+    = folio_price(s.object.line_items_price)
+
+  - if s.object.requires_address?
+    = s.attribute(:shipping_price)
+      = folio_price(s.object.shipping_price)
+
+  = s.attribute(:total_price)
+    = folio_price(s.object.total_price)
+
+  - if s.object.invoice_number?
+    = s.attribute(:invoice)
+      = link_to(s.object.invoice_number,
+                controller.boutique.invoice_path(s.object.secret_hash),
+                target: "_blank")
+
+  - if s.object.shipping_method.present?
+    = s.attribute(:package_label, if_blank: "–")
+      - if s.object.package_remote_id.present?
+        a href=controller.folio.download_label_console_order_path(s.object)
+          = s.object.package_remote_id
+          '
+          i.fa.fa-file-download
+
+    = s.attribute(:package_tracking_url, if_blank: "–")
+      - if s.object.package_tracking_id.present?
+        a href=s.object.package_tracking_url target="_blank"
+          = s.object.package_tracking_id

@@ -88,7 +88,11 @@ class Boutique::Payment < Boutique::ApplicationRecord
   end
 
   def payment_gateway
-    order.payment_gateway
+    @payment_gateway ||= if payment_gateway_provider.blank?
+      order.payment_gateway
+    else
+      Boutique::PaymentGateway.new(payment_gateway_provider.to_sym)
+    end
   end
 
   def payment_method_to_human
@@ -97,6 +101,49 @@ class Boutique::Payment < Boutique::ApplicationRecord
 
   def self.payment_method_to_human(payment_method_string)
     I18n.t("boutique.payment_gateways.payment_method.#{payment_method_string}", fallback: payment_method_string.capitalize)
+  end
+
+  def normalized_payment_method
+    # PAYMENT_CARD
+    # BANK_ACCOUNT
+    # GOOGLE_PAY
+    # APPLE_PAY
+    # GOPAY
+    # PAYPAL
+    # PREMIUM_SMS
+    # PAYSAFECARD  #PaySafeCard kupón
+    # BITCOIN
+    # CLICK_TO_PAY
+
+    case payment_gateway_provider
+    when "go_pay"
+      case payment_method
+      when "MPAYMENT"
+        "BANK_ACCOUNT"
+      when "PRSMS"
+        "PREMIUM_SMS"
+      when "GPAY"
+        "GOOGLE_PAY"
+      else
+        payment_method
+      end
+    when "comgate"
+      if payment_method.start_with?("CARD_")
+        "PAYMENT_CARD"
+      elsif payment_method.start_with?("BANK_")
+        "BANK_ACCOUNT"
+      elsif payment_method.start_with?("GOOGLE_")
+        "GOOGLE_PAY"
+      elsif payment_method.start_with?("APPLE_")
+        "APPLE_PAY"
+      else
+        payment_method
+      end
+    when "paypal"
+      "PAYPAL"
+    else
+      payment_method
+    end
   end
 end
 

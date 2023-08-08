@@ -1,0 +1,23 @@
+.b-order-refunds-corrective-tax-document
+  .b-order-refunds-corrective-tax-document__container
+    .row.pb-g
+      - if Boutique.config.logo_path.present?
+        .col-4
+          a.b-order-refunds-corrective-tax-document__logo href="/"
+              = image({ normal: Boutique.config.logo_path },
+                      "70x70#",
+                      class: "b-order-refunds-corrective-tax-document__logo-img")
+      .col.text-right
+        h3.mt-0
+          = model.corrective_tax_document_title
+
+    = render(:_header)
+    hr.my-s
+    = render(:_payment_details)
+    hr.my-s
+      .b-order-refunds-corrective-tax-document__reason
+        span.font-weight-bold.b-order-refunds-corrective-tax-document__reason-label = t('.reason')
+        span.b-order-refunds-corrective-tax-document__reason-text = model.reason
+
+    hr.mt-4.mb-0
+    = render(:_table)

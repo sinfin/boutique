@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_02_094730) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -59,6 +59,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.string "title"
     t.index ["boutique_order_id"], name: "index_boutique_line_items_on_boutique_order_id"
     t.index ["boutique_product_variant_id"], name: "index_boutique_line_items_on_boutique_product_variant_id"
+  end
+
+  create_table "boutique_order_refunds", force: :cascade do |t|
+    t.string "document_number"
+    t.string "secret_hash"
+    t.bigint "boutique_order_id", null: false
+    t.string "aasm_state"
+    t.date "issue_date"
+    t.date "due_date"
+    t.date "date_of_taxable_supply"
+    t.text "reason"
+    t.date "subscription_refund_from"
+    t.date "subscription_refund_to"
+    t.integer "subscriptions_price_in_cents", default: 0
+    t.integer "total_price_in_cents", default: 0
+    t.string "payment_method"
+    t.datetime "paid_at"
+    t.datetime "approved_at"
+    t.datetime "cancelled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["boutique_order_id"], name: "index_boutique_order_refunds_on_boutique_order_id"
   end
 
   create_table "boutique_orders", force: :cascade do |t|
@@ -712,6 +734,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
 
   add_foreign_key "boutique_line_items", "boutique_orders"
   add_foreign_key "boutique_line_items", "boutique_product_variants"
+  add_foreign_key "boutique_order_refunds", "boutique_orders"
   add_foreign_key "boutique_orders", "boutique_shipping_methods", column: "shipping_method_id"
   add_foreign_key "boutique_orders", "boutique_subscriptions"
   add_foreign_key "boutique_orders", "boutique_vouchers"

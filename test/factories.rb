@@ -140,6 +140,7 @@ FactoryBot.define do
     remote_id { 12345678 }
     aasm_state { "paid" }
     paid_at { 1.minute.ago }
+    payment_gateway_provider { :go_pay }
   end
 
   factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do
@@ -207,6 +208,39 @@ FactoryBot.define do
 
     trait :with_phone do
       phone { "+420604123456" }
+    end
+  end
+
+  factory :boutique_order_refund, class: "Boutique::OrderRefund" do
+    order { create(:boutique_order, :paid, total_price: 123) }
+
+    issue_date { Date.yesterday }
+    due_date { issue_date + 14.days }
+    date_of_taxable_supply { issue_date }
+    reason { "Something was wrong" }
+    total_price_in_cents { order.total_price_in_cents }
+    payment_method { "VOUCHER" }
+
+    trait :created do
+      aasm_state { "created" }
+    end
+
+    trait :approved_to_pay do
+      created
+      aasm_state { "approved_to_pay" }
+      approved_at { 1.minute.ago }
+      sequence(:document_number) { |i| "23" + i.to_s.rjust(4, "0") }
+    end
+
+    trait :paid do
+      approved_to_pay
+      aasm_state { "paid" }
+      paid_at { 1.minute.ago }
+    end
+
+    trait :cancelled do
+      aasm_state { "cancelled" }
+      cancelled_at { 1.minute.ago }
     end
   end
 end
