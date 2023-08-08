@@ -26,6 +26,9 @@
               - else
                 = t('.unpaid')
 
+          - model.refunds.each do |refund|
+            ==cell("boutique/order_refunds/line", refund)
+
           .mt-4
             - if model.is_unpaid?
               = payment_methods_form do |f|

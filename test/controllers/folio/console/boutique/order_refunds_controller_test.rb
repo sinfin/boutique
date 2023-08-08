@@ -16,8 +16,38 @@ class Folio::Console::Boutique::OrderRefundsControllerTest < Folio::Console::Bas
     get url_for([:console, Boutique::OrderRefund])
 
     assert_response :success
+    assert_select ".f-c-catalogue__cell--order a", text: bo_created.order.number, count: 1
+    assert_select ".f-c-catalogue__cell--order a", text: bo_to_pay.order.number, count: 1
+    assert_select ".f-c-catalogue__cell--order a", text: bo_paid.order.number, count: 1
+    assert_select ".f-c-catalogue__cell--order a", text: bo_cancelled.order.number, count: 1
 
-    skip "test state tabs"
+    get url_for([:console, Boutique::OrderRefund, params: { tab: "created" }])
+
+    assert_select ".f-c-catalogue__cell--order a", text: bo_created.order.number, count: 1
+    assert_select ".f-c-catalogue__cell--order a", text: bo_to_pay.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_paid.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_cancelled.order.number, count: 0
+
+    get url_for([:console, Boutique::OrderRefund, params: { tab: "approved" }])
+
+    assert_select ".f-c-catalogue__cell--order a", text: bo_created.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_to_pay.order.number, count: 1
+    assert_select ".f-c-catalogue__cell--order a", text: bo_paid.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_cancelled.order.number, count: 0
+
+    get url_for([:console, Boutique::OrderRefund, params: { tab: "paid" }])
+
+    assert_select ".f-c-catalogue__cell--order a", text: bo_created.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_to_pay.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_paid.order.number, count: 1
+    assert_select ".f-c-catalogue__cell--order a", text: bo_cancelled.order.number, count: 0
+
+    get url_for([:console, Boutique::OrderRefund, params: { tab: "cancelled" }])
+
+    assert_select ".f-c-catalogue__cell--order a", text: bo_created.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_to_pay.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_paid.order.number, count: 0
+    assert_select ".f-c-catalogue__cell--order a", text: bo_cancelled.order.number, count: 1
   end
 
   test "new for subscription order " do

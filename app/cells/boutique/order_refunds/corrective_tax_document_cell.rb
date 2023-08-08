@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Boutique::OrderRefunds::CorrectiveTaxDocumentCell < Folio::ConsoleCell
+class Boutique::OrderRefunds::CorrectiveTaxDocumentCell < ApplicationCell
   def billing_address
     @billing_address ||= model.secondary_address || model.primary_address
   end

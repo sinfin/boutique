@@ -1,0 +1,17 @@
+.b-order-refunds-line
+  .d-flex.align-items-center
+    .mr-g.font-weight-bold
+      = t(".title")
+
+    .mr-g
+      = folio_price(model.total_price)
+      = date_range
+    .mr-g
+      - if model.cancelled?
+        = t('.cancelled')
+      - elsif model.paid?
+        = t('.paid')
+      - elsif model.approved_to_pay?
+        = t('.approved')
+    .mr-g
+      = link_to_document

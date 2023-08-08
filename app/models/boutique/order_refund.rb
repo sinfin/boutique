@@ -2,6 +2,7 @@
 
 class Boutique::OrderRefund < Boutique::ApplicationRecord
   include Folio::HasAasmStates
+  include Folio::HasSecretHash
 
   PAYMENT_METHODS = %w[
     PAYMENT_CARD
@@ -24,6 +25,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
            to: :order
 
   scope :ordered, -> { order(approved_at: :desc, id: :desc) }
+  scope :with_document, -> { where.not(document_number: nil) }
 
   scope :by_state, -> (state) { where(aasm_state: state) }
 
@@ -103,6 +105,10 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     event :cancel do
       transitions from: states.without(:cancelled), to: :cancelled
     end
+  end
+
+  def self.secret_hash_length
+    16
   end
 
   def self.next_number(d_day)
@@ -216,7 +222,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   end
 
   def corrective_tax_document_title
-    I18n.t("folio.console.boutique.order_refunds.corrective_tax_document.title", number: document_number)
+    I18n.t("boutique.order_refunds.corrective_tax_document.title", number: document_number)
   end
 
   LineItemStruct = Struct.new(:to_label, :price, :vat_rate_value, keyword_init: true) do

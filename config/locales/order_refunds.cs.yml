@@ -5,6 +5,41 @@ cs:
       events:
         pay:
           email_subject: "Vrácení platby - objednávka %{order_number}"
+    order_refunds:
+      corrective_tax_document:
+        title: "Opravný daňový doklad č. %{number}"
+        customer: Odběratel
+        supplier: Dodavatel
+        country_name:
+          CZ: Česká republika
+          SK: Slovenská republika
+
+        payment_method: "Způsob úhrady: "
+        payment_method_card: Platební karta
+        bank_account_number: "Bankovní spojení: "
+        variable_symbol: "Variabilní symbol: "
+        order_number:  "Číslo objednávky: "
+        taxable_fulfillment_due_date: "Datum zdaň. plnění: "
+        issued_on_date: "Datum vystavení: "
+        due_date: "Datum splatnosti: "
+        paid_at: "Datum vyplacení: "
+        reason: "Důvod opravy: "
+        subscription_refund_from: Počáteční den refundovaného období včetně
+        subscription_refund_to: Poslední den refundovaného období včetně
+        subscriptions_price: "Částka vráceného předplatného"
+
+        vat: DPH
+        price: Cena
+        total_price_without_vat: Celkem bez DPH
+        total_price_vat: DPH %{value} %
+        total_price: Celkem
+      line:
+        title: "Vratka:"
+        paid: Vyplacená
+        approved: Schválená
+        cancelled: Stornovaná
+        download_tax_document: Stáhnout doklad
+
   folio:
     console:
       boutique:
@@ -30,33 +65,6 @@ cs:
 
           corrective_tax_documents:
             filename: "Seznam_vratek"
-          corrective_tax_document:
-            title: "Opravný daňový doklad č. %{number}"
-            customer: Odběratel
-            supplier: Dodavatel
-            country_name:
-              CZ: Česká republika
-              SK: Slovenská republika
-
-            payment_method: "Způsob úhrady: "
-            payment_method_card: Platební karta
-            bank_account_number: "Bankovní spojení: "
-            variable_symbol: "Variabilní symbol: "
-            order_number:  "Číslo objednávky: "
-            taxable_fulfillment_due_date: "Datum zdaň. plnění: "
-            issued_on_date: "Datum vystavení: "
-            due_date: "Datum splatnosti: "
-            paid_at: "Datum vyplacení: "
-            reason: "Důvod opravy: "
-            subscription_refund_from: Počáteční den refundovaného období včetně
-            subscription_refund_to: Poslední den refundovaného období včetně
-            subscriptions_price: "Částka vráceného předplatného"
-
-            vat: DPH
-            price: Cena
-            total_price_without_vat: Celkem bez DPH
-            total_price_vat: DPH %{value} %
-            total_price: Celkem
           tabs:
             index: Vše
             created: Vytvořené

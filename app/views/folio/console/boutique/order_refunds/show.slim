@@ -17,7 +17,7 @@
       = s.attribute(:corrective_tax_document)
         - if s.object.document_number.present?
           = link_to(s.object.document_number,
-                    controller.folio.corrective_tax_document_console_order_refund_path(s.object.id),
+                    controller.boutique.corrective_tax_document_path(s.object.secret_hash),
                     target: "_blank")
       = s.attribute :paid_at
       = s.attribute :cancelled_at

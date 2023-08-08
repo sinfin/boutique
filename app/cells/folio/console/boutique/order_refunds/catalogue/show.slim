@@ -32,7 +32,7 @@
       attribute(:corrective_tax_document, compact: true) do
         if record.document_number?
           link_to(record.document_number,
-                  controller.folio.corrective_tax_document_console_order_refund_path(record.id),
+                  controller.boutique.corrective_tax_document_path(record.secret_hash),
                   target: "_blank")
         end
       end

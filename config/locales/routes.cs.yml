@@ -6,6 +6,7 @@ cs:
     confirm: potvrdit
     checkout: nakup
     invoice: faktura
+    corrective_tax_document: opravny_danovy_doklad
     order: objednavka
     products: produkt
     remote_item: odebrat

@@ -22,7 +22,8 @@ Boutique::Engine.routes.draw do
       end
     end
 
-    get "invoice/:secret_hash", to: "invoices#show", as: :invoice
+    get "invoice/:secret_hash", to: "documents#invoice", as: :invoice
+    get "corrective_tax_document/:secret_hash", to: "documents#corrective_tax_document", as: :corrective_tax_document
   end
 
 
@@ -60,9 +61,6 @@ Folio::Engine.routes.draw do
         resources :order_refunds do
           collection do
             get :corrective_tax_documents
-          end
-          member do
-            get :corrective_tax_document
           end
         end
 
