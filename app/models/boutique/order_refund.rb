@@ -104,6 +104,9 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
 
     event :cancel do
       transitions from: states.without(:cancelled), to: :cancelled
+      before do
+        self.cancelled_at = Time.current
+      end
     end
   end
 
