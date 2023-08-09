@@ -28,8 +28,7 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
         title: Boutique::Payment.payment_method_to_human(pm),
         value: pm,
         disabled: recurrence_required? ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
-        enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm),
-        icon_path: icon_path(pm),
+        enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm)
       }
     end
   end
