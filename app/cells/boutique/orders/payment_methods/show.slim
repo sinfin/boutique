@@ -10,7 +10,23 @@
 
   .b-orders-payment-methods__btns
     - payment_methods.each_with_index do |method, i|
-      = payment_button(f, method, i)
+      - icon_path = icon_path(method[:value])
+
+      button [
+        type='submit'
+        class="btn btn-#{i.zero? ? "primary" : "secondary"} btn-xs-block"
+        class='b-orders-payment-methods__submit-btn'
+        class=(!i.zero? ? "b-orders-payment-methods__submit-btn--secondary" : nil)
+        data={ payment_method: method[:value], enabled_for_recurrent: method[:enabled_for_recurrent].to_s  }
+        style=("display:none;" if method[:value] == "APPLE_PAY")
+        disabled=method[:disabled]
+      ]
+        - if icon_path.present?
+          img.b-orders-payment-methods__btn-icon[
+            src=image_path(icon_path)
+          ]
+
+        = method[:title]
 
   - if options[:disclaimer]
     .b-orders-payment-methods__disclaimer.small.text-muted
