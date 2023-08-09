@@ -243,7 +243,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
                            vat_rate_value: o_li.vat_rate_value)
       ]
     else
-      order.line_item.collect do |o_li|
+      order.line_items.collect do |o_li|
         LineItemStruct.new(to_label: o_li.title,
                            price: o_li.price,
                            vat_rate_value: o_li.vat_rate_value)
