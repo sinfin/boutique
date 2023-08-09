@@ -2,6 +2,9 @@
 .row
   .col-lg-6.mb-5
     = show_for(@order_refund) do |s|
+      = s.attribute :order
+        = link_to(@order_refund.order.number,
+                  controller.folio.url_for([:console, @order_refund.order]))
       = s.attribute :issue_date, format: :default
       = s.attribute :due_date, format: :default
       = s.attribute :date_of_taxable_supply, format: :default

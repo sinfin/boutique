@@ -71,7 +71,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
-  validates :order, :issue_date, :due_date, :date_of_taxable_supply, presence: true
+  validates :order, :issue_date, :due_date, :date_of_taxable_supply, :reason, presence: true
   validates :document_number, uniqueness: true, allow_nil: true
   validates :due_date, comparison: { greater_than_or_equal_to: :issue_date }
   validates :payment_method, inclusion: { in: PAYMENT_METHODS }
@@ -324,9 +324,17 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
       if total_price_in_cents.blank?
         errors.add(:total_price, :blank)
       else
+
         if order.total_price_in_cents < total_price_in_cents
           errors.add(:total_price, :less_than_or_equal_to, count: order.total_price)
+        else
+          already_refunded = order.refunds.where.not("aasm_state = ? OR id = ?", "cancelled", (id || -1)).sum(:total_price_in_cents)
+
+          if order.total_price_in_cents < (total_price_in_cents + already_refunded)
+            errors.add(:total_price, :greater_sum_than_order_price)
+          end
         end
+
         if total_price_in_cents <= 0
           errors.add(:total_price, :greater_than, count: 0)
         end

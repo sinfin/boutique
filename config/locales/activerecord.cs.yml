@@ -243,6 +243,11 @@ cs:
             line_items:
               missing_subscription_recurrence: nemají vybraný způsob obnovy
 
+        boutique/order_refund:
+          attributes:
+            total_price:
+              greater_sum_than_order_price: Suma všech vratek by překročila celkovou sumu objednávky
+
         boutique/subscription:
           base:
             already_cancelled: Automatická obnova byla již zrušena.

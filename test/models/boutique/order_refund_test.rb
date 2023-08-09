@@ -213,4 +213,31 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
 
     order_refund.send(:handle_refund_by_voucher)
   end
+
+  test "verifies sum of refunds against order" do
+    order = create(:boutique_order, :paid, total_price: 300)
+
+    bo_created = create(:boutique_order_refund, :created, order: order, total_price: 100)
+    bo_to_pay = create(:boutique_order_refund, :approved_to_pay, order: order, total_price: 100)
+    bo_paid = create(:boutique_order_refund, :paid, order: order, total_price: 50)
+    bo_cancelled = create(:boutique_order_refund, :cancelled, order: order, total_price: 50)
+
+    # cancelled order is not counted
+    extra_bo = build(:boutique_order_refund, order: order, total_price: 50)
+    assert extra_bo.valid?
+
+    extra_bo.total_price = 50.01
+    assert extra_bo.invalid?
+    assert_includes extra_bo.errors[:total_price], "Suma všech vratek by překročila celkovou sumu objednávky"
+  end
+
+  test "validates reason presence" do
+    bor = create(:boutique_order_refund)
+
+    assert bor.reason.present?
+    assert bor.valid?
+
+    bor.reason = ""
+    assert bor.invalid?
+  end
 end
