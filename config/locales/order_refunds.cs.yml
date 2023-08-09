@@ -7,7 +7,8 @@ cs:
           email_subject: "Vrácení platby - objednávka %{order_number}"
     order_refunds:
       corrective_tax_document:
-        title: "Opravný daňový doklad č. %{number}"
+        no_vat_title: " Storno k platbě č. %{number}"
+        with_vat_title: "Opravný daňový doklad č. %{number}"
         customer: Odběratel
         supplier: Dodavatel
         country_name:

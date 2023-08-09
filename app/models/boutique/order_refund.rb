@@ -221,8 +221,22 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     self.total_price_in_cents = f_value.to_f * 100
   end
 
+  def hide_vat?
+    return @hide_vat unless @hide_vat.nil?
+    @hide_vat = order.try(:hide_invoice_vat?) == true
+  end
+
+  def regular_invoice?
+    return @regular_invoice unless @regular_invoice.nil?
+    @regular_invoice = order.try(:regular_invoice?) == true
+  end
+
   def corrective_tax_document_title
-    I18n.t("boutique.order_refunds.corrective_tax_document.title", number: document_number)
+    if regular_invoice?
+      I18n.t("boutique.order_refunds.corrective_tax_document.with_vat_title", number: document_number)
+    else
+      I18n.t("boutique.order_refunds.corrective_tax_document.no_vat_title", number: document_number)
+    end
   end
 
   LineItemStruct = Struct.new(:to_label, :price, :vat_rate_value, keyword_init: true) do

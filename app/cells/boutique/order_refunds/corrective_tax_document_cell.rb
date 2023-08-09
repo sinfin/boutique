@@ -51,8 +51,7 @@ class Boutique::OrderRefunds::CorrectiveTaxDocumentCell < ApplicationCell
   end
 
   def hide_vat?
-    return @hide_vat unless @hide_vat.nil?
-    @hide_vat = model.try(:hide_invoice_vat?) == true
+    model.hide_vat?
   end
 
   def payment_method_text
