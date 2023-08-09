@@ -115,9 +115,12 @@ class Boutique::Payment < Boutique::ApplicationRecord
     # BITCOIN
     # CLICK_TO_PAY
 
-    case payment_gateway_provider
+    provider = payment_gateway_provider.to_s
+    p_method = payment_method.to_s
+
+    case provider
     when "go_pay"
-      case payment_method
+      case p_method
       when "MPAYMENT"
         "BANK_ACCOUNT"
       when "PRSMS"
@@ -125,24 +128,24 @@ class Boutique::Payment < Boutique::ApplicationRecord
       when "GPAY"
         "GOOGLE_PAY"
       else
-        payment_method
+        p_method
       end
     when "comgate"
-      if payment_method.start_with?("CARD_")
+      if p_method.start_with?("CARD_")
         "PAYMENT_CARD"
-      elsif payment_method.start_with?("BANK_")
+      elsif p_method.start_with?("BANK_")
         "BANK_ACCOUNT"
-      elsif payment_method.start_with?("GOOGLE_")
+      elsif p_method.start_with?("GOOGLE_")
         "GOOGLE_PAY"
-      elsif payment_method.start_with?("APPLE_")
+      elsif p_method.start_with?("APPLE_")
         "APPLE_PAY"
       else
-        payment_method
+        p_method
       end
     when "paypal"
       "PAYPAL"
     else
-      payment_method
+      p_method
     end
   end
 end
