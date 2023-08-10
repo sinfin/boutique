@@ -16,6 +16,7 @@ en:
         primary_address_country_code/other: Other
         primary_address_country_code/SK: Slovakia
         primary_address_country_code: Country
+        referral_url: Referral URL
         subscription_state/active: Active
         subscription_state/inactive: Inactive
         subscription_state/none: None

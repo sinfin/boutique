@@ -895,6 +895,7 @@ end
 #  gift_recipient_id                         :bigint(8)
 #  shipping_price                            :integer
 #  renewed_subscription_id                   :bigint(8)
+#  referrer_url                              :string
 #
 # Indexes
 #

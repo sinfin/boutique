@@ -3,8 +3,11 @@
 module Boutique::CurrentOrder
   extend ActiveSupport::Concern
 
+  REFERRAL_URL_SESSION_KEY = "boutique_referrer_url"
+
   included do
     helper_method :current_order
+    before_action :call_boutique_orders_get_referrer_url_proc
   end
 
   def current_order
@@ -33,11 +36,18 @@ module Boutique::CurrentOrder
     session[:init] = true if !session || !session.id
 
     @current_order = Boutique::Order.create!(user: current_user,
-                                             web_session_id: session.id.public_id)
+                                             web_session_id: session.id.public_id,
+                                             referrer_url: session[REFERRAL_URL_SESSION_KEY])
   end
 
   private
     def current_order_scope
       Boutique::Order.pending
+    end
+
+    def call_boutique_orders_get_referrer_url_proc
+      if Boutique.config.orders_get_referrer_url_proc && session[REFERRAL_URL_SESSION_KEY].blank?
+        session[REFERRAL_URL_SESSION_KEY] = Boutique.config.orders_get_referrer_url_proc.call(self)
+      end
     end
 end

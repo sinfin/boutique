@@ -15,7 +15,8 @@ module Boutique
                   :folio_console_collection_includes_for_orders,
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
-                  :orders_edit_recurrency_title_proc
+                  :orders_edit_recurrency_title_proc,
+                  :orders_get_referrer_url_proc
 
     def initialize
       # set defaults here
@@ -32,6 +33,9 @@ module Boutique
       @folio_console_collection_includes_for_orders = [line_items: { product_variant: :product }]
       @folio_console_collection_includes_for_products = [cover_placement: :file]
       @folio_console_additional_filters_for_orders = {}
+      @orders_get_referrer_url_proc = -> (controller) {
+        controller.request.referrer
+      }
       @orders_edit_recurrency_title_proc = -> (context:, current_site:, period:, price:, product:) do
         current_site.recurring_payment_disclaimer
                     .to_s

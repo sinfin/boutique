@@ -36,6 +36,7 @@ cs:
         primary_address_country_code/SK: Slovensko
         primary_address_country_code: Země odběru
         product: Produkt
+        referral_url: Referral URL
         shipping_price: Cena dopravy
         subscription_state/active: Aktivní předplatné
         subscription_state/inactive: Neaktivní předplatné

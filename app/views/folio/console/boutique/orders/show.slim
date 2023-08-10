@@ -12,6 +12,13 @@
 
       = s.email
 
+      - if Boutique.config.orders_get_referrer_url_proc
+        = s.attribute(:referrer_url) do
+          - if s.object.referrer_url.present?
+            = link_to(s.object.referrer_url,
+                      s.object.referrer_url,
+                      target: "_blank")
+
       = s.attribute(:created_at)
       = s.attribute(:confirmed_at, if_blank: "–")
       = s.attribute(:paid_at, if_blank: "–")
