@@ -12,9 +12,14 @@ linters:
       - app/cells/boutique/ui/gift_icon/show.slim
       - app/cells/boutique/ui/scroll_icon/show.slim
       - app/cells/folio/console/boutique/orders/catalogue/show.slim
+      - app/cells/folio/console/boutique/order_refunds/form/show.slim
+      - app/cells/folio/console/boutique/order_refunds/index/corrective_tax_documents_button/show.slim
       - app/cells/folio/console/boutique/subscriptions/catalogue/show.slim
       - app/views/boutique/checkout/cart.slim
       - app/views/folio/console/boutique/orders/index.slim
+      - app/views/folio/console/boutique/orders/show.slim
+      - app/views/folio/console/boutique/order_refunds/index.slim
+      - app/views/folio/console/boutique/order_refunds/show.slim
       - app/views/folio/console/boutique/shipping_methods/_form.slim
       - app/views/folio/console/boutique/subscriptions/_form.slim
       - app/views/folio/console/boutique/subscriptions/index.slim

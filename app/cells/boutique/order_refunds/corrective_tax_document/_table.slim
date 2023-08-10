@@ -44,7 +44,9 @@
           td.b-order-refunds-corrective-tax-document__table-td [
             class="font-weight-bold pt-4 d-none d-sm-table-cell"
           ]
-            .b-order-refunds-corrective-tax-document__table-td-total-price.h3.m-0.text-nowrap
+            .b-order-refunds-corrective-tax-document__table-td-total-price[
+              class= "h3 m-0 text-nowrap"
+            ]
               = t('.total_price_without_vat')
 
           td.b-order-refunds-corrective-tax-document__table-td [
@@ -71,7 +73,9 @@
             td.b-order-refunds-corrective-tax-document__table-td [
               class="font-weight-bold pt-4 d-none d-sm-table-cell"
             ]
-              .b-order-refunds-corrective-tax-document__table-td-total-price.h3.m-0.text-nowrap
+              .b-order-refunds-corrective-tax-document__table-td-total-price[
+                class= "h3 m-0 text-nowrap"
+              ]
                 = t('.total_price_vat', value: vat_rate_value)
 
             td.b-order-refunds-corrective-tax-document__table-td [
@@ -98,7 +102,9 @@
         td.b-order-refunds-corrective-tax-document__table-td [
           class="font-weight-bold pt-4 d-none d-sm-table-cell"
         ]
-          .b-order-refunds-corrective-tax-document__table-td-total-price.h3.m-0.text-nowrap
+          .b-order-refunds-corrective-tax-document__table-td-total-price[
+            class= "h3 m-0 text-nowrap"
+          ]
             = t('.total_price')
 
         td.b-order-refunds-corrective-tax-document__table-td [

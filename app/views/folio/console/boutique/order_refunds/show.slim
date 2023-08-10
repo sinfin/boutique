@@ -25,7 +25,6 @@
       = s.attribute :paid_at
       = s.attribute :cancelled_at
 
-
   .col-lg-6.mb-5
     h2 = t(".order_header", order_label: @order_refund.order.to_label)
     == cell("folio/console/boutique/orders/show", @order_refund.order)

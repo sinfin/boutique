@@ -217,13 +217,13 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
   test "verifies sum of refunds against order" do
     order = create(:boutique_order, :paid, total_price: 300)
 
-    bo_created = create(:boutique_order_refund, :created, order: order, total_price: 100)
-    bo_to_pay = create(:boutique_order_refund, :approved_to_pay, order: order, total_price: 100)
-    bo_paid = create(:boutique_order_refund, :paid, order: order, total_price: 50)
-    bo_cancelled = create(:boutique_order_refund, :cancelled, order: order, total_price: 50)
+    _bo_created = create(:boutique_order_refund, :created, order:, total_price: 100)
+    _bo_to_pay = create(:boutique_order_refund, :approved_to_pay, order:, total_price: 100)
+    _bo_paid = create(:boutique_order_refund, :paid, order:, total_price: 50)
+    _bo_cancelled = create(:boutique_order_refund, :cancelled, order:, total_price: 50)
 
     # cancelled order is not counted
-    extra_bo = build(:boutique_order_refund, order: order, total_price: 50)
+    extra_bo = build(:boutique_order_refund, order:, total_price: 50)
     assert extra_bo.valid?
 
     extra_bo.total_price = 50.01

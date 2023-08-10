@@ -9,7 +9,6 @@
   = s.attribute(:email)
     = mail_to s.object.email, s.object.email
 
-
   = s.attribute(:created_at)
   = s.attribute(:confirmed_at, if_blank: "–")
   = s.attribute(:paid_at, if_blank: "–")
@@ -35,7 +34,6 @@
 
     - if s.object.gift_recipient_notification_scheduled_for?
       = s.attribute(:gift_recipient_notification_scheduled_for)
-
 
   = s.attribute(:line_items)
     ul

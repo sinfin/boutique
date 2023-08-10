@@ -32,7 +32,8 @@
       attribute(:corrective_tax_document, compact: true) do
         if record.document_number?
           link_to(record.document_number,
-                  controller.boutique.corrective_tax_document_path(record.secret_hash),
+                  controller.boutique
+                            .corrective_tax_document_path(record.secret_hash),
                   target: "_blank")
         end
       end

@@ -5,11 +5,9 @@
   .col-lg-6.mb-5
     == cell("folio/console/boutique/orders/show", @order)
 
-
 .row
-  h2=t('.refunds')
+  h2 = t('.refunds')
   == cell('folio/console/boutique/order_refunds/catalogue', @order.refunds)
-
 
 == cell("folio/console/addresses/show_for_model", @order)
 

@@ -21,11 +21,17 @@
                   min: allowed_date_ranges[:min_date],
                   max: allowed_date_ranges[:max_date],
                   input_html: { data: allowed_date_ranges}
-        = f.input :subscriptions_price, input_html: { readonly: true,
-                                                      data: { price_per_day_in_cents: f.object.subscription_price_per_day_in_cents }}
-      = f.input :total_price,
-                hint: t(".maximal_price_is", price: number_to_currency(order.total_price, unit: order.currency_unit))
+        = f.input :subscriptions_price,
+                  input_html: { readonly: true, data: { price_per_day_in_cents: f.object.subscription_price_per_day_in_cents} }
 
-      = f.input :payment_method, as: :select, collection: allowed_payment_method_options
+      = f.input :total_price,
+                hint: t(".maximal_price_is",
+                        price: number_to_currency(order.total_price,
+                                                  unit: order.currency_unit))
+
+      = f.input :payment_method,
+                as: :select,
+                collection: allowed_payment_method_options,
+                include_blank: false
 
   = form_footer f
