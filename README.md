@@ -31,6 +31,7 @@ e-shop plugin for [Folio](http://github.com/sinfin/folio)
     payment: {
       currency: "CZK", # *required
       amount_in_cents: 9900, # *required
+      fee: nil, # returned from gateway
       label: "payment label",
       reference_id: "payment_app_reference_OR_order_number",
       description: "Payment content(?) description",

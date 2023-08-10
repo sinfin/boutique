@@ -63,6 +63,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
 
       if pending?
         self.payment_method = gateway_result_hash[:payment][:method]
+        self.transfer_fee = gateway_result_hash[:payment][:fee]
 
         case gateway_result_hash[:state]
         when :paid
