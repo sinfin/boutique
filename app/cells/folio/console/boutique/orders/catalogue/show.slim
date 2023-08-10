@@ -2,7 +2,11 @@
   = catalogue(model, before_lambda: options[:before_lambda],
                      collection_actions: options[:collection_actions])
     ruby:
-      show_link(:number)
+      if controller.can?(:manage, record)
+        show_link(:number)
+      else
+        attribute(:number)
+      end
 
       attribute(:user) do
         if record.user.present?

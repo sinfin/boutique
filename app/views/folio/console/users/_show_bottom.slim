@@ -1,26 +1,19 @@
-h2 = Boutique::Order.model_name.human(count: 2)
+- if can?(:manage, Boutique::Order)
+  h2 = Boutique::Order.model_name.human(count: 2)
 
-== cell('folio/console/boutique/orders/catalogue',
-        @user.orders.ordered \
-                    .except_pending \
-                    .includes(line_items: { product_variant: :product }),
-        collection_actions: [])
+  == cell('folio/console/boutique/orders/catalogue',
+          @user.orders.ordered \
+                      .except_pending \
+                      .includes(line_items: { product_variant: :product }),
+          collection_actions: [])
 
-.row
-  .col
-    h2.mt-g
-      = t('.subscriptions',
-          default: Boutique::Subscription.model_name.human(count: 2))
+- if can?(:manage, Boutique::Subscription)
+  h2.mt-g
+    = t('.subscriptions',
+        default: Boutique::Subscription.model_name.human(count: 2))
 
-  / .col.text-right.mt-g
-  /   a.btn.btn-success[
-  /     href=new_console_user_subscription_url(user_id: @user.id)
-  /   ]
-  /     i.fa.fa-plus
-  /     = t(".new_subscription")
-
-== cell('folio/console/boutique/subscriptions/catalogue',
-        @user.subscriptions.ordered \
-                           .includes(:orders, product_variant: :product),
-        collection_actions: [],
-        hide_user: true)
+  == cell('folio/console/boutique/subscriptions/catalogue',
+          @user.subscriptions.ordered \
+                             .includes(:orders, product_variant: :product),
+          collection_actions: [],
+          hide_user: true)
