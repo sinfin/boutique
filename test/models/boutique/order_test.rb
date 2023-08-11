@@ -329,33 +329,32 @@ class Boutique::OrderTest < ActiveSupport::TestCase
   test "invoice numbers" do
     Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")
 
-    travel_to Time.zone.local(2022, 1, 1)
+    travel_to Time.zone.local(2022, 2, 1)
     order = create(:boutique_order, :confirmed)
     assert_nil order.invoice_number
 
     order.pay!
+
     assert_equal "2200001", order.invoice_number
 
-    order = create(:boutique_order, :paid)
+    order = create(:boutique_order, :paid, paid_at: Time.zone.local(2022, 2, 1))
     assert_equal "2200002", order.invoice_number
 
     Boutique::Order.stub_any_instance(:invoice_number_prefix, "99") do
-      order = create(:boutique_order, :paid)
+      order = create(:boutique_order, :paid, paid_at: Time.zone.local(2022, 2, 1))
       assert_equal "229900003", order.invoice_number
     end
 
     Boutique.config.stub(:invoice_number_with_year_prefix, false) do
-      order = create(:boutique_order, :paid)
+      order = create(:boutique_order, :paid, paid_at: Time.zone.local(2022, 2, 1))
       assert_equal "00004", order.invoice_number
     end
 
-    travel_to Time.zone.local(2023, 1, 1)
-    order = create(:boutique_order, :paid)
+    order = create(:boutique_order, :paid, paid_at: Time.zone.local(2023, 1, 1))
     assert_equal "2300001", order.invoice_number
 
     Boutique.config.stub(:invoice_number_resets_each_year, false) do
-      travel_to Time.zone.local(2024, 1, 1)
-      order = create(:boutique_order, :paid)
+      order = create(:boutique_order, :paid, paid_at: Time.zone.local(2024, 1, 1))
       assert_equal "2400002", order.invoice_number
     end
   end

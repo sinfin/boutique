@@ -62,8 +62,8 @@ class Boutique::Payment < Boutique::ApplicationRecord
       self.order.lock!
 
       if pending?
-        self.payment_method = gateway_result_hash[:payment][:method]
-        self.transfer_fee = gateway_result_hash[:payment][:fee]
+        self.payment_method ||= gateway_result_hash[:payment][:method]
+        self.transfer_fee ||= gateway_result_hash[:payment][:fee] || 0
 
         case gateway_result_hash[:state]
         when :paid
@@ -165,6 +165,7 @@ end
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  payment_gateway_provider :string
+#  transfer_fee             :decimal(, )      default(0.0), not null
 #
 # Indexes
 #

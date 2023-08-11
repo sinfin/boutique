@@ -73,11 +73,16 @@ FactoryBot.define do
       aasm_state { "confirmed" }
       confirmed_at { 1.minute.ago }
 
-      before(:create) do |order|
+      after(:build) do |order|
         order.send(:set_numbers)
         order.send(:before_confirm)
         order.send(:imprint)
       end
+    end
+
+    trait :waiting_for_offline_payment do
+      confirmed
+      aasm_state { "waiting_for_offline_payment" }
     end
 
     trait :paid do
@@ -85,16 +90,16 @@ FactoryBot.define do
       with_user
 
       aasm_state { "paid" }
-      paid_at { 1.minute.ago }
+      paid_at { Time.current - 1.minute }
 
-      before(:create) do |order|
-        order.paid_at = Time.current
+      after(:build) do |order|
+        order.confirmed_at = [order.paid_at, order.confirmed_at].min
         order.send(:set_invoice_number)
         order.send(:imprint)
       end
 
       after(:create) do |order|
-        create(:boutique_payment, order:)
+        create(:boutique_payment, order:, created_at: order.paid_at)
       end
     end
 
@@ -103,7 +108,7 @@ FactoryBot.define do
       sequence(:gift_recipient_email) { |i| "gift-#{i}@email.email" }
     end
 
-    before(:create) do |order, evaluator|
+    after(:build) do |order, evaluator|
       if order.line_items.empty?
         evaluator.line_items_count.times do
           product_factory = evaluator.subscription_product ? :boutique_product_subscription : :boutique_product

@@ -351,19 +351,21 @@ end
 #
 #  id                           :bigint(8)        not null, primary key
 #  document_number              :string
+#  secret_hash                  :string
+#  boutique_order_id            :bigint(8)        not null
+#  aasm_state                   :string
 #  issue_date                   :date
 #  due_date                     :date
 #  date_of_taxable_supply       :date
-#  boutique_order_id            :bigint(8)        not null
 #  reason                       :text
 #  subscription_refund_from     :date
 #  subscription_refund_to       :date
 #  subscriptions_price_in_cents :integer          default(0)
 #  total_price_in_cents         :integer          default(0)
-#  aasm_state                   :string
-#  paid_at                      :datetime
-#  cancelled_at                 :datetime
 #  payment_method               :string
+#  paid_at                      :datetime
+#  approved_at                  :datetime
+#  cancelled_at                 :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #
