@@ -3,8 +3,8 @@
 ]
   .container-fluid
     = form do |f|
-      .b-orders-edit__flex
-        main.b-orders-edit__col.b-orders-edit__col--main
+      .b-orders-edit__grid
+        main.b-orders-edit__cell.b-orders-edit__cell--main
           = render(:_main_top)
 
           h1.h2.mt-0
@@ -75,11 +75,10 @@
           - unless current_order.voucher_code.nil? && current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)
 
-        aside.b-orders-edit__col.b-orders-edit__col--aside
+        aside.b-orders-edit__cell.b-orders-edit__cell--aside
           == cell('boutique/orders/edit/sidebar', current_order)
 
-      .b-orders-edit__flex
-        main.b-orders-edit__col.b-orders-edit__col--main
+        main.b-orders-edit__cell.b-orders-edit__cell--bottom
           == cell('boutique/orders/edit/recurrency_fields', f)
 
           .b-orders-edit__payment
@@ -93,5 +92,3 @@
 
             - else
               == cell('boutique/orders/payment_methods', f, disclaimer:)
-
-        aside.b-orders-edit__col.b-orders-edit__col--aside aria-hidden="true"
