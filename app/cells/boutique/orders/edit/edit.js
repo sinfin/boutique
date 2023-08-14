@@ -19,8 +19,12 @@ $(document)
         if (res && res.data) {
           $wrap.find('.b-orders-edit-sidebar-bottom').replaceWith(res.data.sidebarBottom)
           $wrap.find('.b-orders-payment-methods-price').replaceWith(res.data.price)
+
+          $wrap
+            .find('.b-orders-edit-voucher-fields')
+            .trigger('updatePrice', [res.data.voucherFields])
         }
-        const $res = $(res)
+
         $wrap.removeClass('b-orders-edit--refreshing')
       },
       error: () => {

@@ -67,6 +67,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
       data: {
         sidebarBottom: cell("boutique/orders/edit/sidebar/bottom", order).show,
         price: cell("boutique/orders/payment_methods/price", order.total_price).show,
+        voucherFields: cell("boutique/orders/edit/voucher_fields", nil, order:).show,
       }
     }
   end
@@ -74,7 +75,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
   def apply_voucher
     @use_boutique_adaptive_css = true
 
-    current_order.assign_voucher_by_code(params[:voucher_code])
+    unless current_order.voucher.present?
+      current_order.assign_voucher_by_code(params[:voucher_code])
+    end
 
     respond_to do |format|
       format.html do
