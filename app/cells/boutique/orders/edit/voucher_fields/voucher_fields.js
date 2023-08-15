@@ -1,6 +1,6 @@
 let success = false
 
-const voucherRequestSuccess = (res) => {
+const voucherRequestSuccess = ($wrap, res) => {
   if (res && res.data) {
     success = true
 
@@ -36,7 +36,7 @@ const voucherRequestSuccess = (res) => {
   }
 }
 
-const voucherRequestComplete = () => {
+const voucherRequestComplete = ($wrap) => {
   if (success) return
 
   const $group = $wrap.find('.form-group')
@@ -73,8 +73,8 @@ $(document)
       data: {
         voucher_code: $wrap.find('.b-orders-edit-voucher-fields__input').val()
       },
-      success: voucherRequestSuccess,
-      complete: voucherRequestComplete
+      success: (res) => voucherRequestSuccess($wrap, res),
+      complete: () => voucherRequestComplete($wrap),
     })
   })
   .on('updatePrice', '.b-orders-edit-voucher-fields', (e, res) => {
