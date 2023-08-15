@@ -112,8 +112,8 @@ FactoryBot.define do
       if order.line_items.empty?
         evaluator.line_items_count.times do
           product_factory = evaluator.subscription_product ? :boutique_product_subscription : :boutique_product
-          product_price = (order.read_attribute(:total_price) || 100) / evaluator.line_items_count
-          product_price = product_price / 12 if product_factory == :boutique_product_subscription
+          product_price = (order.read_attribute(:line_items_price) || order.read_attribute(:total_price) || 100) / evaluator.line_items_count
+          product_price = product_price / 12.0 if product_factory == :boutique_product_subscription
           product = create(product_factory, price: product_price)
 
           li = build(:boutique_line_item, product:)
@@ -145,7 +145,7 @@ FactoryBot.define do
     remote_id { 12345678 }
     aasm_state { "paid" }
     paid_at { 1.minute.ago }
-    payment_gateway_provider { :go_pay }
+    payment_gateway_provider { Boutique.config.payment_gateways[:default].to_sym }
   end
 
   factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do

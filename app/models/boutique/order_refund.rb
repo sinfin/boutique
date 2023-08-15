@@ -78,6 +78,8 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   validate :subscription_data_validity
   validate :total_price_validity
 
+  before_validation :set_provider
+
   aasm do
     state :created, initial: true, color: "yellow"
     state :approved_to_pay, color: "blue"
@@ -145,7 +147,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
   end
 
   def allowed_payment_methods
-    original_method = original_payment.normalized_payment_method
+    original_method = original_payment&.normalized_payment_method
     original_method = nil unless PAYMENT_METHODS.include?(original_method)
     [
       original_method,
@@ -285,6 +287,10 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     end
   end
 
+  def set_provider
+    self.payment_gateway_provider = order.fully_paid_by_voucher? ? "voucher" : original_payment&.payment_gateway_provider
+  end
+
   private
     def handle_refund_by_payment_gateway
       original_payment.payment_gateway.payout_order_refund(self)
@@ -368,6 +374,7 @@ end
 #  cancelled_at                 :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
+#  payment_gateway_provider     :string
 #
 # Indexes
 #

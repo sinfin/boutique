@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_10_155512) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_15_091924) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -80,6 +80,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_155512) do
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "payment_gateway_provider"
     t.index ["boutique_order_id"], name: "index_boutique_order_refunds_on_boutique_order_id"
   end
 

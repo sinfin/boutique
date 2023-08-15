@@ -703,6 +703,11 @@ class Boutique::Order < Boutique::ApplicationRecord
     paid.count
   end
 
+  def fully_paid_by_voucher?
+    voucher_code.present? && total_price.zero?
+  end
+
+
   private
     EVENT_CALLBACKS.each do |cb|
       define_method cb do
