@@ -15,6 +15,7 @@ module Boutique::CreatePaymentAndRedirect
                                                                        callback_url: payment_callback_url(order_id: order.secret_hash, only_path: false) })
       end
       order.payments.create!(remote_id: transaction.transaction_id,
+                             amount: order.total_price,
                              payment_gateway_provider: order.payment_gateway.provider,
                              payment_method: params[:payment_method]) # TODO: verify correctness
       # transaction.redirect? should be true

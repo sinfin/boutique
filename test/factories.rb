@@ -145,6 +145,7 @@ FactoryBot.define do
     remote_id { 12345678 }
     aasm_state { "paid" }
     paid_at { 1.minute.ago }
+    payment_method { "BANK_CZ" }
     payment_gateway_provider { Boutique.config.payment_gateways[:default].to_sym }
   end
 

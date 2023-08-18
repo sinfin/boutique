@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_15_091924) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_18_064642) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -152,6 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_15_091924) do
     t.datetime "updated_at", null: false
     t.string "payment_gateway_provider"
     t.decimal "transfer_fee", default: "0.0", null: false
+    t.decimal "amount", precision: 10, scale: 2
     t.index ["boutique_order_id"], name: "index_boutique_payments_on_boutique_order_id"
     t.index ["remote_id"], name: "index_boutique_payments_on_remote_id"
   end

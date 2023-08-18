@@ -706,6 +706,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
     def new_order.charge_recurrent_payment!
       payments.create!(remote_id: "transaction_id",
+        amount: total_price,
         payment_method: "PAYMENT_CARD",
         payment_gateway_provider: :comgate)
     end

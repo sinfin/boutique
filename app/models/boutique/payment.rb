@@ -84,8 +84,12 @@ class Boutique::Payment < Boutique::ApplicationRecord
     end
   end
 
+  def amount
+    @amount ||= (super || order.total_price)
+  end
+
   def amount_in_cents
-    order.total_price * 100 # TODO: make this attribute, initialized with order.total_price
+    amount * 100
   end
 
   def payment_gateway
@@ -166,6 +170,7 @@ end
 #  updated_at               :datetime         not null
 #  payment_gateway_provider :string
 #  transfer_fee             :decimal(, )      default(0.0), not null
+#  amount                   :decimal(10, 2)
 #
 # Indexes
 #

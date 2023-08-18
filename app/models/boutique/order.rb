@@ -624,8 +624,9 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     transaction = payment_gateway.repeat_recurring_transaction(self)
     payments.create!(remote_id: transaction.transaction_id,
-                      payment_method: transaction.hash.dig(:payment, :method),
-                      payment_gateway_provider: payment_gateway.provider)
+                     amount: total_price,
+                     payment_method: transaction.hash.dig(:payment, :method),
+                     payment_gateway_provider: payment_gateway.provider)
   rescue StandardError => error
     if error.is_a?(Boutique::PaymentGateway::Error) && error.stopped_recurrence?
       subscription.cancel!

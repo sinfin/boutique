@@ -112,6 +112,7 @@ class Boutique::SubscriptionBot
 
       new_order.original_payment = new_order.payments.create!(remote_id: subscription.recurrent_payments_init_id,
                                                             aasm_state: "paid",
+                                                            amount: new_order.total_price,
                                                             payment_method: "fake_init_payment",
                                                             paid_at: subscription.active_from,
                                                             payment_gateway_provider: "import")
