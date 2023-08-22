@@ -21,8 +21,8 @@
         record.line_items.map do |line_item|
           content_tag(:div, class: "d-flex align-items-center") do
             label = [
-              line_item.product_variant.product.to_console_label,
-              line_item.product_variant.to_console_label,
+              # line_item.product_variant.product.to_console_label,
+              line_item.to_console_label,
             ].join("<br>")
 
             if record.gift?
