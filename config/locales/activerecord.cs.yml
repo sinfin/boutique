@@ -1,7 +1,7 @@
 ---
 cs:
   attributes:
-    payment_info: Metoda
+    payment_info: Platba
 
   activerecord:
     attributes:
