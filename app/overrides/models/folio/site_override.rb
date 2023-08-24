@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-already_loaded = Folio::Site.method_defined?(:billing_enabled?)
+already_loaded = Folio::Site.method_defined?(:products)
 return if already_loaded
 
 Folio::Site.class_eval do
