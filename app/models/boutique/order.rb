@@ -209,7 +209,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   }
 
   pg_search_scope :by_query,
-                  against: %i[base_number number email first_name last_name],
+                  against: %i[base_number number email first_name last_name invoice_number],
                   associated_against: {
                     primary_address: %i[name company_name address_line_1 zip city],
                     secondary_address: %i[name company_name address_line_1 zip city],
