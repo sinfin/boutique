@@ -8,8 +8,7 @@ class Folio::Console::Boutique::Orders::Index::SummaryCell < Folio::ConsoleCell
   def orders_confirmed
     return @orders unless @orders.nil?
 
-    date = model[:date].to_date
-    @orders_confirmed = model[:scope].select { |o| o.confirmed_at.try(:to_date) == date }
+    @orders_confirmed = model[:scope].select { |o| o.confirmed_at.try(:to_date) == model[:date] }
   end
 
   def total_price_confirmed

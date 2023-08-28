@@ -4,17 +4,18 @@
 
 ruby:
   bl = -> (item, collection, i) do
-    prev = collection[i - 1]
+    prev = collection[i - 1] # for i == 0 it goes to end of collection!
+
     if prev.blank? || prev.new_record?
       return
     else
-      prev_day = prev.confirmed_at.try(:day)
-      day = item.confirmed_at.try(:day)
+      prev_day = prev.confirmed_at.try(:to_date)
+      day = item.confirmed_at.try(:to_date)
       return if day.blank? || prev.blank?
       return if day == prev_day
       cell('folio/console/boutique/orders/index/summary',
            scope: @orders_scope,
-           date: item.confirmed_at).show.try(:html_safe)
+           date: item.confirmed_at.to_date).show.try(:html_safe)
     end
   end
 
