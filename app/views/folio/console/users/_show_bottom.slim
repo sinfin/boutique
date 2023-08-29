@@ -22,3 +22,5 @@ h2 = Boutique::Order.model_name.human(count: 2)
         @user.subscriptions.ordered \
                            .includes(:orders, product_variant: :product),
         collection_actions: [])
+
+= render partial: "folio/console/users/show_bottom_boutique"
