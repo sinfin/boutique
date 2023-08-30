@@ -7,21 +7,21 @@
       show_link(:number)
 
       attribute(:user) do
-        if record.user.present?
-          content_tag(:div, class: "d-flex align-items-center") do
-            account_icon = link_to(url_for([:console, record.user])) do
+        content_tag(:div, class: "d-flex align-items-center") do
+          account_icon = if record.user.present?
+            link_to(url_for([:console, record.user])) do
               cell('boutique/ui/vector_icon',
                    icon_name: :person,
                    class: "mr-2 flex-shrink-0 #{icon_class}--person",
                    size: 16).show
             end
-
-            email = link_to("mailto:#{record.email}", title: record.email) do
-              record.email.truncate(28, omission: '...')
-            end
-
-            [account_icon, email].compact.join(" ")
           end
+
+          email = link_to("mailto:#{record.email}", title: record.email) do
+            record.email.truncate(28, omission: '...')
+          end
+
+          [account_icon, email].compact.join(" ")
         end
       end
 
