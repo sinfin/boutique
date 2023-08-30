@@ -2,31 +2,75 @@
   = catalogue(model, before_lambda: options[:before_lambda],
                      collection_actions: options[:collection_actions])
     ruby:
+      icon_class = 'f-c-b-orders-catalogue__icon'
+
       show_link(:number)
 
-      attribute(:email)
-
-      attribute(:line_items) do
+      attribute(:user) do
         content_tag(:div, class: "d-flex align-items-center") do
-          ary = []
-
-          if record.gift?
-            ary <<  cell('boutique/ui/vector_icon',
-                         icon_name: :gift,
-                         class: 'mr-2 flex-shrink-0',
-                         size: 18).show
+          account_icon = link_to(url_for([:console, record.user])) do
+            cell('boutique/ui/vector_icon',
+                 icon_name: :person,
+                 class: "mr-2 flex-shrink-0 #{icon_class}--person",
+                 size: 16).show
           end
 
-          ary << content_tag(:div,
-                             record.line_items.map(&:to_console_label).join(", "),
-                             class: "flex-grow-1 flex-shrink-1")
+          email = link_to("mailto:#{record.email}", title: record.email) do
+            record.email.truncate(28, omission: '...')
+          end
 
-          ary.join(" ")
+          [account_icon, email].compact.join(" ")
+        end
+      end
+
+      attribute(:line_items) do
+        content_tag(:div, class: "f-c-b-orders-catalogue__line-items") do
+          if record.gift?
+            gift_icon = cell('boutique/ui/vector_icon',
+                             icon_name: :gift,
+                             class: "mr-1 flex-shrink-0 #{icon_class}--gift",
+                             size: 16).show
+          end
+
+          line_items = content_tag(:div, class: "flex-grow-1 flex-shrink-1") do
+            record.line_items
+                  .map(&:to_console_label)
+                  .join(", ")
+          end
+
+          [gift_icon, line_items].compact.join(" ")
         end
       end
 
       attribute(:price) do
-        price(record.total_price)
+        price(record.total_price).gsub(/\s/, '&nbsp;')
+      end
+
+      attribute(:payment_method) do
+        if record.is_paid?
+          payment_method = content_tag(:div, class: 'd-flex') do
+            recurring_icon = if record.line_items.exists?(subscription_recurring: true)
+              cell('boutique/ui/vector_icon',
+                   icon_name: :refresh,
+                   class: "mr-1 flex-shrink-0 #{icon_class}--refresh",
+                   size: 20).show
+            end
+
+            payment_method = if record.paid_payment.present?
+              record.paid_payment.payment_method_to_human
+            end
+
+            [recurring_icon, payment_method].compact.join(' ')
+          end
+
+          voucher = if record.voucher.present?
+            link_to t('.boutique/order.used_voucher', code: record.voucher.code),
+                    url_for([:edit, :console, record.voucher]),
+                    class: 'f-c-b-orders-catalogue__voucher'
+          end
+
+          [payment_method, voucher].compact.join(' ')
+        end
       end
 
       date :confirmed_at
@@ -39,6 +83,17 @@
           link_to(record.invoice_number,
                   controller.boutique.invoice_path(record.secret_hash),
                   target: "_blank")
+        end
+      end
+
+      if record.respond_to?(:distribution_package)
+        attribute(:replacement, compact: true) do
+          if record.distribution_package.try(:replacement).present?
+            url = new_console_nextpagemedia_office_distribution_replacement_path(order: record.number)
+            link_to(url) do
+              record.distribution_package.replacement.aasm.human_state
+            end
+          end
         end
       end
 

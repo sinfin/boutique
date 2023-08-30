@@ -58,6 +58,8 @@ cs:
       catalogue:
         boutique/subscription:
           non_recurring_subscription: Jednorázové předplatné
+        boutique/order:
+          used_voucher: Poukaz %{code}
 
       sites:
         boutique_additional_form_fields:

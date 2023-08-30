@@ -1,0 +1,53 @@
+.f-c-b-orders-catalogue
+  &__line-items
+    max-width: 250px
+    display: flex
+
+  &__icon
+    &--person
+      margin-top: -4px
+
+    &--gift
+      margin-top: 1px
+
+    &--refresh
+      margin-top: 1px
+
+  &__voucher
+    font-size: 11.2px
+    line-height: 1.4
+    display: inline-block
+
+  +mq-desktop-menu
+    .f-c-catalogue__cell--number
+      padding-right: 0
+
+    .f-c-catalogue__cell--email
+      padding-left: 14px
+
+    .f-c-catalogue__cell--confirmed_at,
+    .f-c-catalogue__cell--paid_at
+      .f-c-catalogue-date__date
+        font-size: 11.2px
+        line-height: (16.8 / 11.2)
+
+    .f-c-catalogue__cell--state
+      .f-c-state__state
+        max-width: 125px
+        text-align: left
+        white-space: normal
+        align-items: flex-start
+
+      .f-c-state__state-square
+        flex-shrink: 0
+        margin-top: 3px
+        margin-right: 7px
+
+      .dropdown-toggle::after
+        margin-top: 8px
+        margin-left: 5px
+
+  @media screen and (min-width: 1366px) and (max-width: 1549px)
+    .f-c-catalogue__cell--user
+      overflow: hidden
+      max-width: 100px

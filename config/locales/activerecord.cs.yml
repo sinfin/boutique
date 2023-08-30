@@ -13,7 +13,7 @@ cs:
         confirmed_at: Objednáno
         confirmed_at_range: Objednáno
         created_at: Vytvořeno
-        dispatched_at: Odesláno
+        dispatched_at: Expedováno
         full_name: Jméno
         gift_recipient: Obdarovaný
         gift_recipient_email: E-mail obdarovaného
@@ -50,6 +50,8 @@ cs:
         user: Uživatel
         voucher_code: Kód
         voucher_title: Typ slevy
+        payment_method: Metoda
+        replacement: Reklamace
 
       boutique/product:
         best_offer: Nejvýhodnější nabídka

@@ -6,17 +6,15 @@ aside.f-c-b-orders-index-summary.small
           strong
             = l(model[:date], format: :as_date)
 
-          span.mx-2.d-inline-block |
+          span.ml-g.d-inline-block
+            = t('.confirmed', count: orders_confirmed.size, \
+                              total: price(total_price_confirmed), \
+                              average: price(average_price_confirmed))
 
-          = t('.confirmed', count: orders_confirmed.size, \
-                            total: price(total_price_confirmed), \
-                            average: price(average_price_confirmed))
-
-          span.mx-2.d-inline-block |
-
-          - if orders_paid.size > 0
-            = t('.paid', count: orders_paid.size, \
-                         total: price(total_price_paid), \
-                         average: price(average_price_paid))
-          - else
-            = t('.paid.zero')
+          span.ml-g.d-inline-block
+            - if orders_paid.size > 0
+              = t('.paid', count: orders_paid.size, \
+                           total: price(total_price_paid), \
+                           average: price(average_price_paid))
+            - else
+              = t('.paid.zero')
