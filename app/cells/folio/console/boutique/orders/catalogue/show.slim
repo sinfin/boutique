@@ -91,7 +91,7 @@
       if record.respond_to?(:distribution_package)
         attribute(:replacement, compact: true) do
           if record.distribution_package.try(:replacement).present?
-            url = new_console_nextpagemedia_office_distribution_replacement_path(order: record.number)
+            url = new_console_nextpagemedia_office_distribution_replacement_path(order: record)
             link_to(url) do
               record.distribution_package.replacement.aasm.human_state
             end
