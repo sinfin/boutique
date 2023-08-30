@@ -50,7 +50,7 @@ cs:
         user: Uživatel
         voucher_code: Kód
         voucher_title: Typ slevy
-        payment_method: Metoda
+        payment_method: Platba
         replacement: Reklamace
 
       boutique/product:

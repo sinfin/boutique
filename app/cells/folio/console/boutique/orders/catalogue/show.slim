@@ -1,6 +1,7 @@
 .f-c-b-orders-catalogue
   = catalogue(model, before_lambda: options[:before_lambda],
-                     collection_actions: options[:collection_actions])
+                     collection_actions: options[:collection_actions],
+                     additional_columns_proc: additional_columns_proc)
     ruby:
       icon_class = 'f-c-b-orders-catalogue__icon'
 
@@ -88,15 +89,8 @@
         end
       end
 
-      if record.respond_to?(:distribution_package)
-        attribute(:replacement, compact: true) do
-          if record.distribution_package.try(:replacement).present?
-            url = new_console_nextpagemedia_office_distribution_replacement_path(order: record)
-            link_to(url) do
-              record.distribution_package.replacement.aasm.human_state
-            end
-          end
-        end
+      if model[:additional_columns_proc].present?
+        model[:additional_columns_proc].call(self, record)
       end
 
       actions(:show, :edit)
