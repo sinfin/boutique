@@ -1,0 +1,80 @@
+.f-c-b-orders-show-for-model
+  = show_for model do |s|
+    = s.attribute(:user)
+      - if s.object.user.present?
+        a[
+          href=url_for([:console, s.object.user])
+          target='_blank'
+        ] = s.object.user.to_label
+
+    = s.email
+
+    - if Boutique.config.orders_get_referrer_url_proc
+      = s.attribute(:referrer_url) do
+        - if s.object.referrer_url.present?
+          = link_to(s.object.referrer_url,
+                    s.object.referrer_url,
+                    target: "_blank")
+
+    = s.attribute(:created_at)
+    = s.attribute(:confirmed_at, if_blank: "–")
+    = s.attribute(:paid_at, if_blank: "–")
+    = s.attribute(:dispatched_at, if_blank: "–")
+
+    - if s.object.cancelled_at.present?
+      = s.attribute(:cancelled_at)
+
+    - if s.object.gift?
+      = s.attribute(:gift_recipient)
+        - if s.object.gift_recipient.present?
+          a[
+            href=url_for([:console, s.object.gift_recipient])
+            target='_blank'
+          ] = s.object.gift_recipient.to_label
+        - else
+          = s.object.gift_recipient_full_name
+      = s.email(:gift_recipient_email)
+      = s.attribute(:gift_recipient_notification_scheduled_for)
+
+    = s.attribute(:line_items) do
+      ul
+        - s.object.line_items.each do |li|
+          li
+            a[
+              href=url_for([:edit, :console, li.product])
+              target='_blank'
+            ] = li.to_full_label
+
+    = s.attribute(:payment_method) do
+      - if s.object.is_paid? && s.object.paid_payment.present?
+        .d-flex
+          - if s.object.line_items.exists?(subscription_recurring: true)
+            == cell('boutique/ui/vector_icon',
+                    icon_name: :refresh,
+                    class: "mr-1 flex-shrink-0",
+                    size: 20).show
+
+          = s.object.paid_payment.payment_method_to_human
+
+    - if s.object.voucher.present?
+      = s.attribute(:voucher) do
+        a [
+          href=url_for([:edit, :console, s.object.voucher])
+          target="_blank"
+        ]
+          = s.object.voucher.code
+
+    = s.attribute(:line_items_price)
+      = price(s.object.line_items_price)
+    = s.attribute(:shipping_price)
+      = price(s.object.shipping_price)
+    = s.attribute(:total_price)
+      = price(s.object.total_price)
+
+    = s.attribute(:invoice) do
+      - if s.object.invoice_number?
+        a [
+          href=controller.boutique.invoice_path(s.object.secret_hash)
+          target="_blank"
+        ]
+          = s.object.invoice_number

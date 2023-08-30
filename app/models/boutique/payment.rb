@@ -56,7 +56,7 @@ class Boutique::Payment < Boutique::ApplicationRecord
   alias_attribute :refunded_at, :cancelled_at
 
   def payment_method_to_human
-    self.class.payment_method_to_human(payment_method)
+    self.class.payment_method_to_human(payment_method) if payment_method.present?
   end
 
   def self.payment_method_to_human(payment_method_string)
