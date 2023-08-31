@@ -29,6 +29,14 @@ class Folio::Console::Boutique::OrderRefundsController < Folio::Console::BaseCon
     folio_console_record.setup_from(Boutique::Order.find(params[:order_id]))
   end
 
+  def edit
+    if @order_refund.created?
+      super
+    else
+      redirect_to url_for([:console, @order_refund])
+    end
+  end
+
   def corrective_tax_documents
     data = ::CSV.generate(headers: true, col_sep: ",") do |csv|
       csv << %i[document_number order approved_at paid_at email total_price].map do |a|

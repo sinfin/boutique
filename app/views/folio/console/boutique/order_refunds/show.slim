@@ -1,4 +1,5 @@
-= show_header @order_refund, title: t(".header", label: @order_refund.to_label)
+= show_header @order_refund, title: t(".header", label: @order_refund.to_label), edit: @order_refund.created?
+
 .row
   .col-lg-6.mb-5
     = show_for(@order_refund) do |s|
