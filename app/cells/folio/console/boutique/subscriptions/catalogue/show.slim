@@ -21,6 +21,7 @@
 
       date :active_from
       date :active_until
+      date :cancelled_at
 
       attribute :state do
         if record.active?

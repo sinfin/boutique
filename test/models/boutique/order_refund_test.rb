@@ -240,4 +240,32 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     bor.reason = ""
     assert bor.invalid?
   end
+
+  test "succesfull refund flow" do
+    bor = create(:boutique_order_refund)
+
+    assert bor.created?
+    assert_equal [:approve, :cancel], bor.permitted_event_names.sort
+
+    bor.approve!
+    assert bor.approved_to_pay?
+    assert_equal [:pay], bor.permitted_event_names.sort
+
+    bor.pay!
+    assert bor.paid?
+
+    assert_equal [], bor.permitted_event_names.sort
+  end
+
+  test "can be cancelled only until approval" do
+    bor = Boutique::OrderRefund.new
+    assert bor.created?
+
+    assert bor.permitted_event_names.include?(:cancel)
+
+    (bor.class.all_state_names - [:created]).each do |state|
+      bor.aasm_state = state
+      assert_not bor.permitted_event_names.include?(:cancel), "state #{state} should not be cancellable"
+    end
+  end
 end

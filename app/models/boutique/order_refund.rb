@@ -86,8 +86,6 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     state :paid, color: "green"
     state :cancelled, color: "black"
 
-    states = Boutique::Order.aasm.states.map(&:name)
-
     event :approve do
       transitions from: :created, to: :approved_to_pay
       before do
@@ -105,7 +103,7 @@ class Boutique::OrderRefund < Boutique::ApplicationRecord
     end
 
     event :cancel do
-      transitions from: states.without(:cancelled), to: :cancelled
+      transitions from: :created, to: :cancelled
       before do
         self.cancelled_at = Time.current
       end
