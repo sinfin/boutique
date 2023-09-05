@@ -307,7 +307,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   after_save :check_for_shipping_method_update
 
-
   has_sanitized_fields :first_name,
                        :last_name,
                        :email,
@@ -727,7 +726,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def check_for_shipping_method_update
-      if saved_change_to_attribute?(:shipping_method_id)
+      if saved_change_to_attribute?(:shipping_method_id) && is_paid?
         register_package
       end
     end
