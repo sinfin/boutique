@@ -88,8 +88,8 @@ class Boutique::SubscriptionBot
       # TODO: update product prices if needed
       new_order.line_items = original_order.line_items.map(&:dup)
       new_order.subscription_line_item.subscription_starts_at = subscription.active_until
-      new_order.primary_address = original_order.primary_address.dup
-      new_order.secondary_address = original_order.secondary_address.dup
+      new_order.primary_address = original_order.primary_address.dup unless new_order.digital_only?
+      new_order.secondary_address = subscription.user.secondary_address.dup
       new_order.original_payment = subscription.payment
       new_order
     end
