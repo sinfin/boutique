@@ -88,7 +88,8 @@ class Boutique::SubscriptionBot
       # TODO: update product prices if needed
       new_order.line_items = original_order.line_items.map(&:dup)
       new_order.subscription_line_item.subscription_starts_at = subscription.active_until
-      new_order.primary_address = original_order.primary_address.dup unless new_order.digital_only?
+      new_order.primary_address = original_order.primary_address.dup
+      new_order.use_secondary_address = subscription.user.use_secondary_address
       new_order.secondary_address = subscription.user.secondary_address.dup
       new_order.original_payment = subscription.payment
       new_order
@@ -107,8 +108,9 @@ class Boutique::SubscriptionBot
                                  subscription_starts_at: subscription.active_until,
                                  subscription_period: subscription.period)
       new_order.site = subscription.product.site
-      new_order.primary_address = user.primary_address.dup unless new_order.digital_only?
-      new_order.secondary_address = user.secondary_address.dup
+      new_order.primary_address = user.primary_address.dup
+      new_order.use_secondary_address = subscription.user.use_secondary_address
+      new_order.secondary_address = subscription.user.secondary_address.dup
       new_order.save!
 
       new_order.original_payment = new_order.payments.create!(remote_id: subscription.recurrent_payments_init_id,
