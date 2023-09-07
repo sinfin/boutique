@@ -67,10 +67,11 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
 
       [
         a.name || order.gift ? order.gift_recipient_full_name : order.full_name,
+        a.company_name,
         [a.address_line_1, a.address_line_2].join(" "),
         [a.zip, a.city].join(" "),
         a.country_code,
         a.phone
-      ].join(new_line)
+      ].filter_map(&:presence).join(new_line)
     end
 end

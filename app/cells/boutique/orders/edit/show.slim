@@ -70,7 +70,8 @@
                     f,
                     title: addresses_fields_title,
                     title_tag: "h3",
-                    primary_address: current_order.requires_address?)
+                    primary_address: current_order.requires_address?,
+                    use_primary_address_company_name: true)
 
           - unless current_order.voucher_code.nil? && current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)
