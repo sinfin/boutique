@@ -73,6 +73,13 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     expected_payment_data = payment_data_for(expected_created_order)
     expected_payment_data[:payment][:recurrence] = { init_transaction_id: init_payment.remote_id, period: 2, cycle: :on_demand, valid_to: Date.new(2099, 12, 31) }
 
+    if expected_created_order.primary_address.blank?
+      expected_payment_data[:payer].delete(:city)
+      expected_payment_data[:payer].delete(:street_line)
+      expected_payment_data[:payer].delete(:postal_code)
+      expected_payment_data[:payer].delete(:country_code2)
+    end
+
     payment_result = Boutique::PaymentGateway::ResponseStruct.new(
       transaction_id: "new_payment_id",
       redirect_to: nil,
@@ -154,16 +161,12 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
     end
 
     def payment_data_for(order)
-      {
+      h = {
         payer: {
           email: order.email,
           first_name: order.first_name,
           last_name: order.last_name,
           phone: order.primary_address.try(:phone),
-          # city: order.primary_address.city,
-          # street_line: [order.primary_address.address_line_1, order.primary_address.address_line_2].compact.join(", "),
-          # postal_code: order.primary_address.zip,
-          # country_code2: order.primary_address.country_code,
         },
         payment: {
           currency: "CZK",
@@ -182,6 +185,19 @@ class Boutique::SubscriptionBotTest < ActiveSupport::TestCase
         },
         items: line_items_data(order.line_items)
       }
+
+      adr = order.primary_address || order.user.primary_address
+      return h if adr.blank?
+
+      h.deep_merge(
+        { payer: {
+            city: adr.city,
+            street_line: [adr.address_line_1, adr.address_line_2].compact.join(", "),
+            postal_code: adr.zip,
+            country_code2: adr.country_code
+          }
+        }
+      )
     end
 
     def line_items_data(line_items)

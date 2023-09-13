@@ -799,12 +799,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def invite_user!
       return if user.present?
-
-      self.user = Folio::User.invitation_not_accepted
-                             .find_by(email:)
+      existing_user = Folio::User.find_by(email:)
 
       transaction do
-        if user.nil?
+        if existing_user.nil?
           self.user = Folio::User.invite!(email:,
                                           first_name: gift ? nil : first_name,
                                           last_name: gift ? nil : last_name,
@@ -813,7 +811,9 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           secondary_address: secondary_address.try(:dup),
                                           source_site: site)
         else
-          user.invite!
+          if existing_user.invitation_token.present? && existing_user.invitation_accepted.nil?
+            user.invite!
+          end
         end
 
         update_columns(folio_user_id: user.id,
