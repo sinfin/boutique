@@ -813,8 +813,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         else
           if existing_user.invitation_token.present? && existing_user.invitation_accepted.nil?
             existing_user.invite!
-            self.user = existing_user
           end
+          self.user = existing_user
         end
 
         update_columns(folio_user_id: user.id,
