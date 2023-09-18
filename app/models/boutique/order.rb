@@ -812,7 +812,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           source_site: site)
         else
           if existing_user.invitation_token.present? && existing_user.invitation_accepted.nil?
-            user.invite!
+            existing_user.invite!
+            self.user = existing_user
           end
         end
 
