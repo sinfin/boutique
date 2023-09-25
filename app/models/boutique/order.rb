@@ -811,7 +811,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           secondary_address: secondary_address.try(:dup),
                                           source_site: site)
         else
-          if existing_user.invitation_token.present? && existing_user.invitation_accepted.nil?
+          if existing_user.invitation_token.present? && existing_user.invitation_accepted_at.nil?
             existing_user.invite!
           end
           self.user = existing_user

@@ -689,6 +689,81 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
+  test "#invite_user! for order with user" do
+    user = create(:folio_user)
+    order = create(:boutique_order, email: user.email, user:)
+    assert order.user.present?
+    assert_nil user.invitation_created_at
+
+    order.send(:invite_user!)     # do nothing
+
+    assert_equal user, order.reload.user
+    assert_nil user.reload.invitation_created_at
+  end
+
+  test "#invite_user! for order with not registered user (just email)" do
+    order = create(:boutique_order, email: "no_user@at.all")
+    assert_nil order.user
+
+    assert_difference("Folio::User.count", 1) do
+      order.send(:invite_user!) # create user and invite him
+    end
+
+    user = order.reload.user
+    assert user.present?
+    assert_equal order.email, user.email
+    assert user.invitation_token.present?
+    assert user.invitation_created_at.present?
+    assert_nil user.invitation_accepted_at
+  end
+
+  test "#invite_user! for already registered user with unaccepted invitation" do
+    token = "dsadasda"
+    invited_at = 1.day.ago
+    user = create(:folio_user, invitation_token: token,
+                               invitation_created_at: invited_at)
+    assert_nil user.invitation_accepted_at
+
+    order = create(:boutique_order, email: user.email)
+    assert_nil order.user
+
+    assert_no_difference("Folio::User.count") do
+      order.send(:invite_user!) # assign and invite him again
+    end
+
+    user = order.reload.user
+    assert user.present?
+    assert_equal order.email, user.email
+    assert user.invitation_token.present?
+    assert_not_equal token, user.invitation_token
+    assert user.invitation_created_at.present?
+    assert_not_equal invited_at.to_s, user.invitation_created_at.to_s
+    assert_nil user.invitation_accepted_at
+  end
+
+  test "#invite_user! for already registered user with accepted invitation" do
+    token = "dsadasda"
+    invited_at = 2.days.ago
+    accepted_at = 1.days.ago
+    user = create(:folio_user, invitation_token: token,
+                               invitation_created_at: invited_at,
+                               invitation_accepted_at: accepted_at)
+
+    order = create(:boutique_order, email: user.email)
+    assert_nil order.user
+
+    assert_no_difference("Folio::User.count") do
+      order.send(:invite_user!) # just assign user
+    end
+
+    user = order.reload.user
+    assert user.present?
+    assert_equal order.email, user.email
+    assert_equal token, user.invitation_token
+    assert_equal invited_at.to_s, user.invitation_created_at.to_s
+    assert_equal accepted_at.to_s, user.invitation_accepted_at.to_s
+  end
+
   # from SubscriptionBot + confirm
   def create_confirmed_order_from_subscription(subscription)
     original_order = subscription.original_order
