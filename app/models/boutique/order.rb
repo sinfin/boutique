@@ -239,7 +239,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             allow_nil: true
 
   validate :validate_voucher_code
-  validate :validate_email_not_already_registered, unless: :pending?
+  validate :validate_email_not_already_registered
 
   validates :gift_recipient_email,
             :gift_recipient_notification_scheduled_for,
@@ -824,6 +824,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     def validate_email_not_already_registered
       return if email.nil?
       return if user.present?
+      return unless aasm.from_state == :pending
 
       if Folio::User.invitation_accepted.where(email:).exists?
         errors.add(:email, :already_registered)
