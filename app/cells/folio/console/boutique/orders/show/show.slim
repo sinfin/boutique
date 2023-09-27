@@ -20,14 +20,12 @@
     = s.attribute(:cancelled_at)
 
   - if s.object.gift?
-    = s.attribute(:gift_recipient)
+    = s.attribute(:gift_recipient, if_blank: "–")
       - if s.object.gift_recipient.present?
         a[
           href=controller.folio.url_for([:console, s.object.gift_recipient])
           target='_blank'
         ] = s.object.gift_recipient.to_label
-      - else
-        = s.object.gift_recipient_full_name
 
     = s.attribute(:gift_recipient_email)
       = mail_to s.object.gift_recipient_email, s.object.gift_recipient_email

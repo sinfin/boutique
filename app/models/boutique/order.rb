@@ -829,10 +829,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       period = li.subscription_period || li.product_variant.subscription_period
 
-      if requires_address?
-        address = primary_address.try(:dup)
-        address.name = gift ? gift_recipient_full_name : full_name
-      end
+      address = primary_address.try(:dup) if requires_address?
 
       if renewed_subscription.present?
         renewed_subscription.cancelled_at = nil if li.subscription_recurring?
