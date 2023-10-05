@@ -422,6 +422,10 @@ class Boutique::Order < Boutique::ApplicationRecord
       before do
         self.cancelled_at = Time.current
       end
+
+      after do
+        subscription.destroy! if subscription.present?
+      end
     end
 
     event :revert_cancelation do
