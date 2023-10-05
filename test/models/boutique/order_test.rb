@@ -764,6 +764,45 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal accepted_at.to_s, user.invitation_accepted_at.to_s
   end
 
+  test "#deliver_gift! to unregistered user" do
+    order = create(:boutique_order, gift: true,
+                                    gift_recipient_email: "happy@new.user",
+                                    gift_recipient_notification_scheduled_for: 1.hour.from_now)
+
+    assert_no_difference("Folio::User.count") { order.deliver_gift! }
+    assert_not order.gift_recipient_notification_sent_at
+
+    travel_to 2.hours.from_now
+
+    assert_difference("Folio::User.count", 1) { order.deliver_gift! }
+    assert order.gift_recipient_notification_sent_at
+
+    gift_recipient = order.reload.gift_recipient
+    assert gift_recipient.present?
+    assert_equal gift_recipient.email, order.gift_recipient_email
+    assert gift_recipient.invitation_token.present?
+    assert gift_recipient.invitation_created_at.present?
+    assert_nil gift_recipient.invitation_accepted_at
+  end
+
+  test "#deliver_gift! to registered user" do
+    user = create(:folio_user)
+    order = create(:boutique_order, gift: true,
+                                    gift_recipient_email: user.email,
+                                    gift_recipient_notification_scheduled_for: 1.hour.from_now)
+
+    assert_no_difference("Folio::User.count") { order.deliver_gift! }
+    assert_not order.gift_recipient_notification_sent_at
+    assert_nil order.gift_recipient
+
+
+    travel_to 2.hours.from_now
+
+    assert_no_difference("Folio::User.count") { order.deliver_gift! }
+    assert order.gift_recipient_notification_sent_at
+    assert_equal user, order.gift_recipient
+  end
+
   # from SubscriptionBot + confirm
   def create_confirmed_order_from_subscription(subscription)
     original_order = subscription.original_order

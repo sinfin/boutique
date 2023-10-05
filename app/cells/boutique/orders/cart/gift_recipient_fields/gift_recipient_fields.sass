@@ -29,9 +29,13 @@
     display: none
 
   &__fields
-    margin-top: 30px
+    margin-top: 15px
     position: relative
     z-index: 2
+
+  &__info
+    +font-size-sm
+    margin-bottom: 20px
 
   &__col
     max-width: 350px
@@ -77,17 +81,9 @@
     &--trash-alt
       display: none
 
-  +mq-desktop-menu
-    &__col
-      &:nth-child(2)
-        margin: 0 auto
-
   +mq-mobile-menu
     &__col
       max-width: 500px
-
-    &__col:not(&__col:last-child)
-      margin-bottom: $grid-gutter-half
 
     &__fields
       margin-top: 16px

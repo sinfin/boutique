@@ -118,7 +118,7 @@ cs:
         active: Aktivní
         active_from: Od
         active_until: Do
-        cancelled_at: Zrušeno
+        cancelled_at: Ukončeno
         email_notifications: E-maily
         gift: Dárek
         number: Číslo

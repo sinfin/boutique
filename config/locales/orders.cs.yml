@@ -29,7 +29,8 @@ cs:
 
         gift_recipient_fields:
           checkbox_label: Objednat jako dárek
-          info: Obdarovaný po zaplacení obdrží automaticky e-mail s pozvánkou. Vašeho dárku si může užívat ihned jakmile pozvánku přijme.
+          title: Upozornění pro obdarovaného
+          info: Zvolte prosím datum, kdy odešleme obdarovanému e-mail s informací o vašem dárku a pozvánkou do  Gazetista.
           recipient_email_input_label: E-mail obdarovaného (slouží pro přihlášení)
 
         sidebar:
