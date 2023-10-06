@@ -3,6 +3,8 @@
 class Boutique::Subscription < ApplicationRecord
   include Folio::HasAddresses
 
+  audited only: %i[active_from active_until]
+
   belongs_to :payment, class_name: "Boutique::Payment",
                        foreign_key: :boutique_payment_id,
                        inverse_of: :subscription,
