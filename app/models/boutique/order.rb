@@ -208,6 +208,15 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   }
 
+  scope :sort_by_number_asc, -> { order(number: :asc) }
+  scope :sort_by_number_desc, -> { order(number: :desc) }
+  scope :sort_by_price_asc, -> { order(total_price: :asc) }
+  scope :sort_by_price_desc, -> { order(total_price: :desc) }
+  scope :sort_by_confirmed_at_asc, -> { order(confirmed_at: :asc) }
+  scope :sort_by_confirmed_at_desc, -> { order(confirmed_at: :desc) }
+  scope :sort_by_paid_at_asc, -> { order("#{table_name}.paid_at ASC NULLS LAST") }
+  scope :sort_by_paid_at_desc, -> { order("#{table_name}.paid_at DESC NULLS LAST") }
+
   pg_search_scope :by_query,
                   against: %i[base_number number email first_name last_name invoice_number],
                   associated_against: {
