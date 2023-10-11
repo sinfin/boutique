@@ -54,8 +54,8 @@
           payment_method = content_tag(:div, class: 'd-flex') do
             recurring_icon = if record.line_items.any? { |li| li.subscription_recurring? }
               cell('boutique/ui/vector_icon',
-                   icon_name: :refresh,
-                   class: "mr-1 flex-shrink-0 #{icon_class}--refresh",
+                   icon_name: :renew,
+                   class: "mr-1 flex-shrink-0 text-success",
                    size: 20).show
             end
 

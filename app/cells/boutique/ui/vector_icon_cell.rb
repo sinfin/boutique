@@ -29,8 +29,8 @@ class Boutique::Ui::VectorIconCell < ApplicationCell
       render(:_gift_path)
     when :person
       render(:_person_path)
-    when :refresh
-      render(:_refresh_path)
+    when :renew
+      render(:_renew_path)
     end
   end
 end
