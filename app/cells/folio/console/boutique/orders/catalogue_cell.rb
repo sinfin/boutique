@@ -16,4 +16,11 @@ class Folio::Console::Boutique::Orders::CatalogueCell < Folio::ConsoleCell
     #   end
     # end
   end
+
+  def state_tooltip_proc
+    # override in main app
+    # Proc.new do |context, record|
+    #   record.foo
+    # end
+  end
 end

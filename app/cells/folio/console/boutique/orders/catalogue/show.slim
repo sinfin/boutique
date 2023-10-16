@@ -1,6 +1,7 @@
 .f-c-b-orders-catalogue
   = catalogue(model, before_lambda: options[:before_lambda],
                      collection_actions: options[:collection_actions],
+                     state_tooltip_proc: state_tooltip_proc,
                      additional_columns_proc: additional_columns_proc)
     ruby:
       icon_class = 'f-c-b-orders-catalogue__icon'
@@ -79,7 +80,17 @@
       date :confirmed_at
       date :paid_at
 
-      state
+      attribute(:state, spacey: false) do
+        state_toggle = cell("folio/console/state", record, active: true)
+
+        state_tooltip = if model[:state_tooltip_proc].present?
+          model[:state_tooltip_proc].call(self, record)
+        end
+
+        content_tag :div,
+                    [state_toggle, state_tooltip].compact.join(" "),
+                    class: 'd-flex align-items-center'
+      end
 
       attribute(:invoice, compact: true) do
         if record.invoice_number?
