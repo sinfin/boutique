@@ -52,7 +52,7 @@
       attribute(:payment_method) do
         if record.is_paid?
           payment_method = content_tag(:div, class: 'd-flex') do
-            recurring_icon = if record.line_items.exists?(subscription_recurring: true)
+            recurring_icon = if record.line_items.any? { |li| li.subscription_recurring? }
               cell('boutique/ui/vector_icon',
                    icon_name: :refresh,
                    class: "mr-1 flex-shrink-0 #{icon_class}--refresh",
