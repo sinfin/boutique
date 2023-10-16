@@ -31,6 +31,12 @@ class Boutique::Ui::VectorIconCell < ApplicationCell
       render(:_person_path)
     when :renew
       render(:_renew_path)
+    when :refresh
+      render(:_refresh_path)
+    when :refresh_warning
+      render(:_refresh_warning_path)
+    when :refresh_error
+      render(:_refresh_error_path)
     end
   end
 end
