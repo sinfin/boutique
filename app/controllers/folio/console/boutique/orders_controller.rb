@@ -7,6 +7,8 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
   before_action :filter_orders_by_tab, only: %i[index invoices]
   before_action :filter_orders_with_invoices, only: %i[invoices]
 
+  BASE_TAB_KEYS = %w[unpaid paid dispatched cancelled]
+
   def index
     @orders = @orders.ordered
     @orders_scope = @orders
@@ -61,7 +63,9 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
 
       tab = params[:tab]
 
-      [nil, "unpaid", "paid", "dispatched", "cancelled"].map do |tab_param|
+      tab_keys = [nil, *BASE_TAB_KEYS, *additional_index_tab_keys]
+
+      tab_keys.map do |tab_param|
         {
           force_href: url_for([:console, @klass, base_hash.merge(tab: tab_param)]),
           force_active: tab_param == tab,
@@ -138,17 +142,21 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
     end
 
     def filter_orders_by_tab
-      case params[:tab]
-      when nil
-        @orders = @orders.except_pending
-      when "unpaid"
-        @orders = @orders.where(aasm_state: %w[confirmed waiting_for_offline_payment])
-      when "paid"
-        @orders = @orders.where(aasm_state: "paid")
-      when "dispatched"
-        @orders = @orders.where(aasm_state: "dispatched")
-      when "cancelled"
-        @orders = @orders.where(aasm_state: "cancelled")
+      if additional_index_tab_keys.include?(params[:tab])
+        @orders = filter_orders_by_additional_tab(params[:tab])
+      else
+        case params[:tab]
+        when nil
+          @orders = @orders.except_pending
+        when "unpaid"
+          @orders = @orders.where(aasm_state: %w[confirmed waiting_for_offline_payment])
+        when "paid"
+          @orders = @orders.where(aasm_state: "paid")
+        when "dispatched"
+          @orders = @orders.where(aasm_state: "dispatched")
+        when "cancelled"
+          @orders = @orders.where(aasm_state: "cancelled")
+        end
       end
     end
 
@@ -159,5 +167,13 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
 
     def folio_console_collection_includes
       Boutique.config.folio_console_collection_includes_for_orders
+    end
+
+    def additional_index_tab_keys
+      []
+    end
+
+    def filter_orders_by_additional_tab(_tab)
+      @orders
     end
 end
