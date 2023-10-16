@@ -9,7 +9,7 @@ class Folio::Console::Boutique::Orders::Index::SummaryCell < Folio::ConsoleCell
     return @orders unless @orders.nil?
 
     date = model[:date].to_date
-    @orders_confirmed = model[:scope].select { |o| o.confirmed_at.try(:to_date) == date }
+    @orders_confirmed = model[:scope].where(confirmed_at: date.beginning_of_day..date.end_of_day)
   end
 
   def total_price_confirmed

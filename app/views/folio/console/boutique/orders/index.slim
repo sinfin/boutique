@@ -6,18 +6,16 @@
 ruby:
   unless params[:sort] && %w[confirmed_at number].none? { |attr| params[:sort].starts_with?(attr) }
     bl = -> (item, collection, i) do
+      day = item.confirmed_at.try(:day)
+      return if day.blank?
+
       prev = collection[i - 1]
-      if prev.blank? || prev.new_record?
-        return
-      else
-        prev_day = prev.confirmed_at.try(:day)
-        day = item.confirmed_at.try(:day)
-        return if day.blank? || prev.blank?
-        return if day == prev_day
-        cell('folio/console/boutique/orders/index/summary',
-             scope: @orders_scope,
-             date: item.confirmed_at).show.try(:html_safe)
-      end
+      prev_day = prev.try(:confirmed_at).try(:day)
+      return if day == prev_day && i != 0
+
+      cell('folio/console/boutique/orders/index/summary',
+           scope: @orders_scope,
+           date: item.confirmed_at).show.try(:html_safe)
     end
   end
 
