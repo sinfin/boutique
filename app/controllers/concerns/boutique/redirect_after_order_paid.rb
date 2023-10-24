@@ -5,7 +5,8 @@ module Boutique::RedirectAfterOrderPaid
 
   private
     def redirect_after_order_paid(order)
-      session[:boutique_order_paid_id] = order.id
+      session[:boutique_order_paid_id_for_gtm] = order.id
+      session[:boutique_order_paid_id_for_redirects] = order.id
 
       if order.user.created_by_invite? && !order.user.invitation_accepted?
         session[:folio_user_invited_email] = order.user.email
