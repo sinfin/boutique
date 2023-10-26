@@ -30,6 +30,15 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
 
   def gift_notification(order, token = nil)
     data = order_data(order, gift_notification: true)
+    email_template_mail(data,
+                        to: order.gift_recipient_email,
+                        site: order.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
+  end
+
+  def gift_notification_with_invitation(order, token = nil)
+    data = order_data(order, gift_notification: true)
     data[:USER_ACCEPT_INVITATION_URL] = main_app.accept_user_invitation_url(invitation_token: token)
     email_template_mail(data,
                         to: order.gift_recipient_email,

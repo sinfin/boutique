@@ -104,6 +104,70 @@
 
     {ORDER_URL}
 
+- mailer: Boutique::OrderMailer
+  action: gift_notification
+  optional_keywords:
+    - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
+  title_cs: Objednávka - upozornění obdarovanému
+  subject_cs: Objednávka #{ORDER_NUMBER} dárek
+  subject_en: Order #{ORDER_NUMBER} gift
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>{ORDER_NUMBER}</p>
+    <p>TODO</p>
+
+  body_text_cs: |
+    Dobrý den,
+    {ORDER_NUMBER}
+    TODO
+
+  body_html_en: |
+    <p>Hi</p>
+    <p>{ORDER_NUMBER}</p>
+    <p>TODO</p>
+
+  body_text_en: |
+    Hi
+    {ORDER_NUMBER}
+    TODO
+
+- mailer: Boutique::OrderMailer
+  action: gift_notification_with_invitation
+  required_keywords:
+  - USER_ACCEPT_INVITATION_URL
+  optional_keywords:
+    - ORDER_NUMBER
+    - ORDER_SUMMARY_HTML
+    - ORDER_SUMMARY_PLAIN
+  title_cs: Objednávka - pozvánka pro obdarovanému
+  subject_cs: Objednávka #{ORDER_NUMBER} dárek
+  subject_en: Order #{ORDER_NUMBER} gift
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
+    <p>{ORDER_NUMBER}</p>
+    <p>TODO</p>
+
+  body_text_cs: |
+    Dobrý den,
+    {ORDER_NUMBER}
+    {USER_ACCEPT_INVITATION_URL}
+    TODO
+
+  body_html_en: |
+    <p>Hi</p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
+    <p>{ORDER_NUMBER}</p>
+    <p>TODO</p>
+
+  body_text_en: |
+    Hi
+    {ORDER_NUMBER}
+    {USER_ACCEPT_INVITATION_URL}
+    TODO
+
 - mailer: Boutique::SubscriptionMailer
   action: failure
   optional_keywords:

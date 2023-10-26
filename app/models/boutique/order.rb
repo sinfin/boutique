@@ -601,14 +601,20 @@ class Boutique::Order < Boutique::ApplicationRecord
     return if !gift? || gift_recipient_notification_sent_at?
 
     transaction do
-      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email) || begin
-        Folio::User.invite!(email: gift_recipient_email,
-                            first_name: gift_recipient_first_name,
-                            last_name: gift_recipient_last_name,
-                            primary_address: primary_address.try(:dup),
-                            source_site: site) do |u|
+      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email)
+
+      if gift_recipient.present?
+        Boutique::OrderMailer.gift_notification(self).deliver_later
+      else
+        self.gift_recipient = Folio::User.invite!(email: gift_recipient_email,
+                                                  first_name:,
+                                                  last_name:,
+                                                  primary_address: primary_address.try(:dup),
+                                                  source_site: site) do |u|
           u.skip_invitation = true
         end
+
+        Boutique::OrderMailer.gift_notification_with_invitation(self, gift_recipient.raw_invitation_token).deliver_later
       end
 
       if subscription.present?
@@ -616,8 +622,6 @@ class Boutique::Order < Boutique::ApplicationRecord
                                     updated_at: current_time_from_proper_timezone)
       end
     end
-
-    Boutique::OrderMailer.gift_notification(self, gift_recipient.raw_invitation_token).deliver_later
 
     now = current_time_from_proper_timezone
     update_columns(gift_recipient_id:,

@@ -19,4 +19,14 @@ class Boutique::OrderMailerPreview < ActionMailer::Preview
 
     Boutique::OrderMailer.unpaid_reminder(order)
   end
+
+  def gift_notification
+    order = Boutique::Order.paid.where(gift: true).last
+    Boutique::OrderMailer.gift_notification(order)
+  end
+
+  def gift_notification_with_invitation
+    order = Boutique::Order.paid.where(gift: true).last
+    Boutique::OrderMailer.gift_notification_with_invitation(order, "INVITATION_TOKEN")
+  end
 end
