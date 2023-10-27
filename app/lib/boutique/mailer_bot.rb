@@ -69,7 +69,7 @@ class Boutique::MailerBot
 
     def subscriptions_for_failed_payment
       Boutique::Subscription.recurring
-                            .where(active_until: (now - 1.day - 1.hour)..(now - 1.day))
+                            .where(active_until: (now - 12.hours - 1.hour)..(now - 12.hours))
     end
 
     def subscriptions_for_unpaid
