@@ -44,11 +44,6 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   end
 
   def total_price_without_vat
-    sk = true
-    if sk
-      model.total_price - vat_amounts.values.sum
-    else
-      model.total_price - vat_amounts.values.sum
-    end
+    model.total_price - vat_amounts.values.sum
   end
 end
