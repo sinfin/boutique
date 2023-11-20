@@ -153,6 +153,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                     :gift_recipient_first_name,
                                     :gift_recipient_last_name,
                                     :gift_recipient_notification_scheduled_for,
+                                    :age_verification,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end

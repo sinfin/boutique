@@ -83,6 +83,10 @@
         main.b-orders-edit__cell.b-orders-edit__cell--bottom
           == cell('boutique/orders/edit/recurrency_fields', f)
 
+          - if current_order.requires_age_verification?
+            .b-orders-edit__age-verification-input
+              = f.input :age_verification, error: false
+
           .b-orders-edit__payment
             - if f.object.free?
               = f.button :submit,

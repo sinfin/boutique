@@ -108,6 +108,10 @@ class Boutique::Product < Boutique::ApplicationRecord
     current_price.zero?
   end
 
+  def age_restricted?
+    false
+  end
+
   def self.sites_for_select
     Folio::Site.ordered
   end

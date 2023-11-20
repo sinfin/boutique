@@ -10,6 +10,7 @@ cs:
       boutique/order:
         address_identification_number: IČO
         addresses: Adresa
+        age_verification: Potvrzuji, že jsem starší 18 let
         confirmed_at: Objednáno
         confirmed_at_range: Objednáno
         created_at: Vytvořeno

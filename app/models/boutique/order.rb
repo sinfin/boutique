@@ -267,10 +267,16 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
+  validates :age_verification,
+            acceptance: true,
+            if: :requires_age_verification?
+
   before_validation :unset_unwanted_gift_attributes
 
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
+
+  attribute :age_verification, :boolean
 
   has_sanitized_fields :first_name,
                        :last_name,
@@ -485,6 +491,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def countries_whitelist
     nil
+  end
+
+  def requires_age_verification?
+    line_items.any? { |li| li.product.age_restricted? }
   end
 
   def add_line_item!(product, amount: 1, renewed_subscription: nil, additional_options: {})
