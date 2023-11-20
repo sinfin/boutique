@@ -483,6 +483,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product.shipping_info
   end
 
+  def countries_whitelist
+    nil
+  end
+
   def add_line_item!(product, amount: 1, renewed_subscription: nil, additional_options: {})
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
