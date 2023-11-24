@@ -9,7 +9,7 @@ cs:
 
         title: Objednávka
         quick_checkout: Rychlá objednávka
-        register: Zaregistujte se
+        register: Zaregistrujte se
         or: Nebo
         have_account_already: Již u nás máte účet?
         email_already_registered: Účet s tímto e-mailem již existuje. %{sign_in_link} nebo si nechte %{password_reset_link}.
