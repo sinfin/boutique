@@ -66,6 +66,9 @@ cs:
       confirm:
         success_free: Objednávka proběhla úspěšně
 
+      flash:
+        product_unavailable: Produkt je aktuálně nedostupný, nelze ho objednat.
+
       payment_methods:
         secured_by: Zabezpečeno
         prices_include_vat: Uvedené ceny jsou včetně DPH.
@@ -79,6 +82,7 @@ cs:
         unpaid: nezaplacena
         unpaid_notice: Prosíme prověřte stav platby
         waiting_for_offline_payment_notice: Očekáváme platbu převodem
+
 
       invoice:
         title: "Faktura – daňový doklad č. %{number}"

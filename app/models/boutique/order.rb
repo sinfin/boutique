@@ -500,7 +500,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   def add_line_item!(product, amount: 1, renewed_subscription: nil, additional_options: {})
     Boutique::Order.transaction do
       if ::Boutique.config.use_cart_in_orders
-        if line_item = line_items.all.find { |li| li.product_variant_id == product_variant.id }
+        if line_item = line_items.all.find { |li| li.product_id == product.id }
           line_item.amount += amount
           line_item.subscription_recurring = nil
           line_item.save!

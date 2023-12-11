@@ -6,6 +6,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
   VOUCHER_GET_PARAM_NAME = :c
 
   before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
+  before_action :redirect_if_current_order_is_unavailable, except: %i[add show crossdomain_add payment]
   before_action :find_order_by_secret_hash, only: %i[show payment]
 
   def crossdomain_add
@@ -199,6 +200,13 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     def redirect_if_current_order_is_empty
       redirect_back fallback_location: main_app.root_url if current_order.nil?
+    end
+
+    def redirect_if_current_order_is_unavailable
+      if current_order.line_items.any? { |li| !li.product.published? }
+        flash[:alert] = t(".flash.product_unavailable")
+        redirect_back fallback_location: main_app.root_url
+      end
     end
 
     def find_order_by_secret_hash
