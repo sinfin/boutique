@@ -25,5 +25,9 @@ class Boutique::Orders::DeliverGiftsJob < Boutique::ApplicationJob
                      .where(aasm_state: %w[paid dispatched])
                      .where(gift: true, gift_recipient_notification_sent_at: nil)
                      .where("gift_recipient_notification_scheduled_for <= ?", Time.current)
+                     .includes(:gift_recipient,
+                               :primary_address,
+                               :site,
+                               line_items: :product)
     end
 end
