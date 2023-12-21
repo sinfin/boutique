@@ -40,7 +40,6 @@ class Boutique::MailerBot
                                .where("? < active_until", now)
                                .where(boutique_product_variant_id: subscription.boutique_product_variant_id)
                                .exists?
-      print("Enqueuing email for subscription #{subscription.id}...")
       Boutique::SubscriptionMailer.unpaid(subscription).deliver_later
     end
   end

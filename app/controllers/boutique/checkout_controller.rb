@@ -190,6 +190,10 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
       create_current_order if current_order.nil?
 
+      if params[:gift].present?
+        current_order.update!(gift: true)
+      end
+
       current_order.add_line_item!(product_variant, **add_line_item_options)
 
       redirect_to action: :cart
