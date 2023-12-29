@@ -31,7 +31,7 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
   def to_console_label
     [
       product.try(:to_label),
-      to_label
+      title
     ].compact.join(" - ")
   end
 

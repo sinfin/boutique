@@ -67,7 +67,7 @@ class Boutique::Subscription < ApplicationRecord
 
   def to_label
     [
-      product_variant.to_label,
+      product_variant.title || product_variant.product.to_label,
       ("(#{active_range})" if active_from.present?),
     ].compact
      .join(" ")
