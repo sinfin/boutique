@@ -25,10 +25,15 @@ class Boutique::SubscriptionBot
                                                                                   first_name
                                                                                   last_name
                                                                                   email
-                                                                                  use_secondary_address
-                                                                                  ]))
-        # TODO: update product prices if needed
-        new_order.line_items = original_order.line_items.map(&:dup)
+                                                                                  use_secondary_address]))
+
+        new_order.line_items = original_order.line_items.map do |original_line_item|
+          line_item = original_line_item.dup
+          line_item.vat_rate_value = nil
+          line_item.subscription_starts_at += line_item.subscription_period.months if line_item.subscription_starts_at?
+          line_item
+        end
+
         new_order.primary_address = original_order.primary_address.dup
         new_order.secondary_address = original_order.secondary_address.dup
         new_order.original_payment = subscription.payment
