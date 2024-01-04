@@ -1,6 +1,6 @@
 ruby:
   if f.object.persisted?
-    link = boutique.product_url(f.object.master_variant, only_path: false)
+    link = boutique.product_url(f.object, only_path: false)
     right = cell('folio/console/clipboard_copy',
                  link,
                  as_button: true,
