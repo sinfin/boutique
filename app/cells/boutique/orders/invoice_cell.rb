@@ -39,11 +39,19 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   def vat_amounts
     @vat_amounts ||= model.line_items.group_by(&:vat_rate_value)
                                      .transform_values do |line_items|
-      line_items.sum(&:price_vat)
+      # FIXME: fix for multiple line items
+      total_price_vat
     end
   end
 
+  def total_price_vat
+    fail "invoices for multiple line items are not supported" if model.line_items.size > 1
+
+    vat_rate_value = model.line_items.first.vat_rate_value
+    (model.total_price * (vat_rate_value.to_d / (100 + vat_rate_value))).round(2).to_f
+  end
+
   def total_price_without_vat
-    model.total_price - vat_amounts.values.sum
+    (model.total_price - total_price_vat.to_d).to_f
   end
 end
