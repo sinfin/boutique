@@ -624,7 +624,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def deliver_gift!
     return if !gift? || gift_recipient_notification_sent_at?
-    return unless line_items.any? { |li| li.product.published? }
 
     transaction do
       self.gift_recipient = Folio::User.find_by(email: gift_recipient_email)
@@ -892,6 +891,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 end
+
 # == Schema Information
 #
 # Table name: boutique_orders
