@@ -115,6 +115,11 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
           order_scope: :ordered_by_total_price_asc,
           collapsed: true,
         },
+        by_gift: {
+          as: :collection,
+          collection: [true, false],
+          collapsed: true,
+        },
         by_voucher_title: {
           as: :text,
           autocomplete_attribute: :title,

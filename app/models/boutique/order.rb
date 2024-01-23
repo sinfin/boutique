@@ -170,6 +170,17 @@ class Boutique::Order < Boutique::ApplicationRecord
     where.not(total_price: nil).where("total_price <= ?", total_price)
   }
 
+  scope :by_gift, -> (bool) {
+    case bool
+    when true, "true"
+      where(gift: true)
+    when false, "false"
+      where(gift: false)
+    else
+      all
+    end
+  }
+
   scope :by_voucher_title, -> (voucher_title) {
     where(boutique_voucher_id: Boutique::Voucher.by_query(voucher_title).select(:id))
   }
