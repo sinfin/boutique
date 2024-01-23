@@ -622,8 +622,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         Boutique::OrderMailer.gift_notification(self).deliver_later
       else
         self.gift_recipient = Folio::User.invite!(email: gift_recipient_email,
-                                                  first_name:,
-                                                  last_name:,
+                                                  first_name: gift_recipient_first_name,
+                                                  last_name: gift_recipient_last_name,
                                                   primary_address: primary_address.try(:dup),
                                                   source_site: site) do |u|
           u.skip_invitation = true
