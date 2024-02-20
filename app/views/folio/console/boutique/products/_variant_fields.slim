@@ -5,11 +5,16 @@
     .row.align-items-center
       .col
         .mb-n3
+          == cell('folio/console/publishable_inputs',
+                  f,
+                  additional_fields: %i[master])
+
           .row
-            .col-lg-6
-              == cell('folio/console/publishable_inputs',
-                      f,
-                      additional_fields: %i[master])
+            .col-lg-1
+              = f.input :id, label: "ID",
+                             disabled: true,
+                             readonly: true
+            .col-lg-5
 
               = f.input :title
 
