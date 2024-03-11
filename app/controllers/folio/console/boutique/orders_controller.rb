@@ -8,7 +8,7 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
 
   def index
     @orders = @orders.ordered
-    @orders_scope = @orders
+    @orders_scope = @orders.unscope(:includes)
 
     respond_with(@orders) do |format|
       format.html do
