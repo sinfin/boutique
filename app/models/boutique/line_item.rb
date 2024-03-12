@@ -45,6 +45,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     amount * unit_price
   end
 
+  def price_without_discount
+    amount * unit_price_without_discount
+  end
+
   def price_vat
     amount * unit_price_vat
   end
@@ -55,6 +59,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def unit_price
     super || product.price
+  end
+
+  def unit_price_without_discount
+    product.regular_price
   end
 
   def vat_rate_value
@@ -68,6 +76,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   def unit_price_without_vat
     (unit_price - unit_price_vat.to_d).to_f
   end
+
 
   def subscription_period
     super || product.subscription_period

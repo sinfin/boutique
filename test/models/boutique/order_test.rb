@@ -86,16 +86,20 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
-  test "assign voucher by code" do
+  test "discount" do
     order = create(:boutique_order, line_items_count: 1)
-    order.line_items.first.product.update!(regular_price: 100)
+    product = order.line_items.first
 
+    product.update!(regular_price: 100)
+
+    assert_equal 0, order.discount
     assert_equal 100, order.total_price
 
     order.assign_voucher_by_code("TEST")
 
     assert order.errors[:voucher_code]
     assert_nil order.voucher
+    assert_equal 0, order.discount
     assert_equal 100, order.total_price
 
     voucher = create(:boutique_voucher, code: "TEST", discount: 50, published: false)
@@ -104,6 +108,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
     assert order.errors[:voucher_code]
     assert_nil order.voucher
+    assert_equal 0, order.discount
     assert_equal 100, order.total_price
 
     voucher.update_column(:published, true)
@@ -112,7 +117,18 @@ class Boutique::OrderTest < ActiveSupport::TestCase
 
     assert_empty order.errors[:voucher_code]
     assert_equal voucher, order.voucher
+    assert_equal 50, order.discount
     assert_equal 50, order.total_price
+
+    product.update!(discounted_price: 75)
+
+    assert_equal 25, order.discount
+    assert_equal 50, order.total_price
+
+    product.update!(discounted_price: 25)
+
+    assert_equal 0, order.discount
+    assert_equal 25, order.total_price
   end
 
   test "confirm with voucher discount" do

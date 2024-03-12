@@ -442,6 +442,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || line_items.sum(&:price)
   end
 
+  def line_items_price_without_discount
+    line_items.sum(&:price_without_discount)
+  end
+
   def shipping_price
     super || begin
       return 0 if digital_only?
@@ -471,11 +475,14 @@ class Boutique::Order < Boutique::ApplicationRecord
       return 0 unless voucher.present? &&
                       voucher.applicable?
 
-      if voucher.discount_in_percentages?
-        (line_items_price + shipping_price) * (0.01 * voucher.discount)
+      voucher_discount = if voucher.discount_in_percentages?
+        ((line_items_price_without_discount + shipping_price) * (0.01 * voucher.discount)).round
       else
         voucher.discount
       end
+      product_discount = line_item.product.discount.to_i
+
+      [voucher_discount - product_discount, 0].max
     end
   end
 

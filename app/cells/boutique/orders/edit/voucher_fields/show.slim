@@ -17,6 +17,6 @@ div class=class_name
 
     span.folio-loader.folio-loader--small.b-orders-edit-voucher-fields__loader
 
-  - if order.discount && order.discount > 0
+  - if order.voucher.present?
     p.b-orders-edit-voucher-fields__price
-      ' #{t('.discount')}: #{price(order.discount)}
+      ' #{t('.discount')}: #{price(order.discount, zero_as_number: true)}
