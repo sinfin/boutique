@@ -18,7 +18,9 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
     end
 
     def index_filters
-      {}
+      {
+        by_published: [true, false]
+      }
     end
 
     def product_variants_strong_params
