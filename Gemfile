@@ -39,3 +39,8 @@ group :development do
 
   gem "faker", require: false
 end
+
+group :development, :test do
+  gem "pry-byebug"
+end
+

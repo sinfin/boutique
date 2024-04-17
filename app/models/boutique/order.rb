@@ -480,7 +480,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       else
         voucher.discount
       end
-      product_discount = line_item.product.discount.to_i
+      product_discount = line_items.sum { |li| li.product.discount.to_i }
 
       [voucher_discount - product_discount, 0].max
     end
@@ -768,9 +768,11 @@ class Boutique::Order < Boutique::ApplicationRecord
         address.name = gift ? gift_recipient_full_name : full_name
       end
 
-      if renewed_subscription.present?
-        renewed_subscription.cancelled_at = nil if line_item.subscription_recurring?
+      active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
+      active_until = active_from + period.months
+      cancelled_at = active_from unless line_item.subscription_recurring?
 
+      if renewed_subscription.present? && active_from < renewed_subscription.active_until
         subscription_starts_at = renewed_subscription.active_until
         if line_item.product.has_subscription_frequency?
           # fixes badly imported subscriptions
@@ -781,12 +783,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
         renewed_subscription.update!(payment: paid_payment,
                                      active_until: renewed_subscription.active_until + period.months,
+                                     cancelled_at: line_item.subscription_recurring? ? nil : subscription_starts_at,
                                      primary_address: address)
         update!(subscription: renewed_subscription)
       else
-        active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
-        active_until = active_from + period.months
-        cancelled_at = active_from unless line_item.subscription_recurring?
         subscriber = user unless gift?
 
         create_subscription!(payment: paid_payment,

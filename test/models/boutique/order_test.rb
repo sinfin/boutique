@@ -86,9 +86,43 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
+  test "pay with renewed subscription" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true, email: "foo@test.test")
+    user = order.user
+    active_until = Date.today + 3.days
+    subscription = create(:boutique_subscription, user:, active_from: 1.month.ago, active_until:)
+    order.update!(renewed_subscription: subscription)
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.pay!
+    end
+
+    assert_equal active_until + order.line_items.first.subscription_period.months, subscription.reload.active_until
+    assert_equal subscription, order.subscription
+  end
+
+  test "pay with renewed but not-active subscription" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true, email: "foo@test.test")
+    user = order.user
+    active_until = Date.yesterday
+    subscription = create(:boutique_subscription, user:, active_from: 1.month.ago, active_until:)
+    order.update!(renewed_subscription: subscription)
+
+    assert_difference("user.subscriptions.count", 1) do
+      order.pay!
+    end
+
+    assert_equal active_until, subscription.reload.active_until
+    assert_not_equal subscription, order.subscription
+    assert_equal Date.today, order.subscription.reload.active_from.to_date
+    assert_equal Date.today + order.line_items.first.subscription_period.months, order.subscription.reload.active_until.to_date
+  end
+
   test "discount" do
     order = create(:boutique_order, line_items_count: 1)
-    product = order.line_items.first
+    product = order.line_items.first.product
 
     product.update!(regular_price: 100)
 
