@@ -16,7 +16,8 @@ module Boutique
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
                   :orders_edit_recurrency_title_proc,
-                  :orders_get_referrer_url_proc
+                  :orders_get_referrer_url_proc,
+                  :disable_browser_input_autocomplete
 
     def initialize
       # set defaults here
@@ -48,6 +49,7 @@ module Boutique
                     .to_s
                     .gsub("{AMOUNT}", price.to_s)
       end
+      @disable_browser_input_autocomplete = false
     end
   end
 
