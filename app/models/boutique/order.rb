@@ -313,6 +313,7 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_numbers
         imprint
         set_site
+        set_user_and_email
 
         self.email ||= user.try(:email)
 
@@ -827,6 +828,11 @@ class Boutique::Order < Boutique::ApplicationRecord
       self.line_items_price = line_items_price
       self.discount = discount
       self.total_price = total_price
+    end
+
+    def set_user_and_email
+      self.user = Folio::User.find_by(email:) if email.present? && user.blank?
+      self.email = user&.email if email.blank?
     end
 
     def validate_voucher_code(ignore_blank: true)
