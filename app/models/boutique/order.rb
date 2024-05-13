@@ -731,10 +731,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def invite_user!
-      return if user.present?
+      return if user.present? && (user.invitation_accepted? || user.confirmed_at.present?)
 
-      self.user = Folio::User.invitation_not_accepted
-                             .find_by(email:)
+      self.user ||= Folio::User.invitation_not_accepted
+                               .find_by(email:)
 
       transaction do
         if user.nil?
