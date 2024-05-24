@@ -269,7 +269,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { Boutique.config.products_belong_to_site && !pending? }
 
   validates :email,
-            format: { with: Folio::EMAIL_REGEXP },
+            format: { with: Devise::email_regexp },
             unless: :pending?,
             allow_nil: true
 
@@ -289,7 +289,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   validate :validate_gift_recipient_notification_scheduled_for_is_in_future
 
   validates :gift_recipient_email,
-            format: { with: Folio::EMAIL_REGEXP },
+            format: { with: Devise::email_regexp },
             if: -> { gift? && !pending? },
             allow_nil: true
 
@@ -814,6 +814,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           primary_address: gift? ? nil : primary_address.try(:dup),
                                           secondary_address: secondary_address.try(:dup),
                                           source_site: site)
+          raise "New User (for order #{self.number}) have errors! #{user.errors.full_messages}" if user.errors.any?
         else
           if existing_user.invitation_token.present? && existing_user.invitation_accepted_at.nil?
             existing_user.invite!
