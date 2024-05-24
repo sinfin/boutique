@@ -745,6 +745,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           primary_address: gift? ? nil : primary_address.try(:dup),
                                           secondary_address: secondary_address.try(:dup),
                                           source_site: site)
+          raise "New User (for order #{self.number}) have errors! #{user.errors.full_messages}" if user.errors.any?
         else
           user.invite!
         end
