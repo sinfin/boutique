@@ -134,6 +134,10 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
   end
 
+  def get_confirm
+    redirect_to action: :edit
+  end
+
   def show
     @use_boutique_adaptive_css = :no_background
   end
