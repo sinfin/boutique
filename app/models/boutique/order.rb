@@ -628,8 +628,8 @@ class Boutique::Order < Boutique::ApplicationRecord
   def charge_recurrent_payment!
     return unless confirmed? && subsequent?
 
-    if payments.any?(&:paid?)
-      pay!
+    if payments.where.not(payment_method: "fake_init_payment").any?(&:paid?)
+      pay! # callback after payment.pay! was not successfull
     else
       transaction = payment_gateway.repeat_recurring_transaction(self)
       payments.create!(remote_id: transaction.transaction_id,
