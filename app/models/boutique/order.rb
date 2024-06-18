@@ -628,11 +628,15 @@ class Boutique::Order < Boutique::ApplicationRecord
   def charge_recurrent_payment!
     return unless confirmed? && subsequent?
 
-    transaction = payment_gateway.repeat_recurring_transaction(self)
-    payments.create!(remote_id: transaction.transaction_id,
-                     amount: total_price,
-                     payment_method: transaction.hash.dig(:payment, :method),
-                     payment_gateway_provider: payment_gateway.provider)
+    if payments.any?(&:paid?)
+      pay!
+    else
+      transaction = payment_gateway.repeat_recurring_transaction(self)
+      payments.create!(remote_id: transaction.transaction_id,
+                       amount: total_price,
+                       payment_method: transaction.hash.dig(:payment, :method),
+                       payment_gateway_provider: payment_gateway.provider)
+    end
   rescue StandardError => error
     if error.is_a?(Boutique::PaymentGateway::Error) && error.stopped_recurrence?
       subscription.cancel!
@@ -804,6 +808,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     def invite_user!
       return if user.present?
       existing_user = Folio::User.find_by(email:)
+      existing_user ||= Folio::User.find_by(email: email.downcase)
 
       transaction do
         if existing_user.nil?
