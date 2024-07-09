@@ -136,6 +136,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     end
   end
 
+  def subscription_period_options_for_select
+    self.class.subscription_period_options_for_select
+  end
+
   def price_per_day
     return nil unless subscription?
     (unit_price.to_f / (subscription_ends_at.to_date - subscription_starts_at.to_date).to_i).round(2)
