@@ -269,7 +269,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { Boutique.config.products_belong_to_site && !pending? }
 
   validates :email,
-            format: { with: Devise::email_regexp },
+            format: { with: Devise.email_regexp },
             unless: :pending?,
             allow_nil: true
 
@@ -289,7 +289,7 @@ class Boutique::Order < Boutique::ApplicationRecord
   validate :validate_gift_recipient_notification_scheduled_for_is_in_future
 
   validates :gift_recipient_email,
-            format: { with: Devise::email_regexp },
+            format: { with: Devise.email_regexp },
             if: -> { gift? && !pending? },
             allow_nil: true
 
