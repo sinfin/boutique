@@ -1,10 +1,3 @@
-ruby:
-  product_variants = Boutique::ProductVariant.subscriptions
-                                             .includes(:product)
-                                             .order("boutique_products.slug")
-                                             .load
-  selected_product_variant = f.object.product_variant || product_variants.first
-
 = form_header f
 
 = tabs [:content]
@@ -14,25 +7,21 @@ ruby:
     .row
       .col-md-6
         = f.association :product_variant,
-                        collection: product_variants.map { |pv| [pv.to_console_label, pv.id, "data-requires-address" => !pv.product.digital_only?] },
-                        selected: selected_product_variant.id,
-                        include_blank: false,
-                        input_html: { class: 'f-c-b-subscriptions-form__product-variant-input' }
+                      collection: Boutique::ProductVariant.subscriptions \
+                                                          .order("boutique_products.slug") \
+                                                          .map { |pv| [pv.to_console_label, pv.id] },
+                      include_blank: false
 
     .row
       .col-md-3 = f.input :active_from, as: :date
       .col-md-3 = f.input :active_until, as: :date
 
-    - address_required = !selected_product_variant.product.digital_only?
-    .row.f-c-b-subscriptions-form__address-fields[
-      style=("display: none;" unless address_required)
-    ]
+    .row
       .col-md-6
         == cell('folio/console/addresses/fields',
                 f,
                 cols: [[Folio::Address::Primary, :primary_address, nil]],
                 fields_layout: { primary_address: f.object.class.primary_address_fields_layout },
-                required: %i[name address_line_2],
-                disabled: !address_required)
+                required: %i[name address_line_2])
 
 = form_footer f
