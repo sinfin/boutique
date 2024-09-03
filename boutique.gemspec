@@ -34,6 +34,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "route_translator"
   spec.add_dependency "savon", "~> 2.13.0"
 
+  # FIXME: fixes issue with savon gem
+  spec.add_dependency "nori", "2.7"
+
   spec.add_development_dependency "pry-rails"
   spec.add_development_dependency "letter_opener"
   spec.add_development_dependency "rubocop"
