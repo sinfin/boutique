@@ -10,7 +10,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
   end
 
   def payment
-    if @order.confirmed?
+    if @order.can_be_paid?
       create_payment_and_redirect_to_payment_gateway(@order)
     else
       flash[:error] = t(".error")

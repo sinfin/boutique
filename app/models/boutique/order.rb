@@ -519,6 +519,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     !is_paid?
   end
 
+  def can_be_paid?
+    return false unless confirmed?
+
+    Time.current < confirmed_at + 7.days
+  end
+
   def currency
     # TODO: configurable currency
     "CZK"

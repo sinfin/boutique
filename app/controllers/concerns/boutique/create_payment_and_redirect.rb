@@ -14,6 +14,7 @@ module Boutique::CreatePaymentAndRedirect
                                                                        return_url: return_after_pay_url(order_id: order.secret_hash, only_path: false),
                                                                        callback_url: payment_callback_url(order_id: order.secret_hash, only_path: false) })
       end
+
       order.payments.create!(remote_id: transaction.transaction_id,
                              amount: order.total_price,
                              payment_gateway_provider: order.payment_gateway.provider,
