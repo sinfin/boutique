@@ -634,7 +634,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     return if !gift? || gift_recipient_notification_sent_at?
 
     transaction do
-      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email)
+      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email.downcase)
 
       if gift_recipient.present?
         Boutique::OrderMailer.gift_notification(self).deliver_later
@@ -878,7 +878,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       return if user.present?
       return unless aasm.from_state == :pending
 
-      if Folio::User.invitation_accepted.where(email:).exists?
+      if Folio::User.invitation_accepted.where(email: email.downcase).exists?
         errors.add(:email, :already_registered)
       end
     end
