@@ -658,7 +658,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     return if gift_recipient_notification_scheduled_for.present? && gift_recipient_notification_scheduled_for > Time.current
 
     transaction do
-      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email)
+      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email.downcase)
 
       if gift_recipient.present?
         Boutique::OrderMailer.gift_notification(self).deliver_later
@@ -959,7 +959,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       return if email.nil?
       return if user.present?
 
-      if Folio::User.invitation_accepted.where(email:).exists?
+      if Folio::User.invitation_accepted.where(email: email.downcase).exists?
         errors.add(:email, :already_registered)
       end
     end
