@@ -37,40 +37,48 @@ class Boutique::Subscription < ApplicationRecord
 
   scope :with_email_notifications_enabled, -> { where(email_notifications: true) }
 
-  scope :active_at, -> (time) {
+  scope :active_at, -> (time, include_threshold: true) {
     base = where("(#{table_name}.active_from IS NULL OR #{table_name}.active_from <= ?)", time)
 
-    rec = base.recurring
-              .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
-                     time - NOT_CANCELLED_AT_THRESHOLD)
+    if include_threshold
+      rec = base.recurring
+                .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
+                      time - NOT_CANCELLED_AT_THRESHOLD)
 
-    non_rec = base.non_recurring
-                  .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
-                         time)
+      non_rec = base.non_recurring
+                    .where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
+                          time)
 
-    rec.or(non_rec)
+      rec.or(non_rec)
+    else
+      base.where("(#{table_name}.active_until IS NULL OR #{table_name}.active_until >= ?)",
+                 time)
+    end
   }
 
-  scope :active, -> {
-    active_at(Time.current)
+  scope :active, -> (include_threshold: true) {
+    active_at(Time.current, include_threshold:)
   }
 
-  scope :inactive_at, -> (time) {
+  scope :inactive_at, -> (time, include_threshold: true) {
     base = all
-
     future = base.where("#{table_name}.active_from > ?", time)
 
-    rec = base.recurring
-              .where("#{table_name}.active_until < ?", time - NOT_CANCELLED_AT_THRESHOLD)
+    if include_threshold
+      rec = base.recurring
+                .where("#{table_name}.active_until < ?", time - NOT_CANCELLED_AT_THRESHOLD)
 
-    non_rec = base.non_recurring
-                  .where("#{table_name}.active_until < ?", time)
+      non_rec = base.non_recurring
+                    .where("#{table_name}.active_until < ?", time)
 
-    future.or(rec).or(non_rec)
+      future.or(rec).or(non_rec)
+    else
+      future.or(base.where("#{table_name}.active_until < ?", time))
+    end
   }
 
-  scope :inactive, -> {
-    inactive_at(Time.current)
+  scope :inactive, -> (include_threshold: true) {
+    inactive_at(Time.current, include_threshold: true)
   }
 
   scope :by_active, -> (bool) {
@@ -101,6 +109,12 @@ class Boutique::Subscription < ApplicationRecord
 
   scope :non_recurring, -> {
     where(recurrent: false).or(where.not(cancelled_at: nil))
+  }
+
+  scope :expiring_soon, -> {
+    recurring.active(include_threshold: false)
+             .where(payment_expiration_date: ..Date.today + 7.days)
+             .where("#{table_name}.active_until > #{table_name}.payment_expiration_date")
   }
 
   scope :by_gift, -> (bool) {

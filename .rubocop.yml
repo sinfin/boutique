@@ -6,3 +6,5 @@ Lint/UselessAssignment:
     - test/jobs/boutique/orders/deliver_gifts_job_test.rb
     - test/lib/boutique/mailer_bot_test.rb
     - test/lib/boutique/subscription_bot_test.rb
+    - test/models/boutique/subscripion_test.rb
+

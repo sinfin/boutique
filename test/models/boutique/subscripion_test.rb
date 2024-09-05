@@ -37,6 +37,18 @@ class Boutique::SubscripionTest < ActiveSupport::TestCase
     end
   end
 
+  test "expiring_soon" do
+    assert_equal [], Boutique::Subscription.expiring_soon.ids
+
+    target = create(:boutique_subscription, active_until: 2.weeks.from_now, payment_expiration_date: 1.week.from_now, recurrent: true)
+    expiring_soon_but_will_be_charged = create(:boutique_subscription, active_until: 3.days.from_now, payment_expiration_date: 1.week.from_now, recurrent: true)
+    expiring_later = create(:boutique_subscription, active_until: 2.weeks.from_now, payment_expiration_date: 1.week.from_now + 1.day, recurrent: true)
+    expiration_unknown = create(:boutique_subscription, active_until: 2.weeks.from_now, payment_expiration_date: nil, recurrent: true)
+    cancelled = create(:boutique_subscription, active_until: 2.weeks.from_now, payment_expiration_date: 1.week.from_now, recurrent: true, cancelled_at: 1.day.ago)
+
+    assert_equal [target.id].sort, Boutique::Subscription.expiring_soon.ids.sort
+  end
+
   test "cancel" do
     subscription = create(:boutique_subscription, recurrent: true)
 
