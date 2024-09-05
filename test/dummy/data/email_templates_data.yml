@@ -401,6 +401,31 @@
     Hello,
     we hope you're happy with your subscription. Your prepaid period expires in one week. You can easily renew your subscription on our website.
 
+- mailer: Boutique::SubscriptionMailer
+  action: expiring_soon
+  optional_keywords:
+    - ROOT_URL
+    - SITE_TITLE
+    - DOMAIN
+  title_cs: Předplatné - blíží se konec platnosti platební karty
+  subject_cs: Předplatné - blíží se konec platnosti Vaší platební karty
+  subject_en: Subscription - your credit card is about to expire
+  body_html_cs: |
+    <p>Dobrý den,</p>
+    <p>Vaše platební karta brzy expiruje. Pro obnovu Vašeho předplatného ale nyní nemusíte podnikat žádnou akci. Ke dni obnovy předplatného Vám zašleme e-mail s odkazem na platební bránu, kde jednoduše zadáte číslo Vaší nové karty.</p>
+
+  body_text_cs: |
+    Dobrý den,
+    Vaše platební karta brzy expiruje. Pro obnovu Vašeho předplatného ale nyní nemusíte podnikat žádnou akci. Ke dni obnovy předplatného Vám zašleme e-mail s odkazem na platební bránu, kde jednoduše zadáte číslo Vaší nové karty.
+
+  body_html_en: |
+    <p>Hello,</p>
+    <p>your credit card will expire soon. However, you do not need to take any action now to renew your subscription. We will send you an email on the renewal date with a link to the payment gateway where you simply enter your new card number.</p>
+
+  body_text_en: |
+    Hello,
+    Your credit card will expire soon. However, you do not need to take any action now to renew your subscription. We will send you an email on the renewal date with a link to the payment gateway where you simply enter your new card number.
+
 - mailer: Boutique::OrderRefundMailer
   action: payout_by_paypal
   required_keywords:

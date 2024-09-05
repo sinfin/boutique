@@ -25,4 +25,10 @@ class Boutique::SubscriptionMailerPreview < ActionMailer::Preview
 
     Boutique::SubscriptionMailer.unpaid(subscription)
   end
+
+  def expiring_soon
+    subscription = Boutique::Subscription.last
+
+    Boutique::SubscriptionMailer.expiring_soon(subscription)
+  end
 end

@@ -13,6 +13,7 @@ class Boutique::MailerBot
     subscriptions_ended
     subscriptions_failed_payment
     subscriptions_unpaid
+    subscriptions_expiring_soon
     # subscriptions_will_end_in_a_week
   end
 
@@ -50,6 +51,12 @@ class Boutique::MailerBot
     end
   end
 
+  def subscriptions_expiring_soon
+    subscriptions_for_expiring_soon.each do |subscription|
+      Boutique::SubscriptionMailer.expiring_soon(subscription).deliver_later
+    end
+  end
+
   private
     def now
       @now ||= Time.current.beginning_of_hour
@@ -79,5 +86,13 @@ class Boutique::MailerBot
     def subscriptions_for_will_end_in_a_week
       Boutique::Subscription.non_recurring
                             .where(active_until: (now + 1.week - 1.hour)..(now + 1.week))
+    end
+
+    def subscriptions_for_expiring_soon
+      # sends email just once a day
+      Boutique::Subscription.recurring
+                            .where("payment_expiration_date::timestamp BETWEEN ? AND ?",
+                                   now + 1.week - 7.hour,
+                                   now + 1.week - 6.hours)
     end
 end

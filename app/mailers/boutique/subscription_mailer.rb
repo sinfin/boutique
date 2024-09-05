@@ -37,4 +37,12 @@ class Boutique::SubscriptionMailer < Boutique::ApplicationMailer
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)
   end
+
+  def expiring_soon(subscription)
+    email_template_mail(email_template_data_defaults(subscription),
+                        to: subscription.user.email,
+                        site: subscription.product_variant.product.site,
+                        bcc: ::Boutique.config.mailers_bcc,
+                        reply_to: ::Boutique.config.mailers_reply_to)
+  end
 end

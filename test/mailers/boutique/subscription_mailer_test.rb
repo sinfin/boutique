@@ -40,4 +40,12 @@ class Boutique::SubscriptionMailerTest < ActionMailer::TestCase
     mail = Boutique::SubscriptionMailer.unpaid(subscription)
     assert_equal ["test@test.test"], mail.to
   end
+
+  test "expiring_soon" do
+    user = create(:folio_user, email: "test@test.test")
+    subscription = create(:boutique_subscription, user:)
+
+    mail = Boutique::SubscriptionMailer.expiring_soon(subscription)
+    assert_equal ["test@test.test"], mail.to
+  end
 end

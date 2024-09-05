@@ -105,6 +105,25 @@ class Boutique::MailerBotTest < ActiveSupport::TestCase
     assert_equal [target.id], @bot.send(:subscriptions_for_will_end_in_a_week).map(&:id)
   end
 
+  test "subscriptions_expiring_soon" do
+    travel_to Time.current.change(hour: 7)
+
+    assert_equal [], @bot.send(:subscriptions_for_expiring_soon).map(&:id)
+
+    target = create(:boutique_subscription, active_until: now + 1.week, payment_expiration_date: now + 1.week, recurrent: true)
+    cancelled = create(:boutique_subscription, active_until: now + 1.week, payment_expiration_date: now + 1.week, recurrent: true, cancelled_at: 1.day.ago)
+    expiration_later = create(:boutique_subscription, active_until: now + 1.week, payment_expiration_date: now + 1.week + 1.day, recurrent: true)
+    unknown_expiration = create(:boutique_subscription, active_until: now + 1.week, payment_expiration_date: nil, recurrent: true)
+
+    assert_equal [target.id], @bot.send(:subscriptions_for_expiring_soon).map(&:id)
+
+    # travel to 8am and reset bot's cache
+    travel_to Time.current.change(hour: 8)
+    @bot.instance_variable_set("@now", nil)
+
+    assert_equal [], @bot.send(:subscriptions_for_expiring_soon).map(&:id)
+  end
+
   private
     def now
       @now ||= Time.current.beginning_of_hour - 30.minutes
