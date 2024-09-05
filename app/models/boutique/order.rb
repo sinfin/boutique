@@ -371,9 +371,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after do
         if subsequent?
+          subscription.payment_expiration_date = paid_payment.card_valid_until_as_date
           subscription.extend!
-        # elsif (subscription = same_active_subscription).present?
-        #   subscription.extend!
         else
           invite_user!
           set_up_subscription! unless subsequent?
@@ -592,7 +591,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     return false if voucher.present?
 
     li = subscription_line_item
-    li.present? && li.subscription_period.nil?
+    li.present? && li.subscription_recurring?
   end
 
   def recurrent_payment_available?
@@ -863,6 +862,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                              payer: user,
                              active_from: li.subscription_starts_at,
                              active_until: li.subscription_starts_at + period.months,
+                             payment_expiration_date: paid_payment.card_valid_until_as_date,
                              period:,
                              recurrent: li.subscription_recurring?,
                              primary_address: address)

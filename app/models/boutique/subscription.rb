@@ -328,6 +328,7 @@ end
 #  recurrent                   :boolean          default(FALSE)
 #  recurrent_payments_init_id  :string
 #  email_notifications         :boolean          default(TRUE)
+#  payment_expiration_date     :date
 #
 # Indexes
 #

@@ -819,11 +819,13 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     new_order.original_payment = subscription.payment
 
     def new_order.charge_recurrent_payment!
-      payments.create!(remote_id: "transaction_id",
-        amount: total_price,
-        payment_method: "PAYMENT_CARD",
-        payment_gateway_provider: :comgate)
+      payments.create!(aasm_state: "paid",
+                       remote_id: "transaction_id",
+                       amount: total_price,
+                       payment_method: "PAYMENT_CARD",
+                       payment_gateway_provider: :comgate)
     end
+
     new_order.confirm!
     new_order
   end

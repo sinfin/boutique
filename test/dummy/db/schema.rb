@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_18_064642) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_03_105140) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -114,7 +114,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_064642) do
     t.string "invoice_number"
     t.boolean "gift", default: false
     t.string "gift_recipient_email"
-    t.datetime "gift_recipient_notification_scheduled_for", precision: nil
+    t.datetime "gift_recipient_notification_scheduled_for"
     t.datetime "gift_recipient_notification_sent_at"
     t.datetime "gtm_data_sent_at"
     t.bigint "site_id"
@@ -153,6 +153,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_064642) do
     t.string "payment_gateway_provider"
     t.decimal "transfer_fee", default: "0.0", null: false
     t.decimal "amount", precision: 10, scale: 2
+    t.string "card_number", limit: 32
+    t.string "card_valid_until", limit: 5
     t.index ["boutique_order_id"], name: "index_boutique_payments_on_boutique_order_id"
     t.index ["remote_id"], name: "index_boutique_payments_on_remote_id"
   end
@@ -230,6 +232,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_064642) do
     t.boolean "recurrent", default: false
     t.string "recurrent_payments_init_id"
     t.boolean "email_notifications", default: true
+    t.date "payment_expiration_date"
     t.index ["active_from"], name: "index_boutique_subscriptions_on_active_from"
     t.index ["active_until"], name: "index_boutique_subscriptions_on_active_until"
     t.index ["boutique_payment_id"], name: "index_boutique_subscriptions_on_boutique_payment_id"

@@ -67,6 +67,9 @@ class Boutique::Payment < Boutique::ApplicationRecord
 
         case gateway_result_hash[:state]
         when :paid
+          self.card_number = gateway_result_hash[:payment][:card_number]
+          self.card_valid_until = gateway_result_hash[:payment][:card_valid]
+
           pay!
         when :payment_method_chosen
           unless order.waiting_for_offline_payment?
@@ -102,6 +105,13 @@ class Boutique::Payment < Boutique::ApplicationRecord
 
   def payment_method_to_human
     self.class.payment_method_to_human(payment_method)
+  end
+
+  def card_valid_until_as_date
+    return unless card_valid_until
+
+    m, y = card_valid_until.split("/")
+    Date.new("20#{y}".to_i, m.to_i) + 1.month
   end
 
   def self.payment_method_to_human(payment_method_string)
@@ -171,6 +181,8 @@ end
 #  payment_gateway_provider :string
 #  transfer_fee             :decimal(, )      default(0.0), not null
 #  amount                   :decimal(10, 2)
+#  card_number              :string(32)
+#  card_valid_until         :string(5)
 #
 # Indexes
 #
