@@ -99,7 +99,7 @@ FactoryBot.define do
       end
 
       after(:create) do |order|
-        create(:boutique_payment, order:, created_at: order.paid_at)
+        create(:boutique_payment, order:, created_at: order.paid_at, aasm_state: "paid")
       end
     end
 

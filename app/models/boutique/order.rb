@@ -371,7 +371,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after do
         if subsequent?
-          subscription.payment_expiration_date = paid_payment.card_valid_until_as_date
+          subscription.payment_expiration_date = paid_payment&.card_valid_until_as_date
           subscription.extend!
         else
           invite_user!
@@ -862,7 +862,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                              payer: user,
                              active_from: li.subscription_starts_at,
                              active_until: li.subscription_starts_at + period.months,
-                             payment_expiration_date: paid_payment.card_valid_until_as_date,
+                             payment_expiration_date: paid_payment&.card_valid_until_as_date,
                              period:,
                              recurrent: li.subscription_recurring?,
                              primary_address: address)
