@@ -80,7 +80,7 @@ class Boutique::MailerBot
 
     def subscriptions_for_unpaid
       Boutique::Subscription.recurring
-                            .where(active_until: (now - 7.days - 1.hour)..(now - 7.days))
+                            .where(active_until: (now - 7.days)..(now - 7.days + 1.hour))
     end
 
     def subscriptions_for_will_end_in_a_week
