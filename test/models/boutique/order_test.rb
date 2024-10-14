@@ -559,4 +559,21 @@ class Boutique::OrderTest < ActiveSupport::TestCase
       assert order.valid?
     end
   end
+
+  test "email is downcased, stripped and validated" do
+    I18n.with_locale(:en) do
+      user = create(:folio_user, email: "test@test.test")
+
+      order = create(:boutique_order, :ready_to_be_confirmed, email: "foo@test.test")
+      assert order.confirm!
+
+      order = create(:boutique_order, :ready_to_be_confirmed, email: " Test@test.test ")
+      assert_equal "test@test.test", order.email
+      assert_not order.confirm!
+      assert_equal ["is already registered"], order.errors[:email]
+
+      order.user = user
+      assert order.confirm!
+    end
+  end
 end

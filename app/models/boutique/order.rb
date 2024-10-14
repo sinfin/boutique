@@ -283,6 +283,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: :requires_age_verification?
 
   before_validation :unset_unwanted_gift_attributes
+  before_validation :downcase_emails
 
   attr_accessor :force_address_validation
   attr_accessor :force_gift_recipient_notification_scheduled_for_validation
@@ -313,7 +314,6 @@ class Boutique::Order < Boutique::ApplicationRecord
         set_numbers
         imprint
         set_site
-        set_user_and_email
 
         self.email ||= user.try(:email)
 
@@ -634,7 +634,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     return if !gift? || gift_recipient_notification_sent_at?
 
     transaction do
-      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email.downcase)
+      self.gift_recipient = Folio::User.find_by(email: gift_recipient_email)
 
       if gift_recipient.present?
         Boutique::OrderMailer.gift_notification(self).deliver_later
@@ -831,9 +831,9 @@ class Boutique::Order < Boutique::ApplicationRecord
       self.total_price = total_price
     end
 
-    def set_user_and_email
-      self.user = Folio::User.find_by(email:) if email.present? && user.blank?
-      self.email = user&.email if email.blank?
+    def downcase_emails
+      self.email = email.downcase.strip if email && email_changed?
+      self.gift_recipient_email = gift_recipient_email.downcase.strip if gift_recipient_email && gift_recipient_email_changed?
     end
 
     def validate_voucher_code(ignore_blank: true)
@@ -878,7 +878,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       return if user.present?
       return unless aasm.from_state == :pending
 
-      if Folio::User.where(email: email.downcase).exists?
+      if Folio::User.where(email:).exists?
         errors.add(:email, :already_registered)
       end
     end
