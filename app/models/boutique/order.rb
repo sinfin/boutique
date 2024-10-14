@@ -878,7 +878,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       return if user.present?
       return unless aasm.from_state == :pending
 
-      if Folio::User.invitation_accepted.where(email: email.downcase).exists?
+      if Folio::User.where(email: email.downcase).exists?
         errors.add(:email, :already_registered)
       end
     end
