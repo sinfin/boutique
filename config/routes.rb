@@ -36,6 +36,10 @@ Folio::Engine.routes.draw do
       resources :vat_rates, except: %i[show]
       resources :vouchers, except: %i[show]
 
+      resources :shipping_methods, except: %i[show] do
+        post :set_positions, on: :collection
+      end
+
       resources :users, only: [] do
         resources :subscriptions, except: %i[show destroy], controller: :subscriptions do
           member do

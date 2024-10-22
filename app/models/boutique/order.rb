@@ -27,6 +27,10 @@ class Boutique::Order < Boutique::ApplicationRecord
   belongs_to :site, class_name: "Folio::Site",
                     optional: true
 
+  belongs_to :shipping_method, class_name: "Boutique::ShippingMethod",
+                               inverse_of: :order,
+                               optional: true
+
   belongs_to :subscription, class_name: "Boutique::Subscription",
                             foreign_key: :boutique_subscription_id,
                             inverse_of: :orders,
@@ -452,7 +456,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       return 0 if digital_only?
       return 0 if shipping_price_per_package.zero?
 
-      packages_count * shipping_price_per_package
+      shipping_method.try(:price) || 0
     end
   end
 
@@ -465,10 +469,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     else
       1
     end
-  end
-
-  def shipping_price_per_package
-    0
   end
 
   def discount
@@ -950,6 +950,7 @@ end
 #  shipping_price                            :integer
 #  renewed_subscription_id                   :bigint(8)
 #  referrer_url                              :string
+#  shipping_method_id                        :bigint(8)
 #
 # Indexes
 #
@@ -960,6 +961,7 @@ end
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_renewed_subscription_id   (renewed_subscription_id)
+#  index_boutique_orders_on_shipping_method_id        (shipping_method_id)
 #  index_boutique_orders_on_site_id                   (site_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
 #
@@ -968,4 +970,5 @@ end
 #  fk_rails_...  (boutique_subscription_id => boutique_subscriptions.id)
 #  fk_rails_...  (boutique_voucher_id => boutique_vouchers.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
+#  fk_rails_...  (shipping_method_id => boutique_shipping_methods.id)
 #
