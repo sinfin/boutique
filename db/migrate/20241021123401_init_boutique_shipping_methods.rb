@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateBoutiqueShippingMethods < ActiveRecord::Migration[7.0]
+class InitBoutiqueShippingMethods < ActiveRecord::Migration[7.0]
   def change
     create_table :boutique_shipping_methods do |t|
       t.string :title
@@ -19,5 +19,8 @@ class CreateBoutiqueShippingMethods < ActiveRecord::Migration[7.0]
     add_index :boutique_shipping_methods, :position
 
     add_reference :boutique_orders, :shipping_method, foreign_key: { to_table: :boutique_shipping_methods, primary_key: :id }
+
+    add_column :boutique_orders, :package_remote_id, :string
+    add_column :boutique_orders, :package_tracking_id, :string
   end
 end

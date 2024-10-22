@@ -41,6 +41,15 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     to_full_label
   end
 
+  def weight
+    # TODO: add column to DB
+    0.24
+  end
+
+  def summary_title
+    product.title
+  end
+
   def price
     amount * unit_price
   end

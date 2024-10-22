@@ -437,6 +437,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   end
 
+  %i[email first_name last_name full_name].each do |a|
+    define_method "recipient_#{a}" do
+      gift? ? send("gift_recipient_#{a}") : send(a)
+    end
+  end
+
   def to_label
     [
       number,
@@ -502,6 +508,16 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def is_unpaid?
     !is_paid?
+  end
+
+  def currency
+    # TODO: configurable currency
+    "CZK"
+  end
+
+  def invoice_title
+    key = free? ? "title_free" : "title"
+    I18n.t("boutique.orders.invoice.#{key}", number: invoice_number)
   end
 
   def shipping_info
