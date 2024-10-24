@@ -978,6 +978,8 @@ end
 #  renewed_subscription_id                   :bigint(8)
 #  referrer_url                              :string
 #  shipping_method_id                        :bigint(8)
+#  package_remote_id                         :string
+#  package_tracking_id                       :string
 #
 # Indexes
 #
