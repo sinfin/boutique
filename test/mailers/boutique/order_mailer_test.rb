@@ -27,6 +27,14 @@ class Boutique::OrderMailerTest < ActionMailer::TestCase
     assert_match order.number, mail.text_part.body.decoded
   end
 
+  test "unpaid_reminder" do
+    order = create(:boutique_order, :confirmed, email: "unpaid@test.test")
+
+    mail = Boutique::OrderMailer.unpaid_reminder(order)
+    assert_equal ["unpaid@test.test"], mail.to
+    assert_match order.number, mail.text_part.body.decoded
+  end
+
   test "gift_notification" do
     order = create(:boutique_order, :paid, :gift, gift_recipient_email: "test@test.test")
 
