@@ -53,7 +53,7 @@ FactoryBot.define do
     end
 
     trait :ready_to_be_confirmed do
-      sequence(:email) { |i| "order-#{i}@email.email" }
+      sequence(:email) { |i| user.try(:email) || "order-#{i}@email.email" }
 
       line_items_count { 1 }
 

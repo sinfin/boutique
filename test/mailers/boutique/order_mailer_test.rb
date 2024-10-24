@@ -7,10 +7,12 @@ class Boutique::OrderMailerTest < ActionMailer::TestCase
     create(:folio_site)
     Rails.application.load_tasks
     Rake::Task["folio:email_templates:idp_seed"].execute
+
+    @user = create(:folio_user, email: "test@test.test")
   end
 
   test "paid" do
-    order = create(:boutique_order, :paid, email: "test@test.test")
+    order = create(:boutique_order, :paid, user: @user)
 
     mail = Boutique::OrderMailer.paid(order)
     assert_equal ["test@test.test"], mail.to
@@ -18,7 +20,7 @@ class Boutique::OrderMailerTest < ActionMailer::TestCase
   end
 
   test "paid_subsequent" do
-    order = create(:boutique_order, :paid, email: "test@test.test")
+    order = create(:boutique_order, :paid, user: @user)
 
     mail = Boutique::OrderMailer.paid_subsequent(order)
     assert_equal ["test@test.test"], mail.to
@@ -40,5 +42,13 @@ class Boutique::OrderMailerTest < ActionMailer::TestCase
     assert_equal ["test@test.test"], mail.to
     assert_match order.number, mail.text_part.body.decoded
     assert_match "INVITATION_TOKEN", mail.text_part.body.decoded
+  end
+
+  test "email_for" do
+    order = create(:boutique_order, :paid, user: @user)
+    order.user.update_columns(email: "john@test.test")
+
+    mail = Boutique::OrderMailer.paid_subsequent(order)
+    assert_equal ["john@test.test"], mail.to
   end
 end

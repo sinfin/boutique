@@ -4,7 +4,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   def paid(order)
     data = order_data(order)
     email_template_mail(data,
-                        to: order.email,
+                        to: email_for(order),
                         site: order.site,
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)
@@ -13,7 +13,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   def paid_subsequent(order)
     data = order_data(order)
     email_template_mail(data,
-                        to: order.email,
+                        to: email_for(order),
                         site: order.site,
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)
@@ -26,7 +26,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
     data[:TRACKING_URL] = order.package_tracking_url
 
     email_template_mail(data,
-                        to: order.email,
+                        to: email_for(order),
                         site: order.site,
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)
@@ -35,7 +35,7 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
   def unpaid_reminder(order)
     data = order_data(order, summary: true)
     email_template_mail(data,
-                        to: order.email,
+                        to: email_for(order),
                         site: order.site,
                         bcc: ::Boutique.config.mailers_bcc,
                         reply_to: ::Boutique.config.mailers_reply_to)
@@ -76,5 +76,9 @@ class Boutique::OrderMailer < Boutique::ApplicationMailer
       end
 
       email_template_data_defaults(order).merge(h)
+    end
+
+    def email_for(order)
+      order.user.try(:email) || order.email
     end
 end
