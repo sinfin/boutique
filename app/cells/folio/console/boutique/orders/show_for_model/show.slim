@@ -45,7 +45,7 @@
               target='_blank'
             ] = li.to_full_label
 
-    = s.attribute(:payment_method) do
+    = s.attribute(:payment_method, if_blank: "–") do
       - if s.object.is_paid? && s.object.paid_payment.present?
         .d-flex
           - if s.object.line_items.exists?(subscription_recurring: true)
@@ -55,6 +55,14 @@
                     size: 20).show
 
           = s.object.paid_payment.payment_method_to_human
+
+    = s.attribute(:shipping_method) do
+      - if s.object.shipping_method.present?
+        .d-flex
+          = s.object.shipping_method.to_label
+
+          - if s.object.shipping_method.try(:requires_pickup_point?)
+            = " (#{s.object.pickup_point_title})"
 
     - if s.object.voucher.present?
       = s.attribute(:voucher) do

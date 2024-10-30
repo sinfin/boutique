@@ -1,0 +1,15 @@
+= index_header
+
+= catalogue(@shipping_methods)
+  ruby:
+    edit_link(:title)
+
+    attribute(:price) do
+      price(record.price_cz)
+    end
+
+    published_toggle
+
+    position_controls
+
+    actions

@@ -1,0 +1,13 @@
+= form_header f
+
+= tabs [:content]
+
+.tab-content
+  = tab :content
+    == cell('folio/console/publishable_inputs', f)
+
+    .row
+      .col-lg-6 = f.input :title, placeholder: false
+      .col-lg-6 = f.input :price_cz
+
+= form_footer f

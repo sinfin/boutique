@@ -7,4 +7,5 @@ Rails.application.config.folio_console_sidebar_prepended_link_class_names = [{ l
   Boutique::Order
   Boutique::Voucher
   Boutique::VatRate
+  Boutique::ShippingMethod
 ] }]

@@ -39,6 +39,7 @@ cs:
         primary_address_country_code: Země odběru
         product: Produkt
         referrer_url: Referrer URL
+        shipping_method: Doprava
         shipping_price: Cena dopravy
         subscription_state/active: Aktivní předplatné
         subscription_state/inactive: Neaktivní předplatné
@@ -80,6 +81,9 @@ cs:
 
       boutique/product_variant:
         master: Hlavní varianta
+
+      boutique/shipping_method:
+        price: Cena
 
       boutique/subscription:
         active: Aktivní
@@ -141,6 +145,11 @@ cs:
         one: Objednávka
         few: Objednávky
         other: Objednávek
+
+      boutique/shipping_method:
+        one: Způsob dopravy
+        few: Způsoby dopravy
+        other: Způsobů dopravy
 
       boutique/subscription:
         one: Předplatné
