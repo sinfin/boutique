@@ -150,6 +150,12 @@ FactoryBot.define do
     end
   end
 
+  factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do
+    title { "ShippingMethod title" }
+    price_cz { 0 }
+    published { true }
+  end
+
   factory :boutique_voucher, class: "Boutique::Voucher" do
     published { true }
     published_from { 1.minute.ago }

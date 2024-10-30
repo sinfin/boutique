@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Boutique::ShippingMethod < ApplicationRecord
+class Boutique::ShippingMethod < Boutique::ApplicationRecord
   extend Folio::InheritenceBaseNaming
 
   include Folio::Publishable::Basic
