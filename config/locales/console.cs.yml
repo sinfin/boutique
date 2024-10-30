@@ -43,6 +43,10 @@ cs:
             cancel: Zrušit
             cancel_confirm: Opravdu si přejete zrušit automatickou obnovu předplatného?
 
+        shipping_methods:
+          form:
+            default_type: Základní
+
         vouchers:
           code_input:
             code_types:

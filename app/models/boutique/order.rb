@@ -454,13 +454,18 @@ class Boutique::Order < Boutique::ApplicationRecord
   def shipping_price
     super || begin
       return 0 if digital_only?
-      return 0 if shipping_price_per_package.zero?
 
       packages_count * shipping_price_per_package
     end
   end
 
+  def shipping_price_per_package
+    shipping_method.try(:price_cz) || 0
+  end
+
   def packages_count
+    return 0 if line_items.empty?
+
     # TODO: implement for order with multiple line items
     product = line_items.first.product
 
@@ -469,10 +474,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     else
       1
     end
-  end
-
-  def shipping_price_per_package
-    0
   end
 
   def discount
@@ -611,6 +612,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     else
       I18n.t("datetime.each.month", count: subscription_period)
     end
+  end
+
+  def package_tracking_url
+    shipping_method.tracking_url_for(self) if shipping_method.present?
   end
 
   def invoice_note
@@ -964,6 +969,8 @@ end
 #  renewed_subscription_id                   :bigint(8)
 #  referrer_url                              :string
 #  shipping_method_id                        :bigint(8)
+#  package_remote_id                         :string
+#  package_tracking_id                       :string
 #
 # Indexes
 #

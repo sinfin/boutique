@@ -19,5 +19,8 @@ class InitBoutiqueShippingMethods < ActiveRecord::Migration[7.0]
     add_index :boutique_shipping_methods, :position
 
     add_reference :boutique_orders, :shipping_method, foreign_key: { to_table: :boutique_shipping_methods, primary_key: :id }
+
+    add_column :boutique_orders, :pickup_point_remote_id, :string
+    add_column :boutique_orders, :pickup_point_title, :string
   end
 end

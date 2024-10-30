@@ -151,6 +151,8 @@ cs:
         few: Způsoby dopravy
         other: Způsobů dopravy
 
+      boutique/shipping_method/zasilkovna/pickup_point: Zásilkovna – Doručení na pobočku
+
       boutique/subscription:
         one: Předplatné
         few: Předplatné

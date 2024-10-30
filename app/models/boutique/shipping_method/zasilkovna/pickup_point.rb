@@ -1,40 +1,16 @@
 # frozen_string_literal: true
 
-class Boutique::ShippingMethod < ApplicationRecord
-  extend Folio::InheritenceBaseNaming
-
-  include Folio::Publishable::Basic
-  include Folio::Positionable
-  include Folio::RecursiveSubclasses
-  include Folio::StiPreload
-
-  has_one :order, class_name: "Boutique::Order",
-                  inverse_of: :shipping_method
-
-  validates :title,
-            :price_cz,
-            presence: true
-
-  def self.use_preview_tokens?
-    false
-  end
-
-  def self.sti_paths
-    [
-      Boutique::Engine.root.join("app/models/boutique/shipping_method"),
-    ]
-  end
-
+class Boutique::ShippingMethod::Zasilkovna::PickupPoint < Boutique::ShippingMethod
   def requires_address?
-    true
+    false
   end
 
   def requires_pickup_point?
-    false
+    true
   end
 
   def tracking_url_for(order)
-    nil
+    # "https://tracking.packeta.com/cs_CZ/?id=#{order.package_tracking_id}"
   end
 end
 
