@@ -513,6 +513,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product.shipping_info
   end
 
+  def allowed_shipping_methods
+    line_items.first.product.shipping_methods
+  end
+
   def countries_whitelist
     nil
   end
@@ -711,7 +715,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       if digital_only?
         self.shipping_method = nil
       else
-        self.shipping_method ||= Boutique::ShippingMethod.published.ordered.first
+        self.shipping_method ||= allowed_shipping_methods.published.ordered.first
       end
     end
 
@@ -969,8 +973,8 @@ end
 #  renewed_subscription_id                   :bigint(8)
 #  referrer_url                              :string
 #  shipping_method_id                        :bigint(8)
-#  package_remote_id                         :string
-#  package_tracking_id                       :string
+#  pickup_point_remote_id                    :string
+#  pickup_point_title                        :string
 #
 # Indexes
 #

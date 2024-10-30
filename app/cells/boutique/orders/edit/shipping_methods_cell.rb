@@ -8,6 +8,6 @@ class Boutique::Orders::Edit::ShippingMethodsCell < Boutique::ApplicationCell
   end
 
   def shipping_methods
-    Boutique::ShippingMethod.published.ordered
+    f.object.allowed_shipping_methods.published.ordered
   end
 end

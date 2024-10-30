@@ -103,8 +103,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
     t.bigint "renewed_subscription_id"
     t.string "referrer_url"
     t.bigint "shipping_method_id"
-    t.string "package_remote_id"
-    t.string "package_tracking_id"
+    t.string "pickup_point_remote_id"
+    t.string "pickup_point_title"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
@@ -176,11 +176,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
     t.index ["type"], name: "index_boutique_products_on_type"
   end
 
+  create_table "boutique_products_shipping_methods", id: false, force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "shipping_method_id", null: false
+    t.index ["product_id", "shipping_method_id"], name: "index_boutique_products_shipping_methods"
+  end
+
   create_table "boutique_shipping_methods", force: :cascade do |t|
     t.string "title"
-    t.integer "price"
+    t.integer "price_cz"
+    t.integer "price_sk"
     t.string "type"
-    t.string "country_code"
     t.boolean "published", default: false
     t.integer "position"
     t.datetime "created_at", null: false

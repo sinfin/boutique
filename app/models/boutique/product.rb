@@ -34,6 +34,8 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   has_many :subscriptions, through: :variants
 
+  has_and_belongs_to_many :shipping_methods, class_name: "Boutique::ShippingMethod"
+
   validates :code,
             :title,
             :type,
@@ -63,6 +65,7 @@ class Boutique::Product < Boutique::ApplicationRecord
                 }
 
   after_initialize :set_default_vat_rate
+  after_initialize :set_default_shipping_methods
 
   def subscription?
     is_a?(Boutique::Product::Subscription)
@@ -110,6 +113,10 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   def age_restricted?
     false
+  end
+
+  def self.default_shipping_methods
+    []
   end
 
   def self.sites_for_select
@@ -163,6 +170,12 @@ class Boutique::Product < Boutique::ApplicationRecord
   private
     def set_default_vat_rate
       self.vat_rate = Boutique::VatRate.default if self.boutique_vat_rate_id.nil?
+    end
+
+    def set_default_shipping_methods
+      return unless new_record?
+
+      self.shipping_methods = self.class.default_shipping_methods
     end
 
     def validate_master_variant_presence

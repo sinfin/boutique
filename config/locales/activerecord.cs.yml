@@ -66,6 +66,7 @@ cs:
         discounted_from: Akce od
         discounted_until: Akce do
         shipping_info: Doprava
+        shipping_methods: Způsoby dopravy
         site: Web
         subscription_frequency/none: žádná
         subscription_frequency/bimonthly: dvouměsíční

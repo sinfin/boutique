@@ -46,6 +46,7 @@ ruby:
 
         = render partial: 'additional_fields', locals: { f: }
 
+        = f.association :shipping_methods, remote: true
         = f.input :shipping_info, as: :redactor
         = f.input :description, as: :redactor
         = f.input :checkout_sidebar_content, as: :redactor

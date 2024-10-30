@@ -14,6 +14,7 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
             .permit(*(@klass.column_names - ["id"]),
                     *@klass.additional_params,
                     *file_placements_strong_params,
+                    shipping_method_ids: [],
                     variants_attributes: product_variants_strong_params)
     end
 

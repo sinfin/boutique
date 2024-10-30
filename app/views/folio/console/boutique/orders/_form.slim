@@ -10,6 +10,9 @@
       .col-lg-6 = f.input :first_name
       .col-lg-6 = f.input :last_name
 
+    = f.association :shipping_method, collection: f.object.allowed_shipping_methods,
+                                      include_blank: false
+
     .row
       .col-lg-8
         == cell('folio/console/addresses/fields', f)

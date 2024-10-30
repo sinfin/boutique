@@ -11,9 +11,18 @@ class Boutique::ShippingMethod < ApplicationRecord
   has_one :order, class_name: "Boutique::Order",
                   inverse_of: :shipping_method
 
+  has_and_belongs_to_many :products, class_name: "Boutique::Product"
+
   validates :title,
             :price_cz,
             presence: true
+
+  pg_search_scope :by_query,
+                  against: %i[title],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   def self.use_preview_tokens?
     false
@@ -42,15 +51,15 @@ end
 #
 # Table name: boutique_shipping_methods
 #
-#  id           :bigint(8)        not null, primary key
-#  title        :string
-#  price        :integer
-#  type         :string
-#  country_code :string
-#  published    :boolean          default(FALSE)
-#  position     :integer
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id         :bigint(8)        not null, primary key
+#  title      :string
+#  price_cz   :integer
+#  price_sk   :integer
+#  type       :string
+#  published  :boolean          default(FALSE)
+#  position   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
