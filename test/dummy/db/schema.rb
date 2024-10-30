@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_10_045307) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -102,6 +102,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_045307) do
     t.integer "shipping_price"
     t.bigint "renewed_subscription_id"
     t.string "referrer_url"
+    t.bigint "shipping_method_id"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
@@ -109,6 +110,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_045307) do
     t.index ["number"], name: "index_boutique_orders_on_number"
     t.index ["original_payment_id"], name: "index_boutique_orders_on_original_payment_id"
     t.index ["renewed_subscription_id"], name: "index_boutique_orders_on_renewed_subscription_id"
+    t.index ["shipping_method_id"], name: "index_boutique_orders_on_shipping_method_id"
     t.index ["site_id"], name: "index_boutique_orders_on_site_id"
     t.index ["web_session_id"], name: "index_boutique_orders_on_web_session_id"
   end
@@ -170,6 +172,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_10_045307) do
     t.index ["site_id"], name: "index_boutique_products_on_site_id"
     t.index ["slug"], name: "index_boutique_products_on_slug"
     t.index ["type"], name: "index_boutique_products_on_type"
+  end
+
+  create_table "boutique_shipping_methods", force: :cascade do |t|
+    t.string "title"
+    t.integer "price"
+    t.string "type"
+    t.string "country_code"
+    t.boolean "published", default: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_boutique_shipping_methods_on_position"
+    t.index ["published"], name: "index_boutique_shipping_methods_on_published"
   end
 
   create_table "boutique_subscriptions", force: :cascade do |t|

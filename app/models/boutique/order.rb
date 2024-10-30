@@ -27,6 +27,10 @@ class Boutique::Order < Boutique::ApplicationRecord
   belongs_to :site, class_name: "Folio::Site",
                     optional: true
 
+  belongs_to :shipping_method, class_name: "Boutique::ShippingMethod",
+                               inverse_of: :order,
+                               optional: true
+
   belongs_to :subscription, class_name: "Boutique::Subscription",
                             foreign_key: :boutique_subscription_id,
                             inverse_of: :orders,
@@ -555,6 +559,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       self.site = product.site
 
+      set_default_shipping_method
       after_add_line_item(additional_options)
 
       save!
@@ -697,6 +702,14 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   private
+    def set_default_shipping_method
+      if digital_only?
+        self.shipping_method = nil
+      else
+        self.shipping_method ||= Boutique::ShippingMethod.published.ordered.first
+      end
+    end
+
     def set_numbers
       return if base_number.present?
 
@@ -950,6 +963,7 @@ end
 #  shipping_price                            :integer
 #  renewed_subscription_id                   :bigint(8)
 #  referrer_url                              :string
+#  shipping_method_id                        :bigint(8)
 #
 # Indexes
 #
@@ -960,6 +974,7 @@ end
 #  index_boutique_orders_on_number                    (number)
 #  index_boutique_orders_on_original_payment_id       (original_payment_id)
 #  index_boutique_orders_on_renewed_subscription_id   (renewed_subscription_id)
+#  index_boutique_orders_on_shipping_method_id        (shipping_method_id)
 #  index_boutique_orders_on_site_id                   (site_id)
 #  index_boutique_orders_on_web_session_id            (web_session_id)
 #
@@ -968,4 +983,5 @@ end
 #  fk_rails_...  (boutique_subscription_id => boutique_subscriptions.id)
 #  fk_rails_...  (boutique_voucher_id => boutique_vouchers.id)
 #  fk_rails_...  (folio_user_id => folio_users.id)
+#  fk_rails_...  (shipping_method_id => boutique_shipping_methods.id)
 #
