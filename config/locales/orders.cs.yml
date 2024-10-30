@@ -34,6 +34,12 @@ cs:
           title: Zvolte variantu
           blank: Vybrat …
 
+        shipping_methods:
+          title: Možnosti doručení
+          zasilkovna:
+            pickup_point:
+              select_point: Vyberte výdejní místo...
+
         sidebar:
           bottom:
             contents: Získáte

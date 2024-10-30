@@ -1,0 +1,39 @@
+.b-orders-edit-shipping-methods
+  &__option
+    padding-top: px-to-rem(10px)
+    padding-bottom: px-to-rem(10px)
+    width: 100%
+    display: flex
+    align-items: flex-start
+
+  &__option-input
+    accent-color: $black
+
+  &__option-wrap
+    flex: 1 1 auto
+    margin-top: -5px
+
+  &__option-label
+    font-size: $font-size-base !important
+    flex: 1 0 auto
+    display: flex
+    justify-content: space-between
+    margin-bottom: 0
+    padding-left: 8px
+
+  &__option-price
+    float: right
+    margin-left: $grid-gutter-half
+    flex-shrink: 0
+
+  &__option-content
+    display: none
+    width: 100%
+    margin-top: $grid-gutter-half
+
+  &__option-input:checked ~ &__option-wrap &__option-content
+    display: block
+
+  +media-breakpoint-down(sm)
+    &__option-label
+      font-size: $mobile-font-size-base !important

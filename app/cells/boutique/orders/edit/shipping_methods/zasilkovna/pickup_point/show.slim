@@ -1,0 +1,13 @@
+.b-orders-edit-shipping-methods-zasilkovna-pickup-point
+  = model.hidden_field :pickup_point_remote_id,
+                        class: 'b-orders-edit-shipping-methods-zasilkovna-pickup-point__input-remote-id'
+  = model.hidden_field :pickup_point_title,
+                        class: 'b-orders-edit-shipping-methods-zasilkovna-pickup-point__input-title'
+
+  span.btn.btn-secondary.b-orders-edit-shipping-methods-zasilkovna-pickup-point__btn[
+    data-api-key=ENV["ZASILKOVNA_API_KEY"]
+  ]
+    = t('.select_point')
+
+  .b-orders-edit-shipping-methods-zasilkovna-pickup-point__selected
+    = model.object.pickup_point_title

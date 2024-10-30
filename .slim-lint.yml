@@ -6,6 +6,8 @@ linters:
     exclude:
       - app/cells/boutique/orders/edit/show.slim
       - app/cells/boutique/orders/edit/recurrency_fields/show.slim
+      - app/cells/boutique/orders/edit/shipping_methods/show.slim
+      - app/cells/boutique/orders/edit/shipping_methods/zasilkovna/pickup_point/show.slim
       - app/cells/boutique/orders/edit/subscription_fields/show.slim
       - app/cells/boutique/subscriptions/recurrent_payment_label/show.slim
       - app/cells/boutique/ui/vector_icon/*_path.slim

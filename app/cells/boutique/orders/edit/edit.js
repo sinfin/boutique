@@ -1,5 +1,5 @@
-$(document)
-  .on('change', '.b-orders-edit .f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input', (e) => {
+(() => {
+  const refresh = (e) => {
     const $wrap = $(e.currentTarget).closest('.b-orders-edit')
 
     if ($wrap.hasClass('b-orders-edit--refreshing')) {
@@ -13,12 +13,14 @@ $(document)
       method: "GET",
       url: $wrap.data('refreshedUrl'),
       data: {
+        shipping_method_id: $wrap.find('.b-orders-edit-shipping-methods__option-input:checked').val(),
         country_code: e.currentTarget.value,
       },
       success: (res) => {
         if (res && res.data) {
           $wrap.find('.b-orders-edit-sidebar-bottom').replaceWith(res.data.sidebarBottom)
           $wrap.find('.b-orders-payment-methods-price').replaceWith(res.data.price)
+          // $wrap.find('.b-orders-edit-shipping-methods').replaceWith(res.data.shippingMethods)
 
           $wrap
             .find('.b-orders-edit-voucher-fields')
@@ -32,4 +34,9 @@ $(document)
         window.location.reload()
       }
     })
-  })
+  }
+
+  $(document)
+    .on('change', '.b-orders-edit .f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input', refresh)
+    .on('change', '.b-orders-edit .b-orders-edit-shipping-methods__option-input', refresh)
+})()

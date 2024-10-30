@@ -75,6 +75,10 @@
                     countries_whitelist: current_order.countries_whitelist,
                     disable_autocomplete: Boutique.config.disable_browser_input_autocomplete)
 
+          - if current_order.requires_address?
+            .b-orders-edit__box
+              = cell('boutique/orders/edit/shipping_methods', f)
+
           - unless current_order.voucher_code.nil? && current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)
 
