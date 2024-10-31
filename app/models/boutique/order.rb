@@ -282,6 +282,10 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
+  validates :pickup_point_remote_id,
+            presence: true,
+            if: -> { requires_pickup_point_remote_id? && !pending? }
+
   validates :age_verification,
             acceptance: true,
             if: :requires_age_verification?
@@ -519,6 +523,10 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def countries_whitelist
     nil
+  end
+
+  def requires_pickup_point_remote_id?
+    shipping_method.present? && shipping_method.requires_pickup_point?
   end
 
   def requires_age_verification?

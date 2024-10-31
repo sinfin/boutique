@@ -23,6 +23,8 @@
          .val(title)
     $wrap.find('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__selected')
          .text(title)
+    $wrap.find('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__error')
+         .remove()
   };
 
   $btn.on('click', () => {

@@ -32,6 +32,7 @@ cs:
         number_range: Číslo
         paid_at: Zaplaceno
         paid_at_range: Zaplaceno
+        pickup_point_remote_id: Výdejní místo
         price: Cena
         primary_address_country_code/CZ: Česká republika
         primary_address_country_code/other: Jiná

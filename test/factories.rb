@@ -156,6 +156,10 @@ FactoryBot.define do
     published { true }
   end
 
+  factory :boutique_shipping_method_zasilkovna_pickup_point,
+          class: "Boutique::ShippingMethod::Zasilkovna::PickupPoint",
+          parent: :boutique_shipping_method
+
   factory :boutique_voucher, class: "Boutique::Voucher" do
     published { true }
     published_from { 1.minute.ago }

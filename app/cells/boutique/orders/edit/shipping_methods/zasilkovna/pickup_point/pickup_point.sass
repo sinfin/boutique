@@ -24,12 +24,12 @@
   &:empty
     margin-bottom: 0
 
-  &__selected
+  &__selected, &__error
     +font-size-sm
     margin-top: 10px
 
-  &__selected:empty
-    display: none
+    &:empty
+      display: none
 
 .packeta-widget-overlay
   background: rgba(0, 0, 0, .33) !important
