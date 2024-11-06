@@ -24,6 +24,7 @@ class InitBoutiqueShippingMethods < ActiveRecord::Migration[7.0]
 
     add_column :boutique_orders, :pickup_point_remote_id, :string
     add_column :boutique_orders, :pickup_point_title, :string
+    add_column :boutique_orders, :package_tracking_number, :string
 
     create_join_table :products, :shipping_methods, table_name: :boutique_products_shipping_methods do |t|
       t.index [:product_id, :shipping_method_id], name: "index_boutique_products_shipping_methods"

@@ -56,13 +56,22 @@
 
           = s.object.paid_payment.payment_method_to_human
 
-    = s.attribute(:shipping_method) do
+    = s.attribute(:shipping_method, if_blank: "–") do
       - if s.object.shipping_method.present?
         .d-flex
           = s.object.shipping_method.to_label
 
           - if s.object.shipping_method.try(:requires_pickup_point?)
             = " (#{s.object.pickup_point_title})"
+
+    = s.attribute(:package_tracking_number, if_blank: "–") do
+      - if url = s.object.package_tracking_url
+        .d-flex
+          a [
+            href=url
+            target="_blank"
+          ]
+            = s.object.package_tracking_number
 
     - if s.object.voucher.present?
       = s.attribute(:voucher) do

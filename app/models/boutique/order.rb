@@ -983,6 +983,7 @@ end
 #  shipping_method_id                        :bigint(8)
 #  pickup_point_remote_id                    :string
 #  pickup_point_title                        :string
+#  tracking_number                           :string
 #
 # Indexes
 #

@@ -105,6 +105,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
     t.bigint "shipping_method_id"
     t.string "pickup_point_remote_id"
     t.string "pickup_point_title"
+    t.string "tracking_number"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
@@ -184,6 +185,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
 
   create_table "boutique_shipping_methods", force: :cascade do |t|
     t.string "title"
+    t.string "label"
+    t.text "description"
     t.integer "price_cz"
     t.integer "price_sk"
     t.string "type"

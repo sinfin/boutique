@@ -10,7 +10,9 @@ class Boutique::ShippingMethod::Zasilkovna::PickupPoint < Boutique::ShippingMeth
   end
 
   def tracking_url_for(order)
-    # "https://tracking.packeta.com/cs_CZ/?id=#{order.package_tracking_id}"
+    return if order.package_tracking_number.blank?
+
+    "https://tracking.packeta.com/cs_CZ/?id=#{order.package_tracking_number}"
   end
 end
 
