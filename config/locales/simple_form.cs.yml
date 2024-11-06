@@ -6,6 +6,9 @@ cs:
         variants:
           title: Nepovinný údaj. Pokud má produkt pouze jednu variantu, není potřeba vyplňovat.
 
+      shipping_method:
+        label: Nepovinný údaj. Zobrazuje se zákazníkovi při výběru dopravy v košíku.
+
       voucher:
         code: Libovolný řetězec znaků, nerozlišují se velká a malá písmena.
         code_prefix: 3-5 znaků (pro plně generovaný kód ponechte prázdné).

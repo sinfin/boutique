@@ -8,7 +8,12 @@
 
     .row
       .col-lg-6 = f.input :title, placeholder: false
+      .col-lg-6 = f.input :label
+      .col-lg-6 = f.input :description, as: :redactor
+
+    .row
       .col-lg-6 = f.input :price_cz
+      .col-lg-6 = f.input :price_sk
 
     = f.input :type,
               collection: Boutique::ShippingMethod.recursive_subclasses_for_select(include_self: false),

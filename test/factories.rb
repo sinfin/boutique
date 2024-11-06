@@ -153,6 +153,7 @@ FactoryBot.define do
   factory :boutique_shipping_method, class: "Boutique::ShippingMethod" do
     title { "ShippingMethod title" }
     price_cz { 0 }
+    price_sk { 0 }
     published { true }
   end
 

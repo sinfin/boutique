@@ -4,6 +4,8 @@ class InitBoutiqueShippingMethods < ActiveRecord::Migration[7.0]
   def change
     create_table :boutique_shipping_methods do |t|
       t.string :title
+      t.string :label
+      t.text :description
       t.integer :price_cz
       t.integer :price_sk
 

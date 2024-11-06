@@ -3,9 +3,14 @@
 = catalogue(@shipping_methods)
   ruby:
     edit_link(:title)
+    attribute(:label)
 
-    attribute(:price) do
-      price(record.price_cz)
+    attribute(:price_cz) do
+      price(record.price_cz, zero_as_number: true)
+    end
+
+    attribute(:price_sk) do
+      price(record.price_sk, zero_as_number: true)
     end
 
     published_toggle

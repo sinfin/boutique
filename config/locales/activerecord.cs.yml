@@ -85,7 +85,9 @@ cs:
         master: Hlavní varianta
 
       boutique/shipping_method:
-        price: Cena
+        label: Alternativní název
+        price_cz: Cena (ČR)
+        price_sk: Cena (SR)
 
       boutique/subscription:
         active: Aktivní

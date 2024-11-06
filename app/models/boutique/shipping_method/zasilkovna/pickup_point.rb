@@ -18,15 +18,17 @@ end
 #
 # Table name: boutique_shipping_methods
 #
-#  id         :bigint(8)        not null, primary key
-#  title      :string
-#  price_cz   :integer
-#  price_sk   :integer
-#  type       :string
-#  published  :boolean          default(FALSE)
-#  position   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :bigint(8)        not null, primary key
+#  title       :string
+#  label       :string
+#  description :text
+#  price_cz    :integer
+#  price_sk    :integer
+#  type        :string
+#  published   :boolean          default(FALSE)
+#  position    :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #

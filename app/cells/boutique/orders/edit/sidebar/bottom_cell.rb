@@ -2,7 +2,10 @@
 
 class Boutique::Orders::Edit::Sidebar::BottomCell < Boutique::ApplicationCell
   def shipping_info
-    @shipping_info ||= model.shipping_info
+    @shipping_info ||= [
+      model.shipping_info,
+      model.shipping_method.try(:description)
+    ].compact_blank.join
   end
 
   def shipping_price
