@@ -1,14 +1,6 @@
 (() => {
-  const $btn = $('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__btn')
-
-  if ($btn.length == 0) {
-    return
-  }
-
-  const $modal = $('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__modal')
-  const $wrap = $('.b-orders-edit-shipping-methods-zasilkovna-pickup-point')
-
   const callback = (point) => {
+    const $modal = $('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__modal')
     $modal.removeClass('b-orders-edit-shipping-methods-zasilkovna-pickup-point__modal--visible')
     $('html').removeClass('b--no-scroll')
 
@@ -16,7 +8,9 @@
       return;
     }
 
+    const $wrap = $('.b-orders-edit-shipping-methods-zasilkovna-pickup-point')
     const title = `${point['place']}, ${point['street']}, ${point['city']} ${point['zip']}`
+
     $wrap.find('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__input-remote-id')
          .val(point['id'])
     $wrap.find('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__input-title')
@@ -27,14 +21,15 @@
          .remove()
   };
 
-  $btn.on('click', () => {
-    const apiKey = $(this).data('api-key')
+  $(document).on('click', '.b-orders-edit-shipping-methods-zasilkovna-pickup-point__btn', (e) => {
+    const apiKey = $(e.target).data('api-key')
 
     const opts = {
       language: 'cs',
       country: 'cz',
     }
 
+    const $modal = $('.b-orders-edit-shipping-methods-zasilkovna-pickup-point__modal')
     $modal.addClass('b-orders-edit-shipping-methods-zasilkovna-pickup-point__modal--visible')
     $('html').addClass('b--no-scroll')
 
