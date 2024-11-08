@@ -1,0 +1,7 @@
+---
+en:
+  boutique:
+    shipping_methods:
+      zasilkovna:
+        pickup_point:
+          select_point: Select pickup point...

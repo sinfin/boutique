@@ -7,13 +7,15 @@ linters:
       - app/cells/boutique/orders/edit/show.slim
       - app/cells/boutique/orders/edit/recurrency_fields/show.slim
       - app/cells/boutique/orders/edit/shipping_methods/show.slim
-      - app/cells/boutique/orders/edit/shipping_methods/zasilkovna/pickup_point/show.slim
       - app/cells/boutique/orders/edit/subscription_fields/show.slim
+      - app/cells/boutique/shipping_methods/zasilkovna/pickup_point/show.slim
       - app/cells/boutique/subscriptions/recurrent_payment_label/show.slim
       - app/cells/boutique/ui/vector_icon/*_path.slim
       - app/cells/folio/console/boutique/orders/catalogue/show.slim
+      - app/cells/folio/console/boutique/orders/shipping_method_input/show.slim
       - app/cells/folio/console/boutique/subscriptions/catalogue/show.slim
       - app/views/boutique/orders/edit.slim
+      - app/views/folio/console/boutique/orders/_form.slim
       - app/views/folio/console/boutique/orders/index.slim
       - app/views/folio/console/boutique/shipping_methods/_form.slim
       - app/views/folio/console/boutique/subscriptions/_form.slim

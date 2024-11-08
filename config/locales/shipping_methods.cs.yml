@@ -1,0 +1,7 @@
+---
+cs:
+  boutique:
+    shipping_methods:
+      zasilkovna:
+        pickup_point:
+          select_point: Vyberte výdejní místo...

@@ -1,0 +1,12 @@
+.f-c-b-orders-shipping-method-input
+  = f.association :shipping_method,
+                  collection: f.object.allowed_shipping_methods,
+                  include_blank: false,
+                  input_html: { class: 'f-c-b-orders-shipping-method-input__select' }
+
+  - if zasilkovna_shipping_methods.present?
+    .f-c-b-orders-shipping-method-input__additional-input[
+      data-ids=zasilkovna_shipping_methods.map(&:id)
+      style=("display: none;" unless f.object.shipping_method.in?(zasilkovna_shipping_methods))
+    ]
+      == cell('boutique/shipping_methods/zasilkovna/pickup_point', f)
