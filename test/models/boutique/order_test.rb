@@ -577,7 +577,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
-  test "validates pickup_point_remote_id if required" do
+  test "validates pickup_point_id if required" do
     I18n.with_locale(:en) do
       order = create(:boutique_order, :confirmed)
       assert order.valid?
@@ -586,9 +586,9 @@ class Boutique::OrderTest < ActiveSupport::TestCase
       order.update(shipping_method: zasilkovna)
 
       assert_not order.valid?
-      assert_equal ["can't be blank"], order.errors[:pickup_point_remote_id]
+      assert_equal ["can't be blank"], order.errors[:pickup_point_id]
 
-      order.update!(pickup_point_remote_id: "123")
+      order.update!(pickup_point_id: "123")
       assert order.valid?
     end
   end

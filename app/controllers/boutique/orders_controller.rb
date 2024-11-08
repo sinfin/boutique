@@ -67,6 +67,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     if shipping_method_id = params[:shipping_method_id].presence
       shipping_method = Boutique::ShippingMethod.published.find_by_id(shipping_method_id)
       current_order.shipping_method = shipping_method if shipping_method.present?
+      current_order.pickup_point_country_code = params[:pickup_point_country_code].presence
     end
 
     render json: {
@@ -161,7 +162,8 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                     :gift_recipient_last_name,
                                     :gift_recipient_notification_scheduled_for,
                                     :shipping_method_id,
-                                    :pickup_point_remote_id,
+                                    :pickup_point_id,
+                                    :pickup_point_country_code,
                                     :pickup_point_title,
                                     :age_verification,
                                     *addresses_strong_params,

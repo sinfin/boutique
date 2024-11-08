@@ -1,6 +1,8 @@
 .b-shipping-methods-zasilkovna-pickup-point
-  = model.hidden_field :pickup_point_remote_id,
-                        class: 'b-shipping-methods-zasilkovna-pickup-point__input-remote-id'
+  = model.hidden_field :pickup_point_id,
+                        class: 'b-shipping-methods-zasilkovna-pickup-point__input-id'
+  = model.hidden_field :pickup_point_country_code,
+                        class: 'b-shipping-methods-zasilkovna-pickup-point__input-country-code'
   = model.hidden_field :pickup_point_title,
                         class: 'b-shipping-methods-zasilkovna-pickup-point__input-title'
 
@@ -15,4 +17,4 @@
 
   - if error?
     .b-shipping-methods-zasilkovna-pickup-point__error.invalid-feedback.small
-      = model.object.errors.full_messages_for(:pickup_point_remote_id).join(', ')
+      = model.object.errors.full_messages_for(:pickup_point_id).join(', ')

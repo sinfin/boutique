@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_08_133426) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -103,9 +103,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_21_123401) do
     t.bigint "renewed_subscription_id"
     t.string "referrer_url"
     t.bigint "shipping_method_id"
-    t.string "pickup_point_remote_id"
+    t.string "pickup_point_id"
     t.string "pickup_point_title"
     t.string "tracking_number"
+    t.string "pickup_point_country_code", limit: 2
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"

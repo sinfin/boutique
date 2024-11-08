@@ -282,9 +282,9 @@ class Boutique::Order < Boutique::ApplicationRecord
             if: -> { gift? && !pending? },
             allow_nil: true
 
-  validates :pickup_point_remote_id,
+  validates :pickup_point_id,
             presence: true,
-            if: -> { requires_pickup_point_remote_id? && !pending? }
+            if: -> { requires_pickup_point_id? && !pending? }
 
   validates :age_verification,
             acceptance: true,
@@ -464,7 +464,13 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def shipping_price_per_package
-    shipping_method.try(:price_cz) || 0
+    return 0 if shipping_method.nil?
+
+    if shipping_method.requires_pickup_point? && pickup_point_country_code.present?
+      shipping_method.price_for(pickup_point_country_code)
+    else
+      shipping_method.price_for(primary_address.try(:country_code))
+    end
   end
 
   def packages_count
@@ -525,7 +531,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     nil
   end
 
-  def requires_pickup_point_remote_id?
+  def requires_pickup_point_id?
     shipping_method.present? && shipping_method.requires_pickup_point?
   end
 
@@ -981,9 +987,10 @@ end
 #  renewed_subscription_id                   :bigint(8)
 #  referrer_url                              :string
 #  shipping_method_id                        :bigint(8)
-#  pickup_point_remote_id                    :string
+#  pickup_point_id                           :string
 #  pickup_point_title                        :string
 #  tracking_number                           :string
+#  pickup_point_country_code                 :string(2)
 #
 # Indexes
 #

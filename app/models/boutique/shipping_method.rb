@@ -46,6 +46,14 @@ class Boutique::ShippingMethod < Boutique::ApplicationRecord
   def tracking_url_for(order)
     nil
   end
+
+  def price_for(country_code)
+    if country_code && country_code.downcase == "sk"
+      price_sk
+    else
+      price_cz
+    end
+  end
 end
 
 # == Schema Information

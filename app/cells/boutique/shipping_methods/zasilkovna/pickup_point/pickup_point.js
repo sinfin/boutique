@@ -11,8 +11,11 @@
     const $wrap = $('.b-shipping-methods-zasilkovna-pickup-point')
     const title = `${point['place']}, ${point['street']}, ${point['city']} ${point['zip']}`
 
-    $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__input-remote-id')
+    $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__input-id')
          .val(point['id'])
+    $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__input-country-code')
+         .val(point['country'])
+         .change()
     $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__input-title')
          .val(title)
     $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__selected')
@@ -26,7 +29,7 @@
 
     const opts = {
       language: 'cs',
-      country: 'cz',
+      country: 'cz,sk',
     }
 
     const $modal = $('.b-shipping-methods-zasilkovna-pickup-point__modal')
