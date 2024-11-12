@@ -3,15 +3,17 @@ cs:
   activerecord:
     attributes:
       boutique/order:
-        aasm_state/pending: Nepotvrzená
-        aasm_state/confirmed: Nezaplacená
+        aasm_state/pending: Nepotvrzeno
+        aasm_state/confirmed: Nezaplaceno
         aasm_state/waiting_for_offline_payment: Čeká na platbu převodem
-        aasm_state/paid: Zaplacená
-        aasm_state/dispatched: Vyřízeno
-        aasm_state/cancelled: Stornovaná
+        aasm_state/paid: Zaplaceno
+        aasm_state/dispatched: Odesláno
+        aasm_state/delivered: Doručeno
+        aasm_state/cancelled: Stornováno
 
     events:
       boutique/order:
-        dispatch: Označit za vyřízenou
+        dispatch: Označit za odeslanou
+        deliver: Označit za doručenou
         cancel: Stornovat
         revert_cancelation: Vrátit storno

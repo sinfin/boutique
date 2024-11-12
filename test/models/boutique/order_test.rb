@@ -21,6 +21,7 @@ class Boutique::OrderTest < ActiveSupport::TestCase
       confirm: "confirmed",
       pay: "paid",
       dispatch: "dispatched",
+      deliver: "delivered",
     }.each do |event, state|
       order.aasm.fire!(event)
       assert_equal state, order.aasm_state

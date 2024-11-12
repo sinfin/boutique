@@ -10,7 +10,9 @@ class Boutique::Order < Boutique::ApplicationRecord
                        before_pay
                        after_pay
                        before_dispatch
-                       after_dispatch]
+                       after_dispatch
+                       before_deliver
+                       after_deliver]
 
   MAILER_ACTIONS = %i[paid
                       paid_subsequent]
@@ -311,6 +313,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     state :waiting_for_offline_payment, color: "red"
     state :paid, color: "yellow"
     state :dispatched, color: "green"
+    state :delivered, color: "green"
     state :cancelled, color: "dark"
 
     states = Boutique::Order.aasm.states.map(&:name)
@@ -391,11 +394,24 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
+    event :deliver do
+      transitions from: :dispatched, to: :delivered
+
+      before do
+        before_deliver
+      end
+
+      after do
+        after_deliver
+      end
+    end
+
     event :cancel do
       transitions from: states.without(:cancelled), to: :cancelled
     end
 
     event :revert_cancelation do
+      transitions from: :cancelled, to: :delivered, guard: :delivered_at?
       transitions from: :cancelled, to: :dispatched, guard: :dispatched_at?
       transitions from: :cancelled, to: :paid, guard: :paid_at?
       transitions from: :cancelled, to: :confirmed, guard: :confirmed_at?
@@ -982,6 +998,7 @@ end
 #  pickup_point_title                        :string
 #  tracking_number                           :string
 #  pickup_point_country_code                 :string(2)
+#  delivered_at                              :datetime
 #
 # Indexes
 #
