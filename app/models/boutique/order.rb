@@ -578,7 +578,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       self.site = product.site
 
-      set_default_shipping_method
       after_add_line_item(additional_options)
 
       save!
@@ -725,14 +724,6 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   private
-    def set_default_shipping_method
-      if digital_only?
-        nil
-      elsif shipping_method.nil? || allowed_shipping_methods.exclude?(shipping_method)
-        self.shipping_method = allowed_shipping_methods.published.ordered.first
-      end
-    end
-
     def set_numbers
       return if base_number.present?
 

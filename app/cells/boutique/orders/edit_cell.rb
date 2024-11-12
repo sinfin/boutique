@@ -6,6 +6,7 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
 
   def show
     assign_name_and_addresses
+    assign_shipping_method
 
     render
   end
@@ -77,6 +78,10 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
     @product_description ||= current_order&.line_items&.first&.product&.checkout_sidebar_content
   end
 
+  def shipping_methods
+    @shipping_methods ||= current_order.allowed_shipping_methods.published.ordered
+  end
+
   private
     def assign_name_and_addresses
       if current_user.present? && !current_order.changed?
@@ -102,6 +107,14 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
           current_order.use_secondary_address = current_user.secondary_address.present?
           current_order.secondary_address = current_user.secondary_address.dup
         end
+      end
+    end
+
+    def assign_shipping_method
+      if current_order.digital_only?
+        current_order.shipping_method = nil
+      elsif current_order.shipping_method.nil? || shipping_methods.exclude?(current_order.shipping_method)
+        current_order.shipping_method = shipping_methods.first
       end
     end
 end
