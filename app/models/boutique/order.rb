@@ -12,7 +12,11 @@ class Boutique::Order < Boutique::ApplicationRecord
                        before_dispatch
                        after_dispatch
                        before_deliver
-                       after_deliver]
+                       after_deliver
+                       before_cancel
+                       after_cancel
+                       before_revert_cancelation
+                       after_revert_cancelation]
 
   MAILER_ACTIONS = %i[paid
                       paid_subsequent]
@@ -378,7 +382,11 @@ class Boutique::Order < Boutique::ApplicationRecord
           mailer_paid.deliver_later
         end
 
-        dispatch! if digital_only?
+        if digital_only?
+          # FIXME
+          dispatch!
+          deliver!
+        end
       end
     end
 
@@ -408,6 +416,14 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     event :cancel do
       transitions from: states.without(:cancelled), to: :cancelled
+
+      before do
+        before_cancel
+      end
+
+      after do
+        after_cancel
+      end
     end
 
     event :revert_cancelation do
@@ -417,7 +433,15 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :cancelled, to: :confirmed, guard: :confirmed_at?
       transitions from: :cancelled, to: :pending
 
-      before { self.cancelled_at = nil }
+      before do
+        self.cancelled_at = nil
+
+        before_revert_cancelation
+      end
+
+      after do
+        after_revert_cancelation
+      end
     end
   end
 
