@@ -61,7 +61,7 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
 
       tab = params[:tab]
 
-      [nil, "unpaid", "paid", "dispatched", "cancelled"].map do |tab_param|
+      [nil, "unpaid", "paid", "dispatched", "delivered", "cancelled"].map do |tab_param|
         {
           force_href: url_for([:console, @klass, base_hash.merge(tab: tab_param)]),
           force_active: tab_param == tab,
@@ -149,11 +149,13 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
       when "unpaid"
         @orders = @orders.where(aasm_state: %w[confirmed waiting_for_offline_payment])
       when "paid"
-        @orders = @orders.where(aasm_state: "paid")
+        @orders = @orders.paid
       when "dispatched"
-        @orders = @orders.where(aasm_state: "dispatched")
+        @orders = @orders.dispatched
+      when "delivered"
+        @orders = @orders.delivered
       when "cancelled"
-        @orders = @orders.where(aasm_state: "cancelled")
+        @orders = @orders.cancelled
       end
     end
 

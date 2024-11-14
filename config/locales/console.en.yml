@@ -24,6 +24,7 @@ en:
               index: Unpaid
               paid: Paid
               dispatched: Dispatched
+              delivered: Delivered
               cancelled: Cancelled
 
           invoices:

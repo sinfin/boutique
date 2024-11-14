@@ -24,10 +24,11 @@ cs:
 
             tabs:
               index: Vše
-              unpaid: Nezaplacená
-              paid: Zaplacená
-              dispatched: Expedovaná
-              cancelled: Stornovaná
+              unpaid: Nezaplaceno
+              paid: Zaplaceno
+              dispatched: Expedováno
+              delivered: Doručeno
+              cancelled: Stornováno
 
           invoices:
             filename: faktury
