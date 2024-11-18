@@ -80,7 +80,7 @@
               .b-orders-edit__box
                 = cell('boutique/orders/edit/shipping_methods', f, shipping_methods: shipping_methods)
             - else
-              = f.input :shipping_method_id, as: :hidden
+              = f.hidden_field :shipping_method_id, class: "b-orders-edit__shipping-method-input"
 
           - unless current_order.voucher_code.nil? && current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)

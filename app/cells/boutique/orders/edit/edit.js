@@ -13,7 +13,7 @@
       method: "GET",
       url: $wrap.data('refreshedUrl'),
       data: {
-        shipping_method_id: $wrap.find('.b-orders-edit-shipping-methods__option-input:checked').val(),
+        shipping_method_id: $wrap.find('.b-orders-edit-shipping-methods__option-input:checked, .b-orders-edit__shipping-method-input').val(),
         pickup_point_country_code: $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__input-country-code').val(),
         country_code: $wrap.find('.f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input').val(),
       },
