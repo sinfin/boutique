@@ -311,7 +311,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                        :gift_recipient_last_name,
                        :gift_recipient_email
 
-  aasm timestamps: true do
+  aasm do
     state :pending, initial: true
     state :confirmed, color: "red"
     state :waiting_for_offline_payment, color: "red"
@@ -326,6 +326,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :pending, to: :confirmed
 
       before do
+        self.confirmed_at ||= current_time_from_proper_timezone
+
         set_numbers
         imprint
         set_site
@@ -355,11 +357,17 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: %i[confirmed waiting_for_offline_payment], to: :paid
 
       before do
-        self.paid_at = current_time_from_proper_timezone
+        self.paid_at ||= current_time_from_proper_timezone
 
         set_invoice_number
 
         before_pay
+
+        # if digital_only?
+        #   self.dispatched_at = paid_at
+        #   self.delivered_at = paid_at
+        #   self.aasm_state = "delivered"
+        # end
       end
 
       after do
@@ -394,6 +402,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :paid, to: :dispatched
 
       before do
+        self.dispatched_at ||= current_time_from_proper_timezone
+
         before_dispatch
       end
 
@@ -406,6 +416,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :dispatched, to: :delivered
 
       before do
+        self.delivered_at ||= current_time_from_proper_timezone
+
         before_deliver
       end
 
@@ -418,6 +430,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: states.without(:cancelled), to: :cancelled
 
       before do
+        self.cancelled_at ||= current_time_from_proper_timezone
+
         before_cancel
       end
 
@@ -767,7 +781,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     def set_numbers
       return if base_number.present?
 
-      year_prefix = current_time_from_proper_timezone.year.to_s.last(2)
+      year_prefix = confirmed_at.year.to_s.last(2)
       self.base_number = ActiveRecord::Base.nextval("boutique_orders_base_number_seq")
 
       # format: 2200001, 2200002 ... 2309998, 2309999

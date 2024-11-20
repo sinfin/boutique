@@ -193,7 +193,8 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal "2200001", order.number
 
     travel_to Time.zone.local(2023, 1, 1)
-    order = create(:boutique_order, :confirmed)
+    order = create(:boutique_order, :ready_to_be_confirmed)
+    order.confirm!
     assert_equal "2300002", order.number
   end
 
