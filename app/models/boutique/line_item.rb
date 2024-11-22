@@ -24,15 +24,22 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   before_validation :unset_unwanted_subscription_starts_at
 
+  def amount_to_label
+    "#{amount} ×" if amount > 1
+  end
+
   def to_label
-    [
-      product.title,
-      product_variant.try(:title)
-    ].compact.join(" / ")
+    label = amount_to_label || ""
+    label += " #{product.title}"
+    label += " / #{product_variant.title}" if product_variant && product_variant.title?
+    label
   end
 
   def to_full_label(html_context: nil, order_for_label: nil)
-    product.to_line_item_full_label(html_context:, product_variant:, subscription_starts_at:, order: order_for_label || order)
+    [
+      amount_to_label,
+      product.to_line_item_full_label(html_context:, product_variant:, subscription_starts_at:, order: order_for_label || order)
+    ].compact.join(" ")
   end
 
   def to_console_label
