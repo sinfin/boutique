@@ -5,6 +5,7 @@ linters:
   LineLength:
     exclude:
       - app/cells/boutique/orders/edit/show.slim
+      - app/cells/boutique/orders/edit/line_items_fields/show.slim
       - app/cells/boutique/orders/edit/recurrency_fields/show.slim
       - app/cells/boutique/orders/edit/shipping_methods/show.slim
       - app/cells/boutique/orders/edit/subscription_fields/show.slim

@@ -115,6 +115,11 @@ class Boutique::Product < Boutique::ApplicationRecord
     false
   end
 
+  def max_purchase_amount_allowed
+    # override in main app if needed, use nil for unlimited
+    1
+  end
+
   def self.default_shipping_methods
     []
   end

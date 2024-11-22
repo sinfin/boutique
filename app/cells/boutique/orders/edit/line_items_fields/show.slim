@@ -1,9 +1,13 @@
 .b-orders-edit-line-items-fields
   .b-orders-edit-line-item-fields__inner
     = html_safe_fields_for model, :line_items do |g|
-      h3.mt-0 = g.object.product.variant_type_title || t('.title')
+      - if render_product_variant_input?
+        h3.mt-0 = g.object.product.variant_type_title || t('.title')
 
-      = g.association :product_variant,
-                      collection: g.object.product.variants,
-                      include_blank: t('.blank'),
-                      label: false
+        = g.association :product_variant,
+                        collection: g.object.product.variants,
+                        include_blank: t('.blank'),
+                        label: false
+
+      - if render_amount_input?
+        = g.input :amount, input_html: { min: 1, class: "b-orders-edit-line-items-fields__amount-input" }

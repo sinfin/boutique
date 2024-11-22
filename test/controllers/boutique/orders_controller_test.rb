@@ -52,6 +52,10 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
 
     get refreshed_edit_order_url(country_code: "SK")
     assert_response :success
+
+    @order.line_items.all? { |li| li.product.update!(digital_only: true) }
+    get refreshed_edit_order_url
+    assert_response :success
   end
 
   test "apply_voucher" do

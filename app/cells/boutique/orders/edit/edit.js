@@ -13,6 +13,7 @@
       method: "GET",
       url: $wrap.data('refreshedUrl'),
       data: {
+        line_item_amount: $wrap.find('.b-orders-edit-line-items-fields__amount-input').val(),
         shipping_method_id: $wrap.find('.b-orders-edit-shipping-methods__option-input:checked, .b-orders-edit__shipping-method-input').val(),
         pickup_point_country_code: $wrap.find('.b-shipping-methods-zasilkovna-pickup-point__input-country-code').val(),
         country_code: $wrap.find('.f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input').val(),
@@ -37,6 +38,7 @@
   }
 
   $(document)
+    .on('change', '.b-orders-edit .b-orders-edit-line-items-fields__amount-input', refresh)
     .on('change', '.b-orders-edit .f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input', refresh)
     .on('change', '.b-orders-edit .b-orders-edit-shipping-methods__option-input', refresh)
     .on('change', '.b-orders-edit .b-shipping-methods-zasilkovna-pickup-point__input-country-code', refresh)

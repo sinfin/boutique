@@ -13,9 +13,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
-  validates :amount,
-            numericality: { greater_than_or_equal_to: 1 }
-
+  validate :validate_amount
   validate :validate_product_variant
 
   delegate :cover,
@@ -123,6 +121,18 @@ class Boutique::LineItem < Boutique::ApplicationRecord
       return if requires_subscription_starts_at?
 
       self.subscription_starts_at = nil
+    end
+
+    def validate_amount
+      return if order.pending?
+
+      if amount < 1
+        errors.add(:amount, :greater_than_or_equal_to, value: amount, count: 1)
+      end
+
+      if product.max_purchase_amount_allowed && amount > product.max_purchase_amount_allowed
+        errors.add(:amount, :less_than_or_equal_to, value: amount, count: product.max_purchase_amount_allowed)
+      end
     end
 
     def validate_product_variant

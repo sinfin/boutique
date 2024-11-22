@@ -56,18 +56,24 @@ class Boutique::OrdersController < Boutique::ApplicationController
   def refreshed_edit
     order = current_order
 
-    country_code = params.require(:country_code)
+    if order.requires_address?
+      country_code = params.require(:country_code)
 
-    if order.primary_address.blank?
-      order.build_primary_address(country_code:)
-    else
-      order.primary_address.country_code = country_code
+      if order.primary_address.blank?
+        order.build_primary_address(country_code:)
+      else
+        order.primary_address.country_code = country_code
+      end
+    end
+
+    if params[:line_item_amount]
+      order.line_item.amount = params[:line_item_amount]
     end
 
     if shipping_method_id = params[:shipping_method_id].presence
       shipping_method = Boutique::ShippingMethod.published.find_by_id(shipping_method_id)
-      current_order.shipping_method = shipping_method if shipping_method.present?
-      current_order.pickup_point_country_code = params[:pickup_point_country_code].presence
+      order.shipping_method = shipping_method if shipping_method.present?
+      order.pickup_point_country_code = params[:pickup_point_country_code].presence
     end
 
     render json: {
@@ -194,6 +200,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
     def line_items_strong_params
       [
         line_items_attributes: %i[id
+                                  amount
                                   product_variant_id
                                   subscription_starts_at
                                   subscription_recurring]
