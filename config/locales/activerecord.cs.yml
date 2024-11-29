@@ -183,6 +183,8 @@ cs:
               missing_master_variant: Nemá vybranou hlavní variantu.
               too_many_master_variants: Má vybrano více hlavních variant.
               line_items_exist: Obsahuje položky v objednávkách.
+            discounted_until:
+              must_be_after_discounted_from: nemůže být před začátkem akce.
 
         boutique/order:
           attributes:

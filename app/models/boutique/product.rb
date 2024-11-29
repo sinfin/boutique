@@ -55,6 +55,7 @@ class Boutique::Product < Boutique::ApplicationRecord
   validates :site, inclusion: { in: proc { sites_for_select } },
                    allow_nil: true
 
+  validate :validate_discount_dates
   validate :validate_master_variant_presence
 
   pg_search_scope :by_query,
@@ -201,6 +202,14 @@ class Boutique::Product < Boutique::ApplicationRecord
         # all good
       else
         errors.add(:base, :too_many_master_variants)
+      end
+    end
+
+    def validate_discount_dates
+      return unless discounted_from.present? && discounted_until.present?
+
+      if discounted_from >= discounted_until
+        errors.add(:discounted_until, :must_be_after_discounted_from)
       end
     end
 
