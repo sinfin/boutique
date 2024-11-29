@@ -182,6 +182,7 @@ cs:
             base:
               missing_master_variant: Nemá vybranou hlavní variantu.
               too_many_master_variants: Má vybrano více hlavních variant.
+              line_items_exist: Obsahuje položky v objednávkách.
 
         boutique/order:
           attributes:

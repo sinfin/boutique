@@ -67,6 +67,8 @@ class Boutique::Product < Boutique::ApplicationRecord
   after_initialize :set_default_vat_rate
   after_initialize :set_default_shipping_methods
 
+  before_destroy :can_destroy?, prepend: true
+
   def subscription?
     is_a?(Boutique::Product::Subscription)
   end
@@ -199,6 +201,13 @@ class Boutique::Product < Boutique::ApplicationRecord
         # all good
       else
         errors.add(:base, :too_many_master_variants)
+      end
+    end
+
+    def can_destroy?
+      if Boutique::LineItem.where(product_id: id).exists?
+        errors.add(:base, :line_items_exist)
+        throw :abort
       end
     end
 end
