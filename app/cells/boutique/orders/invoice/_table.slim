@@ -6,10 +6,18 @@
           class="b-orders-invoice__table-th--item"
           colspan=3
         ]
+
         th.b-orders-invoice__table-th.text-right [
           class="b-orders-invoice__table-th--price"
         ]
           = t('.vat')
+
+        - if multiple_amount?
+          th.b-orders-invoice__table-th.text-right [
+            class="b-orders-invoice__table-th--price"
+          ]
+            = t('.price_per_unit')
+
         th.b-orders-invoice__table-th.text-right [
           class="b-orders-invoice__table-th--commission"
         ]
@@ -22,8 +30,14 @@
         tr
           td.b-orders-invoice__table-td colspan=3
             = line_item.to_full_label
+
           td.b-orders-invoice__table-td.text-right
             = "#{line_item.vat_rate_value} %"
+
+          - if multiple_amount?
+            td.b-orders-invoice__table-td.text-right
+              = price(line_item.unit_price, precision: 2, zero_as_number: true)
+
           td.b-orders-invoice__table-td.text-right
             = price(line_item.price + shipping_price_part, precision: 2,
                                                            zero_as_number: true)

@@ -54,4 +54,8 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   def total_price_without_vat
     (model.total_price - total_price_vat.to_d).to_f
   end
+
+  def multiple_amount?
+    model.line_items.any? { |line_item| line_item.amount > 1 }
+  end
 end
