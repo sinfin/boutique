@@ -440,7 +440,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
     end
 
-    event :revert_cancelation do
+    event :revert_cancelation, private: true do
       transitions from: :cancelled, to: :delivered, guard: :delivered_at?
       transitions from: :cancelled, to: :dispatched, guard: :dispatched_at?
       transitions from: :cancelled, to: :paid, guard: :paid_at?
