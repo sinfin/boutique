@@ -16,4 +16,3 @@ cs:
         dispatch: Označit za odeslanou
         deliver: Označit za doručenou
         cancel: Stornovat
-        revert_cancelation: Vrátit storno

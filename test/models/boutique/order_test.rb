@@ -14,28 +14,6 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     Rails.application.routes.default_url_options[:only_path] = false
   end
 
-  test "revert_cancelation event returns order to correct state" do
-    order = create(:boutique_order, :ready_to_be_confirmed)
-
-    {
-      confirm: "confirmed",
-      pay: "paid",
-      dispatch: "dispatched",
-      deliver: "delivered",
-    }.each do |event, state|
-      order.aasm.fire!(event)
-      assert_equal state, order.aasm_state
-
-      order.cancel!
-      assert_equal "cancelled", order.aasm_state
-      assert order.cancelled_at
-
-      order.revert_cancelation!
-      assert_equal state, order.aasm_state
-      assert_nil order.cancelled_at
-    end
-  end
-
   test "confirm" do
     order = create(:boutique_order, :ready_to_be_confirmed)
 

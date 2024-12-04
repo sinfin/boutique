@@ -14,9 +14,7 @@ class Boutique::Order < Boutique::ApplicationRecord
                        before_deliver
                        after_deliver
                        before_cancel
-                       after_cancel
-                       before_revert_cancelation
-                       after_revert_cancelation]
+                       after_cancel]
 
   MAILER_ACTIONS = %i[paid
                       paid_subsequent]
@@ -437,24 +435,6 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       after do
         after_cancel
-      end
-    end
-
-    event :revert_cancelation do
-      transitions from: :cancelled, to: :delivered, guard: :delivered_at?
-      transitions from: :cancelled, to: :dispatched, guard: :dispatched_at?
-      transitions from: :cancelled, to: :paid, guard: :paid_at?
-      transitions from: :cancelled, to: :confirmed, guard: :confirmed_at?
-      transitions from: :cancelled, to: :pending
-
-      before do
-        self.cancelled_at = nil
-
-        before_revert_cancelation
-      end
-
-      after do
-        after_revert_cancelation
       end
     end
   end
