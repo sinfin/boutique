@@ -139,6 +139,10 @@ class Boutique::Product < Boutique::ApplicationRecord
     []
   end
 
+  def self.additional_publishable_input_attributes
+    []
+  end
+
   def self.pregenerated_thumbnails_base
     h = {
       "Folio::FilePlacement::Cover" => [],

@@ -10,6 +10,12 @@ ruby:
     right = nil
   end
 
+  publishable_input_attributes = %i[best_offer]
+
+  publishable_input_attributes.concat(
+    Boutique::Product.additional_publishable_input_attributes
+  )
+
 = form_header f, right:
 
 = tabs [:content]
@@ -22,7 +28,7 @@ ruby:
       .col-md
         == cell('folio/console/publishable_inputs',
                 f,
-                additional_fields: %i[best_offer])
+                additional_fields: publishable_input_attributes)
 
         .row
           .col-md-2 = f.input :code
