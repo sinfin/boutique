@@ -113,6 +113,8 @@ cs:
         discount_in_percentages: Sleva v procentech
         number_of_allowed_uses: Max. počet použití
         published: Aktivní
+        published_from: Aktivní od
+        published_until: Aktivní do
         quantity: Počet voucherů k vygenerování
         product_code: Kód produktu/produktů
         use_count: Počet použití

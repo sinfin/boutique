@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Boutique::VouchersController < Folio::Console::BaseController
-  folio_console_controller_for "Boutique::Voucher"
+  folio_console_controller_for "Boutique::Voucher", csv: true
 
   def create
     @voucher = @klass.create(folio_console_params_with_site)

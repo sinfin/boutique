@@ -86,6 +86,31 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     self.code = code.try(:upcase)
   end
 
+
+  def self.csv_attribute_names
+    %i[title code published published_from published_until product_code discount number_of_allowed_uses]
+  end
+
+  def csv_attributes(controller)
+    self.class.csv_attribute_names.map do |attr|
+      case attr
+      when :discount
+        if discount_in_percentages?
+          "#{discount} %"
+        else
+          ActionController::Base.helpers.number_to_currency(discount, precision: 0)
+        end
+      when :published_from, :published_until
+        t = send(attr)
+        I18n.l(t, format: :console_short) if t.present?
+      when :published
+        I18n.t(".#{send(attr)}")
+      else
+        send(attr)
+      end
+    end
+  end
+
   def self.use_preview_tokens?
     false
   end
