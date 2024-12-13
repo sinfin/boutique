@@ -22,7 +22,7 @@ module Boutique::CurrentOrder
       if current_user.present?
         if order.nil?
           order = current_order_scope.where(user: current_user).order(id: :desc).first
-        elsif order.user_id != current_user.id
+        elsif order.folio_user_id != current_user.id
           order.update_columns(folio_user_id: current_user.id,
                                updated_at: Time.current)
         end
