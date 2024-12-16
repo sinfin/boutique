@@ -13,7 +13,7 @@ module Boutique::CurrentOrder
   def current_order
     @current_order ||= begin
       if session && session.id
-        order = current_order_scope.find_by(web_session_id: session.id.public_id)
+        order = current_order_scope.find_by(web_session_id: [session.id.public_id, session[:id_before_login]].compact)
       else
         order = nil
       end
@@ -23,7 +23,8 @@ module Boutique::CurrentOrder
         if order.nil?
           order = current_order_scope.where(user: current_user).order(id: :desc).first
         elsif order.folio_user_id != current_user.id
-          order.update_columns(folio_user_id: current_user.id,
+          order.update_columns(web_session_id: session.id.public_id,
+                               folio_user_id: current_user.id,
                                updated_at: Time.current)
         end
       end
