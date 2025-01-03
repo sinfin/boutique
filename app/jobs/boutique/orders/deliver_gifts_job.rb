@@ -22,7 +22,7 @@ class Boutique::Orders::DeliverGiftsJob < Boutique::ApplicationJob
   private
     def orders_ready_for_delivery
       Boutique::Order.except_subsequent
-                     .where(aasm_state: %w[paid dispatched])
+                     .where(aasm_state: %w[paid dispatched delivered])
                      .where(gift: true, gift_recipient_notification_sent_at: nil)
                      .where("gift_recipient_notification_scheduled_for <= ?", Time.current)
                      .includes(:gift_recipient,
