@@ -30,7 +30,7 @@ class Boutique::SubscriptionBot
         new_order.line_items = original_order.line_items.map do |original_line_item|
           line_item = original_line_item.dup
           line_item.vat_rate_value = nil
-          line_item.subscription_starts_at += line_item.subscription_period.months if line_item.subscription_starts_at?
+          line_item.subscription_starts_at = subscription.active_until
           line_item
         end
 
