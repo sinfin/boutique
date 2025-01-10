@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_12_122051) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_10_143804) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -108,6 +108,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_12_122051) do
     t.string "tracking_number"
     t.string "pickup_point_country_code", limit: 2
     t.datetime "delivered_at"
+    t.string "shipping_label"
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"

@@ -35,6 +35,14 @@ class Boutique::ShippingMethod < Boutique::ApplicationRecord
     ]
   end
 
+  def to_label
+    label || title
+  end
+
+  def to_console_label
+    title
+  end
+
   def requires_address?
     true
   end

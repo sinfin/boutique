@@ -45,8 +45,10 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
       items = model.line_items.to_a
 
       if model.shipping_price > 0 && included_shipping_price_part == 0
-        items << Struct.new(vat_rate_value: 21,
-                            price_vat: model.shipping_price_vat)
+        # rubocop:disable OpenStruct
+        items << OpenStruct.new(vat_rate_value: model.shipping_vat_rate_value,
+                                price_vat: model.shipping_price_vat)
+        # rubocop:enable OpenStruct
       end
 
       items.group_by(&:vat_rate_value)
@@ -74,7 +76,10 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   end
 
   def included_shipping_price_part
-    # model.shipping_price.to_f / model.line_items.size
-    0
+    if model.shipping_price_invoiced_separately?
+      0
+    else
+      model.shipping_price.to_f / model.line_items.size
+    end
   end
 end

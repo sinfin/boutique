@@ -42,7 +42,7 @@
       - if model.shipping_price > 0 && included_shipping_price_part == 0
         tr
           td.b-orders-invoice__table-td colspan=2
-            = model.shipping_method.label || model.shipping_method.title
+            = model.shipping_label
           td.b-orders-invoice__table-td.text-right
             = "#{model.shipping_vat_rate_value} %"
           td.b-orders-invoice__table-td.text-right

@@ -40,11 +40,13 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     order = create(:boutique_order, :ready_to_be_confirmed)
 
     assert_nil order.read_attribute(:line_items_price)
+    assert_nil order.read_attribute(:shipping_price)
     assert_nil order.read_attribute(:total_price)
 
     order.confirm!
 
     assert order.read_attribute(:line_items_price)
+    assert order.read_attribute(:shipping_price)
     assert order.read_attribute(:total_price)
   end
 

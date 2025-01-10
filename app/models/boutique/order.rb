@@ -597,6 +597,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     line_items.first.product.shipping_info
   end
 
+  def shipping_price_invoiced_separately?
+    shipping_label.present?
+  end
+
   def allowed_shipping_methods
     line_items.first.product.shipping_methods
   end
@@ -929,6 +933,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       self.line_items_price = line_items_price
       self.discount = discount
+      self.shipping_price = shipping_price
+      self.shipping_label = shipping_method.to_label if shipping_method.present?
       self.total_price = total_price
     end
 
@@ -1057,6 +1063,7 @@ end
 #  tracking_number                           :string
 #  pickup_point_country_code                 :string(2)
 #  delivered_at                              :datetime
+#  shipping_label                            :string
 #
 # Indexes
 #
