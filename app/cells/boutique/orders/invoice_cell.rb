@@ -3,6 +3,10 @@
 class Boutique::Orders::InvoiceCell < ApplicationCell
   include Boutique::PriceHelper
 
+  def price_with_precision(amount)
+    price(amount, precision: 2, zero_as_number: true)
+  end
+
   def billing_address
     @billing_address ||= model.secondary_address || model.primary_address
   end
@@ -37,18 +41,28 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
   end
 
   def vat_amounts
-    @vat_amounts ||= model.line_items.group_by(&:vat_rate_value)
-                                     .transform_values do |line_items|
-      # FIXME: fix for multiple line items
-      total_price_vat
+    @vat_amounts ||= begin
+      items = model.line_items.to_a
+
+      if model.shipping_price > 0 && included_shipping_price_part == 0
+        items << Struct.new(vat_rate_value: 21,
+                            price_vat: model.shipping_price_vat)
+      end
+
+      items.group_by(&:vat_rate_value)
+           .transform_values do |items|
+        items.sum(&:price_vat)
+      end
     end
   end
 
   def total_price_vat
-    fail "invoices for multiple line items are not supported" if model.line_items.size > 1
-
-    vat_rate_value = model.line_items.first.vat_rate_value
-    (model.total_price * (vat_rate_value.to_d / (100 + vat_rate_value))).round(2).to_f
+    @total_price_vat ||= if included_shipping_price_part == 0
+      model.line_items.sum(&:price_vat) + model.shipping_price_vat
+    else
+      vat_rate_value = model.line_items.first.vat_rate_value
+      (model.total_price * (vat_rate_value.to_d / (100 + vat_rate_value))).round(2).to_f
+    end
   end
 
   def total_price_without_vat
@@ -57,5 +71,10 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
 
   def multiple_amount?
     model.line_items.any? { |line_item| line_item.amount > 1 }
+  end
+
+  def included_shipping_price_part
+    # model.shipping_price.to_f / model.line_items.size
+    0
   end
 end

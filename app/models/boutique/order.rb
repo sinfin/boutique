@@ -560,6 +560,14 @@ class Boutique::Order < Boutique::ApplicationRecord
     super || [line_items_price + shipping_price - discount.to_i, 0].max
   end
 
+  def total_price_vat
+    line_items.sum(&:price_vat) + shipping_price_vat
+  end
+
+  def total_price_without_vat
+    (total_price - total_price_vat.to_d).to_f
+  end
+
   def free?
     total_price.zero?
   end
@@ -570,6 +578,18 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def is_unpaid?
     !is_paid?
+  end
+
+  def shipping_vat_rate_value
+    21
+  end
+
+  def shipping_price_vat
+    (shipping_price * (shipping_vat_rate_value.to_d / (100 + shipping_vat_rate_value))).round(2).to_f
+  end
+
+  def shipping_price_without_vat
+    (shipping_price - shipping_price_vat.to_d).to_f
   end
 
   def shipping_info
