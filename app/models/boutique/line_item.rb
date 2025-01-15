@@ -82,7 +82,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     (unit_price - unit_price_vat.to_d).to_f
   end
 
-
   def subscription_period
     super || product.subscription_period
   end

@@ -546,10 +546,14 @@ class Boutique::Order < Boutique::ApplicationRecord
                       voucher.applicable?
 
       voucher_discount = if voucher.discount_in_percentages?
-        ((line_items_price_without_discount + shipping_price) * (0.01 * voucher.discount)).round
+        p = line_items_price_without_discount
+        p += shipping_price if voucher.discount == 100 || shipping_price_invoiced_separately?
+
+        (p * 0.01 * voucher.discount).round
       else
         voucher.discount
       end
+
       product_discount = line_items.sum { |li| li.product.discount.to_i }
 
       [voucher_discount - product_discount, 0].max
@@ -561,6 +565,8 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def total_price_vat
+    return 0 if total_price == 0
+
     line_items.sum(&:price_vat) + shipping_price_vat
   end
 
@@ -915,17 +921,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     def use_voucher!
       # TODO: make this work with multiple line items
       voucher.use! if voucher.try(:applicable_for?, line_items.first.product)
-    end
-
-    def apply_voucher
-      return unless voucher.present? &&
-                    voucher.applicable_for?(line_items.first.product)
-
-      self.discount = if voucher.discount_in_percentages?
-        price * (0.01 * voucher.discount)
-      else
-        voucher.discount
-      end
     end
 
     def imprint

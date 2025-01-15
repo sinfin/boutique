@@ -82,11 +82,18 @@
           = s.object.voucher.code
 
     = s.attribute(:line_items_price)
-      = price(s.object.line_items_price)
-    = s.attribute(:shipping_price)
-      = price(s.object.shipping_price)
+      = price(s.object.line_items_price, zero_as_number: true)
+
+    = s.attribute(:shipping_price, if_blank: "–")
+      - unless s.object.digital_only?
+        = price(s.object.shipping_price)
+
+    - if s.object.discount > 0
+      = s.attribute(:discount)
+        = price(s.object.discount * -1)
+
     = s.attribute(:total_price)
-      = price(s.object.total_price)
+      = price(s.object.total_price, zero_as_number: true)
 
     = s.attribute(:invoice) do
       - if s.object.invoice_number?

@@ -16,6 +16,7 @@ cs:
         confirmed_at: Objednáno
         confirmed_at_range: Objednáno
         created_at: Vytvořeno
+        discount: Sleva
         dispatched_at: Expedováno
         full_name: Jméno
         gift: Dárek
