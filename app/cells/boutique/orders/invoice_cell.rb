@@ -40,31 +40,40 @@ class Boutique::Orders::InvoiceCell < ApplicationCell
     ].compact.join(", ")
   end
 
+  # rubocop:disable OpenStruct
   def vat_amounts
     @vat_amounts ||= begin
-      items = model.line_items.to_a
+      items = model.line_items.map do |li|
+        # subtract discount
+        li_price = [li.price - model.discount, 0].max
+        price_vat = (li_price * (li.vat_rate_value.to_d / (100 + li.vat_rate_value))).round(2).to_f
 
-      if model.shipping_price > 0 && included_shipping_price_part == 0
-        # rubocop:disable OpenStruct
-        items << OpenStruct.new(vat_rate_value: model.shipping_vat_rate_value,
-                                price_vat: model.shipping_price_vat)
-        # rubocop:enable OpenStruct
+        {
+          vat_rate_value: li.vat_rate_value,
+          price_vat:
+        }
       end
 
-      items.group_by(&:vat_rate_value)
+      if model.shipping_price > 0 && included_shipping_price_part == 0
+        # discount applies to shipping only on orders with 100% discount
+        price_vat = model.total_price == 0 ? 0 : model.shipping_price_vat
+
+        items << {
+          vat_rate_value: model.shipping_vat_rate_value,
+          price_vat:
+        }
+      end
+
+      items.group_by { |item| item[:vat_rate_value] }
            .transform_values do |items|
-        items.sum(&:price_vat)
+        items.sum { |item| item[:price_vat] }
       end
     end
   end
+  # rubocop:enable OpenStruct
 
   def total_price_vat
-    @total_price_vat ||= if included_shipping_price_part == 0
-      model.line_items.sum(&:price_vat) + model.shipping_price_vat
-    else
-      vat_rate_value = model.line_items.first.vat_rate_value
-      (model.total_price * (vat_rate_value.to_d / (100 + vat_rate_value))).round(2).to_f
-    end
+    @total_price_vat ||= vat_amounts.values.sum
   end
 
   def total_price_without_vat
