@@ -38,7 +38,11 @@
         @payment = Boutique::Payment.find_by_remote_id!(result_hash[:transaction_id])
         @payment.update_state_from_gateway_check(result_hash)
       rescue ActiveRecord::RecordNotFound => error
-        Raven.capture_exception(error, extra: { params: })
+        if Object.const_defined?("Sentry")
+          ::Sentry.capture_exception(error, extra: { params: })
+        else
+          ::Raven.capture_exception(error, extra: { params: })
+        end
       end
     end
   end

@@ -72,7 +72,11 @@ class Boutique::SubscriptionBot
           new_order.confirm!
         rescue => error
           # report error but continue
-          ::Raven.capture_exception(error, extra: { subscription_id: subscription.id })
+          if Object.const_defined?("Sentry")
+            ::Sentry.capture_exception(error, extra: { subscription_id: subscription.id })
+          else
+            ::Raven.capture_exception(error, extra: { subscription_id: subscription.id })
+          end
         end
       end
     end

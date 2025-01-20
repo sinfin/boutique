@@ -9,7 +9,12 @@ class Boutique::Orders::PendingPaymentsCheckJob < Boutique::ApplicationJob
                                                .check_transaction(payment.remote_id)
       payment.update_state_from_gateway_check(payment_result.hash)
     rescue => error
-      ::Raven.capture_exception(error, extra: { payment_id: payment.id })
+      if Object.const_defined?("Sentry")
+        ::Sentry.capture_exception(error, extra: { payment_id: payment.id })
+      else
+        ::Raven.capture_exception(error, extra: { payment_id: payment.id })
+      end
+
     end
   end
 

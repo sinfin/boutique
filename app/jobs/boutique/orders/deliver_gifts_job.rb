@@ -12,7 +12,12 @@ class Boutique::Orders::DeliverGiftsJob < Boutique::ApplicationJob
       orders_ready_for_delivery.find_each do |order|
         order.deliver_gift!
       rescue => error
-        Raven.capture_exception(error, extra: { order_id: order.id })
+        if Object.const_defined?("Sentry")
+          ::Sentry.capture_exception(error, extra: { order_id: order.id })
+        else
+          ::Raven.capture_exception(error, extra: { order_id: order.id })
+        end
+
       end
     end
   ensure
