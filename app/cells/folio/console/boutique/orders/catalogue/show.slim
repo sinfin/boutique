@@ -1,7 +1,8 @@
 .f-c-b-orders-catalogue
   = catalogue(model, before_lambda: options[:before_lambda],
                      collection_actions: options[:collection_actions],
-                     additional_columns_proc: additional_columns_proc)
+                     additional_columns_proc: additional_columns_proc,
+                     invoice_url_host: invoice_url_host) do |c|
     ruby:
       icon_class = 'f-c-b-orders-catalogue__icon'
 
@@ -83,8 +84,10 @@
 
       attribute(:invoice, compact: true) do
         if record.invoice_number?
+          url_opts = model[:invoice_url_host] ? { only_path: false, host: model[:invoice_url_host] } : {}
+
           link_to(record.invoice_number,
-                  controller.boutique.invoice_path(record.secret_hash),
+                  controller.boutique.invoice_url(record.secret_hash, url_opts),
                   target: "_blank")
         end
       end

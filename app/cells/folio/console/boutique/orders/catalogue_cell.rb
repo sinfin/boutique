@@ -16,4 +16,8 @@ class Folio::Console::Boutique::Orders::CatalogueCell < Folio::ConsoleCell
     #   end
     # end
   end
+
+  def invoice_url_host
+    # override in main app
+  end
 end
