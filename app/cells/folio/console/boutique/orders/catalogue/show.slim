@@ -84,10 +84,10 @@
 
       attribute(:invoice, compact: true) do
         if record.invoice_number?
-          url_opts = model[:invoice_url_host] ? { only_path: false, host: model[:invoice_url_host] } : {}
-
           link_to(record.invoice_number,
-                  controller.boutique.invoice_url(record.secret_hash, url_opts),
+                  controller.boutique.invoice_url(record.secret_hash,
+                                                  only_path: !model[:invoice_url_host],
+                                                  host: model[:invoice_url_host]),
                   target: "_blank")
         end
       end

@@ -18,6 +18,6 @@ class Folio::Console::Boutique::Orders::CatalogueCell < Folio::ConsoleCell
   end
 
   def invoice_url_host
-    # override in main app
+    Boutique::Order.invoice_host_site&.env_aware_domain
   end
 end

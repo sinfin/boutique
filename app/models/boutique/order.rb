@@ -777,6 +777,10 @@ class Boutique::Order < Boutique::ApplicationRecord
     !digital_only?
   end
 
+  def self.invoice_host_site
+    nil
+  end
+
   def self.console_additional_index_action(record, context)
     nil
   end

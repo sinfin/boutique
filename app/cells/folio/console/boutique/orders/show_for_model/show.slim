@@ -97,8 +97,11 @@
 
     = s.attribute(:invoice) do
       - if s.object.invoice_number?
+        - host = Boutique::Order.invoice_host_site&.env_aware_domain
         a [
-          href=controller.boutique.invoice_path(s.object.secret_hash)
+          href=controller.boutique.invoice_url(s.object.secret_hash,
+                                               only_path: !host,
+                                               host:)
           target="_blank"
         ]
           = s.object.invoice_number
