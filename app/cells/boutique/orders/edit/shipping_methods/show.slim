@@ -12,12 +12,13 @@
                        id: radio_input_id
 
       .b-orders-edit-shipping-methods__option-wrap
-        label.b-orders-edit-shipping-methods__option-label for=radio_input_id
-          .b-orders-edit-shipping-methods__option-title
-            = shipping_method.to_label
-
-          / .b-orders-edit-shipping-methods__option-price
-          /   = price(shipping_method.price_cz)
+        label.b-orders-edit-shipping-methods__option-label[
+          for=radio_input_id
+          data-id=shipping_method.id
+        ]
+          = cell("boutique/orders/edit/shipping_methods/label", \
+                  shipping_method, \
+                  country_code: f.object.primary_address&.country_code)
 
         - if shipping_method.is_a?(Boutique::ShippingMethod::Zasilkovna::PickupPoint)
           .b-orders-edit-shipping-methods__option-content

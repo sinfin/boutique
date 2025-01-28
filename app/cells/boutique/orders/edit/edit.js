@@ -20,6 +20,15 @@
       },
       success: (res) => {
         if (res && res.data) {
+          $wrap.find('.b-orders-edit-shipping-methods__option-label').each((_, label) => {
+            const id = $(label).data('id')
+            const newLabel = res.data.shippingMethods[id]
+
+            if(newLabel) {
+              $(label).find('.b-orders-edit-shipping-methods-label').replaceWith(res.data.shippingMethods[id])
+            }
+          })
+
           $wrap.find('.b-orders-edit-sidebar-bottom').replaceWith(res.data.sidebarBottom)
           $wrap.find('.b-orders-payment-methods-price').replaceWith(res.data.price)
 

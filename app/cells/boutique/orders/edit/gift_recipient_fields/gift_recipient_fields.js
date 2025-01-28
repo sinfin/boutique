@@ -1,6 +1,6 @@
 $(document)
   .on('change', '.b-orders-edit-gift-fields__gift-checkbox', (e) => {
-    var gift = e.currentTarget.checked;
+    const gift = e.currentTarget.checked;
 
     // show with gift enabled
     $('.b-orders-edit-gift-fields__fields, \

@@ -1,0 +1,4 @@
+span.b-orders-edit-shipping-methods-label
+  = model.to_label
+  '
+  = "(#{price(model.price_for(options[:country_code]))})"

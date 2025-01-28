@@ -76,9 +76,13 @@ class Boutique::OrdersController < Boutique::ApplicationController
       order.pickup_point_country_code = params[:pickup_point_country_code].presence
     end
 
+    shipping_methods_data = order.allowed_shipping_methods.published.to_h do |sm|
+      [sm.id, cell("boutique/orders/edit/shipping_methods/label", sm, country_code: order.primary_address&.country_code).show]
+    end
+
     render json: {
       data: {
-        # shippingMethods: cell("boutique/orders/edit/shipping_methods", order).show,
+        shippingMethods: shipping_methods_data,
         sidebarBottom: cell("boutique/orders/edit/sidebar/bottom", order).show,
         price: cell("boutique/orders/payment_methods/price", order.total_price).show,
         voucherFields: cell("boutique/orders/edit/voucher_fields", nil, order:).show,
