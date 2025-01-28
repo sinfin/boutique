@@ -511,19 +511,13 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def shipping_price
     super || begin
-      return 0 if digital_only?
+      return 0 if digital_only? || shipping_method.nil?
 
-      packages_count * shipping_price_per_package
-    end
-  end
-
-  def shipping_price_per_package
-    return 0 if shipping_method.nil?
-
-    if shipping_method.requires_pickup_point? && pickup_point_country_code.present?
-      shipping_method.price_for(pickup_point_country_code)
-    else
-      shipping_method.price_for(primary_address.try(:country_code))
+      if shipping_method.requires_pickup_point? && pickup_point_country_code.present?
+        shipping_method.price_for(pickup_point_country_code)
+      else
+        shipping_method.price_for(primary_address.try(:country_code))
+      end
     end
   end
 
