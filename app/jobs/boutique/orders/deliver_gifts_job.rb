@@ -17,7 +17,6 @@ class Boutique::Orders::DeliverGiftsJob < Boutique::ApplicationJob
         else
           ::Raven.capture_exception(error, extra: { order_id: order.id })
         end
-
       end
     end
   ensure

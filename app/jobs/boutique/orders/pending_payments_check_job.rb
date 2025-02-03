@@ -14,7 +14,6 @@ class Boutique::Orders::PendingPaymentsCheckJob < Boutique::ApplicationJob
       else
         ::Raven.capture_exception(error, extra: { payment_id: payment.id })
       end
-
     end
   end
 
