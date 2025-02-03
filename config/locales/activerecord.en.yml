@@ -31,6 +31,11 @@ en:
         voucher_code: Code
         voucher_title: Voucher title
 
+      boutique/subscription:
+        email_notifications: E-mails
+        gift: Gift
+        ordered_at_range: Ordered from-to...
+
       boutique/voucher:
         code_prefix: Prefix
         code_type: Type
@@ -55,10 +60,14 @@ en:
         keyword/PAID_AT: Date of refund payout
         keyword/APPROVED_AT: Date of payout approval
 
-      boutique/subscription:
-        email_notifications: E-mails
-        gift: Gift
-        ordered_at_range: Ordered from-to...
+      folio/site:
+        billing_name: Name
+        billing_address_line_1: First address line
+        billing_address_line_2: Second address line
+        billing_identification_number: Identification number
+        billing_vat_identification_number: VAT identification number
+        billing_note: Footer note
+        billing_account_number: Account number
 
     models:
       boutique/product:

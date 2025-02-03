@@ -169,6 +169,7 @@ cs:
         billing_identification_number: IČO
         billing_vat_identification_number: DIČ
         billing_note: Patička
+        billing_account_number: Číslo účtu
         recurring_payment_disclaimer: Text upozornění na rekurentní platbu
 
     models:
