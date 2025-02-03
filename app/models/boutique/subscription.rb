@@ -52,7 +52,7 @@ class Boutique::Subscription < ApplicationRecord
     inactive_at(Time.current)
   }
 
-  scope :ordered, -> { order(active_until: :asc, active_from: :asc) }
+  scope :ordered, -> { order(active_until: :desc, active_from: :desc) }
 
   validates :active_from,
             # :active_until,
