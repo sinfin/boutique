@@ -41,12 +41,12 @@
               .b-orders-edit__box-inner
                 == cell('boutique/orders/edit/gift_recipient_fields', f)
 
-            - if subscription?
-              - fields = cell('boutique/orders/edit/subscription_fields', f).show
-              - if fields
-                .b-orders-edit__box
-                  .b-orders-edit__box-inner
-                    == fields
+          - if subscription?
+            - fields = cell('boutique/orders/edit/subscription_fields', f).show
+            - if fields
+              .b-orders-edit__box
+                .b-orders-edit__box-inner
+                  == fields
 
           - fields = cell('boutique/orders/edit/line_items_fields', f).show
           - if fields

@@ -883,7 +883,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       active_until = active_from + period.months
       cancelled_at = active_from unless line_item.subscription_recurring?
 
-      if renewed_subscription.present? && active_from < renewed_subscription.active_until
+      if renewed_subscription.present? && renewed_subscription.active_until > active_from
         subscription_starts_at = renewed_subscription.active_until
         if line_item.product.has_subscription_frequency?
           # fixes badly imported subscriptions
@@ -899,6 +899,8 @@ class Boutique::Order < Boutique::ApplicationRecord
         update!(subscription: renewed_subscription)
       else
         subscriber = user unless gift?
+
+        line_item.update!(subscription_starts_at: active_from)
 
         create_subscription!(payment: paid_payment,
                              product_variant: line_item.product_variant,

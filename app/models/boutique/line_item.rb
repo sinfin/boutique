@@ -88,7 +88,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def imprint
     self.product_variant ||= product.master_variant
-    self.subscription_starts_at ||= order.renewed_subscription&.active_until
 
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
