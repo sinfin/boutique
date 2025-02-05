@@ -10,8 +10,8 @@ class Boutique::Orders::Edit::SummaryCell < Boutique::ApplicationCell
   def subscription_period(line_item)
     label = t(".subscription_period.months", count: line_item.subscription_period)
 
-    if model.renewed_subscription.present? && model.renewed_subscription.active_until > Time.current
-      date = l(model.renewed_subscription.active_until, format: :as_date)
+    if options[:subscription_active_from]
+      date = l(options[:subscription_active_from], format: :as_date)
       label += ", #{t(".subscription_period.from", date:)}"
     end
 

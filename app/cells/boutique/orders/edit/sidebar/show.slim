@@ -3,6 +3,8 @@
     class="b-orders-edit-sidebar__hr--mobile-only"
   ]
 
-  = cell('boutique/orders/edit/summary', model)
+  = cell('boutique/orders/edit/summary', \
+         model, \
+         subscription_active_from: options[:subscription_active_from])
 
   == cell('boutique/orders/edit/sidebar/bottom', model)

@@ -68,6 +68,18 @@ class Boutique::Orders::EditCell < Boutique::ApplicationCell
     @subscription ||= current_order.line_items.any?(&:subscription?)
   end
 
+  def subscription_renewal?
+    return @subscription_renewal unless @subscription_renewal.nil?
+
+    @subscription_renewal = current_order.renewed_subscription.present? && current_order.renewed_subscription.active_until > Time.current
+  end
+
+  def subscription_active_from
+    if subscription_renewal?
+      current_order.renewed_subscription.active_until
+    end
+  end
+
   def disclaimer
     cell("#{application_namespace_path}/ui/disclaimer",
          nil,

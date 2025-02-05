@@ -41,7 +41,7 @@
               .b-orders-edit__box-inner
                 == cell('boutique/orders/edit/gift_recipient_fields', f)
 
-          - if subscription?
+          - if subscription? && !subscription_renewal?
             - fields = cell('boutique/orders/edit/subscription_fields', f).show
             - if fields
               .b-orders-edit__box
@@ -86,7 +86,9 @@
             == cell('boutique/orders/edit/voucher_fields', f)
 
         aside.b-orders-edit__cell.b-orders-edit__cell--aside
-          == cell('boutique/orders/edit/sidebar', current_order)
+          == cell('boutique/orders/edit/sidebar', \
+                  current_order, \
+                  subscription_active_from:)
 
         main.b-orders-edit__cell.b-orders-edit__cell--bottom
           == cell('boutique/orders/edit/recurrency_fields', f)
