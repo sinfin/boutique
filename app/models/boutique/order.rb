@@ -710,7 +710,10 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def package_tracking_url
-    shipping_method.tracking_url_for(self) if shipping_method.present?
+    return if package_tracking_number.nil?
+    return if shipping_method.nil?
+
+    shipping_method.tracking_url(package_tracking_number)
   end
 
   def invoice_note
@@ -1055,7 +1058,7 @@ end
 #  shipping_method_id                        :bigint(8)
 #  pickup_point_id                           :string
 #  pickup_point_title                        :string
-#  tracking_number                           :string
+#  package_tracking_number                   :string
 #  pickup_point_country_code                 :string(2)
 #  delivered_at                              :datetime
 #  shipping_label                            :string

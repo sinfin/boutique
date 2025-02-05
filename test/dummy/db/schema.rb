@@ -105,7 +105,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_10_143804) do
     t.bigint "shipping_method_id"
     t.string "pickup_point_id"
     t.string "pickup_point_title"
-    t.string "tracking_number"
+    t.string "package_tracking_number"
     t.string "pickup_point_country_code", limit: 2
     t.datetime "delivered_at"
     t.string "shipping_label"

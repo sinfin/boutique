@@ -51,10 +51,8 @@ class Boutique::ShippingMethod < Boutique::ApplicationRecord
     false
   end
 
-  def tracking_url_for(order)
-    return if order.package_tracking_number.blank?
-
-    "https://www.postaonline.cz/trackandtrace/-/zasilka/cislo?parcelNumbers=#{order.package_tracking_number}"
+  def tracking_url(id)
+    "https://www.postaonline.cz/trackandtrace/-/zasilka/cislo?parcelNumbers=#{id}"
   end
 
   def price_for(country_code)
