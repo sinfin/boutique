@@ -11,8 +11,4 @@ class Boutique::Orders::Edit::Sidebar::BottomCell < Boutique::ApplicationCell
   def shipping_price
     @shipping_price ||= model.shipping_price
   end
-
-  def shipping_price_summary
-    @shipping_price_summary ||= price(model.shipping_price)
-  end
 end

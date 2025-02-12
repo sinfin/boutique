@@ -8,9 +8,6 @@
       == cstypo shipping_info
 
       - if shipping_price > 0
-        - if shipping_price_summary.present?
-          .mt-n3 = shipping_price_summary
-
         h4 = price(shipping_price)
 
   hr.b-orders-edit-sidebar__hr.b-adaptive-css-border-color-primary[
