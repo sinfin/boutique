@@ -119,6 +119,10 @@ class Boutique::CheckoutController < Boutique::ApplicationController
           create_payment_and_redirect_to_payment_gateway(current_order)
         end
       else
+        if current_order.errors[:base].present?
+          flash.now[:alert] = current_order.errors[:base].join(", ")
+        end
+
         render :cart
       end
     end

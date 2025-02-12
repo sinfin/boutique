@@ -274,6 +274,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             allow_nil: true
 
   validate :validate_voucher_code
+  validate :validate_against_active_subcriptions
   validate :validate_email_not_already_registered, unless: :pending?
 
   validates :first_name,
@@ -723,7 +724,6 @@ class Boutique::Order < Boutique::ApplicationRecord
     voucher_code.present? && total_price.zero?
   end
 
-
   private
     EVENT_CALLBACKS.each do |cb|
       define_method cb do
@@ -961,6 +961,24 @@ class Boutique::Order < Boutique::ApplicationRecord
 
       if Folio::User.invitation_accepted.where(email: email.downcase).exists?
         errors.add(:email, :already_registered)
+      end
+    end
+
+    # check if user already has active subscription for this product
+    def validate_against_active_subcriptions
+      return unless aasm.from_state == :pending
+      return if subsequent? || gift?
+      return if user.nil?
+
+      line_items.each do |li|
+        next unless li.product_variant.product.subscription?
+
+        subs = user.subscriptions.recurring.where(product_variant: li.product_variant)
+        if subs.where(active_until: nil)
+               .or(subs.where("active_until > ?", Time.current))
+               .exists?
+          errors.add(:base, :user_already_has_active_subscription)
+        end
       end
     end
 

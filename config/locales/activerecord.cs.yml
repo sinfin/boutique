@@ -233,6 +233,8 @@ cs:
 
         boutique/order:
           attributes:
+            base:
+              user_already_has_active_subscription: Ke zvolenému produktu již máte aktivní předplatné s opakovanou platbou. Bude prodlouženo automaticky na konci jeho platnosti.
             email:
               already_registered: je již registrovaný
             voucher_code:

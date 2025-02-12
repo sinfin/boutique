@@ -672,6 +672,25 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
   end
 
+  test "validate_against_active_subcriptions" do
+    order = create(:boutique_order, :ready_to_be_confirmed, :with_user, digital_only: true, subscription_product: true)
+    subscription = create(:boutique_subscription, user: order.user,
+                                                  product_variant: order.line_items.first.product_variant,
+                                                  active_from: 1.day.ago,
+                                                  active_until: 1.month.from_now,
+                                                  recurrent: true)
+
+    order.confirm!
+
+    assert_not order.confirmed?
+    assert order.errors.added?(:base, :user_already_has_active_subscription)
+
+    subscription.cancel!
+    order.confirm!
+
+    assert order.confirmed?
+  end
+
   test "validate gift_recipient_notification_scheduled_for" do
     I18n.with_locale(:en) do
       order = build(:boutique_order)
