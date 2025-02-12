@@ -220,6 +220,12 @@ class Boutique::Subscription < ApplicationRecord
     active_at?(Time.current)
   end
 
+  def active_now_or_future?
+    return true if active_from.present? && active_from > Time.current
+
+    active?
+  end
+
   def unactive?
     !active?
   end
