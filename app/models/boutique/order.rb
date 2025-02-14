@@ -256,9 +256,6 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             unless: :pending?
 
-  validate :validate_line_items_subscription_recurring,
-           unless: :pending?
-
   validates :site,
             presence: true,
             if: -> { Boutique.config.products_belong_to_site && !pending? }
@@ -270,6 +267,7 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   validate :validate_voucher_code
   validate :validate_email_not_already_registered
+  validate :validate_line_items_subscription_recurring
 
   validates :gift_recipient_email,
             :gift_recipient_notification_scheduled_for,
@@ -997,6 +995,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def validate_line_items_subscription_recurring
+      return unless pending?
       return unless recurrent_payment_available?
 
       valid_options = if recurrent_payment_enabled_by_default?
