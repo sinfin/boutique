@@ -995,7 +995,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def validate_line_items_subscription_recurring
-      return unless pending?
+      return if pending?
       return unless recurrent_payment_available?
 
       valid_options = if recurrent_payment_enabled_by_default?
