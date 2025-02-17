@@ -96,6 +96,13 @@ class Boutique::SubscriptionBot
       new_order.use_secondary_address = subscription.user.use_secondary_address
       new_order.secondary_address = subscription.user.secondary_address.dup
       new_order.original_payment = subscription.payment
+
+      new_order.gift = original_order.gift
+      new_order.gift_recipient_email = original_order.gift_recipient_email
+      new_order.gift_recipient_first_name = original_order.gift_recipient_first_name
+      new_order.gift_recipient_last_name = original_order.gift_recipient_last_name
+      new_order.gift_recipient = original_order.gift_recipient
+
       new_order
     end
 

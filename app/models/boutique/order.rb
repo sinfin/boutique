@@ -376,8 +376,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           subscription.extend!
         else
           invite_user!
-          set_up_subscription! unless subsequent?
-
+          set_up_subscription!
           deliver_gift!
         end
 
