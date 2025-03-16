@@ -6,6 +6,7 @@ class Boutique::Product::Subscription < Boutique::Product
     monthly: 1,
     bimonthly: 2,
     quarterly: 3,
+    semiannual: 6,
   }
 
   validates :subscription_frequency, inclusion: { in: SUBSCRIPTION_FREQUENCIES.keys.map(&:to_s) }
