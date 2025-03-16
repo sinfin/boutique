@@ -20,7 +20,8 @@ class Folio::Console::Boutique::ProductsController < Folio::Console::BaseControl
 
     def index_filters
       {
-        by_published: [true, false]
+        by_published: [true, false],
+        by_type: Boutique::Product.recursive_subclasses_for_select(include_self: false),
       }
     end
 

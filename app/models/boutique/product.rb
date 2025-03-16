@@ -58,6 +58,8 @@ class Boutique::Product < Boutique::ApplicationRecord
   validate :validate_discount_dates
   validate :validate_master_variant_presence
 
+  scope :by_type, -> (type) { where(type:) }
+
   pg_search_scope :by_query,
                 against: %i[title],
                 ignoring: :accents,
