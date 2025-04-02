@@ -39,6 +39,7 @@ class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseCo
         by_recurrent: [true, false],
         by_product_variant_id: {
           klass: "Boutique::ProductVariant",
+          scope: "subscriptions",
         },
         by_gift: [true, false],
         by_ordered_at_range: { as: :date_range },

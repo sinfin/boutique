@@ -8,6 +8,7 @@
       .col-md-6
         = f.association :product_variant,
                       collection: Boutique::ProductVariant.subscriptions \
+                                                          .joins(:product) \
                                                           .order("boutique_products.slug") \
                                                           .map { |pv| [pv.to_console_label, pv.id] },
                       include_blank: false

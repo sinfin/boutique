@@ -30,7 +30,7 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
             allow_nil: true
 
   scope :subscriptions, -> {
-    joins(:product).where(boutique_products: { type: "Boutique::Product::Subscription" })
+    where(boutique_product_id: Boutique::Product::Subscription.select(:id))
   }
 
   def title
