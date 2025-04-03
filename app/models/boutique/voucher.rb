@@ -96,10 +96,13 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     def create_additional_vouchers
       return unless quantity.to_i > 1
 
+      original_product_ids = product_ids
+
       (quantity - 1).times do
         d = self.dup
         d.code = nil
         d.quantity = 1
+        d.product_ids = original_product_ids
         d.save!
       end
     end
