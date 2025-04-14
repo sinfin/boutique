@@ -671,11 +671,11 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def recurrent_payment_available?
-    voucher.nil? && line_items.any?(&:subscription?)
+    !free? && line_items.any?(&:subscription?)
   end
 
   def recurrent_payment_enabled_by_default?
-    voucher.nil? && line_items.any? { |li| li.subscription? && li.subscription_recurrent_by_default? }
+    !free? && line_items.any? { |li| li.subscription? && li.subscription_recurrent_by_default? }
   end
 
   def digital_only?
