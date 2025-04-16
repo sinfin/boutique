@@ -182,6 +182,7 @@ FactoryBot.define do
         subscription.payer = order.user
       else
         subscription.user ||= create(:folio_user)
+        subscription.payer ||= subscription.user
       end
 
       unless evaluator.digital_only
