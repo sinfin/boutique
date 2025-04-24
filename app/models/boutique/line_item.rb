@@ -38,7 +38,10 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   def to_full_label(html_context: nil, order_for_label: nil)
     [
       amount_to_label,
-      product.to_line_item_full_label(html_context:, product_variant:, subscription_starts_at:, order: order_for_label || order)
+      product.to_line_item_full_label(html_context:,
+                                      product_variant:,
+                                      line_item: self,
+                                      order: order_for_label || order)
     ].compact.join(" ")
   end
 
@@ -166,6 +169,7 @@ end
 #  vat_rate_value         :integer
 #  subscription_period    :integer
 #  product_id             :bigint(8)
+#  subscription_frequency :string
 #
 # Indexes
 #
