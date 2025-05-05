@@ -1,5 +1,4 @@
 /.bundle/
-/doc/
 
 test/dummy/.env
 /test/dummy/log/*.log
