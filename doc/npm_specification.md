@@ -649,7 +649,7 @@ Boutique platforma typicky potřebuje komunikovat s řadou externích systémů 
 
 ### 6.1. Platební Brány
 
-Integrace s platebními bránami (např. GoPay, Stripe, PayPal) je klíčová pro přijímání online plateb.
+Integrace s platebními bránami (např. GoPay, Comgate, PayU, Stripe, PayPal) je klíčová pro přijímání online plateb.
 
 *   **Inicializace platby:**
     *   Po potvrzení objednávky (`confirm`) a pokud není objednávka zdarma, systém předá platební bráně potřebné údaje (částka, měna, ID objednávky, návratové URL).
@@ -671,7 +671,7 @@ Integrace s platebními bránami (např. GoPay, Stripe, PayPal) je klíčová pr
 
 ### 6.2. Dopravci
 
-Integrace s dopravci (např. Zásilkovna, Česká pošta, PPL, DPD) zahrnuje několik oblastí:
+Integrace s dopravci (např. Zásilkovna, PPL, DPD) zahrnuje několik oblastí:
 
 *   **Výběr výdejních míst:**
     *   Pokud zvolená `ShippingMethod` vyžaduje výdejní místo (`requires_pickup_point`), Boutique musí integrovat frontendový widget poskytovaný dopravcem (např. Zásilkovna Packetery Widget).
