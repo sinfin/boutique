@@ -711,20 +711,11 @@ Pokud Boutique sám negeneruje PDF faktury, může využívat externí službu n
     *   Boutique může uložit odkaz na fakturu nebo samotný PDF soubor (např. pomocí Active Storage) k objednávce.
     *   Faktura může být automaticky přiložena k emailu o potvrzení platby odesílanému zákazníkovi.
 
-## 7. Další Kroky a Otevřené Otázky
-
-*(Popis upraven)*
-Tato specifikace pokrývá základní datový model, koncepty, business logiku a interakce s externími systémy. Dalšími kroky mohou být:
-- Detailní specifikace validačních pravidel pro jednotlivé modely.
-- Návrh API rozhraní (pokud je relevantní).
-- Doplnění specifikace o modely a konfigurace, které zde nejsou detailně popsány (např. kategorie produktů, skladové hospodářství, detailní konfigurace cen dopravy dle zemí/váhy, správa sazeb DPH pro produkty a země).
-- Detailní návrh uživatelského rozhraní pro administraci a pro zákazníky.
-
-## 8. Doplňující Modely a Konfigurace
+## 7. Doplňující Modely a Konfigurace
 
 Tato kapitola nastiňuje modely a konfigurační přístupy pro oblasti, které jsou často součástí e-commerce platforem, ale nebyly detailně popsány v předchozích kapitolách nebo nejsou plně implementovány v analyzovaném kódu.
 
-### 8.1. Kategorie Produktů
+### 7.1. Kategorie Produktů
 
 Pro lepší organizaci nabídky a navigaci zákazníků je nezbytné produkty kategorizovat.
 
@@ -734,7 +725,7 @@ Pro lepší organizaci nabídky a navigaci zákazníků je nezbytné produkty ka
     *   **Propojení:** Vazba Many-to-Many mezi `Product` a `Category` (např. přes spojovací tabulku `boutique_products_categories`).
     *   **Alternativa (Tagy):** Jednodušší systém může využívat tagování produktů bez striktní hierarchie.
 
-### 8.2. Skladové Hospodářství (Inventář)
+### 7.2. Skladové Hospodářství (Inventář)
 
 Pro fyzické produkty je klíčové sledování skladových zásob, aby se zabránilo prodeji zboží, které není skladem.
 
@@ -745,7 +736,7 @@ Pro fyzické produkty je klíčové sledování skladových zásob, aby se zabr�
     *   **Rezervace:** Při přidání do košíku nebo potvrzení objednávky může systém dočasně rezervovat kusy ze skladu.
     *   **Integrace s WMS:** U větších systémů může být správa skladu řešena externím Warehouse Management System, se kterým Boutique komunikuje přes API.
 
-### 8.3. Konfigurace Cen Dopravy
+### 7.3. Konfigurace Cen Dopravy
 
 Cena dopravy často závisí na více faktorech než jen na zvolené metodě.
 
@@ -755,7 +746,7 @@ Cena dopravy často závisí na více faktorech než jen na zvolené metodě.
     *   **Asociovaný model `ShippingPrice`:** Samostatný model vázaný na `ShippingMethod`, který definuje cenu pro specifickou kombinaci země, váhového/cenového rozmezí.
     *   **Logika `price_for`:** Metoda `price_for` v `ShippingMethod` by implementovala logiku pro vyhledání správné ceny na základě dat objednávky (cílová země, váha položek, celková cena).
 
-### 8.4. Správa Sazeb DPH
+### 7.4. Správa Sazeb DPH
 
 Pro správný výpočet DPH, zejména v kontextu mezinárodního prodeje (OSS), je nutná robustní správa sazeb.
 
@@ -766,11 +757,22 @@ Pro správný výpočet DPH, zejména v kontextu mezinárodního prodeje (OSS), 
     *   **Konfigurace:** Alternativně mohou být sazby uloženy v konfiguračním souboru nebo databázové konfigurační tabulce.
     *   **Logika výpočtu:** Při výpočtu DPH (viz 5.1) systém identifikuje zemi doručení, typ produktu, a na základě toho vyhledá a aplikuje správnou sazbu DPH z modelu `VatRate` nebo konfigurace.
 
-## 9. Další Kroky a Otevřené Otázky
+## 8. Další Kroky a Otevřené Otázky
 
 *(Popis upraven)*
-Tato specifikace pokrývá základní datový model, koncepty, business logiku, interakce s externími systémy a návrh doplňujících modelů/konfigurací. Dalšími kroky mohou být:
-- Detailní specifikace validačních pravidel pro jednotlivé modely.
-- Návrh API rozhraní (pokud je relevantní).
-- Detailní návrh uživatelského rozhraní pro administraci a pro zákazníky.
-- Implementace a detailní rozpracování modelů a logiky popsaných v kapitole 8.
+Tato specifikace pokrývá základní datový model, koncepty, business logiku, interakce s externími systémy a návrh doplňujících modelů/konfigurací. Dalšími kroky pro zpřesnění a dokončení specifikace mohou být:
+
+-   **Detailní specifikace validačních pravidel:** Popsat všechny validace definované v modelech (`validates`, `validate`), včetně podmínek (`if`, `unless`) a chybových hlášek (např. pro `email`, `voucher_code`, `gift_recipient_*`, `pickup_point_id`, `age_verification`).
+-   **Detailní popis implementace business logiky:**
+    *   Rozepsat logiku helper metod (např. `full_name`, `packages_count`, `total_price_vat`, `package_tracking_url`, `requires_address?`).
+    *   Rozepsat logiku privátních metod obsahujících klíčové procesy (např. `set_numbers`, `set_invoice_number`, `invite_user!`, `set_up_subscription!`, `imprint`).
+-   **Specifikace scopes:** Popsat účel a použití jednotlivých definovaných `scope` v modelu `Order` pro filtrování, řazení a vyhledávání dat (např. `by_state`, `by_confirmed_at_range`, `by_non_pending_order_count_range_from/to`, `sort_by_*`).
+-   **Full-textové vyhledávání:** Detailně popsat konfiguraci a použití `pg_search_scope :by_query`, včetně prohledávaných polí a asociací.
+-   **Callbacky a Mailery:** Vysvětlit mechanismus `EVENT_CALLBACKS` a `MAILER_ACTIONS` jako hooků pro rozšíření/přizpůsobení chování v hlavní aplikaci.
+-   **CSV Export:** Detailně popsat funkčnost CSV exportu definovanou metodami `csv_attribute_names` a `csv_attributes`.
+-   **Konfigurace (`Boutique.config`):** Specifikovat, jaké konfigurační volby systém využívá (např. `products_belong_to_site`, `invoice_number_resets_each_year`, `use_cart_in_orders`, `invoice_number_base_length`) a jak ovlivňují chování.
+-   **Zpracování chyb:** Dokumentovat specifické zpracování chyb, např. při komunikaci s platební bránou (`GoPay::Error` v `charge_recurrent_payment!`).
+-   **Funkcionalita `Folio::HasSecretHash`:** Popsat účel a použití generování tajných hashů pro objednávky (např. pro bezpečné zobrazení bez přihlášení).
+-   **Návrh API rozhraní:** Pokud bude systém poskytovat API, navrhnout jeho endpointy, datové struktury a autentizaci.
+-   **Detailní návrh uživatelského rozhraní:** Vytvořit wireframy nebo mockupy pro klíčové obrazovky administrace a zákaznické části.
+-   **Implementace doplňujících modelů:** Detailně rozpracovat a implementovat modely a logiku popsané v kapitole 7 (Kategorie, Sklad, Ceny dopravy, Sazby DPH).
