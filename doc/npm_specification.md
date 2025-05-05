@@ -718,4 +718,59 @@ Tato specifikace pokrývá základní datový model, koncepty, business logiku a
 - Detailní specifikace validačních pravidel pro jednotlivé modely.
 - Návrh API rozhraní (pokud je relevantní).
 - Doplnění specifikace o modely a konfigurace, které zde nejsou detailně popsány (např. kategorie produktů, skladové hospodářství, detailní konfigurace cen dopravy dle zemí/váhy, správa sazeb DPH pro produkty a země).
-- Detailní návrh uživatelského rozhraní pro administraci a pro zákazníky. 
+- Detailní návrh uživatelského rozhraní pro administraci a pro zákazníky.
+
+## 8. Doplňující Modely a Konfigurace
+
+Tato kapitola nastiňuje modely a konfigurační přístupy pro oblasti, které jsou často součástí e-commerce platforem, ale nebyly detailně popsány v předchozích kapitolách nebo nejsou plně implementovány v analyzovaném kódu.
+
+### 8.1. Kategorie Produktů
+
+Pro lepší organizaci nabídky a navigaci zákazníků je nezbytné produkty kategorizovat.
+
+*   **Potřeba:** Umožnit zařazení produktů (`Product`) do jedné nebo více kategorií, vytvořit hierarchickou strukturu kategorií (strom) a umožnit filtrování produktů podle kategorií na webu.
+*   **Možná implementace:**
+    *   **Model `Category`:** Samostatný model reprezentující kategorii. Může obsahovat atributy jako `name`, `slug`, `parent_id` (pro stromovou strukturu), `description`.
+    *   **Propojení:** Vazba Many-to-Many mezi `Product` a `Category` (např. přes spojovací tabulku `boutique_products_categories`).
+    *   **Alternativa (Tagy):** Jednodušší systém může využívat tagování produktů bez striktní hierarchie.
+
+### 8.2. Skladové Hospodářství (Inventář)
+
+Pro fyzické produkty je klíčové sledování skladových zásob, aby se zabránilo prodeji zboží, které není skladem.
+
+*   **Potřeba:** Evidovat počet kusů skladem pro každý prodejný fyzický produkt nebo jeho variantu. Snižovat stav skladu při prodeji a případně ho navyšovat při naskladnění nebo stornu objednávky. Zobrazovat dostupnost zákazníkům a zabránit přidání nedostupného zboží do košíku.
+*   **Možná implementace:**
+    *   **Atribut `stock_level`:** Přímo na modelu `Product` nebo `ProductVariant`. Vyžaduje pečlivou správu při každé změně stavu objednávky.
+    *   **Model `InventoryItem`:** Samostatný model vázaný na `Product`/`ProductVariant`, který uchovává `quantity` a případně další informace (lokace ve skladu atd.).
+    *   **Rezervace:** Při přidání do košíku nebo potvrzení objednávky může systém dočasně rezervovat kusy ze skladu.
+    *   **Integrace s WMS:** U větších systémů může být správa skladu řešena externím Warehouse Management System, se kterým Boutique komunikuje přes API.
+
+### 8.3. Konfigurace Cen Dopravy
+
+Cena dopravy často závisí na více faktorech než jen na zvolené metodě.
+
+*   **Potřeba:** Umožnit definovat ceny dopravy (`ShippingMethod`) nejen jako fixní částku, ale i v závislosti na cílové zemi, váze zásilky, celkové hodnotě objednávky nebo kombinaci těchto faktorů.
+*   **Možná implementace:**
+    *   **Rozšíření `ShippingMethod`:** Model `ShippingMethod` může obsahovat komplexnější strukturu pro ceny (např. pole JSONB nebo Hstore `price_matrix`), kde klíče reprezentují kódy zemí a hodnoty jsou ceny nebo odkazy na váhové/cenové tabulky.
+    *   **Asociovaný model `ShippingPrice`:** Samostatný model vázaný na `ShippingMethod`, který definuje cenu pro specifickou kombinaci země, váhového/cenového rozmezí.
+    *   **Logika `price_for`:** Metoda `price_for` v `ShippingMethod` by implementovala logiku pro vyhledání správné ceny na základě dat objednávky (cílová země, váha položek, celková cena).
+
+### 8.4. Správa Sazeb DPH
+
+Pro správný výpočet DPH, zejména v kontextu mezinárodního prodeje (OSS), je nutná robustní správa sazeb.
+
+*   **Potřeba:** Udržovat aktuální sazby DPH pro různé země (minimálně EU) a potenciálně různé typy produktů (standardní, snížená, nulová sazba). Aplikovat správnou sazbu při výpočtu ceny a DPH v objednávce.
+*   **Možná implementace:**
+    *   **Model `VatRate`:** Samostatný model uchovávající sazbu (`value`), kód země (`country_code`), typ sazby (např. `standard`, `reduced`) a případně časovou platnost.
+    *   **Přiřazení k Produktu:** Model `Product`/`ProductVariant` by měl odkazovat na typ sazby DPH, která se na něj vztahuje (např. atribut `vat_rate_type` s hodnotami `standard`, `reduced`, `zero`).
+    *   **Konfigurace:** Alternativně mohou být sazby uloženy v konfiguračním souboru nebo databázové konfigurační tabulce.
+    *   **Logika výpočtu:** Při výpočtu DPH (viz 5.1) systém identifikuje zemi doručení, typ produktu, a na základě toho vyhledá a aplikuje správnou sazbu DPH z modelu `VatRate` nebo konfigurace.
+
+## 9. Další Kroky a Otevřené Otázky
+
+*(Popis upraven)*
+Tato specifikace pokrývá základní datový model, koncepty, business logiku, interakce s externími systémy a návrh doplňujících modelů/konfigurací. Dalšími kroky mohou být:
+- Detailní specifikace validačních pravidel pro jednotlivé modely.
+- Návrh API rozhraní (pokud je relevantní).
+- Detailní návrh uživatelského rozhraní pro administraci a pro zákazníky.
+- Implementace a detailní rozpracování modelů a logiky popsaných v kapitole 8.
