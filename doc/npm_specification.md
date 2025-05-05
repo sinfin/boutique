@@ -643,12 +643,79 @@ Pro splnění povinností v rámci režimu One Stop Shop (OSS) pro prodej B2C zb
     *   Konfigurace/Model Sazeb DPH: Musí existovat mechanismus pro správu a načítání správných sazeb DPH pro různé země a typy produktů.
 3.  **Export/Report:** Systém by měl nabízet funkci pro export těchto agregovaných dat za dané období (např. čtvrtletí) ve formátu vhodném pro vyplnění OSS hlášení (např. CSV soubor). Export by měl seskupovat transakce podle země určení a sazby DPH.
 
-## 6. Další Kroky a Otevřené Otázky
+## 6. Interakce s Externími Systémy
+
+Boutique platforma typicky potřebuje komunikovat s řadou externích systémů pro zajištění plné funkcionality. Tato kapitola popisuje hlavní body integrace.
+
+### 6.1. Platební Brány
+
+Integrace s platebními bránami (např. GoPay, Stripe, PayPal) je klíčová pro přijímání online plateb.
+
+*   **Inicializace platby:**
+    *   Po potvrzení objednávky (`confirm`) a pokud není objednávka zdarma, systém předá platební bráně potřebné údaje (částka, měna, ID objednávky, návratové URL).
+    *   Brána vrátí URL pro přesměrování zákazníka nebo data pro zobrazení platebního formuláře/widgetu.
+    *   Systém vytvoří záznam `Boutique::Payment` ve stavu `pending` a uloží ID transakce z brány (`remote_id`).
+*   **Zpracování výsledku platby:**
+    *   Po dokončení platby (úspěšném či neúspěšném) brána přesměruje zákazníka zpět na definovanou URL adresu nebo zavolá webhook (notifikační endpoint) na straně Boutique.
+    *   Boutique přijme informaci o výsledku platby (stav, ID transakce).
+    *   Na základě výsledku aktualizuje stav příslušného záznamu `Boutique::Payment` (na `paid`, `failed`, `cancelled`).
+    *   Pokud byla platba úspěšná (`paid`), spustí se událost `pay` na související objednávce (`Order`).
+*   **Opakované platby (Recurrence/Subscriptions):**
+    *   Při první platbě předplatného musí systém od brány získat a bezpečně uložit token nebo referenci na platební metodu zákazníka pro budoucí strhávání.
+    *   Pro automatické obnovovací objednávky systém iniciuje stržení platby u brány pomocí uloženého tokenu/reference, aniž by vyžadoval interakci zákazníka.
+    *   Systém musí reagovat na případné chyby při opakovaném strhávání (např. expirace karty, nedostatek prostředků) a případně zrušit související předplatné (`Subscription`).
+*   **Refundace:**
+    *   Administrátor může iniciovat vrácení platby (refundaci) přes administraci Boutique.
+    *   Systém zavolá API platební brány pro provedení refundace.
+    *   Po potvrzení refundace od brány aktualizuje stav `Boutique::Payment` na `refunded`.
+
+### 6.2. Dopravci
+
+Integrace s dopravci (např. Zásilkovna, Česká pošta, PPL, DPD) zahrnuje několik oblastí:
+
+*   **Výběr výdejních míst:**
+    *   Pokud zvolená `ShippingMethod` vyžaduje výdejní místo (`requires_pickup_point`), Boutique musí integrovat frontendový widget poskytovaný dopravcem (např. Zásilkovna Packetery Widget).
+    *   Tento widget umožní zákazníkovi vybrat konkrétní pobočku.
+    *   Po výběru widget vrátí ID a další údaje o pobočce, které Boutique uloží do objednávky (`pickup_point_id`, `pickup_point_title`, `pickup_point_country_code`).
+*   **Podání zásilek (Expediční API):**
+    *   Pro automatizaci expedice může Boutique odesílat data o připravených zásilkách do systému dopravce přes jeho API.
+    *   Typicky se posílají údaje o odesílateli, příjemci (z `Order` a `Folio::Address`), rozměrech a váze zásilky, zvolené službě a případně ID výdejního místa.
+    *   API dopravce vrátí štítek pro tisk a sledovací číslo zásilky (`package_tracking_number`), které se uloží k objednávce.
+*   **Sledování zásilek (Tracking API):**
+    *   Boutique může periodicky nebo na vyžádání dotazovat API dopravce na aktuální stav zásilky pomocí sledovacího čísla.
+    *   Na základě stavu vráceného API (např. "Doručeno") může Boutique automaticky aktualizovat stav objednávky (`aasm_state` na `delivered`).
+
+### 6.3. Účetní Systémy
+
+Pro usnadnění účetnictví je často žádoucí exportovat data z Boutique do účetního softwaru (např. Pohoda, Money S3, Abra).
+
+*   **Export faktur/objednávek:**
+    *   Systém by měl umožnit exportovat uhrazené objednávky (`Order` ve stavu `paid` nebo vyšším) za zvolené období.
+    *   Export by měl obsahovat všechny relevantní údaje pro zaúčtování: číslo faktury, datum vystavení/platby, údaje o odběrateli, rozpis položek a dopravy s cenami bez DPH, sazbami DPH a výší DPH.
+    *   Formát exportu by měl být kompatibilní s importním formátem cílového účetního systému (např. XML, ISDOC, CSV).
+*   **Export plateb:**
+    *   Může být užitečné exportovat i přehled přijatých plateb (`Payment`) pro párování s bankovními výpisy.
+*   **Synchronizace kontaktů:**
+    *   Případně může existovat synchronizace zákazníků (`Folio::User`) a jejich adres (`Folio::Address`) s adresářem v účetním systému.
+
+### 6.4. Systémy pro Generování Faktur
+
+Pokud Boutique sám negeneruje PDF faktury, může využívat externí službu nebo systém specializovaný na generování faktur (např. Fakturoid, iDoklad, nebo vlastní microservice).
+
+*   **Předání dat:**
+    *   Po úspěšné platbě objednávky (`pay`) a přidělení čísla faktury (`invoice_number`) systém zavolá API fakturačního systému.
+    *   Předají se veškeré potřebné údaje pro vytvoření faktury (viz sekce 5.4).
+*   **Získání faktury:**
+    *   API fakturačního systému vrátí vygenerovanou fakturu (typicky jako PDF soubor nebo odkaz ke stažení).
+*   **Uložení/Odeslání:**
+    *   Boutique může uložit odkaz na fakturu nebo samotný PDF soubor (např. pomocí Active Storage) k objednávce.
+    *   Faktura může být automaticky přiložena k emailu o potvrzení platby odesílanému zákazníkovi.
+
+## 7. Další Kroky a Otevřené Otázky
 
 *(Popis upraven)*
-Tato specifikace pokrývá základní datový model, koncepty a business logiku. Dalšími kroky mohou být:
+Tato specifikace pokrývá základní datový model, koncepty, business logiku a interakce s externími systémy. Dalšími kroky mohou být:
 - Detailní specifikace validačních pravidel pro jednotlivé modely.
-- Rozpracování interakcí s externími systémy (platební brány, dopravci a jejich API pro sledování a výběr výdejních míst, účetní systémy, systémy pro generování faktur).
 - Návrh API rozhraní (pokud je relevantní).
 - Doplnění specifikace o modely a konfigurace, které zde nejsou detailně popsány (např. kategorie produktů, skladové hospodářství, detailní konfigurace cen dopravy dle zemí/váhy, správa sazeb DPH pro produkty a země).
 - Detailní návrh uživatelského rozhraní pro administraci a pro zákazníky. 
