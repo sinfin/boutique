@@ -564,7 +564,7 @@ Tato kapitola popisuje klíčové procesy a výpočty v rámci systému.
 
 ### 5.1. Výpočet Cen a DPH
 
-Výpočet finální ceny objednávky (`total_price`) a související DPH je vícekrokový proces:
+Výpočet finální ceny objednávky (`total_price`) a související DPH je vícekrokový proces. Klíčové vypočtené hodnoty (`line_items_price`, `discount`, `shipping_price`, `total_price`) jsou často "otištěny" (uloženy napevno) do objednávky v okamžiku jejího potvrzení pomocí metody `imprint`, aby se zabránilo jejich pozdější změně vlivem úprav cen produktů nebo podmínek voucherů.
 
 1.  **Cena položek (`line_items_price`):** Je to prostý součet cen (`price`) všech položek (`LineItem`) v objednávce. Cena každé položky je zafixována v okamžiku jejího přidání do objednávky a již zahrnuje případné slevy na úrovni produktu nebo varianty.
 2.  **Cena dopravy (`shipping_price`):** Určuje se na základě zvoleného způsobu dopravy (`ShippingMethod`) a cílové země (z `primary_address` nebo `pickup_point_country_code`). Metoda `shipping_method.price_for(country_code)` vrací příslušnou cenu. Pokud je objednávka čistě digitální (`digital_only?`) nebo není zvolena doprava, cena je 0.
@@ -614,7 +614,7 @@ Objednávku lze označit jako dárek, což spouští specifickou logiku:
 
 Proces související s generováním faktur:
 
-1.  **Přiřazení čísla (`set_invoice_number`):** Po úspěšné platbě objednávky (`pay`) se vygeneruje a přiřadí unikátní číslo faktury (`invoice_number`). Generování využívá databázovou sekvenci (`boutique_orders_invoice_base_number_seq`), která se může resetovat každý rok (dle konfigurace). Číslo může obsahovat prefix roku a/nebo vlastní definovaný prefix.
+1.  **Přiřazení čísla (`set_invoice_number`):** Po úspěšné platbě objednávky (`pay`) se vygeneruje a přiřadí unikátní číslo faktury (`invoice_number`). Generování využívá databázovou sekvenci (`boutique_orders_invoice_base_number_seq`), která se může resetovat každý rok (dle konfigurace `Boutique.config.invoice_number_resets_each_year`). Číslo může obsahovat prefix roku (dle `Boutique.config.invoice_number_with_year_prefix`), vlastní definovaný prefix (`invoice_number_prefix`) a má definovanou délku číselné části (dle `Boutique.config.invoice_number_base_length`).
 2.  **Generování dokumentu:** Samotné vygenerování PDF (nebo jiného formátu) faktury není přímo součástí modelu `Order`. Systém využívá data z objednávky a souvisejících modelů (zákazník, adresy, položky, ceny, DPH rozpis) a předává je externí knihovně nebo službě pro generování faktur (např. Prawn, WickedPDF, nebo externí fakturační API).
 3.  **Obsah faktury:** Faktura musí obsahovat všechny zákonné náležitosti, včetně:
     *   Identifikace dodavatele a odběratele (z `Order`, `Folio::User`, `Folio::Address`).
@@ -687,7 +687,7 @@ Integrace s dopravci (např. Zásilkovna, Česká pošta, PPL, DPD) zahrnuje ně
 
 ### 6.3. Účetní Systémy
 
-Pro usnadnění účetnictví je často žádoucí exportovat data z Boutique do účetního softwaru (např. Pohoda, Money S3, Abra).
+Pro usnadnění účetnictví je často žádoucí exportovat data z Boutique do účetního softwaru (např. Pohoda, Money S3, Abra). Viz také kapitola 9 "Exporty Dat".
 
 *   **Export faktur/objednávek:**
     *   Systém by měl umožnit exportovat uhrazené objednávky (`Order` ve stavu `paid` nebo vyšším) za zvolené období.
@@ -700,7 +700,7 @@ Pro usnadnění účetnictví je často žádoucí exportovat data z Boutique do
 
 ### 6.4. Systémy pro Generování Faktur
 
-Pokud Boutique sám negeneruje PDF faktury, může využívat externí službu nebo systém specializovaný na generování faktur (např. Fakturoid, iDoklad, nebo vlastní microservice).
+Pokud Boutique sám negeneruje PDF faktury, může využívat externí službu nebo systém specializovaný na generování faktur (např. Fakturoid, iDoklad, nebo vlastní microservice). Je také možné, že faktura obsahuje zabezpečený odkaz pro přístup bez přihlášení pomocí `Folio::HasSecretHash` (viz kapitola 11).
 
 *   **Předání dat:**
     *   Po úspěšné platbě objednávky (`pay`) a přidělení čísla faktury (`invoice_number`) systém zavolá API fakturačního systému.
@@ -757,22 +757,113 @@ Pro správný výpočet DPH, zejména v kontextu mezinárodního prodeje (OSS), 
     *   **Konfigurace:** Alternativně mohou být sazby uloženy v konfiguračním souboru nebo databázové konfigurační tabulce.
     *   **Logika výpočtu:** Při výpočtu DPH (viz 5.1) systém identifikuje zemi doručení, typ produktu, a na základě toho vyhledá a aplikuje správnou sazbu DPH z modelu `VatRate` nebo konfigurace.
 
-## 8. Další Kroky a Otevřené Otázky
+## 8. Emailové Notifikace (Mailing)
+
+Systém odesílá zákazníkům a administrátorům emailové notifikace v různých fázích procesu objednávky a správy účtu.
+
+### 8.1. Mechanismus Rozšiřitelnosti (`MAILER_ACTIONS`)
+
+Model `Order` definuje konstantu `MAILER_ACTIONS` (např. `[:paid, :paid_subsequent]`) a pro každou akci metodu `mailer_<akce>` (např. `mailer_paid`). Tyto metody ve výchozím stavu volají standardní mailer (`Boutique::OrderMailer`), ale mohou být přepsány v hlavní aplikaci pro odeslání vlastních emailů nebo provedení jiných akcí spojených s danou událostí.
+
+### 8.2. Spouštění Mailerů a Obsah
+
+Jednotlivé mailery jsou typicky spouštěny jako `after_commit` callbacky po úspěšném přechodu do určitého stavu AASM nebo po provedení specifické akce:
+
+*   **`mailer_paid`:**
+    *   **Spouštěč:** Po úspěšném přechodu objednávky do stavu `paid` (v `after_commit` bloku události `pay`), pokud se nejedná o následnou platbu předplatného.
+    *   **Účel/Obsah:** Potvrzení o úspěšném zaplacení objednávky zákazníkovi. Obsahuje shrnutí objednávky, informace o platbě, případně odkaz na stažení faktury nebo informace o dalším postupu (odeslání, přístup k digitálnímu obsahu).
+*   **`mailer_paid_subsequent`:**
+    *   **Spouštěč:** Po úspěšném přechodu objednávky do stavu `paid` (v `after_commit` bloku události `pay`), pokud se jedná o následnou (obnovovací) platbu předplatného (a předplatné má periodu 12 měsíců - *tato podmínka může být specifická*).
+    *   **Účel/Obsah:** Potvrzení o úspěšném zaplacení dalšího období předplatného. Informuje o prodloužení platnosti předplatného.
+*   **`gift_notification` / `gift_notification_with_invitation`:**
+    *   **Spouštěč:** Manuálně nebo plánovačem přes metodu `deliver_gift!`.
+    *   **Účel/Obsah:** Informování příjemce dárku o tom, že pro něj byla zakoupena objednávka/předplatné. Varianta `_with_invitation` se použije, pokud příjemce ještě nemá účet, a obsahuje odkaz pro jeho aktivaci.
+*   **Pozvánky (`Folio::User.invite!`):**
+    *   **Spouštěč:** Při událostech `pay` nebo `wait_for_offline_payment`, pokud zákazník ještě nemá potvrzený účet (metoda `invite_user!`).
+    *   **Účel/Obsah:** Standardní Devise Invitable email s výzvou k nastavení hesla a aktivaci účtu.
+
+### 8.3. Diagram Spouštění (Příklad)
+
+```mermaid
+stateDiagram-v2
+    state "Objednávka" as Order {
+        [*] --> pending
+        pending --> confirmed : confirm
+        confirmed --> paid : pay
+        paid --> dispatched : dispatch
+        dispatched --> delivered : deliver
+
+        state "paid" as paid_state {
+            state "after_commit" as paid_ac
+        }
+        paid_state: Trigger Mailers
+    }
+    state "Akce" as Action {
+         deliver_gift!
+    }
+    state "Mailer" as Mailer {
+        paid
+        paid_subsequent
+        gift
+    }
+
+    paid_ac --> paid : if not subsequent
+    paid_ac --> paid_subsequent : if subsequent & period=12
+    Action -- deliver_gift! --> gift
+
+```
+*Poznámka: Diagram zjednodušeně ukazuje hlavní body spouštění.*
+
+## 9. Exporty Dat
+
+Systém umožňuje exportovat data pro různé účely:
+
+*   **CSV Export Objednávek:**
+    *   **Účel:** Poskytnutí přehledu objednávek pro administrátory nebo pro základní offline zpracování.
+    *   **Implementace:** Definován v `Boutique::Order` metodami `csv_attribute_names` (určuje sloupce) a `csv_attributes` (definuje, jak získat hodnoty pro jednotlivé sloupce, např. formátování datumu, spojení jména, výpis položek).
+    *   **Spouštění:** Typicky dostupné jako akce v administraci nad seznamem objednávek.
+*   **Export pro Účetní Systémy:**
+    *   **Účel:** Přenos dat o uhrazených objednávkách/fakturách do externího účetního softwaru.
+    *   **Implementace:** Vyžaduje specifický formát (XML, ISDOC, CSV) dle cílového systému. Data zahrnují detaily o zákazníkovi, faktuře, položkách a rozpisu DPH (viz sekce 7.3).
+    *   **Spouštění:** Manuální nebo automatizovaný export z administrace.
+*   **Export pro OSS Hlášení:**
+    *   **Účel:** Získání podkladů pro hlášení DPH v režimu One Stop Shop pro B2C prodeje do EU.
+    *   **Implementace:** Agregace dat o prodejích podle země určení a sazby DPH (viz sekce 5.5). Výstupem je typicky CSV nebo jiný strukturovaný formát.
+    *   **Spouštění:** Manuální export z administrace za dané období (čtvrtletí).
+
+## 10. Konfigurace Systému (`Boutique.config`)
+
+Chování některých částí systému lze ovlivnit pomocí globální konfigurace, typicky přístupné přes `Boutique.config`. Z analyzovaného kódu vyplývají následující konfigurační volby:
+
+*   **`products_belong_to_site` (boolean):** Pokud je `true`, validace vyžaduje, aby objednávka (`Order`) měla přiřazen `site_id` (relevantní pro multi-site instalace).
+*   **`invoice_number_resets_each_year` (boolean):** Pokud je `true`, sekvence pro generování čísel faktur (`boutique_orders_invoice_base_number_seq`) se automaticky resetuje na začátku každého kalendářního roku.
+*   **`invoice_number_with_year_prefix` (boolean):** Pokud je `true`, do generovaného čísla faktury (`invoice_number`) se přidává prefix aktuálního roku (poslední dvě číslice).
+*   **`invoice_number_base_length` (integer):** Definuje minimální počet číslic pro základní část čísla faktury (bez prefixů). Číslo se zleva doplní nulami, pokud je kratší.
+*   **`use_cart_in_orders` (boolean):** Ovlivňuje logiku přidávání položek do objednávky metodou `add_line_item!`. Pokud `true`, přidání stejného produktu navyšuje množství existující položky. Pokud `false` (výchozí chování dle kódu), přidání produktu nahradí stávající položku (vhodné pro scénář, kdy objednávka reprezentuje spíše jednopoložkový nákup nebo košík).
+
+*Poznámka: Mohou existovat další konfigurační volby definované v jiných částech aplikace nebo v inicializátorech.*
+
+## 11. Zabezpečený Přístup (`Folio::HasSecretHash`)
+
+Některé modely, zejména `Boutique::Order`, využívají mixin `Folio::HasSecretHash`.
+
+*   **Účel:** Generování unikátního, těžko uhodnutelného řetězce (hashe) pro každý záznam (např. objednávku). Tento hash (`secret_hash`) se pak používá v URL adresách pro přístup k detailu záznamu bez nutnosti přihlášení zákazníka. Například odkaz v emailu může vést na `/objednavka/abc123xyz`, kde `abc123xyz` je `secret_hash`.
+*   **Bezpečnost:** Hash slouží jako forma "hesla" pro přístup ke konkrétnímu záznamu. Délka hashe (`secret_hash_length`) je konfigurovatelná pro zajištění dostatečné odolnosti proti hádání.
+*   **Použití:** Primárně pro objednávky, umožňuje zákazníkům zobrazit stav své objednávky z emailu. Potenciálně lze využít i pro jiné entity, např. pro zabezpečený přístup k online verzi faktury.
+*   **Generování:** Hash se typicky generuje automaticky při vytvoření záznamu.
+
+## 12. Další Kroky a Otevřené Otázky
 
 *(Popis upraven)*
-Tato specifikace pokrývá základní datový model, koncepty, business logiku, interakce s externími systémy a návrh doplňujících modelů/konfigurací. Dalšími kroky pro zpřesnění a dokončení specifikace mohou být:
+Tato specifikace pokrývá základní datový model, koncepty, business logiku, interakce s externími systémy, mailing, exporty, konfiguraci, zabezpečený přístup a návrh doplňujících modelů/konfigurací. Dalšími kroky pro zpřesnění a dokončení specifikace mohou být:
 
--   **Detailní specifikace validačních pravidel:** Popsat všechny validace definované v modelech (`validates`, `validate`), včetně podmínek (`if`, `unless`) a chybových hlášek (např. pro `email`, `voucher_code`, `gift_recipient_*`, `pickup_point_id`, `age_verification`).
+-   **Detailní specifikace validačních pravidel:** Popsat všechny validace definované v modelech (`validates`, `validate`), včetně podmínek (`if`, `unless`) a chybových hlášek.
 -   **Detailní popis implementace business logiky:**
     *   Rozepsat logiku helper metod (např. `full_name`, `packages_count`, `total_price_vat`, `package_tracking_url`, `requires_address?`).
     *   Rozepsat logiku privátních metod obsahujících klíčové procesy (např. `set_numbers`, `set_invoice_number`, `invite_user!`, `set_up_subscription!`, `imprint`).
--   **Specifikace scopes:** Popsat účel a použití jednotlivých definovaných `scope` v modelu `Order` pro filtrování, řazení a vyhledávání dat (např. `by_state`, `by_confirmed_at_range`, `by_non_pending_order_count_range_from/to`, `sort_by_*`).
--   **Full-textové vyhledávání:** Detailně popsat konfiguraci a použití `pg_search_scope :by_query`, včetně prohledávaných polí a asociací.
--   **Callbacky a Mailery:** Vysvětlit mechanismus `EVENT_CALLBACKS` a `MAILER_ACTIONS` jako hooků pro rozšíření/přizpůsobení chování v hlavní aplikaci.
--   **CSV Export:** Detailně popsat funkčnost CSV exportu definovanou metodami `csv_attribute_names` a `csv_attributes`.
--   **Konfigurace (`Boutique.config`):** Specifikovat, jaké konfigurační volby systém využívá (např. `products_belong_to_site`, `invoice_number_resets_each_year`, `use_cart_in_orders`, `invoice_number_base_length`) a jak ovlivňují chování.
--   **Zpracování chyb:** Dokumentovat specifické zpracování chyb, např. při komunikaci s platební bránou (`GoPay::Error` v `charge_recurrent_payment!`).
--   **Funkcionalita `Folio::HasSecretHash`:** Popsat účel a použití generování tajných hashů pro objednávky (např. pro bezpečné zobrazení bez přihlášení).
+-   **Specifikace scopes:** Popsat účel a použití jednotlivých definovaných `scope` v modelu `Order` pro filtrování, řazení a vyhledávání dat.
+-   **Full-textové vyhledávání:** Detailně popsat konfiguraci a použití `pg_search_scope :by_query`.
+-   **Zpracování chyb:** Detailněji dokumentovat specifické zpracování chyb (např. `GoPay::Error`).
 -   **Návrh API rozhraní:** Pokud bude systém poskytovat API, navrhnout jeho endpointy, datové struktury a autentizaci.
 -   **Detailní návrh uživatelského rozhraní:** Vytvořit wireframy nebo mockupy pro klíčové obrazovky administrace a zákaznické části.
 -   **Implementace doplňujících modelů:** Detailně rozpracovat a implementovat modely a logiku popsané v kapitole 7 (Kategorie, Sklad, Ceny dopravy, Sazby DPH).
