@@ -787,32 +787,46 @@ Jednotlivé mailery jsou typicky spouštěny jako `after_commit` callbacky po ú
 ```mermaid
 stateDiagram-v2
     state "Objednávka" as Order {
-        [*] --> pending
+        [*] --> pending : Vytvoření
         pending --> confirmed : confirm
         confirmed --> paid : pay
         paid --> dispatched : dispatch
         dispatched --> delivered : deliver
 
-        state "paid" as paid_state {
-            state "after_commit" as paid_ac
-        }
-        paid_state: Trigger Mailers
-    }
-    state "Akce" as Action {
-         deliver_gift!
-    }
-    state "Mailer" as Mailer {
-        paid
-        paid_subsequent
-        gift
+        note right of paid
+          Po přechodu do stavu 'paid'
+          (v after_commit):
+           - spouští se 'mailer_paid'
+           - NEBO 'mailer_paid_subsequent'
+        end note
+
+        confirmed --> waiting_for_offline_payment : wait_for_offline_payment
+        waiting_for_offline_payment --> paid : pay
+
+        pending --> cancelled : cancel
+        confirmed --> cancelled : cancel
+        waiting_for_offline_payment --> cancelled : cancel
+        paid --> cancelled : cancel
+        dispatched --> cancelled : cancel
+        delivered --> cancelled : cancel
+
+        cancelled --> pending : revert_cancelation
+        cancelled --> confirmed : revert_cancelation
+        cancelled --> paid : revert_cancelation
+        cancelled --> dispatched : revert_cancelation
+        cancelled --> delivered : revert_cancelation
     }
 
-    paid_ac --> paid : if not subsequent
-    paid_ac --> paid_subsequent : if subsequent & period=12
-    Action -- deliver_gift! --> gift
-
+    note right of Order
+      Manuální/plánované
+      volání `deliver_gift!`
+      spouští
+      'gift_notification' /
+      'gift_notification_with_invitation'
+      mailer.
+    end note
 ```
-*Poznámka: Diagram zjednodušeně ukazuje hlavní body spouštění.*
+*Poznámka: Diagram zjednodušeně ukazuje hlavní body spouštění mailerů vázaných na stavy objednávky a externí akce.*
 
 ## 9. Exporty Dat
 
