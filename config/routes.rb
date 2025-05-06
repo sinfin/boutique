@@ -6,6 +6,7 @@ Boutique::Engine.routes.draw do
     get :crossdomain_add, path: "crossdomain_add/:product_slug"
     post :add, path: "add/:product_slug"
     post :confirm
+    get :get_confirm, to: :get_confirm, path: "/confirm"
     post :apply_voucher
     post :payment, path: "/:id/payment"
   end
