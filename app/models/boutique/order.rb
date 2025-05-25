@@ -336,8 +336,12 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       after do
-        use_voucher!
-        charge_recurrent_payment! if subsequent?
+        if subsequent?
+          charge_recurrent_payment!
+        else
+          use_voucher!
+        end
+
 
         after_confirm
       end

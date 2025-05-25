@@ -25,7 +25,10 @@ class Boutique::SubscriptionBot
                                                                                   first_name
                                                                                   last_name
                                                                                   email
-                                                                                  use_secondary_address]))
+                                                                                  use_secondary_address
+                                                                                  discount
+                                                                                  voucher_code
+                                                                                  boutique_voucher_id]))
 
         new_order.line_items = original_order.line_items.map do |original_line_item|
           line_item = original_line_item.dup
