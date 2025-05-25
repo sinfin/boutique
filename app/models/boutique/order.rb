@@ -265,7 +265,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             unless: :pending?,
             allow_nil: true
 
-  validate :validate_voucher_code
+  validate :validate_voucher_code, unless: :subsequent?
   validate :validate_email_not_already_registered
   validate :validate_line_items_subscription_recurring
 
