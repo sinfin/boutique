@@ -999,7 +999,8 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def validate_line_items_subscription_recurring
-      return if pending?
+      # validate only during checkout
+      return unless aasm.from_state == :pending
       return unless recurrent_payment_available?
 
       valid_options = if recurrent_payment_enabled_by_default?
