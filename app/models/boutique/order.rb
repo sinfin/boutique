@@ -326,6 +326,9 @@ class Boutique::Order < Boutique::ApplicationRecord
       before do
         self.confirmed_at ||= current_time_from_proper_timezone
 
+        # FIXME: don't validate 2 times, set_numbers + imprint + set_site should be run after validations are done
+        validate_voucher_code unless subsequent?
+
         set_numbers
         imprint
         set_site
