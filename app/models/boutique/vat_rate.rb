@@ -22,6 +22,10 @@ class Boutique::VatRate < Boutique::ApplicationRecord
   def self.default
     where(default: true).first
   end
+
+  def self.console_icon
+    "fa-percentage"
+  end
 end
 
 # == Schema Information

@@ -115,6 +115,10 @@ class Boutique::Voucher < Boutique::ApplicationRecord
     false
   end
 
+  def self.console_icon
+    "fa-ticket-alt"
+  end
+
   private
     def create_additional_vouchers
       return unless quantity.to_i > 1

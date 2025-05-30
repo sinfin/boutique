@@ -62,6 +62,10 @@ class Boutique::ShippingMethod < Boutique::ApplicationRecord
       price_cz
     end
   end
+
+  def self.console_icon
+    "fa-truck"
+  end
 end
 
 # == Schema Information
