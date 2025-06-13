@@ -73,7 +73,7 @@ class Boutique::Product < Boutique::ApplicationRecord
   before_destroy :can_destroy?, prepend: true
 
   def subscription?
-    is_a?(Boutique::Product::Subscription)
+    is_a?(Boutique::Product::Subscription) && respond_to?(:has_subscription_frequency?)
   end
 
   def current_price
