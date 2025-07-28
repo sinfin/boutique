@@ -19,6 +19,12 @@ class Boutique::Voucher < Boutique::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
+  scope :by_product_code, -> (code) {
+    return where(product_code: nil) if code.blank?
+    
+    where("? = ANY(regexp_split_to_array(trim(product_code), '\\s*,\\s*'))", code.strip)
+  }
+
   pg_search_scope :by_query,
                   against: %i[title code],
                   ignoring: :accents,

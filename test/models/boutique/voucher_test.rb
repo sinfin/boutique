@@ -34,4 +34,15 @@ class Boutique::VoucherTest < ActiveSupport::TestCase
     assert voucher.applicable_for?(product_1)
     assert voucher.applicable_for?(product_2)
   end
+
+  test "by_product_code" do
+    create(:boutique_voucher, product_code: nil)
+    create(:boutique_voucher, product_code: "FOO")
+    create(:boutique_voucher, product_code: "BAR")
+    create(:boutique_voucher, product_code: "FOO, BAR")
+    create(:boutique_voucher, product_code: "BAR, FOO")
+    create(:boutique_voucher, product_code: "BAR, FOO, BAR")
+
+    assert_equal 4, Boutique::Voucher.by_product_code("FOO").count
+  end
 end
