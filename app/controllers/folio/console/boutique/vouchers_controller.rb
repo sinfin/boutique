@@ -25,7 +25,8 @@ class Folio::Console::Boutique::VouchersController < Folio::Console::BaseControl
     def index_filters
       {
         by_published: [true, false],
-        by_product_code: Boutique::Product.all.map { |c| [c.to_console_label, c.code] }.sort_by { |c| c.first },
+        by_multiple: [true, false],
+        by_product_code: Boutique::Product.all.map { |c| [c.to_console_label, c.code] },
       }
     end
 

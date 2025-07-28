@@ -19,9 +19,19 @@ class Boutique::Voucher < Boutique::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
+  scope :by_multiple, -> (bool) {
+    case bool
+    when true, "true"
+      where(multiple: true)
+    when false, "false"
+      where(multiple: false)
+    else
+      all
+    end
+  }
   scope :by_product_code, -> (code) {
     return where(product_code: nil) if code.blank?
-    
+
     where("? = ANY(regexp_split_to_array(trim(product_code), '\\s*,\\s*'))", code.strip)
   }
 
@@ -54,6 +64,7 @@ class Boutique::Voucher < Boutique::ApplicationRecord
             if: :discount_in_percentages
 
   before_validation :set_token
+  before_validation :set_multiple
   before_validation :upcase_token
 
   after_create :create_additional_vouchers
@@ -94,7 +105,7 @@ class Boutique::Voucher < Boutique::ApplicationRecord
 
 
   def self.csv_attribute_names
-    %i[title code published published_from published_until product_code discount number_of_allowed_uses]
+    %i[title code published published_from published_until product_code discount number_of_allowed_uses multiple]
   end
 
   def csv_attributes(controller)
@@ -109,7 +120,7 @@ class Boutique::Voucher < Boutique::ApplicationRecord
       when :published_from, :published_until
         t = send(attr)
         I18n.l(t, format: :console_short) if t.present?
-      when :published
+      when :published, :multiple
         I18n.t(".#{send(attr)}")
       else
         send(attr)
@@ -129,8 +140,13 @@ class Boutique::Voucher < Boutique::ApplicationRecord
         d = self.dup
         d.code = nil
         d.quantity = 1
+        d.multiple = true
         d.save!
       end
+    end
+
+    def set_multiple
+      self.multiple = true if quantity.to_i > 1
     end
 
     def set_token
@@ -171,6 +187,7 @@ end
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  product_code            :string
+#  multiple                :boolean          default(FALSE)
 #
 # Indexes
 #

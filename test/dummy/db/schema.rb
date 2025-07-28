@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_23_111829) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_25_131726) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -247,6 +247,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_23_111829) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "product_code"
+    t.boolean "multiple", default: false
     t.index "upper((code)::text)", name: "index_boutique_vouchers_on_upper_code", unique: true
     t.index ["published"], name: "index_boutique_vouchers_on_published"
     t.index ["published_from"], name: "index_boutique_vouchers_on_published_from"

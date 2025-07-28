@@ -61,11 +61,11 @@ class Boutique::Product < Boutique::ApplicationRecord
   scope :by_type, -> (type) { where(type:) }
 
   pg_search_scope :by_query,
-                against: %i[title],
-                ignoring: :accents,
-                using: {
-                  tsearch: { prefix: true }
-                }
+                  against: %i[title],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   after_initialize :set_default_vat_rate
   after_initialize :set_default_shipping_methods
