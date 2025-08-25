@@ -15,6 +15,7 @@ cs:
         confirmed_at: Objednáno
         confirmed_at_range: Objednáno
         created_at: Vytvořeno
+        custom_discount/default: Získáváte automatickou slevu.
         dispatched_at: Odesláno
         full_name: Jméno
         gift_recipient: Obdarovaný

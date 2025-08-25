@@ -482,7 +482,9 @@ class Boutique::Order < Boutique::ApplicationRecord
 
   def discount
     super || begin
-      if voucher.present? && voucher.applicable?
+      if custom_discount_applicable?
+        custom_discount
+      elsif voucher.present? && voucher.applicable?
         if voucher.discount_in_percentages?
           ((total_price_without_discount) * (0.01 * voucher.discount)).floor
         else
@@ -492,6 +494,18 @@ class Boutique::Order < Boutique::ApplicationRecord
         0
       end
     end
+  end
+
+  def custom_discount_applicable?
+    false
+  end
+
+  def custom_discount
+    0
+  end
+
+  def custom_discount_message
+    self.class.human_attribute_name("custom_discount/default")
   end
 
   def total_price_without_discount

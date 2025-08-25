@@ -12,4 +12,9 @@ class Boutique::Orders::Cart::VoucherFieldsCell < Boutique::ApplicationCell
   def applied?
     model.object.voucher.present?
   end
+
+  def custom_discount_applicable?
+    return @custom_discount_applicable unless @custom_discount_applicable.nil?
+    @custom_discount_applicable = model.object.custom_discount_applicable?
+  end
 end

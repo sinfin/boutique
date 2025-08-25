@@ -1,21 +1,24 @@
 div class=class_name
-  .b-orders-cart-voucher-fields__inner
-    = input
+  - if custom_discount_applicable?
+    .text-success = model.object.custom_discount_message
+  - else
+    .b-orders-cart-voucher-fields__inner
+      = input
 
-    .b-orders-cart-voucher-fields__right
+      .b-orders-cart-voucher-fields__right
       span.b-orders-cart-voucher-fields__apply.small[
-        data-url=controller.boutique.apply_voucher_checkout_path(format: :json)
-        data-error=t('.generic_error')
+          data-url=controller.boutique.apply_voucher_checkout_path(format: :json)
+          data-error=t('.generic_error')
       ]
-        = t(".apply")
+          = t(".apply")
 
       img.b-orders-cart-voucher-fields__applied[
-        src=image_path('boutique/coupon-applied.svg')
-        width=20
-        height=20
+          src=image_path('boutique/coupon-applied.svg')
+          width=20
+          height=20
       ]
 
-    span.folio-loader.folio-loader--small.b-orders-cart-voucher-fields__loader
+      span.folio-loader.folio-loader--small.b-orders-cart-voucher-fields__loader
 
   - if model.object.discount && model.object.discount > 0
     p.b-orders-cart-voucher-fields__discount-value-text

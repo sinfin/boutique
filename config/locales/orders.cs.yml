@@ -82,6 +82,7 @@ cs:
         recurring_payment: Automatická obnova
         single_payment: Jednorázová platba %{months}
         shipping: Doprava
+        discount: Sleva
         voucher: Slevový kupón
         total: Celkem
         remove: odebrat
@@ -99,7 +100,7 @@ cs:
         payment_method_card: Platební karta
         bank_account_number: "Bankovní spojení: "
         variable_symbol: "Variabilní symbol: "
-        order_number:  "Číslo objednávky: "
+        order_number: "Číslo objednávky: "
         taxable_fulfillment_due_date: "Datum zdaň. plnění: "
         issued_on_date: "Datum vystavení: "
         due_date: "Datum splatnosti: "

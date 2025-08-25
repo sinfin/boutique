@@ -75,6 +75,7 @@ en:
         recurring_payment: Automatic renewal
         single_payment: Single payment %{months}
         shipping: Shipping
+        discount: Discount
         voucher: Discount voucher
         total_price: Total
         remove: remove

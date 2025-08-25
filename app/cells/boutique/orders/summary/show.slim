@@ -52,11 +52,14 @@
         .col.text-right
           = folio_price(model.shipping_price)
 
-  - if model.voucher.present?
+  - if model.discount > 0
     .b-orders-summary__price-row
       .row
         .col-auto
-          = t('.voucher')
+          - if model.voucher.present?
+            = t('.voucher')
+          - else
+            = t('.discount')
 
         .col.text-right
           = folio_price(model.discount * -1)
