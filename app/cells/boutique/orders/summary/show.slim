@@ -52,7 +52,7 @@
         .col.text-right
           = folio_price(model.shipping_price)
 
-  - if model.discount > 0
+  - if model.discount && model.discount > 0
     .b-orders-summary__price-row
       .row
         .col-auto

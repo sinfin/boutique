@@ -47,10 +47,13 @@
                           precision: 2,
                           zero_as_number: true)
 
-      - if model.voucher_code.present?
+      - if model.discount && model.discount > 0
         tr
           td.b-orders-invoice__table-td colspan=4
-            = t(".discount", code: model.voucher_code.upcase)
+            - if model.voucher_code.present?
+                = t(".voucher", code: model.voucher_code.upcase)
+            - else
+                = t(".discount")
           td.b-orders-invoice__table-td.text-right
             = folio_price(model.discount * -1,
                           precision: 2,
