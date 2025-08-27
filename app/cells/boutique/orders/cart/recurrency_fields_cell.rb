@@ -22,8 +22,7 @@ class Boutique::Orders::Cart::RecurrencyFieldsCell < ApplicationCell
                            .call(context: self,
                                  current_site:,
                                  period: recurrence_to_human(subscription_line_item.product_variant.subscription_period),
-                                 price: subscription_line_item.unit_price,
-                                 product: subscription_line_item.product)
+                                 price: model.object.total_price)
   end
 
   def subscription_line_item

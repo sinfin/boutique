@@ -41,7 +41,7 @@ module Boutique
       @folio_console_collection_includes_for_products = [cover_placement: :file]
       @folio_console_additional_filters_for_orders = {}
       @folio_console_collection_includes_for_order_refunds = [:order]
-      @orders_edit_recurrency_title_proc = -> (context:, current_site:, period:, price:, product:) do
+      @orders_edit_recurrency_title_proc = -> (context:, current_site:, period:, price:) do
         current_site.recurring_payment_disclaimer
                     .to_s
                     .gsub("{AMOUNT}", price.to_s)
