@@ -28,19 +28,19 @@ class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
   end
 
   def line_item_tag_additional_class(line_item)
-    if line_item.subscription_recurring? || line_item.subscription_period.nil?
+    if line_item.subscription_recurring? || line_item.subscription_recurring.nil?
       "b-orders-summary__tag--recurring"
     end
   end
 
   def line_item_tag_label(line_item)
-    if line_item.subscription_recurring? || line_item.subscription_period.nil?
+    if line_item.subscription_recurring? || line_item.subscription_recurring.nil?
       [
         image_tag("boutique/refresh.svg", class: "b-orders-summary__tag-img"),
         t(".recurring_payment")
       ].join
     else
-      t(".single_payment", months: duration_to_human(line_item.subscription_period))
+      t(".single_payment", months: duration_to_human(1))
     end
   end
 

@@ -20,7 +20,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
            :subscription?,
            to: :product
 
-  after_initialize :set_default_subscription_recurring
   before_validation :unset_unwanted_subscription_starts_at
 
   def title
@@ -101,7 +100,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
     if subscription?
       self.subscription_starts_at = subscription_starts_at
-      self.subscription_period = product_variant.subscription_period if subscription_recurring?
+      self.subscription_period = product_variant.subscription_period
     end
 
     self
@@ -148,10 +147,6 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   private
     def subscription_starts_at_label(date, number)
       "#{I18n.t('boutique.issue').capitalize} #{number} / #{date.year}"
-    end
-
-    def set_default_subscription_recurring
-      self.subscription_recurring ||= false
     end
 
     def unset_unwanted_subscription_starts_at

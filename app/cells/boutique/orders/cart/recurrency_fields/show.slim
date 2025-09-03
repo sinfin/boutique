@@ -15,25 +15,14 @@ div class=class_name
               .b-orders-cart-recurrency-fields__option-text
                 = text_true
 
-        label.b-orders-cart-recurrency-fields__show-nonrecurring-button
-          = t('.nonrecurring_payment.link')
+        label.b-orders-cart-recurrency-fields__option
+            = g.radio_button :subscription_recurring,
+                             false,
+                             class: "b-orders-cart-recurrency-fields__option-input"
 
-          input.b-orders-cart-recurrency-fields__show-nonrecurring-button-input[
-            type="checkbox"
-            name="nonrecurring_payment_visible"
-          ]
-
-        .b-orders-cart-recurrency-fields__nonrecurring-payment
-          .b-orders-cart-recurrency-fields__nonrecurring-payment-title
-            = t('.nonrecurring_payment.title')
-
-          - g.object.subscription_period_options_for_select.each do |label, n|
-            label.b-orders-cart-recurrency-fields__nonrecurring-payment-option
-              = g.radio_button :subscription_period,
-                               n,
-                               class: nonrecurring_payment_option_input_class_name
-
-              span = label
+            .b-orders-cart-recurrency-fields__option-content
+            .b-orders-cart-recurrency-fields__option-title
+                = "Nechci opakovanou platbu, zaplatím jednorázově."
 
         - if show_error_message?
           .b-orders-cart-recurrency-fields__error.text-danger
