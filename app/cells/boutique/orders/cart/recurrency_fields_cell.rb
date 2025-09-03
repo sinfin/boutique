@@ -18,7 +18,7 @@ class Boutique::Orders::Cart::RecurrencyFieldsCell < ApplicationCell
 
   def text_true
     @text_true ||= Boutique.config
-                           .orders_edit_recurrency_title_proc
+                           .orders_cart_recurrency_title_proc
                            .call(context: self,
                                  current_site:,
                                  period: recurrence_to_human(subscription_line_item.product_variant.subscription_period),

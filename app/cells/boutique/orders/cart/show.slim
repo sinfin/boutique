@@ -76,17 +76,26 @@
             .b-orders-cart__recurrency-fields
               == cell('boutique/orders/cart/recurrency_fields', f)
 
+            - if terms_agreement_required?
+                .b-orders-cart__terms
+                  = f.input :terms_agreement,
+                            as: :boolean,
+                            label: terms_agreement_label.html_safe
+
             .b-orders-cart__payment
               - if f.object.free?
                 = f.button :submit,
                            t(".order_for_free"),
                            class: "btn btn-primary"
 
-                .mt-g.small.text-muted
-                  = disclaimer
+                - unless terms_agreement_required?
+                  .mt-g.small.text-muted
+                    = disclaimer
 
               - else
-                == cell('boutique/orders/payment_methods', f, disclaimer:)
+                == cell('boutique/orders/payment_methods',
+                        f,
+                        disclaimer: terms_agreement_required? ? nil : disclaimer)
 
         aside.b-orders-cart__col.b-orders-cart__col--aside
           == cell('boutique/orders/cart/sidebar', current_order, form: true)

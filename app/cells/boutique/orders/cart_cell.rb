@@ -64,7 +64,20 @@ class Boutique::Orders::CartCell < Boutique::ApplicationCell
   end
 
   def subscription?
-    @subscription ||= current_order.line_items.any?(&:subscription?)
+    return @subscription unless @subscription.nil?
+
+    @subscription = current_order.line_items.any?(&:subscription?)
+  end
+
+  def terms_agreement_required?
+    terms_agreement_label.present?
+  end
+
+  def terms_agreement_label
+    @terms_agreement_label ||= Boutique.config
+                                       .orders_cart_terms_agreement_proc
+                                       .call(context: self,
+                                             current_site:)
   end
 
   def disclaimer

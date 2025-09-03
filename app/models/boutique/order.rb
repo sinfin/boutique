@@ -261,6 +261,9 @@ class Boutique::Order < Boutique::ApplicationRecord
             presence: true,
             unless: :pending?
 
+  validates :terms_agreement,
+            acceptance: true
+
   validate :validate_line_items_subscription_recurrence,
            unless: :pending?
 

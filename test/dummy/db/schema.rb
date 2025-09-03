@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_03_145542) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -634,6 +634,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_03_145542) do
     t.text "recurring_payment_disclaimer"
     t.string "copyright_info_source"
     t.string "billing_account_number"
+    t.text "checkout_terms_agreement"
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"

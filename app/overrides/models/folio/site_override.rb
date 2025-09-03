@@ -29,6 +29,7 @@ Folio::Site.class_eval do
       billing_vat_identification_number
       billing_note
       billing_account_number
+      checkout_terms_agreement
       recurring_payment_disclaimer
     ]
   end

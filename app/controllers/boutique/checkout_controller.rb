@@ -140,6 +140,7 @@ class Boutique::CheckoutController < Boutique::ApplicationController
                                     :shipping_method_id,
                                     :pickup_point_remote_id,
                                     :pickup_point_title,
+                                    :terms_agreement,
                                     *addresses_strong_params,
                                     *line_items_strong_params)
     end

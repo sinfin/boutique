@@ -126,7 +126,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def self.subscription_period_options
-    [1, 3, 6, 12]
+    [1]
   end
 
   def self.subscription_period_options_for_select

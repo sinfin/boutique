@@ -50,6 +50,7 @@ cs:
         subsequent_subscription/new: Nové předplatné
         subsequent_subscription/subsequent: Prodlužující předplatné
         subsequent_subscription: Typ předplatného
+        terms_agreement: Souhlas s podmínkami
         total_price: Cena celkem
         total_price_range: Cena
         user: Uživatel
@@ -171,6 +172,7 @@ cs:
         billing_vat_identification_number: DIČ
         billing_note: Patička
         billing_account_number: Číslo účtu
+        checkout_terms_agreement: Text pro souhlas s obchodními podmínkami
         recurring_payment_disclaimer: Text upozornění na rekurentní platbu
 
     models:
@@ -246,6 +248,8 @@ cs:
               in_the_past: nesmí být v minulosti
             line_items:
               missing_subscription_recurrence: nemají vybraný způsob obnovy
+            terms_agreement:
+              accepted: musí být potvrzen
 
         boutique/order_refund:
           attributes:
