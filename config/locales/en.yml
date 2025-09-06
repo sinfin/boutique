@@ -3,6 +3,9 @@ en:
   boutique:
     free: free
     issue: issue
+    currency_symbol: "$"
+    currency_code: "USD"
+    product_preview_notice: "This page is optimized for sharing. Regular users are redirected to the shopping cart."
 
   datetime:
     each:

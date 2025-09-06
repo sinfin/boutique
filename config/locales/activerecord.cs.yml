@@ -70,6 +70,7 @@ cs:
         discounted_price: Akční cena
         discounted_from: Akce od
         discounted_until: Akce do
+        og_title: Alternativní titulek pro sdílení
         shipping_info: Doprava
         shipping_methods: Způsoby dopravy
         site: Web

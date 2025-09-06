@@ -3,6 +3,9 @@ cs:
   boutique:
     free: zdarma
     issue: číslo
+    currency_symbol: "Kč"
+    currency_code: "CZK"
+    product_preview_notice: "Tato stránka je optimalizována pro sdílení. Běžní uživatelé jsou přesměrováni do nákupního košíku."
 
   datetime:
     each:

@@ -115,7 +115,6 @@ end
 #  shipping_info                           :text
 #  digital_only                            :boolean          default(FALSE)
 #  subscription_recurrent_payment_disabled :boolean          default(FALSE)
-#  preview_token                           :string
 #  code                                    :string(32)
 #  checkout_sidebar_content                :text
 #  description                             :text
@@ -126,6 +125,10 @@ end
 #  discounted_until                        :datetime
 #  best_offer                              :boolean          default(FALSE)
 #  variant_type_title                      :string
+#  preview_token                           :string
+#  meta_title                              :string(512)
+#  meta_description                        :text
+#  og_title                                :string
 #
 # Indexes
 #

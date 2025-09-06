@@ -1,0 +1,9 @@
+.row
+  .col-md-auto
+    = react_picker(f, :og_image_placement)
+  .col-md
+    = f.input :meta_title, character_counter: true
+
+    = f.input :meta_description, autosize: true, character_counter: true
+
+    = f.input :og_title, character_counter: true

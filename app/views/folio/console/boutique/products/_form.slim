@@ -18,7 +18,7 @@ ruby:
 
 = form_header f, right:
 
-= tabs [:content]
+= tabs [:content, :seo]
 
 .tab-content
   = tab :content
@@ -70,5 +70,8 @@ ruby:
     = render partial: 'variants', locals: { f: }
 
     = render partial: 'form_bottom', locals: { f: }
+
+  = tab :seo
+    = render partial: 'tab_seo', locals: { f: }
 
 = form_footer f
