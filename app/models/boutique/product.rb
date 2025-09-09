@@ -151,7 +151,9 @@ class Boutique::Product < Boutique::ApplicationRecord
 
   def self.pregenerated_thumbnails_base
     h = {
-      "Folio::FilePlacement::Cover" => [],
+      "Folio::FilePlacement::Cover" => [
+        Folio::OG_IMAGE_DIMENSIONS,
+      ],
     }
 
     [
