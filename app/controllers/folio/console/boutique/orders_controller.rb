@@ -101,7 +101,7 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
         },
         by_product_id: {
           klass: "Boutique::Product",
-          width: 210,
+          width: 438,
         },
         by_number_range: {
           as: :numeric_range,
