@@ -4,7 +4,7 @@
   .container-fluid
     = form do |f|
       .b-orders-edit__grid
-        main.b-orders-edit__cell.b-orders-edit__cell--main
+        main.b-orders-edit__cell.b-orders-edit__cell--description
           = render(:_main_top)
 
           h1.h2.mt-0
@@ -19,6 +19,12 @@
             ]
               == product_description
 
+        aside.b-orders-edit__cell.b-orders-edit__cell--aside
+          == cell('boutique/orders/edit/sidebar', \
+                  current_order, \
+                  subscription_active_from:)
+
+        main.b-orders-edit__cell.b-orders-edit__cell--main
           - unless current_user
             .b-orders-edit__box
               .b-orders-edit__box-inner
@@ -84,11 +90,6 @@
 
           - unless current_order.voucher_code.nil? && current_order.free?
             == cell('boutique/orders/edit/voucher_fields', f)
-
-        aside.b-orders-edit__cell.b-orders-edit__cell--aside
-          == cell('boutique/orders/edit/sidebar', \
-                  current_order, \
-                  subscription_active_from:)
 
         main.b-orders-edit__cell.b-orders-edit__cell--bottom
           == cell('boutique/orders/edit/recurrency_fields', f)

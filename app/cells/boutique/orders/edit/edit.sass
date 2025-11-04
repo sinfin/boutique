@@ -49,6 +49,7 @@
       display: grid
       grid-template-columns: 1fr percentage(390/1320)
 
+    &__cell--description,
     &__cell--main,
     &__cell--bottom
       min-width: 0
@@ -58,11 +59,14 @@
       +media-breakpoint-up(xl)
         margin-right: 2 * $grid-gutter-width
 
-    &__cell--main
+    &__cell--description
       grid-row: 1
 
-    &__cell--bottom
+    &__cell--main
       grid-row: 2
+
+    &__cell--bottom
+      grid-row: 3
 
     &__cell--aside
       grid-row: span 2
