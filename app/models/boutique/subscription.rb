@@ -125,10 +125,7 @@ class Boutique::Subscription < ApplicationRecord
 
   def cancel!
     if cancelled_at.nil?
-      now = current_time_from_proper_timezone
-      update_columns(cancelled_at: now,
-                     updated_at: now)
-      true
+      update(cancelled_at: current_time_from_proper_timezone)
     else
       errors.add(:base, :already_cancelled)
       false
