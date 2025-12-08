@@ -104,13 +104,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     runner = self
 
     if from.present?
-      from_date_time = DateTime.parse(from)
+      from_date_time = Time.zone.parse(from)
       runner = runner.where("confirmed_at >= ?", from_date_time)
     end
 
     if to.present?
       to = "#{to} 23:59" if to.exclude?(":")
-      to_date_time = DateTime.parse(to)
+      to_date_time = Time.zone.parse(to)
       runner = runner.where("confirmed_at <= ?", to_date_time)
     end
 
@@ -123,13 +123,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     runner = self
 
     if from.present?
-      from_date_time = DateTime.parse(from)
+      from_date_time = Time.zone.parse(from)
       runner = runner.where("paid_at >= ?", from_date_time)
     end
 
     if to.present?
       to = "#{to} 23:59" if to.exclude?(":")
-      to_date_time = DateTime.parse(to)
+      to_date_time = Time.zone.parse(to)
       runner = runner.where("paid_at <= ?", to_date_time)
     end
 
