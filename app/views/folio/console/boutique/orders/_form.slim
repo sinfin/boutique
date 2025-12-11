@@ -10,6 +10,12 @@
       .col-lg-6 = f.input :first_name
       .col-lg-6 = f.input :last_name
 
+    - if f.object.gift?
+      .row
+        - disabled = f.object.gift_recipient_notification_sent_at?
+        .col-lg-6 = f.input :gift_recipient_email, disabled:
+        .col-lg-6 = f.input :gift_recipient_notification_scheduled_for, disabled:
+
     - unless f.object.digital_only?
       == cell('folio/console/boutique/orders/shipping_method_input', f)
 
