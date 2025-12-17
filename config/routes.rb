@@ -8,6 +8,7 @@ Boutique::Engine.routes.draw do
     post :confirm
     post :apply_voucher
     get :payment, path: "/:id/payment"
+    post :payment, path: "/:id/payment"
   end
 
   localized do
