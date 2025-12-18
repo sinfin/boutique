@@ -1,4 +1,5 @@
 - if f.object.billing_enabled?
+  = f.input :checkout_terms_agreement, as: :redactor
   = f.input :recurring_payment_disclaimer, as: :redactor
 
   h3 = t(".billing_details")
