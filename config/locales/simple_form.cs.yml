@@ -8,6 +8,7 @@ cs:
         subscription_period: Platí pouze pro produkty typu předplatné.
 
       site:
+        checkout_terms_agreement: Zobrazuje se v checkoutu jako checkbox pro souhlas s podmínkami. Použijte klíčová slova {TERMS_URL} pro adresu obchodních podmínek a {PRIVACY_POLICY_URL} pro adresu zásad ochrany osobních údajů.
         recurring_payment_disclaimer: Zobrazuje se v checkoutu při aktivní rekurentní platbě, použijte klíčová slova {AMOUNT} pro vložení dané částky a {TERMS_URL} pro adresu obchodních podmínek.
 
     placeholders:

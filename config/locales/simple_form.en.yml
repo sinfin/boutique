@@ -11,6 +11,7 @@ en:
         subscription_period: Valid for subscription products only.
 
       site:
+        checkout_terms_agreement: Displayed in the checkout as a checkbox for agreeing to the terms. Use the {TERMS_URL} keyword for the terms url and {PRIVACY_POLICY_URL} for the privacy policy url.
         recurring_payment_disclaimer: Displayed in the checkout when a recurring payment is active, use the {AMOUNT} keyword to insert the order amount and {TERMS_URL} for privacy policy url.
 
     placeholders:
