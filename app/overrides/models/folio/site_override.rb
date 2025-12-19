@@ -20,7 +20,7 @@ Folio::Site.class_eval do
     true
   end
 
-  def self.additional_params
+  def self.boutique_additional_params
     %i[
       billing_name
       billing_address_line_1
