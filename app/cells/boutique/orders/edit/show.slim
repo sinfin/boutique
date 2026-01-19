@@ -78,8 +78,7 @@
                     title_tag: "h3",
                     primary_address: current_order.requires_address?,
                     use_primary_address_company_name: true,
-                    countries_whitelist: current_order.countries_whitelist,
-                    disable_autocomplete: Boutique.config.disable_browser_input_autocomplete)
+                    countries_whitelist: current_order.countries_whitelist)
 
           - if current_order.requires_address?
             - if shipping_methods.size > 1
