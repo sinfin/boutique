@@ -16,10 +16,12 @@ module Boutique
                   :folio_console_collection_includes_for_products,
                   :folio_console_additional_filters_for_orders,
                   :orders_edit_recurrency_title_proc,
-                  :orders_get_referrer_url_proc
+                  :orders_get_referrer_url_proc,
+                  :allow_guest_checkout_with_registered_email
 
     def initialize
       # set defaults here
+      @allow_guest_checkout_with_registered_email = false
       @use_cart_in_orders = true
       @logo_path = nil
       @products_belong_to_site = false

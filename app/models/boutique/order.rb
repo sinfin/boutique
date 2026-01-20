@@ -266,7 +266,7 @@ class Boutique::Order < Boutique::ApplicationRecord
             allow_nil: true
 
   validate :validate_voucher_code, unless: :subsequent?
-  validate :validate_email_not_already_registered
+  validate :validate_email_not_already_registered, unless: -> { Boutique.config.allow_guest_checkout_with_registered_email }
   validate :validate_line_items_subscription_recurring
 
   validates :gift_recipient_email,
@@ -848,12 +848,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     def invite_user!
-      return if user.present? && (user.invitation_accepted? || user.confirmed_at.present?)
+      return if user.present? && user.created_by_invite? && user.invitation_accepted?
 
-      self.user ||= Folio::User.invitation_not_accepted
-                               .find_by(email:)
+      self.user ||= Folio::User.find_by(email:)
 
       transaction do
+        # invite user if needed
         if user.nil?
           self.user = Folio::User.invite!(email:,
                                           first_name:,
@@ -863,12 +863,15 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           secondary_address: secondary_address.try(:dup),
                                           source_site: site)
           raise "New User (for order #{self.number}) have errors! #{user.errors.full_messages}" if user.errors.any?
-        else
+        elsif user.created_by_invite? && !user.invitation_accepted?
           user.invite!
         end
 
-        update_columns(folio_user_id: user.id,
-                       updated_at: current_time_from_proper_timezone)
+        # save user relation if needed
+        if folio_user_id_changed?
+          update_columns(folio_user_id: user.id,
+                        updated_at: current_time_from_proper_timezone)
+        end
       end
     end
 
