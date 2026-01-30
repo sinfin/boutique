@@ -1010,7 +1010,7 @@ class Boutique::Order < Boutique::ApplicationRecord
       return unless recurrent_payment_available?
 
       li = subscription_line_item
-      if li && !li.marked_for_destruction? && li.requires_subscription_recurring? && li.subscription_recurring.nil?
+      if li && !li.marked_for_destruction? && li.requires_subscription_recurring? && !li.subscription_recurring? && li.subscription_period.nil?
         errors.add(:line_items, :missing_subscription_recurrence)
       end
     end
