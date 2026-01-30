@@ -6,11 +6,11 @@ div class=class_name
       = input
 
       .b-orders-cart-voucher-fields__right
-      span.b-orders-cart-voucher-fields__apply.small[
-          data-url=controller.boutique.apply_voucher_checkout_path(format: :json)
-          data-error=t('.generic_error')
-      ]
-          = t(".apply")
+        span.b-orders-cart-voucher-fields__apply.small[
+            data-url=controller.boutique.apply_voucher_checkout_path(format: :json)
+            data-error=t('.generic_error')
+        ]
+            = t(".apply")
 
       img.b-orders-cart-voucher-fields__applied[
           src=image_path('boutique/coupon-applied.svg')
