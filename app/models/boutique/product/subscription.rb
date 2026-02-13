@@ -82,14 +82,19 @@ class Boutique::Product::Subscription < Boutique::Product
         self.subscription_frequency = line_item.subscription_frequency
       end
 
+      period_in_months = (line_item.subscription_period || subscription_period || 12) - 1
       from = issue_at(line_item&.subscription_starts_at)
-      to = issue_at(line_item&.subscription_starts_at + 11.months)
+      to = issue_at(line_item&.subscription_starts_at + period_in_months.months)
 
       self.subscription_frequency = current_subscription_frequency if current_subscription_frequency
 
       return super unless from && to
 
-      "#{title} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
+      if from == to
+        "#{title} (#{from[:number]}/#{from[:year]})"
+      else
+        "#{title} (#{from[:number]}/#{from[:year]} –⁠ #{to[:number]}/#{to[:year]})"
+      end
     else
       super
     end
