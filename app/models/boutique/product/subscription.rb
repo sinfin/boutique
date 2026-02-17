@@ -75,6 +75,8 @@ class Boutique::Product::Subscription < Boutique::Product
   end
 
   def to_line_item_full_label(html_context: nil, product_variant: nil, line_item: nil, order: nil)
+    return super if line_item&.subscription_period == 1
+
     if line_item&.subscription_starts_at
       # FIXME: quick hack - line item labels should be refactored
       if line_item&.subscription_frequency
@@ -82,7 +84,7 @@ class Boutique::Product::Subscription < Boutique::Product
         self.subscription_frequency = line_item.subscription_frequency
       end
 
-      period_in_months = (line_item.subscription_period || subscription_period || 12) - 1
+      period_in_months = (line_item&.subscription_period || subscription_period || 12) - 1
       from = issue_at(line_item&.subscription_starts_at)
       to = issue_at(line_item&.subscription_starts_at + period_in_months.months)
 

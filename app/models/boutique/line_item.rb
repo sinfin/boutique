@@ -15,6 +15,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   validate :validate_amount
   validate :validate_product_variant
+  validate :validate_subscription_starts_at
 
   delegate :cover,
            :cover_placement,
@@ -149,6 +150,18 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
       if product.variants.size > 1
         errors.add(:product_variant, :blank)
+      end
+    end
+
+    def validate_subscription_starts_at
+      return unless order.aasm.to_state == :confirmed
+      return unless requires_subscription_starts_at?
+      return if subscription_starts_at.blank?
+
+      allowed_dates = subscription_starts_at_options_for_select.map(&:last)
+
+      if allowed_dates.exclude?(subscription_starts_at.to_date)
+        errors.add(:subscription_starts_at, :inclusion)
       end
     end
 end

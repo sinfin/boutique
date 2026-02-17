@@ -18,7 +18,7 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
 
   def to_line_item_full_label(html_context: nil, product_for_label: nil, line_item: nil, order: nil)
     if product_for_label && product_for_label.title.present?
-      if title.present?
+      if title.present? && title != product_for_label.title
         "#{product_for_label.title} / #{title}"
       else
         product_for_label.title
