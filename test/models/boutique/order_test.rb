@@ -564,6 +564,17 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     end
   end
 
+  test "validate gift_recipient_email format (rejects invalid, accepts valid)" do
+    I18n.with_locale(:en) do
+      order = create(:boutique_order, :confirmed, :gift, gift_recipient_email: "valid@test.test")
+      assert order.valid?
+
+      order.gift_recipient_email = "invalid with space@test.test"
+      assert_not order.valid?
+      assert order.errors.added?(:gift_recipient_email, :invalid, value: "invalid with space@test.test")
+    end
+  end
+
   test "email is downcased, stripped and validated" do
     I18n.with_locale(:en) do
       user = create(:folio_user, email: "test@test.test")
