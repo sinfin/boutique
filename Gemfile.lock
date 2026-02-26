@@ -7,6 +7,14 @@ GIT
       cells (>= 4.1.6, < 5.0.0)
 
 GIT
+  remote: https://github.com/sinfin/dragonfly-s3_data_store.git
+  revision: 62da33cf42ccaf363da60006a30f98ffa37d5343
+  specs:
+    dragonfly-s3_data_store (1.3.0)
+      dragonfly (~> 1.0)
+      fog-aws
+
+GIT
   remote: https://github.com/sinfin/dragonfly_libvips.git
   revision: 8143023d4fb84b55da0a2f6768058c507805865c
   branch: more_geometry
@@ -17,8 +25,8 @@ GIT
 
 GIT
   remote: https://github.com/sinfin/folio.git
-  revision: abb0358ba9cae5d90e68d03d0cbb9a3bbda11d35
-  branch: v3
+  revision: f0a4b8b605c694fca05e772dedf0626106d7f9a1
+  branch: legacy-v3-nextpagemedia
   specs:
     folio (3.0.0)
       aasm
@@ -40,7 +48,6 @@ GIT
       devise-i18n
       devise_invitable
       dotenv-rails
-      dragonfly-s3_data_store
       dropzonejs-rails
       fast_jsonapi
       friendly_id
@@ -55,7 +62,7 @@ GIT
       omniauth-google-oauth2
       omniauth-rails_csrf_protection
       omniauth-twitter2
-      pagy
+      pagy (~> 6)
       pg
       pg_search (= 2.3.2)
       phonelib
@@ -65,6 +72,7 @@ GIT
       recaptcha (= 4.13.1)
       redis
       responders
+      ruby-openai
       rubyzip
       sass-rails
       show_for
@@ -163,46 +171,51 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    acts-as-taggable-on (10.0.0)
-      activerecord (>= 6.1, < 7.2)
+    acts-as-taggable-on (11.0.0)
+      activerecord (>= 7.0, < 8.0)
+      zeitwerk (>= 2.4, < 3.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     after_commit_everywhere (1.4.0)
       activerecord (>= 4.2)
       activesupport
-    ancestry (4.3.3)
+    ancestry (5.0.0)
       activerecord (>= 5.2.6)
+      logger
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ar-sequence (0.2.1)
       activerecord
     ast (2.4.2)
-    audited (5.6.0)
-      activerecord (>= 5.2, < 7.2)
-      activesupport (>= 5.2, < 7.2)
-    aws-eventstream (1.3.0)
-    aws-partitions (1.954.0)
-    aws-sdk-core (3.201.1)
+    audited (5.8.0)
+      activerecord (>= 5.2, < 8.2)
+      activesupport (>= 5.2, < 8.2)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1220.0)
+    aws-sdk-core (3.242.0)
       aws-eventstream (~> 1, >= 1.3.0)
-      aws-partitions (~> 1, >= 1.651.0)
-      aws-sigv4 (~> 1.8)
+      aws-partitions (~> 1, >= 1.992.0)
+      aws-sigv4 (~> 1.9)
+      base64
+      bigdecimal
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.88.0)
-      aws-sdk-core (~> 3, >= 3.201.0)
+      logger
+    aws-sdk-kms (1.122.0)
+      aws-sdk-core (~> 3, >= 3.241.4)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.156.0)
-      aws-sdk-core (~> 3, >= 3.201.0)
+    aws-sdk-s3 (1.213.0)
+      aws-sdk-core (~> 3, >= 3.241.4)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
-    aws-sigv4 (1.8.0)
+    aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
     base64 (0.2.0)
-    bcrypt (3.1.20)
+    bcrypt (3.1.21)
     bigdecimal (3.1.8)
     breadcrumbs_on_rails (4.1.0)
       railties (>= 5.0)
@@ -237,49 +250,49 @@ GEM
     colorize (0.8.1)
     concurrent-ruby (1.3.3)
     connection_pool (2.4.1)
-    countries (6.0.1)
+    countries (7.1.1)
       unaccent (~> 0.3)
-    country_select (9.0.0)
-      countries (> 5.0, < 7.0)
+    country_select (10.0.1)
+      countries (> 5.0, < 8.0)
     crass (1.0.6)
-    css_parser (1.17.1)
+    css_parser (1.21.1)
       addressable
     date (3.3.4)
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
-    devise (4.9.4)
+    devise (5.0.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
+      railties (>= 7.0)
       responders
       warden (~> 1.2.3)
     devise-bootstrap-views (1.1.0)
-    devise-i18n (1.12.1)
-      devise (>= 4.9.0)
-    devise_invitable (2.0.9)
+    devise-i18n (1.16.0)
+      devise (>= 5.0.0)
+      rails-i18n
+    devise_invitable (2.0.11)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (3.1.2)
-    dotenv-rails (3.1.2)
-      dotenv (= 3.1.2)
+    dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
       railties (>= 6.1)
     dragonfly (1.4.0)
       addressable (~> 2.3)
       multi_json (~> 1.0)
       rack (>= 1.3)
-    dragonfly-s3_data_store (1.3.0)
-      dragonfly (~> 1.0)
-      fog-aws
     dropzonejs-rails (0.8.5)
       rails (> 3.1)
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
-    excon (0.111.0)
-    execjs (2.9.1)
+    event_stream_parser (1.0.0)
+    excon (1.3.2)
+      logger
+    execjs (2.10.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     faker (2.22.0)
@@ -287,28 +300,31 @@ GEM
     faraday (2.10.0)
       faraday-net_http (>= 2.0, < 3.2)
       logger
+    faraday-multipart (1.2.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.1.0)
       net-http
     fast_jsonapi (1.5)
       activesupport (>= 4.2)
     ffi (1.17.0)
-    fog-aws (3.24.0)
-      fog-core (~> 2.1)
+    fog-aws (3.33.1)
+      base64 (>= 0.2, < 0.4)
+      fog-core (~> 2.6)
       fog-json (~> 1.1)
       fog-xml (~> 0.1)
-    fog-core (2.4.0)
+    fog-core (2.6.0)
       builder
-      excon (~> 0.71)
+      excon (~> 1.0)
       formatador (>= 0.2, < 2.0)
       mime-types
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
-    fog-xml (0.1.4)
+    fog-xml (0.1.5)
       fog-core
       nokogiri (>= 1.5.11, < 2.0.0)
     formatador (1.1.0)
-    friendly_id (5.5.1)
+    friendly_id (5.6.0)
       activerecord (>= 4.0.0)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
@@ -339,7 +355,7 @@ GEM
       guard-compat (~> 1.2, >= 1.2.1)
       slim_lint (~> 0.15)
     hashie (5.0.0)
-    htmlentities (4.3.4)
+    htmlentities (4.4.2)
     http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
@@ -348,7 +364,7 @@ GEM
     invisible_captcha (2.3.0)
       rails (>= 5.2)
     jmespath (1.6.2)
-    jquery-rails (4.6.0)
+    jquery-rails (4.6.1)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -373,8 +389,8 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    message_bus (4.3.8)
-      rack (>= 1.1.3)
+    message_bus (4.5.1)
+      rack (> 2, < 4)
     method_source (1.1.0)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
@@ -383,9 +399,10 @@ GEM
     minitest (5.14.4)
     minitest-stub_any_instance (1.0.3)
     mocha (1.14.0)
-    multi_exiftool (0.18.1)
+    multi_exiftool (0.19.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
+    multipart-post (2.4.1)
     nenv (0.3.0)
     net-http (0.4.1)
       uri
@@ -434,7 +451,7 @@ GEM
       omniauth
       omniauth-oauth2 (~> 1.0)
     orm_adapter (0.5.0)
-    pagy (8.6.3)
+    pagy (6.5.0)
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -442,10 +459,10 @@ GEM
     pg_search (2.3.2)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
-    phonelib (0.8.9)
-    premailer (1.23.0)
+    phonelib (0.10.16)
+    premailer (1.27.0)
       addressable
-      css_parser (>= 1.12.0)
+      css_parser (>= 1.19.0)
       htmlentities (>= 4.0.0)
     premailer-rails (1.12.0)
       actionmailer (>= 3)
@@ -491,7 +508,7 @@ GEM
     rails-html-sanitizer (1.6.0)
       loofah (~> 2.21)
       nokogiri (~> 1.14)
-    rails-i18n (7.0.9)
+    rails-i18n (7.0.10)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
     railties (7.0.8.4)
@@ -510,9 +527,9 @@ GEM
       json
     redis (4.8.1)
     regexp_parser (2.5.0)
-    responders (3.1.1)
-      actionpack (>= 5.2)
-      railties (>= 5.2)
+    responders (3.2.0)
+      actionpack (>= 7.0)
+      railties (>= 7.0)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
@@ -555,10 +572,14 @@ GEM
       rubocop-rails (~> 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
+    ruby-openai (8.3.0)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     ruby-progressbar (1.11.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
-    rubyzip (2.3.2)
+    rubyzip (3.2.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -570,9 +591,9 @@ GEM
       sprockets-rails
       tilt
     shellany (0.0.1)
-    show_for (0.8.1)
-      actionpack (>= 5.2)
-      activemodel (>= 5.2)
+    show_for (0.9.0)
+      actionpack (>= 7.0)
+      activemodel (>= 7.0)
     sidekiq (6.5.12)
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
@@ -580,15 +601,15 @@ GEM
     sidekiq-cron (1.8.0)
       fugit (~> 1)
       sidekiq (>= 4.2.1)
-    simple_form (5.3.1)
-      actionpack (>= 5.2)
-      activemodel (>= 5.2)
+    simple_form (5.4.1)
+      actionpack (>= 7.0)
+      activemodel (>= 7.0)
     sitemap_generator (6.3.0)
       builder (~> 3.0)
     slim (3.0.9)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)
-    slim-rails (3.6.3)
+    slim-rails (4.0.0)
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (>= 3.0, < 6.0, != 5.0.0)
@@ -606,12 +627,12 @@ GEM
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
     temple (0.8.2)
-    terser (1.2.3)
+    terser (1.2.6)
       execjs (>= 0.3.0, < 3)
     thor (1.3.1)
     tilt (2.0.11)
     timeout (0.4.1)
-    traco (5.3.3)
+    traco (6.0.0)
       activerecord (>= 4.2)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
@@ -619,7 +640,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
-    uglifier (4.2.0)
+    uglifier (4.2.1)
       execjs (>= 0.3.0, < 3)
     unaccent (0.4.0)
     unf (0.1.4)
@@ -633,7 +654,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    whenever (1.0.0)
+    whenever (1.1.2)
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -649,6 +670,7 @@ DEPENDENCIES
   cells
   cells-rails!
   cells-slim (= 0.0.6)
+  dragonfly-s3_data_store!
   dragonfly_libvips!
   factory_bot
   faker

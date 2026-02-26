@@ -8,7 +8,7 @@ gemspec
 
 gem "sprockets-rails"
 
-gem "folio", "~> 3.0", github: "sinfin/folio", branch: "v3"
+gem "folio", "~> 3.0", github: "sinfin/folio", branch: "legacy-v3-nextpagemedia"
 # gem "folio", path: "../folio"
 
 gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
@@ -16,6 +16,8 @@ gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geome
 gem "cells"
 gem "cells-slim", "0.0.6"
 gem "cells-rails", github: "sinfin/cells-rails"
+
+gem "dragonfly-s3_data_store", github: "sinfin/dragonfly-s3_data_store"
 
 gem "sidekiq", "~> 6.5"
 gem "sidekiq-cron", "~> 1.8"
