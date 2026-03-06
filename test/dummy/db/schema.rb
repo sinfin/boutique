@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_06_211740) do
+ActiveRecord::Schema[7.0].define(version: 2026_03_06_145859) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -110,6 +110,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_06_211740) do
     t.string "pickup_point_country_code", limit: 2
     t.datetime "delivered_at"
     t.string "shipping_label"
+    t.index "(((((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((number)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((email)::text, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((first_name)::text, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((last_name)::text, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((invoice_number)::text, ''::text))), 'B'::\"char\")))", name: "index_boutique_orders_on_by_query", using: :gin
     t.index ["boutique_subscription_id"], name: "index_boutique_orders_on_boutique_subscription_id"
     t.index ["boutique_voucher_id"], name: "index_boutique_orders_on_boutique_voucher_id"
     t.index ["folio_user_id"], name: "index_boutique_orders_on_folio_user_id"
@@ -387,6 +388,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_06_211740) do
     t.string "alt"
     t.string "placement_title"
     t.string "placement_title_type"
+    t.text "description"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
@@ -414,6 +416,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_06_211740) do
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
     t.string "default_gravity"
+    t.string "alt"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

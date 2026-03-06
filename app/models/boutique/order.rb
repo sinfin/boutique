@@ -239,10 +239,12 @@ class Boutique::Order < Boutique::ApplicationRecord
   scope :sort_by_paid_at_desc, -> { order("#{table_name}.paid_at DESC NULLS LAST") }
 
   pg_search_scope :by_query,
-                  against: %i[base_number number email first_name last_name invoice_number],
-                  associated_against: {
-                    primary_address: %i[name company_name address_line_1 zip city],
-                    secondary_address: %i[name company_name address_line_1 zip city],
+                  against: {
+                    number: "A",
+                    email: "B",
+                    first_name: "B",
+                    last_name: "B",
+                    invoice_number: "B",
                   },
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
@@ -1077,6 +1079,7 @@ end
 #
 #  index_boutique_orders_on_boutique_subscription_id  (boutique_subscription_id)
 #  index_boutique_orders_on_boutique_voucher_id       (boutique_voucher_id)
+#  index_boutique_orders_on_by_query                  ((((((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((number)::text, ''::text))), 'A'::"char") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((email)::text, ''::text))), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((first_name)::text, ''::text))), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((last_name)::text, ''::text))), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((invoice_number)::text, ''::text))), 'B'::"char")))) USING gin
 #  index_boutique_orders_on_folio_user_id             (folio_user_id)
 #  index_boutique_orders_on_gift_recipient_id         (gift_recipient_id)
 #  index_boutique_orders_on_number                    (number)
