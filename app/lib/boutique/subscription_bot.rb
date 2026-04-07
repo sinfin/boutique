@@ -45,7 +45,7 @@ class Boutique::SubscriptionBot
           new_order.confirm!
         rescue => error
           # report error but continue
-          Raven.capture_exception(error, extra: { subscription_id: subscription.id })
+          Sentry.capture_exception(error, extra: { subscription_id: subscription.id })
         end
       end
     end
