@@ -42,7 +42,9 @@ class Boutique::SubscriptionBot
         new_order.original_payment = subscription.payment
 
         begin
-          new_order.confirm!
+          unless new_order.confirm!
+            raise ActiveRecord::RecordInvalid.new(new_order)
+          end
         rescue => error
           # report error but continue
           Sentry.capture_exception(error, extra: { subscription_id: subscription.id })

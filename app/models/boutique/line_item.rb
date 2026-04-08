@@ -15,13 +15,16 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   validate :validate_amount
   validate :validate_product_variant
-  validate :validate_subscription_starts_at
+  validate :validate_subscription_starts_at, unless: :subsequent?
 
   delegate :cover,
            :cover_placement,
            :digital_only?,
            :subscription?,
            to: :product
+
+  delegate :subsequent?,
+           to: :order
 
   before_validation :unset_unwanted_subscription_starts_at
 
