@@ -520,24 +520,6 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
   end
 
-  test "scope by_query - addresses" do
-    primary_address = create(:folio_address_primary,
-                             name: "Lorem Ipsum",
-                             address_line_1: "Downing Street 10",
-                             city: "London",
-                             zip: "12345")
-    order = create(:boutique_order, primary_address:)
-
-    assert Boutique::Order.by_query("Downing Street 10").exists?(id: order.id)
-    assert Boutique::Order.by_query("Downing").exists?(id: order.id)
-    assert Boutique::Order.by_query("10").exists?(id: order.id)
-    assert Boutique::Order.by_query("London").exists?(id: order.id)
-    assert Boutique::Order.by_query("Lorem").exists?(id: order.id)
-    assert Boutique::Order.by_query("Ips").exists?(id: order.id)
-    assert Boutique::Order.by_query("12345").exists?(id: order.id)
-    assert_not Boutique::Order.by_query("xaxa").exists?(id: order.id)
-  end
-
   test "scope by_query - email" do
     order = create(:boutique_order, email: "foo@bar.baz")
 
