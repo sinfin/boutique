@@ -107,6 +107,18 @@ class Boutique::MailerBotTest < ActiveSupport::TestCase
     assert_equal [target.id], @bot.send(:subscriptions_for_will_end_in_a_week).map(&:id)
   end
 
+  test "all dispatches will_end_in_a_week mailer for non-recurring subs ending in one week" do
+    target = create(:boutique_subscription, active_until: now + 1.week, recurrent: false)
+    create(:boutique_subscription, active_until: now + 1.week, recurrent: true)
+    create(:boutique_subscription, active_until: now + 1.week + 1.day, recurrent: false)
+
+    Boutique::SubscriptionMailer.expects(:will_end_in_a_week)
+                                .with { |sub| sub.id == target.id }
+                                .returns(stub(deliver_later: true))
+
+    @bot.all
+  end
+
   test "subscriptions_expiring_soon" do
     travel_to Time.current.change(hour: 7)
 
