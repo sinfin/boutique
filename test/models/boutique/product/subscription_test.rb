@@ -27,6 +27,12 @@ class Boutique::Product::SubscriptionTest < ActiveSupport::TestCase
     assert_equal 3, issue[:number]
     assert_equal 7, issue[:month]
     assert_equal 2022, issue[:year]
+
+    @subscription.subscription_frequency = "yearly"
+    issue = @subscription.issue_at(date)
+    assert_equal 1, issue[:number]
+    assert_equal 1, issue[:month]
+    assert_equal 2022, issue[:year]
   end
 
   test "SUBSCRIPTION_FREQUENCIES includes yearly with 12 months per issue" do
