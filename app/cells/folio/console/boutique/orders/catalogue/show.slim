@@ -56,4 +56,14 @@
         end
       end
 
+      attribute(:refunds, compact: true) do
+        record.refunds.sort_by(&:created_at).map do |refund|
+          label = refund.document_number.presence || "##{refund.id}"
+          link = link_to(label,
+                         controller.folio.url_for([:console, refund]),
+                         target: "_blank")
+          refund.aasm_state == "cancelled" ? content_tag(:s, link) : link
+        end.join(" ").html_safe
+      end
+
       actions :show, :edit
