@@ -38,6 +38,43 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal 1, line_item.amount
   end
 
+  test "manual re-payment of a recurring subscription order refreshes the recurring token in place" do
+    sub_active_until = 1.day.from_now
+    subscription = create(:boutique_subscription, recurrent: true, period: 1, active_until: sub_active_until)
+    old_payment = subscription.payment
+
+    # a subsequent renewal order, as built by the SubscriptionBot (original_payment = old token)
+    original_order = subscription.original_order
+    order = subscription.orders.build(original_order.attributes.slice(*%w[folio_user_id first_name last_name email use_secondary_address]))
+    order.line_items = original_order.line_items.map(&:dup)
+    order.primary_address = original_order.primary_address.dup
+    order.secondary_address = original_order.secondary_address.dup
+    order.original_payment = old_payment
+
+    # the manual recovery flow marks the order as renewing its own subscription
+    order.renewed_subscription = subscription
+
+    # do not trigger an automatic recurring charge on confirm
+    def order.charge_recurrent_payment!; end
+    order.confirm!
+
+    assert order.subsequent?
+    assert order.recurrent_payment?
+
+    # a fresh recurring init payment is captured for the re-payment
+    new_payment = create(:boutique_payment, order:, remote_id: "NEW-INIT-TOKEN")
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.pay!
+    end
+
+    subscription.reload
+    assert_equal new_payment, subscription.payment
+    assert_equal "NEW-INIT-TOKEN", subscription.payment.remote_id
+    assert_not_equal old_payment.id, subscription.boutique_payment_id
+    assert_equal (sub_active_until + subscription.period.months).to_date, subscription.active_until.to_date
+  end
+
 
   test "revert_cancelation event returns order to correct state" do
     order = create(:boutique_order, :ready_to_be_confirmed)

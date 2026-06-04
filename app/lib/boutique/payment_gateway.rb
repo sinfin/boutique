@@ -51,7 +51,7 @@ class Boutique::PaymentGateway
   end
 
   def start_recurring_transaction(order, options = {})
-    unless order.first_of_subsequent?
+    unless order.recurrent_payment?
       fail "cannot create recurrence for non-recurrent order"
     end
 
