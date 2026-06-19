@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative Folio::Engine.root.join("test/factories")
-
 FactoryBot.define do
   factory :boutique_product, class: "Boutique::Product::Basic" do
     title { "Product title" }

@@ -8,17 +8,19 @@ gemspec
 
 gem "sprockets-rails"
 
-gem "folio", "~> 4.0", github: "sinfin/folio"
+gem "folio", "~> 4.0", github: "sinfin/folio", branch: "v4-boutique"
 # gem "folio", path: "../folio"
 
 gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+gem "dragonfly-s3_data_store", github: "sinfin/dragonfly-s3_data_store"
 
 gem "cells"
 gem "cells-slim", "0.0.6"
 gem "cells-rails", github: "sinfin/cells-rails"
+gem "view_component"
 
 gem "sidekiq", "~> 6.5"
-gem "sidekiq-cron", "~> 1.8"
+gem "sidekiq-cron", "~> 1.10"
 
 gem "omniauth"
 gem "omniauth-facebook"

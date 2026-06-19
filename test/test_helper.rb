@@ -14,6 +14,10 @@ ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __d
 require "rails/test_help"
 require "factory_bot"
 
+FactoryBot.definition_file_paths = [
+  Folio::Engine.root.join("test/factories").to_s,
+  File.expand_path("factories", __dir__)
+]
 FactoryBot.find_definitions
 
 class ActiveSupport::TestCase

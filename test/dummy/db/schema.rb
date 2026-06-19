@@ -281,6 +281,23 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
     t.index ["voucher_id", "product_id"], name: "index_boutique_vouchers_products_on_voucher_id_and_product_id"
   end
 
+  create_table "emailbutler_messages", force: :cascade do |t|
+    t.uuid "uuid", null: false
+    t.string "mailer", null: false
+    t.string "action", null: false
+    t.jsonb "params", default: {}, null: false
+    t.string "send_to", array: true
+    t.integer "status", default: 0, null: false
+    t.datetime "timestamp"
+    t.integer "lock_version"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "site_id"
+    t.string "subject"
+    t.index ["site_id"], name: "index_emailbutler_messages_on_site_id"
+    t.index ["uuid"], name: "index_emailbutler_messages_on_uuid", unique: true
+  end
+
   create_table "folio_accounts", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -600,6 +617,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
     t.index ["web_session_id"], name: "index_folio_session_attachments_on_web_session_id"
   end
 
+  create_table "folio_site_user_links", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "site_id", null: false
+    t.json "roles", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_site_user_links_on_site_id"
+    t.index ["user_id"], name: "index_folio_site_user_links_on_user_id"
+  end
+
   create_table "folio_sites", force: :cascade do |t|
     t.string "title"
     t.string "domain"
@@ -633,6 +660,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
     t.string "billing_note"
     t.text "recurring_payment_disclaimer"
     t.string "copyright_info_source"
+    t.json "available_user_roles", default: []
     t.string "billing_account_number"
     t.text "checkout_terms_agreement"
     t.index ["domain"], name: "index_folio_sites_on_domain"
@@ -754,4 +782,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
   add_foreign_key "boutique_vouchers_products", "boutique_products", column: "product_id"
   add_foreign_key "boutique_vouchers_products", "boutique_vouchers", column: "voucher_id"
+  add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
 end
