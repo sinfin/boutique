@@ -63,7 +63,8 @@ class Folio::Console::Boutique::SubscriptionsControllerTest < Folio::Console::Ba
 
     assert_not @model.cancelled_at?
     delete url_for([:cancel, :console, @model])
-    assert_redirected_to url_for([:console, @model])
+    # no referrer in tests, controller redirects to the index
+    assert_redirected_to url_for([:console, Boutique::Subscription])
     assert @model.reload.cancelled_at?
   end
 end

@@ -6,5 +6,5 @@ en:
         boutique:
           subscriptions:
             cancel:
-              alert: Automatic subscription renewal could not be cancelled.
-              notice: Automatic subscription renewal was cancelled.
+              error: Automatic subscription renewal could not be cancelled.
+              success: Automatic subscription renewal was cancelled.

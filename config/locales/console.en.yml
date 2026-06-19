@@ -28,6 +28,10 @@ en:
               quantity: Automatic generation of multiple vouchers.
 
         subscriptions:
+          catalogue:
+            cancel: Cancel
+            cancel_confirm: Do you really want to cancel the automatic subscription renewal?
+
           index:
             tabs:
               all: All

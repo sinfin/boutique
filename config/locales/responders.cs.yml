@@ -6,5 +6,5 @@ cs:
         boutique:
           subscriptions:
             cancel:
-              alert: Automatická obnova předplatného nelze zrušit.
-              notice: Automatická obnova předplatného zrušena.
+              error: Automatickou obnovu předplatného nelze zrušit.
+              success: Automatická obnova předplatného zrušena.

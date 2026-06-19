@@ -33,4 +33,13 @@
 
       toggle :email_notifications
 
-      actions(:show, :edit)
+      actions(:show,
+              :edit,
+              cancel: {
+                icon: :close_box,
+                variant: :danger,
+                method: :delete,
+                confirm: t(".cancel_confirm"),
+                url: -> (record) { through_aware_console_url_for(record, action: :cancel) },
+                disabled: -> (record) { !(record.recurrent? && !record.cancelled?) },
+              })
