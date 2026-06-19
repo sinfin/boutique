@@ -24,14 +24,7 @@ class Folio::Console::Boutique::SubscriptionsController < Folio::Console::BaseCo
   def cancel
     @subscription.cancel!
 
-    index_url = through_aware_console_url_for(@klass)
-    location = if !request.referrer || request.referrer.include?(index_url)
-      index_url
-    else
-      request.referrer
-    end
-
-    respond_with @subscription, location:
+    respond_with @subscription, location: request.referrer || through_aware_console_url_for(@klass)
   end
 
   private

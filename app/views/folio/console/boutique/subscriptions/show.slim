@@ -1,4 +1,6 @@
-= show_header @subscription
+= show_header @subscription,
+              edit: false,
+              right: cell("folio/console/boutique/subscriptions/show/buttons", @subscription)
 
 .row
   .col-lg-6.mb-5
@@ -10,7 +12,7 @@
             target='_blank'
           ] = s.object.user.to_label
 
-      = s.email
+      = s.attribute(:email)
 
       = s.attribute(:active_from, if_blank: "–")
       = s.attribute(:active_until, if_blank: "–")
@@ -20,9 +22,8 @@
         = s.object.product_variant.to_console_label
 
       = s.attribute(:email_notifications)
-        == cell('folio/console/boolean_toggle',
-                s.object,
-                attribute: :email_notifications)
+        = render(Folio::Console::Ui::BooleanToggleComponent.new(record: s.object,
+                                                                attribute: :email_notifications))
 
 h2.mt-0 = Boutique::Order.model_name.human(count: 2)
 
