@@ -1,6 +1,7 @@
 .f-c-b-orders-catalogue
   = catalogue(model, before_lambda: options[:before_lambda],
-                     collection_actions: options[:collection_actions])
+                     collection_actions: options[:collection_actions],
+                     hide_user: options[:hide_user])
     ruby:
       if controller.can?(:manage, record)
         show_link(:number)
@@ -8,12 +9,14 @@
         attribute(:number)
       end
 
-      attribute(:user) do
-        if record.user.present?
-          link_to(record.user.email,
-                  controller.folio.url_for([:console, record.user]))
-        else
-          record.email
+      unless model[:hide_user]
+        attribute(:user) do
+          if record.user.present?
+            link_to(record.user.email,
+                    controller.folio.url_for([:console, record.user]))
+          else
+            record.email
+          end
         end
       end
 

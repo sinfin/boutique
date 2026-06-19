@@ -5,7 +5,8 @@
           @user.orders.ordered \
                       .except_pending \
                       .includes(line_items: { product_variant: :product }),
-          collection_actions: [])
+          collection_actions: [],
+          hide_user: true)
 
 - if can?(:manage, Boutique::Subscription)
   h2.mt-g
