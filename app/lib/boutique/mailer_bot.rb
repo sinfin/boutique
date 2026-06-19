@@ -14,7 +14,7 @@ class Boutique::MailerBot
     subscriptions_failed_payment
     subscriptions_unpaid
     subscriptions_expiring_soon
-    # subscriptions_will_end_in_a_week
+    subscriptions_will_end_in_a_week
   end
 
   def orders_unpaid_reminder
