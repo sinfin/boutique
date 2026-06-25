@@ -1,5 +1,14 @@
+require:
+  - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
+
 inherit_gem:
-  folio: lib/rubocop_config.yml
+  folio: lib/rubocop-rails_config-without-md.yml
+
+AllCops:
+  TargetRubyVersion: 3.3
 
 Lint/UselessAssignment:
   Exclude:
@@ -8,3 +17,16 @@ Lint/UselessAssignment:
     - test/lib/boutique/subscription_bot_test.rb
     - test/models/boutique/subscripion_test.rb
 
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - test/dummy/db/schema.rb
+
+Style/HashSyntax:
+  Exclude:
+    - test/controllers/boutique/checkout_controller_test.rb
+    - test/integration/boutique/order_checkout_flow_test.rb
+
+Minitest/AssertWithExpectedArgument:
+  Exclude:
+    - test/lib/boutique/payment_gateway_test.rb
+    - test/models/boutique/order_refund_test.rb

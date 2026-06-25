@@ -23,7 +23,7 @@ class Boutique::CheckoutControllerTest < Boutique::ControllerTest
     assert_equal 0, Boutique::Order.count
 
     get crossdomain_add_item_checkout_url(product_slug: product.slug),
-        headers: { "HTTP_REFERER" => Folio::Site.instance.env_aware_domain }
+        headers: { "HTTP_REFERER" => Folio::Current.site.env_aware_domain }
     assert_redirected_to cart_checkout_url
 
     assert_equal 1, Boutique::Order.count

@@ -19,6 +19,7 @@ module Dummy
     config.action_controller.include_all_helpers = false
 
     config.folio_users = true
+    config.folio_site_default_test_factory = :folio_site
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs

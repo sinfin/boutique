@@ -245,7 +245,7 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   }
 
-  pg_search_scope :by_query,
+  pg_search_scope :by_query_raw,
                   against: %i[base_number number email first_name last_name],
                   associated_against: {
                     primary_address: %i[name company_name address_line_1 zip city],
@@ -253,6 +253,13 @@ class Boutique::Order < Boutique::ApplicationRecord
                   },
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
+
+  scope :by_query, -> (query) do
+    return none if query.blank?
+
+    where(id: by_query_raw(query).reselect("boutique_orders.id"))
+      .or(where("boutique_orders.email ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%"))
+  end
 
   validates :email,
             :base_number,
@@ -684,7 +691,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                                                   first_name:,
                                                   last_name:,
                                                   primary_address: primary_address.try(:dup),
-                                                  source_site: site) do |u|
+                                                  source_site: user_auth_site,
+                                                  auth_site: user_auth_site) do |u|
           u.skip_invitation = true
         end
 
@@ -840,7 +848,8 @@ class Boutique::Order < Boutique::ApplicationRecord
                                           use_secondary_address:,
                                           primary_address: gift? ? nil : primary_address.try(:dup),
                                           secondary_address: secondary_address.try(:dup),
-                                          source_site: site)
+                                          source_site: user_auth_site,
+                                          auth_site: user_auth_site)
           raise "New User (for order #{self.number}) have errors! #{user.errors.full_messages}" if user.errors.any?
         else
           if existing_user.invitation_token.present? && existing_user.invitation_accepted_at.nil?
@@ -852,6 +861,10 @@ class Boutique::Order < Boutique::ApplicationRecord
         update_columns(folio_user_id: user.id,
                        updated_at: current_time_from_proper_timezone)
       end
+    end
+
+    def user_auth_site
+      site || Folio::Current.site || Folio::Current.main_site || Folio::Site.first
     end
 
     def set_up_subscription!

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -708,6 +708,23 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
     t.datetime "crossdomain_devise_set_at"
     t.string "sign_out_salt_part"
     t.bigint "source_site_id"
+    t.boolean "superadmin", default: false, null: false
+    t.string "console_url"
+    t.datetime "console_url_updated_at"
+    t.string "degree_pre", limit: 32
+    t.string "degree_post", limit: 32
+    t.string "phone_secondary"
+    t.date "born_at"
+    t.string "bank_account_number"
+    t.string "company_name"
+    t.string "time_zone", default: "Prague"
+    t.string "preferred_locale"
+    t.jsonb "console_preferences"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
+    t.bigint "auth_site_id", null: false
+    t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
@@ -784,4 +801,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_03_092228) do
   add_foreign_key "boutique_vouchers_products", "boutique_vouchers", column: "voucher_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
+  add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
 end

@@ -5,6 +5,14 @@ class Boutique::ApplicationCell < Folio::ApplicationCell
     get_from_options_or_controller(:current_order)
   end
 
+  def current_user
+    get_from_options_or_controller(:current_user)
+  end
+
+  def current_site
+    get_from_options_or_controller(:current_site) || Folio::Current.site
+  end
+
   def application_namespace
     @application_namespace ||= ::Rails.application.class.name.deconstantize
   end

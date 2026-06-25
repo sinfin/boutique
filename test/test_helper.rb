@@ -24,6 +24,10 @@ class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 
   parallelize
+
+  setup do
+    create_and_host_site
+  end
 end
 
 class Boutique::ControllerTest < ActionDispatch::IntegrationTest

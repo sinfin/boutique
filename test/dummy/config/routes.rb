@@ -2,9 +2,6 @@
 
 Rails.application.routes.draw do
   if Rails.application.config.folio_users
-    devise_for :accounts, class_name: "Folio::Account",
-                          module: "folio/accounts"
-
     devise_for :users, class_name: "Folio::User",
                        module: "dummy/folio/users",
                        omniauth_providers: Rails.application.config.folio_users_omniauth_providers

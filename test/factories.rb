@@ -252,6 +252,7 @@ end
 
 FactoryBot.modify do
   factory :folio_site do
+    type { "Folio::Site" }
     billing_name { "Site billing_name" }
     billing_address_line_1 { "Site billing_address_line_1" }
     billing_address_line_2 { "Site billing_address_line_2" }

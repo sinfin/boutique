@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "boutique/go_pay/universal_gateway"
+require Boutique::Engine.root.join("app/lib/boutique/go_pay/universal_gateway").to_s
 require "comgate_ruby"
 
 Boutique.configure do |config|
