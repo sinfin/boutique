@@ -121,6 +121,125 @@ class Boutique::Stripe::UniversalGatewayTest < ActiveSupport::TestCase
     end
   end
 
+  test "make right call for creating recurring payment" do
+    payment_data = simple_payment_data
+    payment_data[:payment][:recurrence] = { cycle: :on_demand, period: 1, valid_to: Date.new(2099, 12, 31) }
+    gateway_url = "https://checkout.stripe.com/c/pay/cs_test_123"
+
+    ::Stripe::Checkout::SessionService.any_instance
+                                      .expects(:create)
+                                      .with do |params|
+                                        params[:mode] == "payment" &&
+                                        params[:customer_creation] == "always" &&
+                                        params[:payment_intent_data] == { setup_future_usage: "off_session" }
+                                      end
+                                      .returns(stripe_checkout_session(url: gateway_url))
+
+    result = gateway.start_recurring_transaction(payment_data)
+
+    assert result.redirect?
+    assert_equal gateway_url, result.redirect_to
+    assert_equal "cs_test_123", result.transaction_id
+    assert_equal :pending, result.hash[:state]
+  end
+
+  test "make right call for repeating recurring payment" do
+    payment_data = repeat_payment_data
+
+    ::Stripe::Checkout::SessionService.any_instance
+                                      .expects(:retrieve)
+                                      .with("cs_test_123", { expand: ["payment_intent"] })
+                                      .returns(stripe_checkout_session(customer: "cus_test_123",
+                                                                       payment_intent: {
+                                                                         id: "pi_test_init",
+                                                                         object: "payment_intent",
+                                                                         payment_method: "pm_test_123",
+                                                                       }))
+
+    expected_params = {
+      amount: 10000,
+      currency: "czk",
+      customer: "cus_test_123",
+      payment_method: "pm_test_123",
+      off_session: true,
+      confirm: true,
+      description: "Order Order #123",
+      metadata: { order_reference_id: "123" },
+    }
+
+    ::Stripe::PaymentIntentService.any_instance
+                                  .expects(:create)
+                                  .with(expected_params, { idempotency_key: "charge-123" })
+                                  .returns(stripe_payment_intent(id: "pi_test_charge"))
+
+    result = gateway.repeat_recurring_transaction(payment_data)
+
+    assert_not result.redirect?
+    assert_nil result.redirect_to
+    assert_equal "pi_test_charge", result.transaction_id
+    assert_equal :pending, result.hash[:state]
+    assert_equal "PAYMENT_CARD", result.hash[:payment][:method]
+  end
+
+  test "repeating recurring payment without saved mandate stops recurrence" do
+    ::Stripe::Checkout::SessionService.any_instance
+                                      .expects(:retrieve)
+                                      .returns(stripe_checkout_session(customer: nil, payment_intent: nil))
+
+    error = assert_raises(Boutique::PaymentGateway::Error) do
+      gateway.repeat_recurring_transaction(repeat_payment_data)
+    end
+
+    assert error.stopped_recurrence?
+  end
+
+  test "repeating recurring payment converts hard declines to stopped recurrence" do
+    stub_mandate_resolution
+
+    ::Stripe::PaymentIntentService.any_instance
+                                  .expects(:create)
+                                  .raises(::Stripe::CardError.new("Your card was reported stolen.", nil,
+                                                                  code: "card_declined",
+                                                                  json_body: { error: { decline_code: "stolen_card" } }))
+
+    error = assert_raises(Boutique::PaymentGateway::Error) do
+      gateway.repeat_recurring_transaction(repeat_payment_data)
+    end
+
+    assert error.stopped_recurrence?
+  end
+
+  test "repeating recurring payment keeps soft declines as plain card errors" do
+    stub_mandate_resolution
+
+    ::Stripe::PaymentIntentService.any_instance
+                                  .expects(:create)
+                                  .raises(::Stripe::CardError.new("Authentication required.", nil,
+                                                                  code: "authentication_required",
+                                                                  json_body: { error: { code: "authentication_required" } }))
+
+    error = assert_raises(::Stripe::CardError) do
+      gateway.repeat_recurring_transaction(repeat_payment_data)
+    end
+
+    assert_equal "authentication_required", error.code
+  end
+
+  test "repeating recurring payment converts missing stripe records to stopped recurrence" do
+    stub_mandate_resolution
+
+    ::Stripe::PaymentIntentService.any_instance
+                                  .expects(:create)
+                                  .raises(::Stripe::InvalidRequestError.new("No such customer: cus_test_123", nil,
+                                                                            code: "resource_missing"))
+
+    error = assert_raises(Boutique::PaymentGateway::Error) do
+      gateway.repeat_recurring_transaction(repeat_payment_data)
+    end
+
+    assert error.stopped_recurrence?
+  end
+
   test "handles callbacks" do
     request_params = { "order_id" => "joQNtFWDudZAxk9gOmFEUA", "session_id" => "cs_test_123" }
 
@@ -172,6 +291,23 @@ class Boutique::Stripe::UniversalGatewayTest < ActiveSupport::TestCase
       }
     end
 
+    def repeat_payment_data
+      payment_data = simple_payment_data
+      payment_data[:payment][:recurrence] = { init_transaction_id: "cs_test_123", period: 2 }
+      payment_data
+    end
+
+    def stub_mandate_resolution
+      ::Stripe::Checkout::SessionService.any_instance
+                                        .expects(:retrieve)
+                                        .returns(stripe_checkout_session(customer: "cus_test_123",
+                                                                         payment_intent: {
+                                                                           id: "pi_test_init",
+                                                                           object: "payment_intent",
+                                                                           payment_method: "pm_test_123",
+                                                                         }))
+    end
+
     def stripe_checkout_session(attributes = {})
       ::Stripe::Checkout::Session.construct_from({
         id: "cs_test_123",
@@ -180,6 +316,7 @@ class Boutique::Stripe::UniversalGatewayTest < ActiveSupport::TestCase
         status: "open",
         payment_status: "unpaid",
         payment_intent: nil,
+        customer: nil,
       }.merge(attributes))
     end
 

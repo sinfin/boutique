@@ -10,6 +10,9 @@ module Boutique
       # Boutique::Orders::PendingPaymentsCheckJob checking payments older than 1 hour
       SESSION_VALIDITY = 1.hour
       SESSION_ID_PLACEHOLDER = "{CHECKOUT_SESSION_ID}"
+      # declines that cannot recover on retry - the subscription gets cancelled
+      # right away instead of running through dunning
+      HARD_DECLINE_CODES = %w[stolen_card lost_card pickup_card fraudulent]
 
       def initialize(api_key:, webhook_secret: nil)
         @api_key = api_key
@@ -58,11 +61,60 @@ module Boutique
       end
 
       def start_recurring_transaction(payment_data)
-        raise NotImplementedError, "Stripe recurring transactions are not implemented yet"
+        session = create_checkout_session(payment_data,
+                                          customer_creation: "always",
+                                          payment_intent_data: { setup_future_usage: "off_session" })
+
+        Boutique::PaymentGateway::ResponseStruct.new(
+          transaction_id: session.id,
+          redirect_to: session.url,
+          hash: {
+            transaction_id: session.id,
+            state: :pending,
+            payment: { method: DEFAULT_PAYMENT_METHOD },
+          },
+          array: nil
+        )
       end
 
       def repeat_recurring_transaction(payment_data)
-        raise NotImplementedError, "Stripe recurring transactions are not implemented yet"
+        payment = payment_data[:payment]
+        init_transaction_id = payment.dig(:recurrence, :init_transaction_id)
+        raise "[:payment][:recurrence][:init_transaction_id] is needed!" if init_transaction_id.blank?
+
+        customer_id, payment_method_id = resolve_mandate(init_transaction_id)
+
+        payment_intent = client.v1.payment_intents.create(
+          {
+            amount: payment[:amount_in_cents].to_i,
+            currency: payment[:currency].to_s.downcase,
+            customer: customer_id,
+            payment_method: payment_method_id,
+            off_session: true,
+            confirm: true,
+            description: payment[:description],
+            metadata: { order_reference_id: payment[:reference_id] },
+          },
+          # deterministic key - hourly SubscriptionBot retries of the same order
+          # must not create a second off-session charge
+          { idempotency_key: "charge-#{payment[:reference_id]}" }
+        )
+
+        Boutique::PaymentGateway::ResponseStruct.new(
+          transaction_id: payment_intent.id,
+          redirect_to: nil,
+          hash: {
+            transaction_id: payment_intent.id,
+            # confirmed by the webhook / Boutique::Orders::PendingPaymentsCheckJob
+            state: :pending,
+            payment: { method: DEFAULT_PAYMENT_METHOD },
+          },
+          array: nil
+        )
+      rescue ::Stripe::CardError => error
+        raise convert_card_error(error)
+      rescue ::Stripe::InvalidRequestError => error
+        raise convert_invalid_request_error(error)
       end
 
       def refund_transaction(payment_data)
@@ -157,6 +209,48 @@ module Boutique
           else # "processing", "requires_payment_method", "requires_confirmation", "requires_action", "requires_capture"
             :pending
           end
+        end
+
+        def resolve_mandate(init_transaction_id)
+          if init_transaction_id.to_s.start_with?("cs_")
+            session = client.v1.checkout.sessions.retrieve(init_transaction_id,
+                                                           { expand: ["payment_intent"] })
+            customer_id = session.customer
+            payment_method_id = session.payment_intent.try(:payment_method)
+          else
+            payment_intent = client.v1.payment_intents.retrieve(init_transaction_id)
+            customer_id = payment_intent.customer
+            payment_method_id = payment_intent.payment_method
+          end
+
+          if customer_id.blank? || payment_method_id.blank?
+            raise stopped_recurrence_error("No saved customer/payment method for init transaction #{init_transaction_id}")
+          end
+
+          [customer_id, payment_method_id]
+        end
+
+        # issuer soft declines and authentication_required must keep the
+        # subscription alive - dunning mails + manual recovery handle them;
+        # hard declines mean the card is permanently gone
+        def convert_card_error(error)
+          return error unless error.error.try(:decline_code).in?(HARD_DECLINE_CODES)
+
+          stopped_recurrence_error(error.message)
+        end
+
+        # resource_missing means the stored customer / payment method no longer
+        # exists at Stripe - retrying cannot succeed
+        def convert_invalid_request_error(error)
+          return error unless error.code == "resource_missing"
+
+          stopped_recurrence_error(error.message)
+        end
+
+        def stopped_recurrence_error(message)
+          error = Boutique::PaymentGateway::Error.new(message)
+          error.stopped_recurrence = true
+          error
         end
 
         def payment_hash_for(payment_intent)

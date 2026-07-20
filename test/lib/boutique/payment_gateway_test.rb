@@ -304,8 +304,45 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
     skip
   end
 
-  test "handles gateway errors" do
-    skip
+  test "handles gateway errors - permanent failure cancels subscription" do
+    subscription = create(:boutique_subscription)
+    orig_payment = subscription.orders.first.paid_payment
+    order = create(:boutique_order, :confirmed,
+                   subscription:,
+                   subscription_product: true,
+                   original_payment_id: orig_payment.id)
+
+    error = Boutique::PaymentGateway::Error.new("card was reported stolen")
+    error.stopped_recurrence = true
+
+    Boutique::PaymentGateway.any_instance
+                            .expects(:repeat_recurring_transaction)
+                            .raises(error)
+
+    order.charge_recurrent_payment!
+
+    assert subscription.reload.cancelled?
+    assert_equal 0, order.payments.count
+  end
+
+  test "handles gateway errors - temporary failure keeps subscription" do
+    subscription = create(:boutique_subscription)
+    orig_payment = subscription.orders.first.paid_payment
+    order = create(:boutique_order, :confirmed,
+                   subscription:,
+                   subscription_product: true,
+                   original_payment_id: orig_payment.id)
+
+    Boutique::PaymentGateway.any_instance
+                            .expects(:repeat_recurring_transaction)
+                            .raises(RuntimeError.new("gateway timeout"))
+
+    order.expects(:report_exception)
+
+    order.charge_recurrent_payment!
+
+    assert_not subscription.reload.cancelled?
+    assert_equal 0, order.payments.count
   end
 
   private
