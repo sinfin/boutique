@@ -22,6 +22,12 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
     assert_equal :comgate, gw.provider
     assert gw.provider_gateway.is_a?(Comgate::Gateway)
     assert_equal true, gw.provider_gateway.test_calls_used?
+
+    gw = Boutique::PaymentGateway.new(:stripe)
+
+    assert_equal :stripe, gw.provider
+    assert gw.provider_gateway.is_a?(Boutique::Stripe::UniversalGateway)
+    assert_equal true, gw.provider_gateway.test_calls_used?
   end
 
   test "#check_transaction(transaction_id)" do
@@ -207,6 +213,37 @@ class Boutique::PaymentGatewayTest < ActiveSupport::TestCase
     resp = Boutique::PaymentGateway.process_callback(gopay_like_params)
 
     assert_equal :timeouted, resp.hash[:state], resp.to_json
+  end
+
+  test "#process_callback(payload) for stripe return leg" do
+    session_id = "cs_test_a1b2c3"
+    stripe_like_params = { "order_id" => "joQNtFWDudZAxk9gOmFEUA", "session_id" => session_id }
+
+    stripe_response = Boutique::PaymentGateway::ResponseStruct.new(
+      transaction_id: session_id,
+      redirect_to: nil,
+      hash: { transaction_id: session_id, state: :paid, payment: { method: "PAYMENT_CARD" } },
+      array: nil
+    )
+
+    Boutique::Stripe::UniversalGateway.any_instance
+                    .expects(:check_transaction)
+                    .with(transaction_id: session_id)
+                    .returns(stripe_response)
+
+    resp = Boutique::PaymentGateway.process_callback(stripe_like_params)
+
+    assert_equal :paid, resp.hash[:state], resp.to_json
+  end
+
+  test "Error#stopped_recurrence?" do
+    error = Boutique::PaymentGateway::Error.new("declined")
+
+    assert_not error.stopped_recurrence?
+
+    error.stopped_recurrence = true
+
+    assert error.stopped_recurrence?
   end
 
   test "prepares data for start_preauthorized_transaction(payment_data)" do

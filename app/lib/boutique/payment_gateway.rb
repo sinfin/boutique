@@ -7,6 +7,10 @@ class Boutique::PaymentGateway
 
   class Error < StandardError
     attr_accessor :stopped_recurrence
+
+    def stopped_recurrence?
+      !!stopped_recurrence
+    end
   end
 
   ResponseStruct = Struct.new(:transaction_id, :redirect_to, :hash, :array, keyword_init: true) do
@@ -16,7 +20,13 @@ class Boutique::PaymentGateway
   end
 
   def self.process_callback(params, provider: nil)
-    provider ||= params["transId"].present? ? :comgate : :go_pay
+    provider ||= if params["transId"].present?
+      :comgate
+    elsif params["session_id"].to_s.start_with?("cs_")
+      :stripe
+    else
+      :go_pay
+    end
 
     case provider
     when :comgate
@@ -26,6 +36,10 @@ class Boutique::PaymentGateway
                        .process_callback(params)
       # do not trust payment info from callback body
       gw.check_transaction(callback_res.transaction_id)
+    when :stripe
+      # do not trust payment info from the return leg params
+      Boutique::PaymentGateway.new(:stripe)
+                              .check_transaction(params["session_id"])
     when :go_pay
       # go_pay DO CheckTransaction in process_callback
       Boutique::PaymentGateway.new(:go_pay)

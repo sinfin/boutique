@@ -4,6 +4,7 @@ require "test_helper"
 
 class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
   include Boutique::Test::GoPayApiMocker
+  include Boutique::Test::StripeApiMocker
 
   def setup
     super
@@ -54,5 +55,35 @@ class Boutique::PaymentGatewaysControllerTest < Boutique::ControllerTest
 
     assert_response :success
     assert @order.reload.paid?
+  end
+
+  test "stripe comeback with successful payment" do
+    stripe_order = create(:boutique_order, :confirmed)
+    stripe_payment = stripe_order.payments.create!(remote_id: mocked_stripe_session_id,
+                                                   payment_gateway_provider: "stripe")
+
+    stripe_check_transaction_api_call_mock
+
+    get return_after_pay_url(order_id: stripe_order.secret_hash, session_id: mocked_stripe_session_id)
+
+    assert_redirected_to main_app.user_invitation_url
+    assert stripe_payment.reload.paid?
+    assert stripe_order.reload.paid?
+    assert_equal "Platba proběhla úspěšně.", flash[:success]
+  end
+
+  test "stripe comeback with cancelled payment" do
+    stripe_order = create(:boutique_order, :confirmed)
+    stripe_payment = stripe_order.payments.create!(remote_id: mocked_stripe_session_id,
+                                                   payment_gateway_provider: "stripe")
+
+    stripe_check_transaction_api_call_mock(state: :pending)
+
+    get return_after_pay_url(order_id: stripe_order.secret_hash, session_id: mocked_stripe_session_id)
+
+    assert_redirected_to order_url(stripe_order.secret_hash)
+    assert stripe_payment.reload.pending?
+    assert stripe_order.reload.confirmed?
+    assert_equal "Platba selhala.", flash[:alert]
   end
 end

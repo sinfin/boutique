@@ -5,6 +5,23 @@ require "test_helper"
 class Boutique::OrderTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
+  test "payment_gateway provider is resolved via config proc" do
+    order = build(:boutique_order)
+
+    assert_equal :go_pay, order.payment_gateway.provider
+
+    original_proc = Boutique.config.payment_gateway_provider_for_order_proc
+
+    begin
+      Boutique.config.payment_gateway_provider_for_order_proc = -> (order:) { :stripe }
+      order = build(:boutique_order)
+
+      assert_equal :stripe, order.payment_gateway.provider
+    ensure
+      Boutique.config.payment_gateway_provider_for_order_proc = original_proc
+    end
+  end
+
   test "add_line_item" do
     product_basic = create(:boutique_product)
     order = create(:boutique_order)

@@ -10,6 +10,7 @@ require "slim"
 require "route_translator"
 
 require "gopay"
+require "stripe"
 
 module Boutique
 end

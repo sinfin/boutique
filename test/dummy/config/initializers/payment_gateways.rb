@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require Boutique::Engine.root.join("app/lib/boutique/go_pay/universal_gateway").to_s
+require Boutique::Engine.root.join("app/lib/boutique/stripe/universal_gateway").to_s
 require "comgate_ruby"
 
 Boutique.configure do |config|
@@ -12,6 +13,8 @@ Boutique.configure do |config|
                                                 client_secret: ENV.fetch("GO_PAY_CLIENT_SECRET")), # client authorization secret (password)
     comgate: Comgate::Gateway.new(merchant_gateway_id: ENV["COMGATE_MERCHANT_ID"],
                                   test_calls: !Rails.env.production?,
-                                  client_secret: ENV["COMGATE_SECRET"])
+                                  client_secret: ENV["COMGATE_SECRET"]),
+    stripe: Boutique::Stripe::UniversalGateway.new(api_key: ENV["STRIPE_SECRET_KEY"],
+                                                   webhook_secret: ENV["STRIPE_WEBHOOK_SECRET"])
   }
 end

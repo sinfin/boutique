@@ -652,7 +652,10 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def payment_gateway
-    @payment_gateway ||= Boutique::PaymentGateway.new
+    @payment_gateway ||= begin
+      provider = Boutique.config.payment_gateway_provider_for_order_proc.call(order: self)
+      Boutique::PaymentGateway.new(provider)
+    end
   end
 
   def charge_recurrent_payment!

@@ -21,6 +21,7 @@ module Boutique
                   :orders_cart_recurrency_title_proc,
                   :orders_cart_terms_agreement_proc,
                   :payment_gateways,
+                  :payment_gateway_provider_for_order_proc,
                   :email_template_data_defaults_proc,
                   :order_refund_voucher_validity_in_days
 
@@ -55,6 +56,8 @@ module Boutique
         default: :go_pay,
         go_pay: nil
       }
+      # nil provider falls back to payment_gateways[:default]
+      @payment_gateway_provider_for_order_proc = -> (order:) { nil }
       @email_template_data_defaults_proc = -> (model) { {} }
       @order_refund_voucher_validity_in_days = 90
     end

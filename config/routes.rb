@@ -29,6 +29,7 @@ Boutique::Engine.routes.draw do
 
   get "after_payment", to: "payment_gateways#after_payment", as: :return_after_pay # URL address for return to e-shop (with protocol)
   match "payment_callback", to: "payment_gateways#payment_callback", via: [:get, :post], as: :payment_callback # URL address for sending asynchronous notification in the case of changes in the payment status (with protocol)
+  post "stripe/payment_callback", to: "stripe_webhooks#payment_callback", as: :stripe_payment_callback # Stripe webhook endpoint, needs raw request body for signature verification
 
   # legacy redirection
   get "go_pay/comeback", to: "payment_gateways#after_payment"

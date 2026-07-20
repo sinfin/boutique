@@ -116,6 +116,7 @@ PATH
       route_translator
       savon (~> 2.13.0)
       slim
+      stripe (~> 19.0)
 
 GEM
   remote: https://rubygems.org/
@@ -756,6 +757,9 @@ GEM
       sprockets (>= 3.0.0)
     ssrf_filter (1.5.0)
     stringio (3.2.0)
+    stripe (19.3.1)
+      bigdecimal
+      logger
     strscan (3.1.0)
     temple (0.8.2)
     terser (1.2.7)
