@@ -118,7 +118,33 @@ module Boutique
       end
 
       def refund_transaction(payment_data)
-        raise NotImplementedError, "Stripe refunds are not implemented yet"
+        payment = payment_data[:payment]
+
+        # no idempotency_key here - the only stable candidate would be the
+        # order/document reference, which repeats across partial refunds of the
+        # same order; Stripe would silently return the first refund instead of
+        # creating the second one
+        refund = client.v1.refunds.create({
+          payment_intent: resolve_payment_intent_id(payment_data[:transaction_id]),
+          amount: payment[:amount_in_cents].round,
+          metadata: { order_reference_id: payment[:reference_id] },
+        })
+
+        Boutique::PaymentGateway::ResponseStruct.new(
+          transaction_id: refund.id,
+          redirect_to: nil,
+          hash: {
+            transaction_id: refund.id,
+            state: convert_refund_state(refund.status),
+            payment: {
+              method: DEFAULT_PAYMENT_METHOD,
+              amount_in_cents: refund.amount,
+              currency: refund.currency&.upcase,
+              reference_id: payment[:reference_id],
+            },
+          },
+          array: nil
+        )
       end
 
       # raises ::Stripe::SignatureVerificationError for an invalid signature
@@ -207,6 +233,30 @@ module Boutique
           when "canceled"
             :cancelled
           else # "processing", "requires_payment_method", "requires_confirmation", "requires_action", "requires_capture"
+            :pending
+          end
+        end
+
+        # payments are stored under the checkout session id (cs_) for the first
+        # payment and under the payment intent id (pi_) for renewals
+        def resolve_payment_intent_id(transaction_id)
+          return transaction_id unless transaction_id.to_s.start_with?("cs_")
+
+          payment_intent_id = client.v1.checkout.sessions.retrieve(transaction_id).payment_intent
+          raise "No payment intent for checkout session #{transaction_id}" if payment_intent_id.blank?
+
+          payment_intent_id
+        end
+
+        def convert_refund_state(status)
+          case status
+          when "succeeded"
+            :refunded
+          when "failed"
+            :failed
+          when "canceled"
+            :cancelled
+          else # "pending", "requires_action"
             :pending
           end
         end

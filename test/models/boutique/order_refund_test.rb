@@ -190,6 +190,28 @@ class Boutique::OrderRefundTest < ActiveSupport::TestCase
     order_refund.send(:handle_refund_by_payment_gateway)
   end
 
+  test "#handle_refund_by_payment_gateway for a stripe payment" do
+    order = create(:boutique_order, :paid)
+    order_payment = order.payments.paid.first
+    order_payment.update!(payment_gateway_provider: "stripe", remote_id: "cs_test_a1b2c3")
+
+    order_refund = create(:boutique_order_refund, :approved_to_pay, order:, payment_method: "PAYMENT_CARD")
+
+    assert_equal "stripe", order_refund.payment_gateway_provider
+
+    passed_payment_data = nil
+    Boutique::Stripe::UniversalGateway.any_instance
+                                      .expects(:refund_transaction)
+                                      .with { |payment_data| passed_payment_data = payment_data }
+                                      .returns(true)
+
+    order_refund.send(:handle_refund_by_payment_gateway)
+
+    assert_equal "cs_test_a1b2c3", passed_payment_data[:transaction_id]
+    assert_equal order_refund.total_price_in_cents, passed_payment_data[:payment][:amount_in_cents]
+    assert_equal order_refund.document_number, passed_payment_data[:payment][:reference_id]
+  end
+
   test "#handle_refund_by_paypal" do
     # PayPal: instrukce k vrácení prostředků do detailu vratky a e-mailu Admina (e-mail zákazníka, částka)
     order_refund = create(:boutique_order_refund, :approved_to_pay, payment_method: "PAYPAL")

@@ -240,6 +240,61 @@ class Boutique::Stripe::UniversalGatewayTest < ActiveSupport::TestCase
     assert error.stopped_recurrence?
   end
 
+  test "make right call for refunding a checkout session payment" do
+    ::Stripe::Checkout::SessionService.any_instance
+                                      .expects(:retrieve)
+                                      .with("cs_test_123")
+                                      .returns(stripe_checkout_session(payment_intent: "pi_test_123"))
+
+    ::Stripe::RefundService.any_instance
+                           .expects(:create)
+                           .with({ payment_intent: "pi_test_123",
+                                   amount: 5000,
+                                   metadata: { order_reference_id: "123" } })
+                           .returns(stripe_refund(amount: 5000))
+
+    result = gateway.refund_transaction(refund_payment_data(transaction_id: "cs_test_123", amount_in_cents: 5000))
+
+    assert_not result.redirect?
+    assert_equal "re_test_123", result.transaction_id
+    assert_equal :refunded, result.hash[:state]
+    assert_equal 5000, result.hash[:payment][:amount_in_cents]
+    assert_equal "CZK", result.hash[:payment][:currency]
+  end
+
+  test "refunding a renewal payment goes straight to the payment intent" do
+    ::Stripe::Checkout::SessionService.any_instance
+                                      .expects(:retrieve)
+                                      .never
+
+    ::Stripe::RefundService.any_instance
+                           .expects(:create)
+                           .with({ payment_intent: "pi_test_charge",
+                                   amount: 10000,
+                                   metadata: { order_reference_id: "123" } })
+                           .returns(stripe_refund)
+
+    result = gateway.refund_transaction(refund_payment_data(transaction_id: "pi_test_charge"))
+
+    assert_equal "re_test_123", result.transaction_id
+    assert_equal :refunded, result.hash[:state]
+  end
+
+  test "refund states are mapped" do
+    { "succeeded" => :refunded,
+      "pending" => :pending,
+      "failed" => :failed,
+      "canceled" => :cancelled }.each do |stripe_status, expected_state|
+      ::Stripe::RefundService.any_instance
+                             .expects(:create)
+                             .returns(stripe_refund(status: stripe_status))
+
+      result = gateway.refund_transaction(refund_payment_data(transaction_id: "pi_test_charge"))
+
+      assert_equal expected_state, result.hash[:state], "#{stripe_status} should map to #{expected_state}"
+    end
+  end
+
   test "handles callbacks" do
     request_params = { "order_id" => "joQNtFWDudZAxk9gOmFEUA", "session_id" => "cs_test_123" }
 
@@ -295,6 +350,27 @@ class Boutique::Stripe::UniversalGatewayTest < ActiveSupport::TestCase
       payment_data = simple_payment_data
       payment_data[:payment][:recurrence] = { init_transaction_id: "cs_test_123", period: 2 }
       payment_data
+    end
+
+    def refund_payment_data(transaction_id:, amount_in_cents: 10000)
+      {
+        transaction_id:,
+        payment: {
+          currency: "CZK",
+          amount_in_cents:,
+          reference_id: "123",
+        }
+      }
+    end
+
+    def stripe_refund(attributes = {})
+      ::Stripe::Refund.construct_from({
+        id: "re_test_123",
+        object: "refund",
+        status: "succeeded",
+        amount: 10000,
+        currency: "czk",
+      }.merge(attributes))
     end
 
     def stub_mandate_resolution
