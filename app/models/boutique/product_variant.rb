@@ -104,38 +104,3 @@ class Boutique::ProductVariant < Boutique::ApplicationRecord
       product.variants.last if product
     end
 end
-
-# == Schema Information
-#
-# Table name: boutique_product_variants
-#
-#  id                       :bigint(8)        not null, primary key
-#  boutique_product_id      :bigint(8)        not null
-#  title                    :string
-#  checkout_sidebar_content :text
-#  regular_price            :integer          not null
-#  discounted_price         :integer
-#  discounted_from          :datetime
-#  discounted_until         :datetime
-#  master                   :boolean          default(FALSE)
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  position                 :integer
-#  slug                     :string
-#  description              :text
-#  best_offer               :boolean          default(FALSE)
-#  code                     :string(32)
-#  subscription_period      :integer          default(12)
-#  stock                    :integer
-#
-# Indexes
-#
-#  index_boutique_product_variants_on_boutique_product_id  (boutique_product_id)
-#  index_boutique_product_variants_on_master               (master) WHERE master
-#  index_boutique_product_variants_on_position             (position)
-#  index_boutique_product_variants_on_slug                 (slug)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (boutique_product_id => boutique_products.id)
-#

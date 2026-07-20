@@ -31,22 +31,3 @@ class Boutique::ShippingMethod::Zasilkovna::PickupPoint < Boutique::ShippingMeth
       @carrier ||= Boutique::Carrier::Zasilkovna.new
     end
 end
-
-# == Schema Information
-#
-# Table name: boutique_shipping_methods
-#
-#  id         :bigint(8)        not null, primary key
-#  title      :string
-#  price      :integer
-#  type       :string
-#  published  :boolean          default(FALSE)
-#  position   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_boutique_shipping_methods_on_position   (position)
-#  index_boutique_shipping_methods_on_published  (published)
-#

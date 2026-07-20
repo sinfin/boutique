@@ -213,9 +213,6 @@ GEM
     annot8 (1.0.1)
       activerecord (>= 8.0.0, < 9)
       rake (>= 10.4, < 14.0)
-    annotate (2.6.5)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
     anonymous_loader (0.1.2)
       version_gem (~> 1.1, >= 1.1.13)
     ar-sequence (0.2.1)
@@ -819,7 +816,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  annotate
   boutique!
   capybara (~> 2.13)
   cells

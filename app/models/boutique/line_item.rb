@@ -161,31 +161,3 @@ class Boutique::LineItem < Boutique::ApplicationRecord
       self.subscription_starts_at = nil
     end
 end
-
-# == Schema Information
-#
-# Table name: boutique_line_items
-#
-#  id                          :bigint(8)        not null, primary key
-#  boutique_order_id           :bigint(8)        not null
-#  amount                      :integer          default(1)
-#  unit_price                  :integer
-#  subscription_starts_at      :datetime
-#  subscription_recurring      :boolean
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  boutique_product_variant_id :bigint(8)        not null
-#  vat_rate_value              :integer
-#  subscription_period         :integer
-#  title                       :string
-#
-# Indexes
-#
-#  index_boutique_line_items_on_boutique_order_id            (boutique_order_id)
-#  index_boutique_line_items_on_boutique_product_variant_id  (boutique_product_variant_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (boutique_order_id => boutique_orders.id)
-#  fk_rails_...  (boutique_product_variant_id => boutique_product_variants.id)
-#

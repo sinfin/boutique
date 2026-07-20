@@ -26,19 +26,3 @@ class Boutique::VatRate < Boutique::ApplicationRecord
     where(default: true).first
   end
 end
-
-# == Schema Information
-#
-# Table name: boutique_vat_rates
-#
-#  id         :bigint(8)        not null, primary key
-#  value      :integer
-#  title      :string
-#  default    :boolean          default(FALSE)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_boutique_vat_rates_on_value  (value)
-#

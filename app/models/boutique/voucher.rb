@@ -130,30 +130,3 @@ class Boutique::Voucher < Boutique::ApplicationRecord
       self.code = nil if errors.present? && code_type == "generated"
     end
 end
-
-# == Schema Information
-#
-# Table name: boutique_vouchers
-#
-#  id                      :bigint(8)        not null, primary key
-#  code                    :string
-#  code_prefix             :string(8)
-#  title                   :string
-#  discount                :integer
-#  discount_in_percentages :boolean          default(FALSE)
-#  number_of_allowed_uses  :integer          default(1)
-#  use_count               :integer          default(0)
-#  published               :boolean          default(TRUE)
-#  published_from          :datetime
-#  published_until         :datetime
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  subscription_period     :integer          default(1)
-#
-# Indexes
-#
-#  index_boutique_vouchers_on_published        (published)
-#  index_boutique_vouchers_on_published_from   (published_from)
-#  index_boutique_vouchers_on_published_until  (published_until)
-#  index_boutique_vouchers_on_upper_code       (upper((code)::text)) UNIQUE
-#

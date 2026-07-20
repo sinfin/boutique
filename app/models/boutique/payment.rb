@@ -164,32 +164,3 @@ class Boutique::Payment < Boutique::ApplicationRecord
     end
   end
 end
-
-# == Schema Information
-#
-# Table name: boutique_payments
-#
-#  id                       :bigint(8)        not null, primary key
-#  boutique_order_id        :bigint(8)        not null
-#  remote_id                :string
-#  aasm_state               :string           default("pending")
-#  payment_method           :string
-#  paid_at                  :datetime
-#  cancelled_at             :datetime
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  payment_gateway_provider :string
-#  transfer_fee             :decimal(, )      default(0.0), not null
-#  amount                   :decimal(10, 2)
-#  card_number              :string(32)
-#  card_valid_until         :string(5)
-#
-# Indexes
-#
-#  index_boutique_payments_on_boutique_order_id  (boutique_order_id)
-#  index_boutique_payments_on_remote_id          (remote_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (boutique_order_id => boutique_orders.id)
-#
