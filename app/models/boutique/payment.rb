@@ -2,6 +2,9 @@
 
 class Boutique::Payment < Boutique::ApplicationRecord
   include AASM
+  include Folio::Audited::Model
+
+  audited
 
   belongs_to :order, class_name: "Boutique::Order",
                      foreign_key: :boutique_order_id,
@@ -159,6 +162,10 @@ class Boutique::Payment < Boutique::ApplicationRecord
       end
     when "paypal"
       "PAYPAL"
+    when "stripe"
+      # the adapter reports PAYMENT_CARD, the hosted checkout page handles
+      # the concrete payment method itself
+      p_method.presence || "PAYMENT_CARD"
     else
       p_method
     end

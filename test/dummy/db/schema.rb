@@ -15,8 +15,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
   create_sequence "boutique_orders_invoice_base_number_seq"
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
-  enable_extension "plpgsql"
   enable_extension "unaccent"
 
   create_folio_unaccent
@@ -37,6 +37,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.string "request_uuid"
     t.datetime "created_at", precision: nil
     t.integer "placement_version"
+    t.jsonb "folio_data"
     t.index ["associated_type", "associated_id"], name: "associated_index"
     t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
@@ -281,62 +282,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.index ["voucher_id", "product_id"], name: "index_boutique_vouchers_products_on_voucher_id_and_product_id"
   end
 
-  create_table "emailbutler_messages", force: :cascade do |t|
-    t.uuid "uuid", null: false
-    t.string "mailer", null: false
-    t.string "action", null: false
-    t.jsonb "params", default: {}, null: false
-    t.string "send_to", array: true
-    t.integer "status", default: 0, null: false
-    t.datetime "timestamp"
-    t.integer "lock_version"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "site_id"
-    t.string "subject"
-    t.index ["site_id"], name: "index_emailbutler_messages_on_site_id"
-    t.index ["uuid"], name: "index_emailbutler_messages_on_uuid", unique: true
-  end
-
-  create_table "folio_accounts", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at", precision: nil
-    t.datetime "last_sign_in_at", precision: nil
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "first_name"
-    t.string "last_name"
-    t.boolean "is_active", default: true
-    t.string "invitation_token"
-    t.datetime "invitation_created_at", precision: nil
-    t.datetime "invitation_sent_at", precision: nil
-    t.datetime "invitation_accepted_at", precision: nil
-    t.integer "invitation_limit"
-    t.string "invited_by_type"
-    t.bigint "invited_by_id"
-    t.integer "invitations_count", default: 0
-    t.string "crossdomain_devise_token"
-    t.datetime "crossdomain_devise_set_at"
-    t.string "sign_out_salt_part"
-    t.jsonb "roles", default: []
-    t.string "console_path"
-    t.datetime "console_path_updated_at"
-    t.index ["crossdomain_devise_token"], name: "index_folio_accounts_on_crossdomain_devise_token"
-    t.index ["email"], name: "index_folio_accounts_on_email", unique: true
-    t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
-    t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
-    t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
-    t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
-  end
-
   create_table "folio_addresses", force: :cascade do |t|
     t.string "name"
     t.string "company_name"
@@ -369,6 +314,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
+  create_table "folio_attribute_types", force: :cascade do |t|
+    t.bigint "site_id"
+    t.string "title"
+    t.string "type"
+    t.integer "position"
+    t.string "data_type", default: "string"
+    t.integer "folio_attributes_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["folio_attributes_count"], name: "index_folio_attribute_types_on_folio_attributes_count"
+    t.index ["position"], name: "index_folio_attribute_types_on_position"
+    t.index ["site_id"], name: "index_folio_attribute_types_on_site_id"
+    t.index ["type"], name: "index_folio_attribute_types_on_type"
+  end
+
+  create_table "folio_attributes", force: :cascade do |t|
+    t.bigint "folio_attribute_type_id"
+    t.string "placement_type"
+    t.bigint "placement_id"
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["folio_attribute_type_id"], name: "index_folio_attributes_on_folio_attribute_type_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_attributes_on_placement"
+  end
+
   create_table "folio_console_notes", force: :cascade do |t|
     t.text "content"
     t.string "target_type"
@@ -380,8 +351,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "site_id", null: false
     t.index ["closed_by_id"], name: "index_folio_console_notes_on_closed_by_id"
     t.index ["created_by_id"], name: "index_folio_console_notes_on_created_by_id"
+    t.index ["site_id"], name: "index_folio_console_notes_on_site_id"
     t.index ["target_type", "target_id"], name: "index_folio_console_notes_on_target"
   end
 
@@ -392,7 +365,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "title"
+    t.bigint "site_id"
     t.index ["position"], name: "index_folio_content_templates_on_position"
+    t.index ["site_id"], name: "index_folio_content_templates_on_site_id"
     t.index ["type"], name: "index_folio_content_templates_on_type"
   end
 
@@ -412,6 +387,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.string "subject_cs"
     t.text "body_html_cs"
     t.text "body_text_cs"
+    t.boolean "active", default: true
     t.index ["site_id"], name: "index_folio_email_templates_on_site_id"
     t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end
@@ -428,11 +404,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.string "alt"
     t.string "placement_title"
     t.string "placement_title_type"
+    t.jsonb "folio_embed_data"
+    t.text "description"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
+  end
+
+  create_table "folio_file_site_links", force: :cascade do |t|
+    t.bigint "file_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["file_id", "site_id"], name: "index_folio_file_site_links_unique", unique: true
+    t.index ["file_id"], name: "index_folio_file_site_links_on_file_id"
+    t.index ["site_id"], name: "index_folio_file_site_links_on_site_id"
   end
 
   create_table "folio_files", force: :cascade do |t|
@@ -447,10 +435,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.bigint "file_size"
     t.json "additional_data"
     t.json "file_metadata"
-    t.string "hash_id"
+    t.string "slug"
     t.string "author"
     t.text "description"
-    t.integer "file_placements_size"
+    t.integer "file_placements_count", default: 0, null: false
     t.string "file_name_for_search"
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
@@ -460,12 +448,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.json "remote_services_data", default: {}
     t.integer "preview_track_duration_in_seconds"
     t.string "alt"
+    t.bigint "site_id", null: false
+    t.string "attribution_source"
+    t.string "attribution_source_url"
+    t.string "attribution_copyright"
+    t.string "attribution_licence"
+    t.string "headline"
+    t.datetime "capture_date"
+    t.decimal "gps_latitude", precision: 10, scale: 6
+    t.decimal "gps_longitude", precision: 10, scale: 6
+    t.datetime "file_metadata_extracted_at"
+    t.bigint "media_source_id"
+    t.integer "attribution_max_usage_count"
+    t.integer "published_usage_count", default: 0, null: false
+    t.jsonb "thumbnail_configuration"
+    t.bigint "created_by_folio_user_id"
+    t.index "(((to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((headline)::text, ''::text)))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(description, ''::text)))))", name: "index_folio_files_on_by_label_query", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
+    t.index ["created_by_folio_user_id"], name: "index_folio_files_on_created_by_folio_user_id"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
-    t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
+    t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
+    t.index ["site_id"], name: "index_folio_files_on_site_id"
+    t.index ["slug"], name: "index_folio_files_on_slug_unique", unique: true
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end
@@ -482,6 +490,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.string "aasm_state", default: "submitted"
     t.bigint "site_id"
     t.index ["site_id"], name: "index_folio_leads_on_site_id"
+  end
+
+  create_table "folio_media_source_site_links", force: :cascade do |t|
+    t.bigint "media_source_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["media_source_id", "site_id"], name: "index_folio_media_source_site_links_unique", unique: true
+    t.index ["media_source_id"], name: "index_folio_media_source_site_links_on_media_source_id"
+    t.index ["site_id"], name: "index_folio_media_source_site_links_on_site_id"
+  end
+
+  create_table "folio_media_sources", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "licence"
+    t.string "copyright_text"
+    t.integer "max_usage_count", default: 1
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_media_sources_on_site_id"
+    t.index ["title"], name: "index_folio_media_sources_on_title", unique: true
   end
 
   create_table "folio_menu_items", force: :cascade do |t|
@@ -562,6 +592,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.bigint "site_id"
     t.text "atoms_data_for_search"
     t.string "preview_token"
+    t.jsonb "tiptap_content"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["locale"], name: "index_folio_pages_on_locale"
@@ -582,7 +613,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.string "file_name"
     t.text "title"
     t.string "alt"
-    t.text "thumbnail_sizes"
+    t.text "thumbnail_sizes", default: "--- {}\n"
     t.integer "position"
     t.integer "file_width"
     t.integer "file_height"
@@ -620,9 +651,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
   create_table "folio_site_user_links", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "site_id", null: false
-    t.json "roles", default: []
+    t.jsonb "roles", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "locked_at"
     t.index ["site_id"], name: "index_folio_site_user_links_on_site_id"
     t.index ["user_id"], name: "index_folio_site_user_links_on_user_id"
   end
@@ -660,13 +692,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.string "billing_note"
     t.text "recurring_payment_disclaimer"
     t.string "copyright_info_source"
-    t.json "available_user_roles", default: []
+    t.jsonb "available_user_roles", default: ["administrator", "manager"]
+    t.string "phone_secondary"
+    t.text "address_secondary"
     t.string "billing_account_number"
+    t.jsonb "subtitle_languages", default: ["cs"]
+    t.boolean "subtitle_auto_generation_enabled", default: false
     t.text "checkout_terms_agreement"
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
+    t.index ["subtitle_languages"], name: "index_folio_sites_on_subtitle_languages", using: :gin
     t.index ["type"], name: "index_folio_sites_on_type"
+  end
+
+  create_table "folio_tiptap_revisions", force: :cascade do |t|
+    t.string "placement_type", null: false
+    t.bigint "placement_id", null: false
+    t.bigint "user_id"
+    t.bigint "superseded_by_user_id"
+    t.jsonb "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "attribute_name", default: "tiptap_content", null: false
+    t.index ["placement_type", "placement_id"], name: "index_folio_tiptap_revisions_on_placement"
+    t.index ["superseded_by_user_id"], name: "index_folio_tiptap_revisions_on_superseded_by_user_id"
+    t.index ["user_id"], name: "index_folio_tiptap_revisions_on_user_id"
   end
 
   create_table "folio_users", force: :cascade do |t|
@@ -717,13 +768,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.date "born_at"
     t.string "bank_account_number"
     t.string "company_name"
-    t.string "time_zone", default: "Prague"
+    t.string "time_zone", default: "UTC"
+    t.bigint "auth_site_id", null: false
     t.string "preferred_locale"
     t.jsonb "console_preferences"
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
-    t.bigint "auth_site_id", null: false
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
@@ -735,6 +786,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
     t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
     t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
+  end
+
+  create_table "folio_video_subtitles", force: :cascade do |t|
+    t.bigint "video_id", null: false
+    t.string "language", null: false
+    t.string "format", default: "vtt"
+    t.text "text"
+    t.boolean "enabled", default: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled"], name: "index_folio_video_subtitles_on_enabled"
+    t.index ["language"], name: "index_folio_video_subtitles_on_language"
+    t.index ["metadata"], name: "index_folio_video_subtitles_on_metadata", using: :gin
+    t.index ["video_id", "language"], name: "index_folio_video_subtitles_on_video_id_and_language", unique: true
+    t.index ["video_id"], name: "index_folio_video_subtitles_on_video_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -767,6 +834,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.integer "tagger_id"
     t.string "context", limit: 128
     t.datetime "created_at", precision: nil
+    t.string "tenant", limit: 128
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -776,6 +844,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
     t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
     t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
+    t.index ["tenant"], name: "index_taggings_on_tenant"
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
@@ -799,7 +868,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_130000) do
   add_foreign_key "boutique_subscriptions", "boutique_product_variants"
   add_foreign_key "boutique_vouchers_products", "boutique_products", column: "product_id"
   add_foreign_key "boutique_vouchers_products", "boutique_vouchers", column: "voucher_id"
+  add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
+  add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
+  add_foreign_key "folio_file_site_links", "folio_files", column: "file_id"
+  add_foreign_key "folio_file_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_files", "folio_media_sources", column: "media_source_id"
+  add_foreign_key "folio_files", "folio_sites", column: "site_id"
+  add_foreign_key "folio_files", "folio_users", column: "created_by_folio_user_id", on_delete: :nullify
+  add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
+  add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
+  add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"
+  add_foreign_key "folio_tiptap_revisions", "folio_users", column: "user_id"
   add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
+  add_foreign_key "folio_video_subtitles", "folio_files", column: "video_id"
 end

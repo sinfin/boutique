@@ -8,7 +8,7 @@ gemspec
 
 gem "sprockets-rails"
 
-gem "folio", path: "../folio"
+gem "folio", github: "sinfin/folio", ref: "00635333e2446c88a5c53ac4a76e5020dba440d8"
 # gem "folio", path: "../folio"
 
 gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Boutique::Subscription < ApplicationRecord
+  include Folio::Audited::Model
   include Folio::HasAddresses
+
+  audited
 
   EVENT_CALLBACKS = %i[before_cancel
                        after_cancel]
