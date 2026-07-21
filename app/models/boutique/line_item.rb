@@ -186,6 +186,8 @@ end
 #  subscription_period    :integer
 #  product_id             :bigint(8)
 #  subscription_frequency :string
+#  intro_duration_months  :integer
+#  subsequent_unit_price  :integer
 #
 # Indexes
 #

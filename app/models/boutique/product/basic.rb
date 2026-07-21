@@ -36,6 +36,9 @@ end
 #  meta_title                              :string(512)
 #  meta_description                        :text
 #  og_title                                :string
+#  intro_enabled                           :boolean          default(FALSE)
+#  intro_price                             :integer
+#  intro_duration_months                   :integer
 #
 # Indexes
 #

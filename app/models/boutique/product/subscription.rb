@@ -11,8 +11,34 @@ class Boutique::Product::Subscription < Boutique::Product
 
   validates :subscription_frequency, inclusion: { in: SUBSCRIPTION_FREQUENCIES.keys.map(&:to_s) }
 
+  validates :intro_price,
+            :intro_duration_months,
+            presence: true,
+            if: :intro_enabled?
+
+  validates :intro_price,
+            numericality: { greater_than_or_equal_to: 0, less_than: :regular_price },
+            allow_nil: true,
+            if: :intro_enabled?
+
+  validates :intro_duration_months,
+            numericality: { greater_than_or_equal_to: 1 },
+            allow_nil: true,
+            if: :intro_enabled?
+
+  validate :validate_intro_requires_recurrent_payment
+  validate :validate_intro_duration_fits_subscription_period
+
   def subscription_recurrent_payment_enabled?
     !subscription_recurrent_payment_disabled?
+  end
+
+  def intro?
+    intro_enabled? && intro_price.present? && intro_duration_months.to_i > 0
+  end
+
+  def intro_free?
+    intro? && intro_price.zero?
   end
 
   def current_issue
@@ -101,6 +127,28 @@ class Boutique::Product::Subscription < Boutique::Product
       super
     end
   end
+
+  private
+    def validate_intro_requires_recurrent_payment
+      return unless intro_enabled?
+      return if subscription_recurrent_payment_enabled?
+
+      errors.add(:intro_enabled, :requires_recurrent_payment)
+    end
+
+    # A discounted (non-zero) introductory price is charged for every period, so
+    # the introductory duration has to add up to whole periods. A free trial is
+    # charged just once during checkout and the subscription runs for the whole
+    # introductory duration in one block, so it does not have to.
+    def validate_intro_duration_fits_subscription_period
+      return unless intro_enabled?
+      return if intro_price.nil? || intro_price.zero?
+      return if intro_duration_months.nil? || subscription_period.nil?
+      return if (intro_duration_months % subscription_period).zero?
+
+      errors.add(:intro_duration_months, :must_be_multiple_of_subscription_period,
+                 subscription_period:)
+    end
 end
 
 # == Schema Information
@@ -136,6 +184,9 @@ end
 #  meta_title                              :string(512)
 #  meta_description                        :text
 #  og_title                                :string
+#  intro_enabled                           :boolean          default(FALSE)
+#  intro_price                             :integer
+#  intro_duration_months                   :integer
 #
 # Indexes
 #

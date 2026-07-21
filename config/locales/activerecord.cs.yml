@@ -70,6 +70,9 @@ cs:
         discounted_price: Akční cena
         discounted_from: Akce od
         discounted_until: Akce do
+        intro_enabled: Úvodní zvýhodněná cena
+        intro_price: Úvodní cena
+        intro_duration_months: Délka úvodního období (měsíců)
         og_title: Alternativní titulek pro sdílení
         shipping_info: Doprava
         shipping_methods: Způsoby dopravy
@@ -191,6 +194,10 @@ cs:
               line_items_exist: Obsahuje položky v objednávkách.
             discounted_until:
               must_be_after_discounted_from: nemůže být před začátkem akce.
+            intro_enabled:
+              requires_recurrent_payment: lze zapnout jen u předplatného s povolenou opakovanou platbou.
+            intro_duration_months:
+              must_be_multiple_of_subscription_period: musí být násobek délky předplatného (%{subscription_period}).
 
         boutique/order:
           attributes:

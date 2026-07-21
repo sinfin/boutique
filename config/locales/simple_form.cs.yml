@@ -3,6 +3,8 @@ cs:
   simple_form:
     hints:
       product:
+        intro_price: 'Cena za úvodní období. 0 = zdarma (karta se pouze ověří, nic se nestrhne).'
+        intro_duration_months: U zvýhodněné ceny musí vyjít na celé periody předplatného.
         variants:
           title: Nepovinný údaj. Pokud má produkt pouze jednu variantu, není potřeba vyplňovat.
 

@@ -5,3 +5,16 @@
     = f.input :subscription_period
   .col-md-6
     = f.input :subscription_recurrent_payment_disabled
+
+.f-c-b-products-sti-fields__intro[
+  class=(f.object.intro_enabled? ? 'f-c-b-products-sti-fields__intro--active' : nil)
+]
+  = f.input :intro_enabled, \
+            input_html: { class: 'f-c-b-products-sti-fields__intro-checkbox' }
+
+  .f-c-b-products-sti-fields__intro-inputs
+    .row
+      .col-md-6
+        = f.input :intro_price
+      .col-md-6
+        = f.input :intro_duration_months

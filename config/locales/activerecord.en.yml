@@ -68,6 +68,10 @@ en:
             base:
               missing_master_variant: Doesn't have a master variant.
               too_many_master_variants: Has too many master variants.
+            intro_enabled:
+              requires_recurrent_payment: can only be enabled for subscriptions with recurrent payment allowed.
+            intro_duration_months:
+              must_be_multiple_of_subscription_period: must be a multiple of the subscription period (%{subscription_period}).
 
         boutique/order:
           attributes:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_03_06_145859) do
+ActiveRecord::Schema[7.0].define(version: 2026_07_21_095138) do
   create_sequence "boutique_orders_base_number_seq"
   create_sequence "boutique_orders_invoice_base_number_seq"
 
@@ -58,6 +58,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_06_145859) do
     t.integer "subscription_period"
     t.bigint "product_id"
     t.string "subscription_frequency"
+    t.integer "intro_duration_months"
+    t.integer "subsequent_unit_price"
     t.index ["boutique_order_id"], name: "index_boutique_line_items_on_boutique_order_id"
     t.index ["product_id"], name: "index_boutique_line_items_on_product_id"
     t.index ["product_variant_id"], name: "index_boutique_line_items_on_product_variant_id"
@@ -177,6 +179,9 @@ ActiveRecord::Schema[7.0].define(version: 2026_03_06_145859) do
     t.string "meta_title", limit: 512
     t.text "meta_description"
     t.string "og_title"
+    t.boolean "intro_enabled", default: false
+    t.integer "intro_price"
+    t.integer "intro_duration_months"
     t.index ["boutique_vat_rate_id"], name: "index_boutique_products_on_boutique_vat_rate_id"
     t.index ["published"], name: "index_boutique_products_on_published"
     t.index ["published_at"], name: "index_boutique_products_on_published_at"
