@@ -21,6 +21,13 @@ class Boutique::SubscriptionBot
 
       subscription.transaction do
         original_order = subscription.original_order
+
+        # Read before building the new order - once it is appended to the
+        # loaded orders association, original_order (orders.last) would return
+        # the unsaved order instead of the original one. nil for subscriptions
+        # without a snapshot, those keep copying the original price below.
+        next_unit_price = subscription.price_for_next_period
+
         new_order = subscription.orders.build(original_order.attributes.slice(*%w[folio_user_id
                                                                                   first_name
                                                                                   last_name
@@ -34,6 +41,7 @@ class Boutique::SubscriptionBot
           line_item = original_line_item.dup
           line_item.vat_rate_value = nil
           line_item.subscription_starts_at = subscription.active_until
+          line_item.unit_price = next_unit_price if next_unit_price.present?
           line_item
         end
 
