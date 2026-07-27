@@ -893,7 +893,16 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       active_from = line_item.subscription_starts_at || gift_recipient_notification_scheduled_for || paid_at
-      active_until = active_from + period.months
+
+      active_until = if line_item.free_intro?
+        # a free trial is paid for once, so the whole introductory block is
+        # active right away; a discounted introductory price is charged for
+        # every period, so the first period is a regular one
+        active_from + line_item.intro_duration_months.months
+      else
+        active_from + period.months
+      end
+
       cancelled_at = active_from unless line_item.subscription_recurring?
 
       if renewed_subscription.present? && renewed_subscription.active_until > active_from

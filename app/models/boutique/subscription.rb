@@ -119,6 +119,38 @@ class Boutique::Subscription < ApplicationRecord
     orders.last
   end
 
+  # Pricing is snapshotted on the line item of the order the subscription
+  # started with, so that later changes of the product do not affect it.
+  def original_line_item
+    @original_line_item ||= original_order&.line_items&.detect(&:subscription?)
+  end
+
+  # End of the introductory period, nil when there was none. Derived from
+  # active_from on purpose - whenever active_from is shifted, this shifts too.
+  def intro_until
+    return if active_from.nil?
+    return if original_line_item.nil? || original_line_item.intro_duration_months.nil?
+
+    active_from + original_line_item.intro_duration_months.months
+  end
+
+  def intro_active?
+    intro_until.present? && intro_until > Time.current
+  end
+
+  # Unit price for the period that is about to start - that one begins at
+  # active_until. Returns nil for subscriptions without a snapshot, those keep
+  # copying the price of the original line item (see Boutique::SubscriptionBot).
+  def price_for_next_period
+    return if original_line_item.nil?
+
+    if intro_until.present? && active_until.present? && active_until < intro_until
+      original_line_item.unit_price
+    else
+      original_line_item.subsequent_unit_price
+    end
+  end
+
   def cancelled?
     cancelled_at?
   end

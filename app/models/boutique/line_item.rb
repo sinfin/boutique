@@ -70,7 +70,28 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   def unit_price
-    super || product.price
+    super || (intro_applicable? ? product.intro_price : product.price)
+  end
+
+  # The introductory price is only for a brand new, auto-renewing subscription -
+  # not for prolonging an existing one, not for gifts (those are prepaid) and not
+  # for the subsequent orders created by Boutique::SubscriptionBot.
+  def intro_applicable?
+    return false unless product.subscription? && product.intro?
+    return false if order.nil? || subsequent?
+    return false if order.renewed_subscription.present?
+    return false if order.gift?
+
+    # nil means the customer has not picked a renewal policy yet - keep showing
+    # the introductory price, the order cannot be confirmed without the choice
+    # (see Boutique::Order#validate_line_items_subscription_recurring)
+    subscription_recurring != false
+  end
+
+  # Introductory price was free, i.e. the customer only authorized their card
+  # and the whole introductory period is paid for.
+  def free_intro?
+    intro_duration_months.present? && unit_price.zero?
   end
 
   def unit_price_without_discount
@@ -95,6 +116,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
 
   def imprint
     self.product_variant ||= product.master_variant
+
+    # Only snapshotted for introductory line items. Left nil otherwise so that
+    # recurrences keep copying the original price - subscriptions bought for a
+    # discounted price have to keep renewing for it.
+    if intro_applicable?
+      self.intro_duration_months = product.intro_duration_months
+      self.subsequent_unit_price = product.regular_price
+    end
 
     self.unit_price = unit_price
     self.vat_rate_value = vat_rate_value
