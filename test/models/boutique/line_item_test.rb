@@ -105,10 +105,21 @@ module Boutique
       @product.update!(intro_price: 0)
 
       line_item = build_line_item
+
+      # already during checkout, before imprint writes the snapshots
+      assert line_item.free_intro?
+
       line_item.imprint
 
       assert_equal 0, line_item.unit_price
       assert line_item.free_intro?
+    end
+
+    test "free_intro? is false for a product that is free without an introductory price" do
+      line_item = build_line_item(product: create(:boutique_product_subscription, regular_price: 0))
+
+      assert_equal 0, line_item.unit_price
+      assert_not line_item.free_intro?
     end
 
     test "confirmed order totals the introductory price" do

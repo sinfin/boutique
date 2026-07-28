@@ -40,6 +40,12 @@
           case gp_payment["state"]
           when "PAID"
             @payment.pay!
+          when "AUTHORIZED"
+            # a zero amount authorization cannot be captured, the authorization
+            # itself is the whole payment. For a preauthorization with an actual
+            # amount AUTHORIZED means blocked but not charged yet, so leave it
+            # pending.
+            @payment.pay! if gp_payment["amount"].to_i.zero?
           when "PAYMENT_METHOD_CHOSEN"
             unless @payment.order.waiting_for_offline_payment?
               @payment.order.wait_for_offline_payment!

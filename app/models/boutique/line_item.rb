@@ -88,10 +88,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     subscription_recurring != false
   end
 
-  # Introductory price was free, i.e. the customer only authorized their card
+  # Introductory price was free, i.e. the customer only authorizes their card
   # and the whole introductory period is paid for.
   def free_intro?
-    intro_duration_months.present? && unit_price.zero?
+    return false unless unit_price.zero?
+
+    # the snapshot only exists once the order has been confirmed, before that
+    # (during checkout) fall back to the current state of the product
+    intro_duration_months.present? || intro_applicable?
   end
 
   def unit_price_without_discount

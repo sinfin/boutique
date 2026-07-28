@@ -39,6 +39,24 @@ class Boutique::GoPayControllerTest < Boutique::ControllerTest
     assert @order.reload.waiting_for_offline_payment?
   end
 
+  test "comeback with a zero amount authorization" do
+    go_pay_find_payment_api_call_mock(state: "AUTHORIZED", amount: 0)
+
+    get comeback_go_pay_url(id: 123, order_id: @order.secret_hash)
+    assert_redirected_to main_app.user_invitation_url
+    assert @payment.reload.paid?
+    assert @order.reload.paid?
+  end
+
+  test "comeback with a preauthorization that has not been captured yet" do
+    go_pay_find_payment_api_call_mock(state: "AUTHORIZED", amount: 14900)
+
+    get comeback_go_pay_url(id: 123, order_id: @order.secret_hash)
+    assert_redirected_to order_url(@order.secret_hash)
+    assert @payment.reload.pending?
+    assert @order.reload.confirmed?
+  end
+
   test "notify" do
     go_pay_find_payment_api_call_mock
 

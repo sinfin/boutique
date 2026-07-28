@@ -579,6 +579,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     total_price.zero?
   end
 
+  # A free introductory subscription still has to go through the payment gateway.
+  # The card gets authorized for 0 without being charged, so that the first real
+  # payment at the end of the introductory period has a recurrence to build on.
+  def zero_amount_authorization?
+    free? && line_items.any? { |li| li.subscription? && li.free_intro? }
+  end
+
   def is_paid?
     paid_at?
   end
@@ -680,11 +687,12 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   def recurrent_payment_available?
-    !free? && line_items.any?(&:subscription?)
+    (!free? || zero_amount_authorization?) && line_items.any?(&:subscription?)
   end
 
   def recurrent_payment_enabled_by_default?
-    !free? && line_items.any? { |li| li.subscription? && li.subscription_recurrent_by_default? }
+    (!free? || zero_amount_authorization?) &&
+      line_items.any? { |li| li.subscription? && li.subscription_recurrent_by_default? }
   end
 
   def digital_only?
@@ -832,6 +840,8 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     def set_invoice_number
       return if invoice_number.present?
+      # nothing was charged, there is nothing to invoice
+      return if zero_amount_authorization?
 
       if Boutique.config.invoice_number_resets_each_year && !Boutique::Order.where("paid_at >= ?", paid_at.beginning_of_year).exists?
         Boutique::Order.connection.execute("ALTER SEQUENCE boutique_orders_invoice_base_number_seq RESTART;")

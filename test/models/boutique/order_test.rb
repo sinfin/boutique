@@ -589,4 +589,73 @@ class Boutique::OrderTest < ActiveSupport::TestCase
       assert order.valid?
     end
   end
+
+  test "zero_amount_authorization? for a free introductory subscription" do
+    order = intro_order(intro_price: 0)
+
+    assert_equal 0, order.total_price
+    assert order.zero_amount_authorization?
+
+    # the recurring payment consent has to be offered even though nothing is
+    # charged now, otherwise there would be no card to charge later
+    assert order.recurrent_payment_available?
+  end
+
+  test "zero_amount_authorization? is false for a discounted introductory price" do
+    order = intro_order(intro_price: 49)
+
+    assert_equal 49, order.total_price
+    assert_not order.zero_amount_authorization?
+  end
+
+  test "zero_amount_authorization? is false without an introductory price" do
+    order = intro_order(intro_price: nil)
+
+    assert_equal 149, order.total_price
+    assert_not order.zero_amount_authorization?
+  end
+
+  test "zero_amount_authorization? ignores an order made free by a voucher" do
+    order = intro_order(intro_price: nil)
+    create(:boutique_voucher, code: "FREE", discount: 100, discount_in_percentages: true)
+    order.assign_voucher_by_code("FREE")
+
+    assert_equal 0, order.total_price
+    assert_not order.zero_amount_authorization?
+    assert_not order.recurrent_payment_available?
+  end
+
+  test "a free introductory order gets no invoice number" do
+    order = intro_order(intro_price: 0)
+
+    assert order.confirm!, "order not confirmed: #{order.errors.full_messages.to_sentence}"
+    order.pay!
+
+    assert_nil order.invoice_number
+    assert order.paid?
+  end
+
+  test "a discounted introductory order is invoiced as usual" do
+    order = intro_order(intro_price: 49)
+
+    assert order.confirm!, "order not confirmed: #{order.errors.full_messages.to_sentence}"
+    order.pay!
+
+    assert_not_nil order.invoice_number
+  end
+
+  private
+    def intro_order(intro_price:, intro_duration_months: 2)
+      product = create(:boutique_product_subscription,
+                       regular_price: 149,
+                       subscription_period: 1,
+                       intro_enabled: intro_price.present?,
+                       intro_price:,
+                       intro_duration_months: intro_price.present? ? intro_duration_months : nil)
+
+      order = create(:boutique_order, :ready_to_be_confirmed, :with_user, line_items_count: 0)
+      order.line_items << build(:boutique_line_item, product:, order:)
+      order.save!
+      order
+    end
 end

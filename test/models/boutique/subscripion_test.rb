@@ -55,6 +55,11 @@ class Boutique::SubscripionTest < ActiveSupport::TestCase
 
     # nothing is charged inside the block, the first charge is a regular one
     assert_equal 149, subscription.price_for_next_period
+
+    # even a subscription whose active_until got moved inside the free block
+    # (manual edit in the console, imported data) must never renew for free
+    subscription.active_until = subscription.active_from + 1.month
+    assert_equal 149, subscription.price_for_next_period
   end
 
   test "price_for_next_period ignores later product changes" do

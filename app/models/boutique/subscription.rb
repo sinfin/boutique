@@ -144,6 +144,10 @@ class Boutique::Subscription < ApplicationRecord
   def price_for_next_period
     return if original_line_item.nil?
 
+    # a free introductory block is paid for in one go, there is no second
+    # period to charge zero for - never renew for free
+    return original_line_item.subsequent_unit_price if original_line_item.free_intro?
+
     if intro_until.present? && active_until.present? && active_until < intro_until
       original_line_item.unit_price
     else

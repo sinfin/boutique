@@ -137,7 +137,9 @@ class Boutique::OrdersController < Boutique::ApplicationController
 
     current_order.transaction do
       if current_order.confirm!
-        if current_order.free?
+        # a free introductory subscription still needs the card authorized,
+        # see Boutique::Order#zero_amount_authorization?
+        if current_order.free? && !current_order.zero_amount_authorization?
           current_order.pay!
 
           flash[:success] = t(".success_free")

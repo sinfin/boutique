@@ -105,6 +105,10 @@ class Boutique::GoPay::Api
         }
       end
 
+      # the gateway refuses a zero amount unless it is a preauthorization, which
+      # only verifies the card - see Boutique::Order#zero_amount_authorization?
+      result[:preauthorization] = true if order.total_price.zero?
+
       result
     end
 

@@ -96,6 +96,36 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert @order.primary_address.present?
   end
 
+  test "confirm free introductory subscription" do
+    product = create(:boutique_product_subscription,
+                     regular_price: 149,
+                     subscription_period: 1,
+                     intro_enabled: true,
+                     intro_price: 0,
+                     intro_duration_months: 2)
+
+    create_order_with_current_session_id(product:)
+    go_pay_create_payment_api_call_mock
+
+    params = {
+      order: {
+        first_name: "John",
+        last_name: "Doe",
+        email: "test-intro@test.test",
+        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        line_items_attributes: [{ id: @order.line_items.first.id, subscription_recurring: true }],
+      }
+    }
+
+    post confirm_order_url, params: params
+
+    # nothing is charged, but the card still has to be authorized at the gateway
+    assert_redirected_to mocked_go_pay_payment_gateway_url
+    assert_equal 0, @order.reload.total_price
+    assert @order.confirmed?
+    assert_equal 1, @order.payments.count
+  end
+
   test "show" do
     order = create(:boutique_order, :ready_to_be_confirmed)
     assert_raises(ActiveRecord::RecordNotFound) { get order_url(order.secret_hash) }
@@ -123,8 +153,8 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
   end
 
   private
-    def create_order_with_current_session_id
-      product = create(:boutique_product)
+    def create_order_with_current_session_id(product: nil)
+      product ||= create(:boutique_product)
       post add_order_url(product)
       @order = Boutique::Order.find_by(web_session_id: session.id.public_id) if session && session.id
     end

@@ -15,11 +15,12 @@ module Boutique::Test
                             .returns(result)
       end
 
-      def go_pay_find_payment_api_call_mock(state: "PAID")
+      def go_pay_find_payment_api_call_mock(state: "PAID", amount: 14900)
         result = {
           "id" => 123,
           "payment_instrument" => "PAYMENT_CARD",
           "state" => state,
+          "amount" => amount,
         }
 
         Boutique::GoPay::Api.any_instance
