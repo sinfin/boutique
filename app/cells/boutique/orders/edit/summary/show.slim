@@ -14,7 +14,17 @@
       - if line_item.subscription?
         .mt-n3 = subscription_period(line_item)
 
-  h4.b-orders-edit-summary__line-items-price
-    = price(model.line_items_price)
+  - if intro_line_item
+    p.b-orders-edit-summary__intro
+      strong>
+        = intro_price(intro_line_item)
+      == intro_note(intro_line_item)
+
+    h4.b-orders-edit-summary__line-items-price
+      = t('.total_now',
+          price: price(model.line_items_price, zero_as_number: true))
+  - else
+    h4.b-orders-edit-summary__line-items-price
+      = price(model.line_items_price)
 
   = render(:_bottom)

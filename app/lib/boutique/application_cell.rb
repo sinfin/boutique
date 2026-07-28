@@ -2,6 +2,7 @@
 
 class Boutique::ApplicationCell < Folio::ApplicationCell
   include Boutique::PriceHelper
+  include Boutique::IntroHelper
 
   def current_user
     controller.current_user

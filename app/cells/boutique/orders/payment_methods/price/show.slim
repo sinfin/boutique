@@ -1,2 +1,6 @@
 h3.b-orders-payment-methods-price
-  = t('.title', price: price(model))
+  = title
+
+  - if intro_line_item
+    span.b-orders-payment-methods-price__intro<
+      == intro_note(intro_line_item)

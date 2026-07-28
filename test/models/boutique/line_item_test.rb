@@ -101,6 +101,35 @@ module Boutique
       assert_not line_item.free_intro?
     end
 
+    test "the introductory snapshots fall back to the product during checkout" do
+      line_item = build_line_item
+
+      # the checkout has to be able to spell out the introductory terms before
+      # imprint gets to write them down
+      assert line_item.intro?
+      assert_equal 3, line_item.intro_duration_months
+      assert_equal 149, line_item.subsequent_unit_price
+    end
+
+    test "the introductory snapshots stay empty once the order is confirmed" do
+      @product.update!(intro_enabled: false)
+
+      order = create(:boutique_order, :ready_to_be_confirmed, line_items_count: 0)
+      order.line_items << build(:boutique_line_item, product: @product, order:)
+      order.save!
+      assert order.confirm!, order.errors.full_messages.to_sentence
+
+      # the product gaining an introductory price later must not rewrite what
+      # the customer actually bought
+      @product.update!(intro_enabled: true, intro_price: 49, intro_duration_months: 3)
+
+      line_item = order.line_items.first.reload
+
+      assert_not line_item.intro?
+      assert_nil line_item.intro_duration_months
+      assert_nil line_item.subsequent_unit_price
+    end
+
     test "free_intro? for a zero introductory price" do
       @product.update!(intro_price: 0)
 

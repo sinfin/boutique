@@ -7,6 +7,12 @@ class Boutique::Orders::Edit::SummaryCell < Boutique::ApplicationCell
     @line_items ||= model.line_items.includes(product_variant: { product: { cover_placement: :file } }).load
   end
 
+  def intro_line_item
+    return @intro_line_item if defined?(@intro_line_item)
+
+    @intro_line_item = intro_line_item_for(model)
+  end
+
   def subscription_period(line_item)
     label = t(".subscription_period.months", count: line_item.subscription_period)
 

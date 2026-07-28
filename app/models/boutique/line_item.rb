@@ -88,14 +88,34 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     subscription_recurring != false
   end
 
+  # The snapshots below are only written by #imprint, i.e. once the order has
+  # been confirmed. Until then (during checkout) fall back to the current state
+  # of the product, the same way #unit_price does. Never fall back afterwards -
+  # a line item bought before the product got an introductory price has to keep
+  # reporting none.
+  def intro_duration_months
+    return super unless order&.pending?
+
+    super || (intro_applicable? ? product.intro_duration_months : nil)
+  end
+
+  # The price the subscription renews for once the introductory period is over.
+  # Left nil for a line item without an introductory price - see #imprint.
+  def subsequent_unit_price
+    return super unless order&.pending?
+
+    super || (intro_applicable? ? product.regular_price : nil)
+  end
+
+  # The line item is priced with the product's introductory price.
+  def intro?
+    intro_duration_months.present?
+  end
+
   # Introductory price was free, i.e. the customer only authorizes their card
   # and the whole introductory period is paid for.
   def free_intro?
-    return false unless unit_price.zero?
-
-    # the snapshot only exists once the order has been confirmed, before that
-    # (during checkout) fall back to the current state of the product
-    intro_duration_months.present? || intro_applicable?
+    unit_price.zero? && intro?
   end
 
   def unit_price_without_discount

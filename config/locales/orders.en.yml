@@ -37,6 +37,7 @@ en:
             shipping: Shipping
 
         summary:
+          total_now: "You pay now: %{price}"
           subscription_period:
             months:
               one: "%{count} month"
@@ -65,8 +66,10 @@ en:
       payment_methods:
         secured_by: Secured
         prices_include_vat: The listed prices include VAT.
+        card_authorization: Verify card
         price:
           title: Payment %{price}
+          title_free: FREE
 
       show:
         invoice: download invoice

@@ -7,6 +7,18 @@ en:
     currency_code: "USD"
     product_preview_notice: "This page is optimized for sharing. Regular users are redirected to the shopping cart."
 
+    intro:
+      free_price: FREE
+      note_html: "for the %{duration}, then %{price} %{frequency}"
+      duration:
+        one: first month
+        other: first %{count} months
+      frequency:
+        year: yearly
+        month:
+          one: monthly
+          other: every %{count} months
+
   datetime:
     each:
       year: each year

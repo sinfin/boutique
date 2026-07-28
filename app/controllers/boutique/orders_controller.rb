@@ -84,7 +84,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
       data: {
         shippingMethods: shipping_methods_data,
         sidebarBottom: cell("boutique/orders/edit/sidebar/bottom", order).show,
-        price: cell("boutique/orders/payment_methods/price", order.total_price).show,
+        price: cell("boutique/orders/payment_methods/price", order).show,
         voucherFields: cell("boutique/orders/edit/voucher_fields", nil, order:).show,
       }
     }

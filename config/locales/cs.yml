@@ -7,6 +7,20 @@ cs:
     currency_code: "CZK"
     product_preview_notice: "Tato stránka je optimalizována pro sdílení. Běžní uživatelé jsou přesměrováni do nákupního košíku."
 
+    intro:
+      free_price: ZDARMA
+      note_html: "po dobu %{duration}, poté %{price} %{frequency}"
+      duration:
+        one: prvního měsíce
+        few: prvních %{count} měsíců
+        other: prvních %{count} měsíců
+      frequency:
+        year: ročně
+        month:
+          one: měsíčně
+          few: každé %{count} měsíce
+          other: každých %{count} měsíců
+
   datetime:
     each:
       year: každý rok

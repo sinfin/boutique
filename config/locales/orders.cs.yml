@@ -47,6 +47,7 @@ cs:
           hint: Uvedené číslo označuje pořadí vydání časopisu, nikoli kalendářní měsíc.
 
         summary:
+          total_now: "Nyní zaplatíte: %{price}"
           subscription_period:
             months:
               one: "%{count} měsíc"
@@ -75,8 +76,10 @@ cs:
       payment_methods:
         secured_by: Zabezpečeno
         prices_include_vat: Uvedené ceny jsou včetně DPH.
+        card_authorization: Ověřit kartu
         price:
           title: Platba %{price}
+          title_free: ZDARMA
 
       show:
         invoice: stáhnout fakturu

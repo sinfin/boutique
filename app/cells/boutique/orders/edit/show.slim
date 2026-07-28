@@ -98,7 +98,7 @@
               = f.input :age_verification, error: false
 
           .b-orders-edit__payment
-            - if f.object.free?
+            - if f.object.free? && !f.object.zero_amount_authorization?
               = f.button :submit,
                          t(".order_for_free"),
                          class: "btn btn-primary"

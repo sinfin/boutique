@@ -40,6 +40,35 @@ class Boutique::OrdersControllerTest < Boutique::ControllerTest
     assert_response :success
   end
 
+  test "edit offers the payment gateway for a free introductory subscription" do
+    product = create(:boutique_product_subscription,
+                     regular_price: 149,
+                     subscription_period: 1,
+                     intro_enabled: true,
+                     intro_price: 0,
+                     intro_duration_months: 2)
+
+    create_order_with_current_session_id(product:)
+
+    # the enabled methods are pulled from the gateway, which is never called in
+    # tests - see Boutique::Orders::PaymentMethodsCell#enabled_payment_methods
+    Boutique::Orders::PaymentMethodsCell.any_instance
+                                        .stubs(:enabled_payment_methods)
+                                        .returns(%w[PAYMENT_CARD BANK_ACCOUNT])
+
+    get edit_order_url
+    assert_response :success
+
+    # the card has to be authorized even though nothing is charged, so the
+    # plain "order for free" button would be a dead end
+    assert_select ".b-orders-payment-methods-price", text: /ZDARMA/
+    assert_select ".b-orders-edit__payment input[type=submit]", false
+
+    # and calling that authorization a payment would be a lie
+    labels = css_select(".b-orders-payment-methods__submit-btn").map { |btn| btn.text.squish }
+    assert_equal ["Ověřit kartu", "Bankovní převod"], labels
+  end
+
   test "refreshed_edit" do
     get refreshed_edit_order_url
     assert_redirected_to main_app.root_url

@@ -17,20 +17,21 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
   end
 
   def payment_methods
-    return [] if ::Rails.env.test?
-
-    enabled = Boutique::GoPay::Api.new.gateway.payment_instruments["enabledPaymentInstruments"]
-                                              .map { |pm| pm["paymentInstrument"] }
-    selected = STANDARD_PAYMENT_METHODS
-
-    (selected & enabled).map do |pm|
+    (STANDARD_PAYMENT_METHODS & enabled_payment_methods).map do |pm|
       {
-        title: Boutique::Payment.payment_method_to_human(pm),
+        title: payment_method_title(pm),
         value: pm,
         disabled: recurrence_required? ? RECURRENT_PAYMENT_METHODS.exclude?(pm) : false,
         enabled_for_recurrent: RECURRENT_PAYMENT_METHODS.include?(pm)
       }
     end
+  end
+
+  def enabled_payment_methods
+    return [] if ::Rails.env.test?
+
+    Boutique::GoPay::Api.new.gateway.payment_instruments["enabledPaymentInstruments"]
+                                    .map { |pm| pm["paymentInstrument"] }
   end
 
   def payment_method_btn(method, i, &block)
@@ -60,6 +61,16 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
       "boutique/icons/apple.svg"
     else
       "boutique/icons/credit-card.svg"
+    end
+  end
+
+  # Nothing is charged now, the card only gets verified - see
+  # Boutique::Order#zero_amount_authorization?
+  def payment_method_title(payment_method)
+    if payment_method == "PAYMENT_CARD" && f.object.zero_amount_authorization?
+      t(".card_authorization")
+    else
+      Boutique::Payment.payment_method_to_human(payment_method)
     end
   end
 
