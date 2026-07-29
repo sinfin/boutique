@@ -555,7 +555,12 @@ class Boutique::Order < Boutique::ApplicationRecord
         voucher.discount
       end
 
-      product_discount = line_items.sum { |li| li.product.discount.to_i }
+      # The voucher percentage is taken off the regular price, so whatever the
+      # line item is already reduced by has to be subtracted again - otherwise a
+      # voucher on an introductory price would discount the same money twice and
+      # could push the order down to zero, past the payment gateway and thus
+      # past the recurrence the subscription needs.
+      product_discount = line_items.sum(&:unit_discount)
 
       [voucher_discount - product_discount, 0].max
     end

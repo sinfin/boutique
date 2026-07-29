@@ -644,6 +644,29 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_not_nil order.invoice_number
   end
 
+  test "a voucher does not discount the introductory price a second time" do
+    order = intro_order(intro_price: 49)
+    create(:boutique_voucher, code: "HALF", discount: 50, discount_in_percentages: true)
+    order.assign_voucher_by_code("HALF")
+
+    # half of the regular 149 is less than the 100 the introductory price
+    # already saves, so nothing is left for the voucher. Were it counted twice
+    # the order would come out free and skip the gateway - and with it the
+    # recurrence the subscription is built on.
+    assert_equal 0, order.discount
+    assert_equal 49, order.total_price
+  end
+
+  test "a voucher bigger than the introductory reduction still applies" do
+    order = intro_order(intro_price: 49)
+    create(:boutique_voucher, code: "MOST", discount: 80, discount_in_percentages: true)
+    order.assign_voucher_by_code("MOST")
+
+    # 80 % of 149 is 119, of which the introductory price covers 100
+    assert_equal 19, order.discount
+    assert_equal 30, order.total_price
+  end
+
   private
     def intro_order(intro_price:, intro_duration_months: 2)
       product = create(:boutique_product_subscription,

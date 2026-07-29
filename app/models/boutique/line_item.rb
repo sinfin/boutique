@@ -122,6 +122,13 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     product.regular_price
   end
 
+  # How much the line item is already reduced against the regular price, either
+  # by a promotional price or by the introductory one. A voucher does not stack
+  # on top of it - see Boutique::Order#discount.
+  def unit_discount
+    unit_price_without_discount - unit_price
+  end
+
   def vat_rate_value
     super || product.vat_rate.value
   end
