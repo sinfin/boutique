@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 class Folio::Console::Boutique::Products::StiFieldsCell < Folio::ConsoleCell
+  include Folio::Console::Boutique::ProductTypeHelper
+
   def f
     model
   end
 
   def render_sti_fields(type)
-    style = "display: none" unless f.object.type == type
-
     content_tag :div, class: "f-c-b-products-sti-fields__inputs",
-                      style:,
-                      data: { type: } do
+                      **console_product_type_attributes(f.object, type) do
       render("_#{type.demodulize.underscore}")
     end
   end

@@ -67,6 +67,8 @@ ruby:
           .col-lg-3
             = f.input :discounted_until, calendar_on_top: true
 
+        == cell('folio/console/boutique/products/intro_fields', f)
+
     = render partial: 'variants', locals: { f: }
 
     = render partial: 'form_bottom', locals: { f: }

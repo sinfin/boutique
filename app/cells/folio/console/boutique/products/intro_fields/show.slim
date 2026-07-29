@@ -1,0 +1,13 @@
+.f-c-b-products-intro-fields[
+  class=enabled_class
+  *console_product_type_attributes(f.object, PRODUCT_TYPE)
+]
+  = f.input :intro_enabled, \
+            input_html: { class: 'f-c-b-products-intro-fields__checkbox' }
+
+  .f-c-b-products-intro-fields__inputs
+    .row
+      .col-lg-3
+        = f.input :intro_price
+      .col-lg-3
+        = f.input :intro_duration_months

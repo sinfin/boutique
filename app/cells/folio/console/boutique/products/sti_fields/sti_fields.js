@@ -1,12 +1,9 @@
 $(document).on('change', '.f-c-b-products-sti-fields__type-input', function () {
-  const type = $(this).val()
-  const $inputs = $('.f-c-b-products-sti-fields__inputs')
-  $inputs.hide()
-  $inputs.filter(`[data-type=${type}]`).show()
+  $(document).trigger('folioConsoleBoutiqueProductTypeChange', [$(this).val()])
 })
 
-$(document).on('change', '.f-c-b-products-sti-fields__intro-checkbox', function () {
-  $(this)
-    .closest('.f-c-b-products-sti-fields__intro')
-    .toggleClass('f-c-b-products-sti-fields__intro--active', this.checked)
+$(document).on('folioConsoleBoutiqueProductTypeChange', function (e, type) {
+  const $fields = $('[data-boutique-product-type]')
+  $fields.hide()
+  $fields.filter(`[data-boutique-product-type="${type}"]`).show()
 })
