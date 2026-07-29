@@ -1,0 +1,210 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+# The introductory price has to survive the whole journey: the checkout, the
+# trip through the payment gateway, the subscription it sets up and the
+# recurrences the bot charges afterwards. The individual steps have their own
+# unit tests - this covers the seams between them.
+class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
+  include Boutique::Test::GoPayApiMocker
+
+  test "a discounted introductory price is charged for every introductory period" do
+    order = checkout(intro_product(intro_price: 49, intro_duration_months: 3))
+
+    pay_at_gateway(order)
+
+    assert_equal 49, order.total_price
+    assert_not_nil order.invoice_number, "a discounted order is invoiced as usual"
+
+    subscription = order.subscription.reload
+    active_from = subscription.active_from
+
+    # charged per period, so the first one is a regular period
+    assert_equal (active_from + 1.month).to_i, subscription.active_until.to_i
+    assert_equal (active_from + 3.months).to_i, subscription.intro_until.to_i
+
+    assert_equal 49, charge_recurrence(subscription).total_price
+    assert_equal (active_from + 2.months).to_i, subscription.reload.active_until.to_i
+
+    assert_equal 49, charge_recurrence(subscription).total_price
+    assert_equal (active_from + 3.months).to_i, subscription.reload.active_until.to_i
+
+    # the introductory window is over now
+    assert_equal 149, charge_recurrence(subscription).total_price
+    assert_equal (active_from + 4.months).to_i, subscription.reload.active_until.to_i
+  end
+
+  test "a free trial is paid for in one block and renews for the full price" do
+    order = checkout(intro_product(intro_price: 0, intro_duration_months: 2))
+
+    # nothing is charged, but the card is authorized - the gateway answers
+    # AUTHORIZED instead of PAID, see Boutique::Order#zero_amount_authorization?
+    pay_at_gateway(order, state: "AUTHORIZED", amount: 0)
+
+    assert_equal 0, order.total_price
+    assert_nil order.invoice_number, "a 0 Kč order is not invoiced"
+
+    subscription = order.subscription.reload
+    active_from = subscription.active_from
+
+    # the whole introductory block is paid for at once
+    assert_equal (active_from + 2.months).to_i, subscription.active_until.to_i
+    assert_equal subscription.active_until.to_i, subscription.intro_until.to_i
+
+    # there is no second free period to charge zero for
+    assert_equal 149, charge_recurrence(subscription).total_price
+    assert_equal (active_from + 3.months).to_i, subscription.reload.active_until.to_i
+  end
+
+  test "a subscription cancelled during the introductory block is never charged" do
+    order = checkout(intro_product(intro_price: 0, intro_duration_months: 2))
+    pay_at_gateway(order, state: "AUTHORIZED", amount: 0)
+
+    subscription = order.subscription.reload
+    subscription.cancel!
+
+    # the whole block has elapsed, so the bot would pick the subscription up
+    subscription.update_column(:active_until, Time.current.beginning_of_hour + 6.hours + 30.minutes)
+
+    assert_no_difference("Boutique::Order.count") do
+      Boutique::SubscriptionBot.new.charge_all_eligible
+    end
+
+    # proof the bot would have charged it had it not been cancelled
+    subscription.update_column(:cancelled_at, nil)
+    go_pay_create_recurrent_payment_api_call_mock(id: next_remote_id)
+
+    assert_difference("Boutique::Order.count", 1) do
+      Boutique::SubscriptionBot.new.charge_all_eligible
+    end
+  end
+
+  test "a voucher does not stack on top of the introductory price" do
+    # half of the regular price is still more than the introductory one, so the
+    # voucher adds nothing - the same way it behaves for a promotional price
+    voucher = create(:boutique_voucher, discount: 50, discount_in_percentages: true)
+    order = checkout(intro_product(intro_price: 49, intro_duration_months: 3),
+                     voucher_code: voucher.code)
+
+    pay_at_gateway(order)
+
+    assert_equal 49, order.line_items_price
+    assert_equal 0, order.discount
+    assert_equal 49, order.total_price
+
+    # the voucher was a one-off, the recurrence stays on the intro price
+    assert_equal 49, charge_recurrence(order.subscription.reload).total_price
+  end
+
+  test "a voucher bigger than the introductory reduction still applies" do
+    # 80 % off 149 is 119, the introductory price already saves 100 of it
+    voucher = create(:boutique_voucher, discount: 80, discount_in_percentages: true)
+    order = checkout(intro_product(intro_price: 49, intro_duration_months: 3),
+                     voucher_code: voucher.code)
+
+    pay_at_gateway(order)
+
+    assert_equal 19, order.discount
+    assert_equal 30, order.total_price
+  end
+
+  test "an order made free by a voucher never reaches the gateway" do
+    voucher = create(:boutique_voucher, discount: 100, discount_in_percentages: true)
+
+    # no create_payment mock on purpose - calling the gateway would blow up
+    order = checkout(intro_product, voucher_code: voucher.code, expect_gateway: false)
+
+    assert order.reload.is_paid?
+    assert_equal 0, order.total_price
+    assert_empty order.payments
+  end
+
+  test "a subscription without an introductory price is unaffected" do
+    order = checkout(intro_product)
+
+    pay_at_gateway(order)
+
+    assert_equal 149, order.total_price
+
+    subscription = order.subscription.reload
+    assert_nil subscription.intro_until
+    assert_nil subscription.original_line_item.subsequent_unit_price
+
+    assert_equal 149, charge_recurrence(subscription).total_price
+  end
+
+  private
+    def intro_product(intro_price: nil, intro_duration_months: nil)
+      create(:boutique_product_subscription,
+             digital_only: true,
+             regular_price: 149,
+             subscription_period: 1,
+             intro_enabled: intro_price.present?,
+             intro_price:,
+             intro_duration_months:)
+    end
+
+    # Walks the checkout the way a customer does and returns the pending order.
+    def checkout(product, voucher_code: nil, expect_gateway: true)
+      post add_order_url(product)
+      assert_redirected_to edit_order_url
+
+      order = Boutique::Order.last
+
+      go_pay_create_payment_api_call_mock if expect_gateway
+
+      post confirm_order_url, params: {
+        order: {
+          first_name: "John",
+          last_name: "Doe",
+          email: "intro@test.test",
+          voucher_code:,
+          primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+          line_items_attributes: [{ id: order.line_items.first.id, subscription_recurring: true }],
+        }
+      }
+
+      if expect_gateway
+        assert_redirected_to mocked_go_pay_payment_gateway_url
+      end
+
+      order
+    end
+
+    def pay_at_gateway(order, state: "PAID", amount: 14900)
+      go_pay_find_payment_api_call_mock(state:, amount:)
+
+      get comeback_go_pay_url(id: 123, order_id: order.secret_hash)
+
+      # a digital order is dispatched and delivered right away, so #paid? is
+      # already false by the time we get here
+      assert order.reload.is_paid?, "the order was not paid: #{order.aasm_state}"
+    end
+
+    # One turn of the bot: it builds and confirms the next order, the gateway
+    # then reports the recurrent payment as paid. Returns the new order.
+    def charge_recurrence(subscription)
+      remote_id = next_remote_id
+
+      go_pay_create_recurrent_payment_api_call_mock(id: remote_id)
+
+      assert_difference("subscription.orders.reload.count", 1) do
+        Boutique::SubscriptionBot.new.charge(Boutique::Subscription.where(id: subscription.id))
+      end
+
+      subsequent_order = subscription.current_order
+
+      go_pay_find_payment_api_call_mock(id: remote_id)
+      get notify_go_pay_url(id: remote_id, order_id: subsequent_order.secret_hash)
+      assert_response :success
+
+      assert subsequent_order.reload.is_paid?, "the recurrent payment was not accepted"
+
+      subsequent_order
+    end
+
+    def next_remote_id
+      @next_remote_id = (@next_remote_id || 123) + 1
+    end
+end
