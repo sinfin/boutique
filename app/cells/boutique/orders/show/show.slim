@@ -17,7 +17,7 @@
       .text-muted.mr-g
         = model.is_paid? ? t('.paid') : t('.unpaid')
 
-      - if model.is_paid?
+      - if model.invoice_number?
         a[
           href=controller.boutique.invoice_path(model.secret_hash)
           target="_blank"
