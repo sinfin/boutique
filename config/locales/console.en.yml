@@ -36,6 +36,20 @@ en:
           variants:
             add: Přidat variantu
 
+        intro:
+          free: free
+          label:
+            one: "%{price} for %{count} month, then %{subsequent_price}"
+            other: "%{price} for %{count} months, then %{subsequent_price}"
+
+          subscription:
+            trial:
+              active: Trial until %{date}
+              over: Trial was until %{date}
+            discounted:
+              active: Introductory price until %{date}
+              over: Introductory price was until %{date}
+
         subscriptions:
           catalogue:
             cancel: Cancel

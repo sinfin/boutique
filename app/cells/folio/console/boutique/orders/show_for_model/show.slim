@@ -95,6 +95,10 @@
     = s.attribute(:total_price)
       = price(s.object.total_price, zero_as_number: true)
 
+    - if intro_line_item = console_intro_line_item(s.object)
+      = s.attribute(:intro) do
+        = console_intro_label(intro_line_item)
+
     = s.attribute(:invoice) do
       - if s.object.invoice_number?
         - host = Boutique::Order.invoice_host_site&.env_aware_domain

@@ -26,6 +26,7 @@ cs:
         gift_recipient_last_name: Příjmení obdarovaného
         gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
         invoice: Faktura
+        intro: Úvodní cena
         invoice_number: Číslo faktury
         items: Předměty
         line_items: Položky

@@ -19,7 +19,15 @@
       end
 
       attribute :active do
-        record.active_range
+        intro_label = console_subscription_intro_label(record)
+
+        if intro_label.present?
+          safe_join([record.active_range,
+                     content_tag(:small, intro_label, class: "text-muted")],
+                    tag.br)
+        else
+          record.active_range
+        end
       end
 
       attribute :cancelled_at do

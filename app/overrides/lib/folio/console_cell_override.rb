@@ -2,4 +2,5 @@
 
 Folio::ConsoleCell.class_eval do
   include Boutique::PriceHelper
+  include Folio::Console::Boutique::IntroHelper
 end

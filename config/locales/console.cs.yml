@@ -39,6 +39,21 @@ cs:
           variants:
             add: Přidat variantu
 
+        intro:
+          free: zdarma
+          label:
+            one: "%{price} po dobu %{count} měsíce, poté %{subsequent_price}"
+            few: "%{price} po dobu %{count} měsíců, poté %{subsequent_price}"
+            other: "%{price} po dobu %{count} měsíců, poté %{subsequent_price}"
+
+          subscription:
+            trial:
+              active: Trial do %{date}
+              over: Trial byl do %{date}
+            discounted:
+              active: Úvodní cena do %{date}
+              over: Úvodní cena byla do %{date}
+
         subscriptions:
           catalogue:
             cancel: Zrušit
