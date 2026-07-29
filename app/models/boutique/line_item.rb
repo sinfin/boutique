@@ -73,10 +73,14 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     super || (intro_applicable? ? product.intro_price : product.price)
   end
 
+  def intro_applicable?
+    intro_offered? && intro_eligible?
+  end
+
   # The introductory price is only for a brand new, auto-renewing subscription -
   # not for prolonging an existing one, not for gifts (those are prepaid) and not
   # for the subsequent orders created by Boutique::SubscriptionBot.
-  def intro_applicable?
+  def intro_offered?
     return false unless product.subscription? && product.intro?
     return false if order.nil? || subsequent?
     return false if order.renewed_subscription.present?
@@ -86,6 +90,19 @@ class Boutique::LineItem < Boutique::ApplicationRecord
     # the introductory price, the order cannot be confirmed without the choice
     # (see Boutique::Order#validate_line_items_subscription_recurring)
     subscription_recurring != false
+  end
+
+  # The introductory price is a new customer offer, see
+  # Boutique.config.intro_eligibility_proc.
+  def intro_eligible?
+    order.nil? || order.intro_eligible_for?(self)
+  end
+
+  # The customer picked an introductory offer they turn out not to be entitled
+  # to. Such a line item is priced regularly and the checkout has to say why,
+  # see Boutique::OrdersController#confirm.
+  def intro_denied?
+    intro_offered? && !intro_eligible?
   end
 
   # The snapshots below are only written by #imprint, i.e. once the order has

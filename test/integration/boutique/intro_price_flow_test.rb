@@ -8,6 +8,7 @@ require "test_helper"
 # unit tests - this covers the seams between them.
 class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
   include Boutique::Test::GoPayApiMocker
+  include Devise::Test::IntegrationHelpers
 
   test "a discounted introductory price is charged for every introductory period" do
     order = checkout(intro_product(intro_price: 49, intro_duration_months: 3))
@@ -134,6 +135,83 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     assert_equal 149, charge_recurrence(subscription).total_price
   end
 
+  test "a signed in customer who already had a subscription is told on arrival" do
+    product = intro_product(intro_price: 49, intro_duration_months: 3)
+    user = create(:folio_user)
+    past_subscription_for(user, product)
+
+    sign_in user
+
+    order = add_to_order(product)
+
+    # the offer is gone the moment the checkout opens - the customer clicked an
+    # introductory price and has to learn why they are not seeing it
+    get edit_order_url
+    assert_response :success
+    assert_match "úvodní cena již není dostupná", flash[:warning].to_s
+    assert_equal 149, order.reload.total_price
+
+    # having been told, the confirm goes straight through for the full price
+    go_pay_create_payment_api_call_mock
+    post confirm_order_url, params: { order: confirm_params(order, email: user.email) }
+    assert_redirected_to mocked_go_pay_payment_gateway_url
+
+    assert_equal 149, order.reload.total_price
+    assert_nil order.line_items.first.intro_duration_months
+  end
+
+  test "a guest is judged by the e-mail they fill in and can then buy for the full price" do
+    # otherwise the checkout turns a registered e-mail down before it ever gets
+    # to the introductory price
+    Boutique.config.stubs(:allow_guest_checkout_with_registered_email).returns(true)
+
+    product = intro_product(intro_price: 0, intro_duration_months: 2)
+    user = create(:folio_user)
+    past_subscription_for(user, product)
+
+    order = add_to_order(product)
+    assert_equal 0, order.total_price
+
+    body = { order: confirm_params(order, email: user.email) }
+
+    # no create_payment mock on purpose - a denied checkout must not get to the
+    # gateway with a price the customer has not seen
+    post confirm_order_url, params: body
+    assert_redirected_to edit_order_url
+
+    follow_redirect!
+    assert_match "trial již není dostupný", flash[:warning].to_s
+
+    # the e-mail is kept, so the checkout keeps recognizing the customer and
+    # keeps showing the regular price even if they reload the page
+    order.reload
+    assert order.pending?
+    assert_equal user.email, order.email
+    assert_equal 149, order.total_price
+
+    go_pay_create_payment_api_call_mock
+
+    post confirm_order_url, params: body
+    assert_redirected_to mocked_go_pay_payment_gateway_url
+
+    order.reload
+    assert order.confirmed?
+    assert_equal 149, order.total_price
+    assert_nil order.line_items.first.intro_duration_months
+    assert_nil order.line_items.first.subsequent_unit_price
+  end
+
+  test "a guest who has never subscribed keeps the introductory price" do
+    product = intro_product(intro_price: 0, intro_duration_months: 2)
+    create(:folio_user, email: "someone.else@test.test")
+
+    order = checkout(product)
+
+    assert_nil flash[:warning]
+    assert_equal 0, order.reload.total_price
+    assert_equal 2, order.line_items.first.intro_duration_months
+  end
+
   private
     def intro_product(intro_price: nil, intro_duration_months: nil)
       create(:boutique_product_subscription,
@@ -145,31 +223,45 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
              intro_duration_months:)
     end
 
+    # A subscription the customer already holds - the factory insists on building
+    # its own user, so the owner has to be moved afterwards.
+    def past_subscription_for(user, product)
+      subscription = create(:boutique_subscription, product_variant: product.master_variant)
+      subscription.update!(user:)
+      subscription
+    end
+
     # Walks the checkout the way a customer does and returns the pending order.
     def checkout(product, voucher_code: nil, expect_gateway: true)
-      post add_order_url(product)
-      assert_redirected_to edit_order_url
-
-      order = Boutique::Order.last
+      order = add_to_order(product)
 
       go_pay_create_payment_api_call_mock if expect_gateway
 
-      post confirm_order_url, params: {
-        order: {
-          first_name: "John",
-          last_name: "Doe",
-          email: "intro@test.test",
-          voucher_code:,
-          primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
-          line_items_attributes: [{ id: order.line_items.first.id, subscription_recurring: true }],
-        }
-      }
+      post confirm_order_url, params: { order: confirm_params(order, voucher_code:) }
 
       if expect_gateway
         assert_redirected_to mocked_go_pay_payment_gateway_url
       end
 
       order
+    end
+
+    def add_to_order(product)
+      post add_order_url(product)
+      assert_redirected_to edit_order_url
+
+      Boutique::Order.last
+    end
+
+    def confirm_params(order, voucher_code: nil, email: "intro@test.test")
+      {
+        first_name: "John",
+        last_name: "Doe",
+        email:,
+        voucher_code:,
+        primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
+        line_items_attributes: [{ id: order.line_items.first.id, subscription_recurring: true }],
+      }
     end
 
     def pay_at_gateway(order, state: "PAID", amount: 14900)

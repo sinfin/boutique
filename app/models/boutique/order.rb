@@ -591,6 +591,34 @@ class Boutique::Order < Boutique::ApplicationRecord
     free? && line_items.any? { |li| li.subscription? && li.free_intro? }
   end
 
+  # Whether the customer may still buy the line item for the introductory price
+  # of its product, see Boutique.config.intro_eligibility_proc. The checkout does
+  # not require a log in, so the customer is whoever the order belongs to, or the
+  # account registered under the e-mail they filled in.
+  #
+  # Memoized per customer and product - #unit_price asks on every render and the
+  # e-mail changes while the customer is still in the checkout.
+  def intro_eligible_for?(line_item)
+    # #downcase_emails only runs once the order gets validated, and the customer
+    # has to be recognized before that
+    customer_email = email&.downcase&.strip.presence
+
+    key = [folio_user_id, customer_email, line_item.product_id]
+
+    @intro_eligible ||= {}
+    return @intro_eligible[key] if @intro_eligible.key?(key)
+
+    customer = user || (Folio::User.find_by(email: customer_email) if customer_email)
+
+    @intro_eligible[key] = Boutique.config.intro_eligibility_proc.call(line_item:, user: customer)
+  end
+
+  # The line item the customer picked an introductory offer for without being
+  # entitled to it - the checkout prices it regularly and has to say why.
+  def denied_intro_line_item
+    line_items.detect(&:intro_denied?)
+  end
+
   def is_paid?
     paid_at?
   end

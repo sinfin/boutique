@@ -70,6 +70,10 @@ cs:
       confirm:
         success_free: Objednávka proběhla úspěšně
 
+      intro_denied:
+        trial: Bohužel, zkušební trial již není dostupný, protože jste předplatné v minulosti již čerpal*a. Proto musíte pokračovat v předplatném za plnou cenu.
+        discounted: Bohužel, zvýhodněná úvodní cena již není dostupná, protože jste předplatné v minulosti již čerpal*a. Proto musíte pokračovat v předplatném za plnou cenu.
+
       flash:
         product_unavailable: Produkt je aktuálně nedostupný, nelze ho objednat.
 

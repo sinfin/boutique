@@ -17,7 +17,8 @@ module Boutique
                   :folio_console_additional_filters_for_orders,
                   :orders_edit_recurrency_title_proc,
                   :orders_get_referrer_url_proc,
-                  :allow_guest_checkout_with_registered_email
+                  :allow_guest_checkout_with_registered_email,
+                  :intro_eligibility_proc
 
     def initialize
       # set defaults here
@@ -49,6 +50,25 @@ module Boutique
         current_site.recurring_payment_disclaimer
                     .to_s
                     .gsub("{AMOUNT}", price.to_s)
+      end
+      # Whether the customer may still buy the line item for the introductory
+      # price of its product. Asked during checkout only, see
+      # Boutique::LineItem#intro_applicable?.
+      #
+      # user is the account the order resolves to - nil for a customer who has
+      # never bought anything, since every paid order creates one.
+      #
+      # By default the introductory price is gone once the customer has had a
+      # subscription of the same product, no matter whether they still have it.
+      # A subscription only exists once its order has been paid, so an
+      # abandoned or a cancelled checkout does not count.
+      @intro_eligibility_proc = -> (line_item:, user:) do
+        return true if user.nil?
+
+        !user.subscriptions
+             .joins(:product_variant)
+             .where(boutique_product_variants: { boutique_product_id: line_item.product_id })
+             .exists?
       end
     end
   end

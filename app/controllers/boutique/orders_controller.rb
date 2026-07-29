@@ -4,6 +4,7 @@ class Boutique::OrdersController < Boutique::ApplicationController
   include Boutique::RedirectAfterOrderPaid
 
   VOUCHER_GET_PARAM_NAME = :c
+  INTRO_DENIAL_SESSION_KEY = :boutique_intro_denied_order_id
 
   before_action :redirect_if_current_order_is_empty, except: %i[add show crossdomain_add payment]
   before_action :redirect_if_current_order_is_unavailable, except: %i[add show crossdomain_add payment]
@@ -48,6 +49,13 @@ class Boutique::OrdersController < Boutique::ApplicationController
   def edit
     if params[VOUCHER_GET_PARAM_NAME]
       current_order.assign_voucher_by_code(params[VOUCHER_GET_PARAM_NAME])
+    end
+
+    # a signed in customer is recognized right away, so they get told the moment
+    # they arrive rather than after filling the whole checkout in
+    if message = denied_intro_message
+      flash.now[:warning] = message
+      mark_intro_denial_as_seen
     end
 
     @use_boutique_adaptive_css = true
@@ -135,6 +143,17 @@ class Boutique::OrdersController < Boutique::ApplicationController
     current_order.force_gift_recipient_notification_scheduled_for_validation = true
     current_order.assign_attributes(order_params)
 
+    # the e-mail just told us who the customer is and the introductory offer may
+    # not apply to them - back to the checkout, which now prices the order
+    # regularly and says why, instead of straight to the payment gateway
+    if !intro_denial_seen? && current_order.denied_intro_line_item.present?
+      # keep what the customer filled in, both to spare them retyping it and so
+      # that the checkout keeps recognizing them on every further request
+      current_order.save(validate: false)
+
+      redirect_to action: :edit and return
+    end
+
     current_order.transaction do
       if current_order.confirm!
         # a free introductory subscription still needs the card authorized,
@@ -211,6 +230,27 @@ class Boutique::OrdersController < Boutique::ApplicationController
                                   subscription_starts_at
                                   subscription_recurring]
       ]
+    end
+
+    # The introductory price is a new customer offer and the checkout only learns
+    # who the customer is once they sign in or fill their e-mail in. Whenever the
+    # offer turns out not to apply, the line item falls back to the regular price
+    # on its own - this is the only place that says so out loud.
+    def denied_intro_message
+      line_item = current_order.denied_intro_line_item
+      return if line_item.nil?
+
+      t("boutique.orders.intro_denied.#{line_item.product.intro_free? ? 'trial' : 'discounted'}")
+    end
+
+    # Once the customer has seen the regular price in the checkout, confirming is
+    # up to them - #confirm stops turning them back.
+    def mark_intro_denial_as_seen
+      session[INTRO_DENIAL_SESSION_KEY] = current_order.id
+    end
+
+    def intro_denial_seen?
+      session[INTRO_DENIAL_SESSION_KEY] == current_order.id
     end
 
     def create_payment_and_redirect_to_payment_gateway(order)

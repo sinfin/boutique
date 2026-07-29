@@ -63,6 +63,10 @@ en:
       confirm:
         success_free: Order successful
 
+      intro_denied:
+        trial: Unfortunately the free trial is no longer available, as you have already had a subscription in the past. You have to continue with the subscription for the full price.
+        discounted: Unfortunately the introductory price is no longer available, as you have already had a subscription in the past. You have to continue with the subscription for the full price.
+
       payment_methods:
         secured_by: Secured
         prices_include_vat: The listed prices include VAT.
