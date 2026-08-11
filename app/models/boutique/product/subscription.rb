@@ -17,9 +17,16 @@ class Boutique::Product::Subscription < Boutique::Product
             if: :intro_enabled?
 
   validates :intro_price,
-            numericality: { greater_than_or_equal_to: 0, less_than: :regular_price },
+            numericality: { greater_than_or_equal_to: 0 },
             allow_nil: true,
             if: :intro_enabled?
+
+  # regular_price has to be checked separately, comparing against a missing one
+  # would blow up inside the numericality validator
+  validates :intro_price,
+            numericality: { less_than: :regular_price },
+            allow_nil: true,
+            if: -> { intro_enabled? && regular_price.present? }
 
   validates :intro_duration_months,
             numericality: { greater_than_or_equal_to: 1 },

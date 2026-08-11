@@ -76,6 +76,22 @@ class Boutique::Product::SubscriptionTest < ActiveSupport::TestCase
     assert @subscription.valid?, @subscription.errors.full_messages.to_sentence
   end
 
+  test "intro price is validated even without a regular price" do
+    @subscription.assign_attributes(intro_enabled: true,
+                                    intro_duration_months: 1,
+                                    subscription_period: 1,
+                                    regular_price: nil,
+                                    intro_price: 49)
+
+    assert_not @subscription.valid?
+    assert @subscription.errors.of_kind?(:regular_price, :blank)
+    assert_not @subscription.errors.of_kind?(:intro_price, :less_than)
+
+    @subscription.intro_price = -1
+    assert_not @subscription.valid?
+    assert @subscription.errors.of_kind?(:intro_price, :greater_than_or_equal_to)
+  end
+
   test "intro duration must be at least one month" do
     @subscription.assign_attributes(intro_enabled: true,
                                     intro_price: 0,
