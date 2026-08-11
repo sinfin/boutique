@@ -443,6 +443,8 @@ class Boutique::Order < Boutique::ApplicationRecord
       end
 
       after do
+        tear_down_subscription!
+
         after_cancel
       end
     end
@@ -455,12 +457,18 @@ class Boutique::Order < Boutique::ApplicationRecord
       transitions from: :cancelled, to: :pending
 
       before do
+        # tear_down_subscription! stamped this onto the subscription, keep it
+        # around for restore_subscription! to recognize its own mark
+        @cancelled_at_before_revert = cancelled_at
+
         self.cancelled_at = nil
 
         before_revert_cancelation
       end
 
       after do
+        restore_subscription!
+
         after_revert_cancelation
       end
     end
@@ -977,6 +985,90 @@ class Boutique::Order < Boutique::ApplicationRecord
                              cancelled_at:,
                              primary_address: address)
       end
+    end
+
+    # Undoes set_up_subscription! - a cancelled order must not leave the
+    # subscription it paid for behind. Runs after the state has been persisted,
+    # inside the transaction AASM wraps the event in.
+    def tear_down_subscription!
+      return if subscription.nil?
+
+      if subscription_set_up_here?
+        torn_down = subscription
+
+        # dependent: :nullify clears boutique_subscription_id in the database,
+        # keep the in-memory record in sync - AASM will not save it again
+        self.subscription = nil
+
+        torn_down.destroy!
+      else
+        # this order only prolonged an already existing subscription, so roll
+        # the prolongation back and stop the recurrence instead of destroying it
+        subscription.update!(cancelled_at: subscription.cancelled_at || cancelled_at,
+                             active_until: subscription_active_until_before_prolongation)
+      end
+    end
+
+    # Undoes tear_down_subscription! - reverting a storno puts the subscription
+    # back. Which of the two branches ran back then is readable off the order:
+    # only the destroying one leaves it without a subscription.
+    def restore_subscription!
+      # nothing below the paid state ever had a subscription
+      return unless paid_at?
+
+      if subscription.present?
+        restore_prolonged_subscription!
+      else
+        set_up_subscription!
+
+        # create_subscription! only assigns the foreign key in memory and AASM
+        # has already saved the order by now
+        update_column(:boutique_subscription_id, subscription.id) if subscription.present?
+      end
+    end
+
+    def restore_prolonged_subscription!
+      attrs = {}
+
+      # only undo the cancellation that the storno itself caused - a customer
+      # who had stopped the recurrence before it must stay stopped
+      attrs[:cancelled_at] = nil if subscription.cancelled_at == @cancelled_at_before_revert
+
+      if subscription.active_until.present?
+        attrs[:active_until] = subscription.active_until + subscription.period.months
+      end
+
+      subscription.update!(attrs) if attrs.any?
+    end
+
+    # True when this very order brought the subscription into existence. Orders
+    # that renew (renewed_subscription) or recur (subsequent?) only extend one
+    # that was already there, and so does any later order attached to it - such
+    # an order paid for a period of its own, so the subscription has to survive.
+    def subscription_set_up_here?
+      return false if subsequent?
+      return false if renewed_subscription_id?
+
+      !subscription.orders.where.not(id:).exists?
+    end
+
+    # Gives back the single period this order paid for.
+    def subscription_active_until_before_prolongation
+      active_until = subscription.active_until
+      return if active_until.nil?
+
+      rolled_back = active_until - subscription.period.months
+
+      # set_up_subscription! snapshots the start of the period this order paid
+      # for on the line item, which is more precise than the arithmetic above -
+      # adding and subtracting months is not a round trip around shorter months.
+      # Only usable when this order paid for the last period though, an older
+      # one must not give up what the orders after it paid for.
+      starts_at = line_items.detect(&:subscription?).try(:subscription_starts_at)
+      return rolled_back if starts_at.nil? || starts_at < rolled_back
+
+      # cancelling an order can only ever shorten a subscription
+      [starts_at, active_until].min
     end
 
     def set_site

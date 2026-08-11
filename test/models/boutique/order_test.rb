@@ -123,6 +123,223 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal Date.today + order.line_items.first.subscription_period.months, order.subscription.reload.active_until.to_date
   end
 
+  test "cancel destroys the subscription the order set up" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true)
+    order.pay!
+
+    subscription = order.subscription
+    assert_not_nil subscription
+
+    assert_difference("Boutique::Subscription.count", -1) do
+      order.cancel!
+    end
+
+    assert_nil order.subscription
+    assert_nil order.reload.subscription
+    assert_not Boutique::Subscription.exists?(subscription.id)
+  end
+
+  test "cancel keeps a subscription that a later order prolonged" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true)
+    order.pay!
+
+    subscription = order.subscription
+    active_until = subscription.active_until
+
+    subsequent = create(:boutique_order, :paid,
+                        subscription_product: true,
+                        user: order.user,
+                        subscription:,
+                        original_payment: subscription.payment)
+    subsequent.line_items.first.update!(subscription_starts_at: active_until)
+    subscription.prolong!
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.cancel!
+    end
+
+    # the subsequent order paid for a period of its own, so one period is gone
+    assert_equal active_until.to_i, subscription.reload.active_until.to_i
+    assert subscription.cancelled?
+  end
+
+  test "cancel of a subsequent order rolls the prolongation back" do
+    subscription = create(:boutique_subscription)
+    active_until = subscription.active_until
+
+    subsequent = create(:boutique_order, :paid,
+                        subscription_product: true,
+                        user: subscription.user,
+                        subscription:,
+                        original_payment: subscription.payment)
+    subsequent.line_items.first.update!(subscription_starts_at: active_until)
+    subscription.prolong!
+
+    assert_no_difference("Boutique::Subscription.count") do
+      subsequent.cancel!
+    end
+
+    subscription.reload
+    assert_equal active_until.to_i, subscription.active_until.to_i
+    assert subscription.cancelled?
+    assert_equal subscription, subsequent.reload.subscription
+  end
+
+  test "cancel of a renewing order rolls the prolongation back" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true)
+    subscription = create(:boutique_subscription,
+                          user: order.user,
+                          active_from: 1.month.ago,
+                          active_until: 3.days.from_now)
+    active_until = subscription.active_until
+    order.update!(renewed_subscription: subscription)
+
+    order.pay!
+    assert_equal subscription, order.subscription
+    assert_operator subscription.reload.active_until, :>, active_until
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.cancel!
+    end
+
+    subscription.reload
+    assert_equal order.line_items.first.subscription_starts_at.to_i, subscription.active_until.to_i
+    assert subscription.cancelled?
+  end
+
+  test "cancel does not touch a subscription that is already cancelled" do
+    subscription = create(:boutique_subscription, cancelled_at: 2.days.ago)
+    cancelled_at = subscription.cancelled_at
+    active_until = subscription.active_until
+
+    subsequent = create(:boutique_order, :paid,
+                        subscription_product: true,
+                        user: subscription.user,
+                        subscription:,
+                        original_payment: subscription.payment)
+    subsequent.line_items.first.update!(subscription_starts_at: active_until)
+    subscription.prolong!
+
+    subsequent.cancel!
+
+    subscription.reload
+    assert_equal cancelled_at.to_i, subscription.cancelled_at.to_i
+    assert_equal active_until.to_i, subscription.active_until.to_i
+  end
+
+  test "revert_cancelation sets the subscription up again" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true)
+    order.pay!
+
+    subscription = order.subscription
+    active_from = subscription.active_from
+    active_until = subscription.active_until
+
+    order.cancel!
+    assert_nil order.subscription
+
+    assert_difference("Boutique::Subscription.count", 1) do
+      order.revert_cancelation!
+    end
+
+    restored = order.subscription
+    assert_not_nil restored
+    assert_not_equal subscription.id, restored.id
+    assert_equal active_from.to_i, restored.active_from.to_i
+    assert_equal active_until.to_i, restored.active_until.to_i
+    assert_not restored.cancelled?
+
+    # the foreign key has to survive the request, not just the callback
+    assert_equal restored, order.reload.subscription
+  end
+
+  test "revert_cancelation of a subsequent order prolongs the subscription again" do
+    subscription = create(:boutique_subscription)
+    active_until = subscription.active_until
+
+    subsequent = create(:boutique_order, :paid,
+                        subscription_product: true,
+                        user: subscription.user,
+                        subscription:,
+                        original_payment: subscription.payment)
+    subsequent.line_items.first.update!(subscription_starts_at: active_until)
+    subscription.prolong!
+    prolonged_until = subscription.active_until
+
+    subsequent.cancel!
+    assert_equal active_until.to_i, subscription.reload.active_until.to_i
+
+    assert_no_difference("Boutique::Subscription.count") do
+      subsequent.revert_cancelation!
+    end
+
+    subscription.reload
+    assert_equal prolonged_until.to_i, subscription.active_until.to_i
+    assert_not subscription.cancelled?
+  end
+
+  test "revert_cancelation of a renewing order prolongs the subscription again" do
+    setup_emails
+    order = create(:boutique_order, :confirmed, :with_user, subscription_product: true)
+    subscription = create(:boutique_subscription,
+                          user: order.user,
+                          active_from: 1.month.ago,
+                          active_until: 3.days.from_now)
+    order.update!(renewed_subscription: subscription)
+
+    order.pay!
+    prolonged_until = subscription.reload.active_until
+
+    order.cancel!
+    assert_operator subscription.reload.active_until, :<, prolonged_until
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.revert_cancelation!
+    end
+
+    subscription.reload
+    assert_equal prolonged_until.to_i, subscription.active_until.to_i
+    assert_not subscription.cancelled?
+  end
+
+  test "revert_cancelation keeps a recurrence the customer had stopped themselves" do
+    subscription = create(:boutique_subscription, cancelled_at: 2.days.ago)
+    cancelled_at = subscription.cancelled_at
+    active_until = subscription.active_until
+
+    subsequent = create(:boutique_order, :paid,
+                        subscription_product: true,
+                        user: subscription.user,
+                        subscription:,
+                        original_payment: subscription.payment)
+    subsequent.line_items.first.update!(subscription_starts_at: active_until)
+    subscription.prolong!
+    prolonged_until = subscription.active_until
+
+    subsequent.cancel!
+    subsequent.revert_cancelation!
+
+    subscription.reload
+    assert_equal prolonged_until.to_i, subscription.active_until.to_i
+    assert_equal cancelled_at.to_i, subscription.cancelled_at.to_i
+  end
+
+  test "revert_cancelation leaves orders without a subscription alone" do
+    order = create(:boutique_order, :confirmed)
+    order.cancel!
+
+    assert_no_difference("Boutique::Subscription.count") do
+      order.revert_cancelation!
+    end
+
+    assert_equal "confirmed", order.aasm_state
+    assert_nil order.subscription
+  end
+
   test "discount" do
     order = create(:boutique_order, line_items_count: 1)
     product = order.line_items.first.product
