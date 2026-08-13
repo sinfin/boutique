@@ -599,26 +599,21 @@ class Boutique::Order < Boutique::ApplicationRecord
     free? && line_items.any? { |li| li.subscription? && li.free_intro? }
   end
 
-  # Whether the customer may still buy the line item for the introductory price
-  # of its product, see Boutique.config.intro_eligibility_proc. The checkout does
-  # not require a log in, so the customer is whoever the order belongs to, or the
-  # account registered under the e-mail they filled in.
+  # Whether the line item may still be bought for the introductory price of its
+  # product, see Boutique.config.intro_eligibility_proc. The offer belongs to
+  # whoever ends up holding the subscription, see #intro_beneficiary.
   #
-  # Memoized per customer and product - #unit_price asks on every render and the
-  # e-mail changes while the customer is still in the checkout.
+  # Memoized per beneficiary and product - #unit_price asks on every render and
+  # the e-mails change while the customer is still in the checkout.
   def intro_eligible_for?(line_item)
-    # #downcase_emails only runs once the order gets validated, and the customer
-    # has to be recognized before that
-    customer_email = email&.downcase&.strip.presence
-
-    key = [folio_user_id, customer_email, line_item.product_id]
+    key = [gift?, folio_user_id, intro_beneficiary_email, line_item.product_id]
 
     @intro_eligible ||= {}
     return @intro_eligible[key] if @intro_eligible.key?(key)
 
-    customer = user || (Folio::User.find_by(email: customer_email) if customer_email)
-
-    @intro_eligible[key] = Boutique.config.intro_eligibility_proc.call(line_item:, user: customer)
+    @intro_eligible[key] = Boutique.config
+                                   .intro_eligibility_proc
+                                   .call(line_item:, user: intro_beneficiary)
   end
 
   # The line item the customer picked an introductory offer for without being
@@ -865,6 +860,29 @@ class Boutique::Order < Boutique::ApplicationRecord
   end
 
   private
+    # Whoever ends up holding the subscription the introductory offer is for -
+    # the recipient of a gift, see #set_up_subscription!, the customer otherwise.
+    # The checkout does not require a log in, so the customer is whoever the
+    # order belongs to, or the account registered under the e-mail they filled
+    # in. Nil when nobody can be recognized yet, which counts as eligible.
+    def intro_beneficiary
+      recognized = Folio::User.find_by(email: intro_beneficiary_email) if intro_beneficiary_email
+
+      # a gift belongs to the recipient alone - the customer paying for it keeps
+      # their own entitlement, they are just not the one using it up
+      return recognized if gift?
+
+      user || recognized
+    end
+
+    # #downcase_emails only runs once the order gets validated, and the
+    # beneficiary has to be recognized before that
+    def intro_beneficiary_email
+      raw_email = gift? ? gift_recipient_email : email
+
+      raw_email&.downcase&.strip.presence
+    end
+
     def set_numbers
       return if base_number.present?
 

@@ -233,14 +233,18 @@ class Boutique::OrdersController < Boutique::ApplicationController
     end
 
     # The introductory price is a new customer offer and the checkout only learns
-    # who the customer is once they sign in or fill their e-mail in. Whenever the
-    # offer turns out not to apply, the line item falls back to the regular price
-    # on its own - this is the only place that says so out loud.
+    # who it is for once they sign in or fill the e-mail in - the recipient's one
+    # on a gift. Whenever the offer turns out not to apply, the line item falls
+    # back to the regular price on its own - this is the only place that says so
+    # out loud.
     def denied_intro_message
       line_item = current_order.denied_intro_line_item
       return if line_item.nil?
 
-      t("boutique.orders.intro_denied.#{line_item.product.intro_free? ? 'trial' : 'discounted'}")
+      key = line_item.product.intro_free? ? "trial" : "discounted"
+      key = "gift_#{key}" if current_order.gift?
+
+      t("boutique.orders.intro_denied.#{key}")
     end
 
     # Once the customer has seen the regular price in the checkout, confirming is

@@ -78,13 +78,13 @@ class Boutique::LineItem < Boutique::ApplicationRecord
   end
 
   # The introductory price is only for a brand new, auto-renewing subscription -
-  # not for prolonging an existing one, not for gifts (those are prepaid) and not
-  # for the subsequent orders created by Boutique::SubscriptionBot.
+  # not for prolonging an existing one and not for the subsequent orders created
+  # by Boutique::SubscriptionBot. A gift qualifies, but it is the recipient who
+  # has to be entitled to it - see Boutique::Order#intro_eligible_for?.
   def intro_offered?
     return false unless product.subscription? && product.intro?
     return false if order.nil? || subsequent?
     return false if order.renewed_subscription.present?
-    return false if order.gift?
 
     # nil means the customer has not picked a renewal policy yet - keep showing
     # the introductory price, the order cannot be confirmed without the choice

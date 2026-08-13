@@ -66,6 +66,8 @@ en:
       intro_denied:
         trial: Unfortunately the free trial is no longer available, as you have already had a subscription in the past. You have to continue with the subscription for the full price.
         discounted: Unfortunately the introductory price is no longer available, as you have already had a subscription in the past. You have to continue with the subscription for the full price.
+        gift_trial: Unfortunately we cannot offer the free trial to this recipient, as they have already had a subscription with us in the past. The gift is therefore for the full price.
+        gift_discounted: Unfortunately we cannot offer the introductory price to this recipient, as they have already had a subscription with us in the past. The gift is therefore for the full price.
 
       payment_methods:
         secured_by: Secured

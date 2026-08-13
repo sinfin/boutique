@@ -43,6 +43,24 @@ class Folio::Console::Boutique::ProductsControllerTest < Folio::Console::BaseCon
     end
   end
 
+  test "create with intro pricing and no regular price rerenders the form" do
+    params = build(:boutique_product_subscription).serializable_hash
+                                                  .merge("type" => "Boutique::Product::Subscription",
+                                                         "boutique_vat_rate_id" => create(:boutique_vat_rate).id,
+                                                         "regular_price" => "",
+                                                         "intro_enabled" => "1",
+                                                         "intro_price" => "49",
+                                                         "intro_duration_months" => "1")
+
+    assert_no_difference("Boutique::Product.count") do
+      post url_for([:console, Boutique::Product]), params: {
+        product: params,
+      }
+    end
+
+    assert_response :success
+  end
+
   test "update" do
     model = create(:boutique_product)
     assert_not_equal("Title", model.title)

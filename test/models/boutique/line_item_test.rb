@@ -45,11 +45,56 @@ module Boutique
       assert_equal 149, line_item.unit_price
     end
 
-    test "unit_price ignores the introductory price for a gift" do
+    test "unit_price uses the introductory price for a gift" do
       line_item = build_line_item(order: create(:boutique_order, :gift))
 
-      assert_not line_item.intro_applicable?
+      assert line_item.intro_applicable?
+      assert_equal 49, line_item.unit_price
+    end
+
+    test "a gift is judged by its recipient, not by the customer paying for it" do
+      recipient = create(:folio_user)
+      past_subscription_for(recipient)
+
+      order = create(:boutique_order, :gift, gift_recipient_email: recipient.email)
+      line_item = build_line_item(order:)
+
+      assert line_item.intro_denied?
       assert_equal 149, line_item.unit_price
+    end
+
+    test "the customer's own past subscription does not deny a gift" do
+      customer = create(:folio_user)
+      past_subscription_for(customer)
+
+      # they have used their own entitlement up, the recipient still has theirs
+      order = create(:boutique_order, :gift, user: customer)
+      line_item = build_line_item(order:)
+
+      assert line_item.intro_applicable?
+      assert_equal 49, line_item.unit_price
+    end
+
+    test "the introductory price of a gift is judged again when the recipient changes" do
+      recipient = create(:folio_user)
+      past_subscription_for(recipient)
+
+      order = create(:boutique_order, :gift)
+      line_item = build_line_item(order:)
+
+      assert_equal 49, line_item.unit_price
+
+      order.gift_recipient_email = recipient.email
+      assert_equal 149, line_item.unit_price
+
+      order.gift_recipient_email = "someone.else@test.test"
+      assert_equal 49, line_item.unit_price
+    end
+
+    test "a recipient with no account at all keeps the introductory price" do
+      order = create(:boutique_order, :gift, gift_recipient_email: "brand.new@test.test")
+
+      assert build_line_item(order:).intro_applicable?
     end
 
     test "unit_price ignores the introductory price without recurring payment" do

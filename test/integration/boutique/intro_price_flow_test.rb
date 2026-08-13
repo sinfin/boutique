@@ -201,6 +201,80 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     assert_nil order.line_items.first.subsequent_unit_price
   end
 
+  test "a trial bought as a gift runs for the recipient and renews on the payer's card" do
+    product = intro_product(intro_price: 0, intro_duration_months: 2)
+
+    order = checkout(product, gift_recipient_email: "recipient@test.test")
+
+    pay_at_gateway(order, state: "AUTHORIZED", amount: 0)
+
+    assert_equal 0, order.total_price
+
+    subscription = order.subscription.reload
+    active_from = subscription.active_from
+
+    # the gift is announced first, the trial only starts then
+    assert_equal order.gift_recipient_notification_scheduled_for.to_i, active_from.to_i
+    assert_equal (active_from + 2.months).to_i, subscription.active_until.to_i
+
+    # until the gift is delivered the subscription has a payer but no holder
+    assert_nil subscription.user
+    assert_equal order.user, subscription.payer
+
+    order.deliver_gift!
+
+    assert_equal "recipient@test.test", subscription.reload.user.email
+
+    # the trial is over and the recurrence is charged to whoever paid for the
+    # gift, the same as any other gift subscription
+    assert_equal 149, charge_recurrence(subscription).total_price
+    assert_equal order.user, subscription.reload.payer
+    assert_equal (active_from + 3.months).to_i, subscription.active_until.to_i
+  end
+
+  test "a gift is judged by its recipient, not by the customer paying for it" do
+    product = intro_product(intro_price: 0, intro_duration_months: 2)
+    recipient = create(:folio_user)
+    past_subscription_for(recipient, product)
+
+    order = add_to_order(product)
+    assert_equal 0, order.total_price
+
+    body = { order: confirm_params(order, gift_recipient_email: recipient.email) }
+
+    # no create_payment mock on purpose - the customer must see the price first
+    post confirm_order_url, params: body
+    assert_redirected_to edit_order_url
+
+    follow_redirect!
+    assert_match "trial nabídnout nemůžeme", flash[:warning].to_s
+    assert_equal 149, order.reload.total_price
+
+    go_pay_create_payment_api_call_mock
+
+    post confirm_order_url, params: body
+    assert_redirected_to mocked_go_pay_payment_gateway_url
+
+    order.reload
+    assert order.confirmed?
+    assert_equal 149, order.total_price
+    assert_nil order.line_items.first.intro_duration_months
+  end
+
+  test "a customer who has used their own entitlement up can still gift a trial" do
+    product = intro_product(intro_price: 0, intro_duration_months: 2)
+    user = create(:folio_user)
+    past_subscription_for(user, product)
+
+    sign_in user
+
+    order = checkout(product, email: user.email, gift_recipient_email: "recipient@test.test")
+
+    assert_nil flash[:warning]
+    assert_equal 0, order.reload.total_price
+    assert_equal 2, order.line_items.first.intro_duration_months
+  end
+
   test "a guest who has never subscribed keeps the introductory price" do
     product = intro_product(intro_price: 0, intro_duration_months: 2)
     create(:folio_user, email: "someone.else@test.test")
@@ -232,12 +306,12 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     end
 
     # Walks the checkout the way a customer does and returns the pending order.
-    def checkout(product, voucher_code: nil, expect_gateway: true)
+    def checkout(product, expect_gateway: true, **params)
       order = add_to_order(product)
 
       go_pay_create_payment_api_call_mock if expect_gateway
 
-      post confirm_order_url, params: { order: confirm_params(order, voucher_code:) }
+      post confirm_order_url, params: { order: confirm_params(order, **params) }
 
       if expect_gateway
         assert_redirected_to mocked_go_pay_payment_gateway_url
@@ -253,8 +327,8 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
       Boutique::Order.last
     end
 
-    def confirm_params(order, voucher_code: nil, email: "intro@test.test")
-      {
+    def confirm_params(order, voucher_code: nil, email: "intro@test.test", gift_recipient_email: nil)
+      params = {
         first_name: "John",
         last_name: "Doe",
         email:,
@@ -262,6 +336,16 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
         primary_address_attributes: build(:boutique_folio_primary_address).serializable_hash,
         line_items_attributes: [{ id: order.line_items.first.id, subscription_recurring: true }],
       }
+
+      if gift_recipient_email.present?
+        params.merge!(gift: true,
+                      gift_recipient_email:,
+                      gift_recipient_first_name: "Jane",
+                      gift_recipient_last_name: "Roe",
+                      gift_recipient_notification_scheduled_for: 2.days.from_now.strftime("%d. %m. %Y %H:%M"))
+      end
+
+      params
     end
 
     def pay_at_gateway(order, state: "PAID", amount: 14900)
