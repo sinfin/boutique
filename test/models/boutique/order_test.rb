@@ -584,6 +584,29 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert Boutique::Order.by_subsequent_subscription("subsequent").exists?(id: order.id)
   end
 
+  test "scope by_intro_pricing" do
+    free_order = create(:boutique_order,
+                        line_items: [create(:boutique_line_item, intro_duration_months: 3, unit_price: 0)])
+
+    discounted_order = create(:boutique_order,
+                              line_items: [create(:boutique_line_item, intro_duration_months: 3, unit_price: 100)])
+
+    regular_order = create(:boutique_order,
+                           line_items: [create(:boutique_line_item, unit_price: 500)])
+
+    assert Boutique::Order.by_intro_pricing("free").exists?(id: free_order.id)
+    assert_not Boutique::Order.by_intro_pricing("free").exists?(id: discounted_order.id)
+    assert_not Boutique::Order.by_intro_pricing("free").exists?(id: regular_order.id)
+
+    assert_not Boutique::Order.by_intro_pricing("discounted").exists?(id: free_order.id)
+    assert Boutique::Order.by_intro_pricing("discounted").exists?(id: discounted_order.id)
+    assert_not Boutique::Order.by_intro_pricing("discounted").exists?(id: regular_order.id)
+
+    assert_not Boutique::Order.by_intro_pricing("regular").exists?(id: free_order.id)
+    assert_not Boutique::Order.by_intro_pricing("regular").exists?(id: discounted_order.id)
+    assert Boutique::Order.by_intro_pricing("regular").exists?(id: regular_order.id)
+  end
+
   test "scope by_product_id" do
     target_product = create(:boutique_product)
     line_item = create(:boutique_line_item, product: target_product)

@@ -9,6 +9,10 @@ en:
         gift_recipient_email: Gift recipient e-mail
         gift_recipient_notification_scheduled_for: Date & time of notification
         intro: Introductory price
+        intro_pricing/discounted: Discounted introductory price
+        intro_pricing/free: Free introductory period
+        intro_pricing/regular: Regular price
+        intro_pricing: Introductory offer
         non_pending_order_count_range: Order count
         number: Number
         number_range: Number

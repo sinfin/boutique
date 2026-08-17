@@ -91,6 +91,15 @@ class Folio::Console::Boutique::OrdersController < Folio::Console::BaseControlle
             [@klass.human_attribute_name("subsequent_subscription/subsequent"), "subsequent"],
           ],
           width: 220,
+        },
+        by_intro_pricing: {
+          as: :collection,
+          collection: [
+            [@klass.human_attribute_name("intro_pricing/free"), "free"],
+            [@klass.human_attribute_name("intro_pricing/discounted"), "discounted"],
+            [@klass.human_attribute_name("intro_pricing/regular"), "regular"],
+          ],
+          width: 220,
         }
       }.merge(Boutique.config.folio_console_additional_filters_for_orders).merge(
         by_confirmed_at_range: {

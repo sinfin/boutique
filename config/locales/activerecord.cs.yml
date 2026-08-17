@@ -27,6 +27,10 @@ cs:
         gift_recipient_notification_scheduled_for: Datum a čas odeslání upozornění
         invoice: Faktura
         intro: Úvodní cena
+        intro_pricing/discounted: Zvýhodněná úvodní cena
+        intro_pricing/free: Úvodní období zdarma
+        intro_pricing/regular: Standardní cena
+        intro_pricing: Úvodní nabídka
         invoice_number: Číslo faktury
         items: Předměty
         line_items: Položky

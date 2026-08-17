@@ -165,6 +165,24 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
   }
 
+  # Filters by the pricing the order was confirmed with, based on the line item
+  # snapshots written by Boutique::LineItem#imprint. A pending order has no
+  # snapshots yet, so it always counts as "regular".
+  scope :by_intro_pricing, -> (str) {
+    intro_line_items = Boutique::LineItem.where.not(intro_duration_months: nil)
+
+    case str
+    when "free"
+      where(id: intro_line_items.where(unit_price: 0).select(:boutique_order_id))
+    when "discounted"
+      where(id: intro_line_items.where("unit_price > 0").select(:boutique_order_id))
+    when "regular"
+      where.not(id: intro_line_items.select(:boutique_order_id))
+    else
+      all
+    end
+  }
+
   scope :by_product_id, -> (product_id) {
     ids_subselect = Boutique::LineItem.where(product_id:)
                                       .select(:boutique_order_id)
