@@ -935,7 +935,7 @@ class Boutique::Order < Boutique::ApplicationRecord
           errors.add(:voucher_code, :invalid)
         elsif !found_voucher.published?
           errors.add(:voucher_code, :expired)
-        elsif !found_voucher.relevant_for?(line_items.first.product_variant)
+        elsif !found_voucher.relevant_for?(line_items.first.product_variant.product)
           errors.add(:voucher_code, :not_applicable_for)
         end
 
