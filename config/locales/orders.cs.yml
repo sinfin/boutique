@@ -71,10 +71,10 @@ cs:
         success_free: Objednávka proběhla úspěšně
 
       intro_denied:
-        trial: Bohužel, zkušební trial již není dostupný, protože jste předplatné v minulosti již čerpal*a. Proto musíte pokračovat v předplatném za plnou cenu.
-        discounted: Bohužel, zvýhodněná úvodní cena již není dostupná, protože jste předplatné v minulosti již čerpal*a. Proto musíte pokračovat v předplatném za plnou cenu.
-        gift_trial: Bohužel, tomuto obdarovanému už zkušební trial nabídnout nemůžeme – předplatné u nás v minulosti měl. Dárek je proto za plnou cenu.
-        gift_discounted: Bohužel, tomuto obdarovanému už zvýhodněnou úvodní cenu nabídnout nemůžeme – předplatné u nás v minulosti měl. Dárek je proto za plnou cenu.
+        trial: Úvodní období zdarma je určeno pouze pro nové předplatitelstvo. Využijte prosím standardní předplatné.
+        discounted: Úvodní zvýhodněná cena je určena pouze pro nové předplatitelstvo. Využijte prosím standardní předplatné.
+        gift_trial: Úvodní období zdarma je určeno pouze pro nové předplatitelstvo. Obdarovaný už předplatné měl, dárek je proto za plnou cenu.
+        gift_discounted: Úvodní zvýhodněná cena je určena pouze pro nové předplatitelstvo. Obdarovaný už předplatné měl, dárek je proto za plnou cenu.
 
       flash:
         product_unavailable: Produkt je aktuálně nedostupný, nelze ho objednat.

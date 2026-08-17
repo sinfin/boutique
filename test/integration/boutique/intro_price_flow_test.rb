@@ -148,7 +148,7 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     # introductory price and has to learn why they are not seeing it
     get edit_order_url
     assert_response :success
-    assert_match "úvodní cena již není dostupná", flash[:warning].to_s
+    assert_equal I18n.t("boutique.orders.intro_denied.discounted"), flash[:warning].to_s
     assert_equal 149, order.reload.total_price
 
     # having been told, the confirm goes straight through for the full price
@@ -180,7 +180,7 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     assert_redirected_to edit_order_url
 
     follow_redirect!
-    assert_match "trial již není dostupný", flash[:warning].to_s
+    assert_equal I18n.t("boutique.orders.intro_denied.trial"), flash[:warning].to_s
 
     # the e-mail is kept, so the checkout keeps recognizing the customer and
     # keeps showing the regular price even if they reload the page
@@ -253,7 +253,7 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     assert_redirected_to edit_order_url
 
     follow_redirect!
-    assert_match "trial nabídnout nemůžeme", flash[:warning].to_s
+    assert_equal I18n.t("boutique.orders.intro_denied.gift_trial"), flash[:warning].to_s
 
     second = Boutique::Order.last.reload
     assert_equal 149, second.total_price
@@ -278,7 +278,7 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     assert_redirected_to edit_order_url
 
     follow_redirect!
-    assert_match "trial nabídnout nemůžeme", flash[:warning].to_s
+    assert_equal I18n.t("boutique.orders.intro_denied.gift_trial"), flash[:warning].to_s
     assert_equal 149, order.reload.total_price
 
     go_pay_create_payment_api_call_mock
