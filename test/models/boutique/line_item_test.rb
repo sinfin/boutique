@@ -286,7 +286,7 @@ module Boutique
       assert line_item.intro_applicable?
 
       Boutique.config.stubs(:intro_eligibility_proc)
-                     .returns(-> (line_item:, user:) { false })
+                     .returns(-> (line_item:, user:, email: nil) { false })
 
       assert_not build_line_item.intro_applicable?
     end

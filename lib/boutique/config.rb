@@ -56,19 +56,35 @@ module Boutique
       # Boutique::LineItem#intro_applicable?.
       #
       # user is the account the order resolves to - nil for a customer who has
-      # never bought anything, since every paid order creates one.
+      # never bought anything, since every paid order creates one. email is the
+      # address of the same person, filled in even when no account matches it.
       #
       # By default the introductory price is gone once the customer has had a
       # subscription of the same product, no matter whether they still have it.
       # A subscription only exists once its order has been paid, so an
       # abandoned or a cancelled checkout does not count.
-      @intro_eligibility_proc = -> (line_item:, user:) do
-        return true if user.nil?
+      #
+      # A gift that has been paid for but not handed over yet counts as well.
+      # Its subscription has no holder until the recipient is notified, so it
+      # is only reachable through the order it came from - without this the
+      # same address could collect any number of introductory offers while they
+      # queue up.
+      @intro_eligibility_proc = -> (line_item:, user:, email: nil) do
+        if user.present?
+          held = user.subscriptions
+                     .joins(:product_variant)
+                     .where(boutique_product_variants: { boutique_product_id: line_item.product_id })
+                     .exists?
 
-        !user.subscriptions
-             .joins(:product_variant)
-             .where(boutique_product_variants: { boutique_product_id: line_item.product_id })
-             .exists?
+          return false if held
+        end
+
+        return true if email.blank?
+
+        !Boutique::Order.undelivered_gifts_for(email)
+                        .joins(:line_items)
+                        .where(boutique_line_items: { product_id: line_item.product_id })
+                        .exists?
       end
     end
   end

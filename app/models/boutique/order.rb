@@ -87,6 +87,13 @@ class Boutique::Order < Boutique::ApplicationRecord
     order(line_items_price: :desc)
   }
 
+  scope :undelivered_gifts_for, -> (email) {
+    where(gift: true,
+          gift_recipient_notification_sent_at: nil,
+          gift_recipient_email: email.to_s.downcase.strip,
+          aasm_state: %w[paid dispatched delivered])
+  }
+
   scope :by_state, -> (state) { where(aasm_state: state) }
 
   scope :by_number_query, -> (q) {
@@ -603,6 +610,11 @@ class Boutique::Order < Boutique::ApplicationRecord
   # product, see Boutique.config.intro_eligibility_proc. The offer belongs to
   # whoever ends up holding the subscription, see #intro_beneficiary.
   #
+  # The beneficiary is passed twice on purpose - as an account when one matches,
+  # and as a bare e-mail always. A gift bought for somebody who has never signed
+  # up has no account to look anything up by, and neither does a gift that is
+  # waiting to be handed over, see .undelivered_gifts_for.
+  #
   # Memoized per beneficiary and product - #unit_price asks on every render and
   # the e-mails change while the customer is still in the checkout.
   def intro_eligible_for?(line_item)
@@ -613,7 +625,9 @@ class Boutique::Order < Boutique::ApplicationRecord
 
     @intro_eligible[key] = Boutique.config
                                    .intro_eligibility_proc
-                                   .call(line_item:, user: intro_beneficiary)
+                                   .call(line_item:,
+                                         user: intro_beneficiary,
+                                         email: intro_beneficiary_email)
   end
 
   # The line item the customer picked an introductory offer for without being
@@ -876,9 +890,12 @@ class Boutique::Order < Boutique::ApplicationRecord
     end
 
     # #downcase_emails only runs once the order gets validated, and the
-    # beneficiary has to be recognized before that
+    # beneficiary has to be recognized before that.
+    #
+    # A signed in customer only gets #email copied over from their account on
+    # confirm!, so up until then their own address is the only one there is.
     def intro_beneficiary_email
-      raw_email = gift? ? gift_recipient_email : email
+      raw_email = gift? ? gift_recipient_email : (email.presence || user&.email)
 
       raw_email&.downcase&.strip.presence
     end

@@ -232,6 +232,37 @@ class Boutique::IntroPriceFlowTest < Boutique::ControllerTest
     assert_equal (active_from + 3.months).to_i, subscription.active_until.to_i
   end
 
+  # A gift stays without a holder between being paid for and being handed over,
+  # so the recipient cannot be recognized through Folio::User#subscriptions the
+  # way anybody else is - the queue of undelivered gifts has to be asked too,
+  # see Boutique::Order.undelivered_gifts_for.
+  test "a second trial cannot be gifted to the same address while the first is queued" do
+    product = intro_product(intro_price: 0, intro_duration_months: 2)
+
+    first = checkout(product, gift_recipient_email: "recipient@test.test")
+    pay_at_gateway(first, state: "AUTHORIZED", amount: 0)
+
+    assert_nil first.subscription.reload.user, "the gift has no holder yet"
+    assert_nil first.reload.gift_recipient_notification_sent_at
+    assert_nil Folio::User.find_by(email: "recipient@test.test"), "the recipient has no account either"
+
+    body = { order: confirm_params(add_to_order(product), gift_recipient_email: "recipient@test.test") }
+
+    # no create_payment mock on purpose - the customer must see the price first
+    post confirm_order_url, params: body
+    assert_redirected_to edit_order_url
+
+    follow_redirect!
+    assert_match "trial nabídnout nemůžeme", flash[:warning].to_s
+
+    second = Boutique::Order.last.reload
+    assert_equal 149, second.total_price
+    assert_nil second.line_items.first.intro_duration_months
+
+    # the first gift is still on its way, untouched
+    assert_equal 0, first.reload.total_price
+  end
+
   test "a gift is judged by its recipient, not by the customer paying for it" do
     product = intro_product(intro_price: 0, intro_duration_months: 2)
     recipient = create(:folio_user)
