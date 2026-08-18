@@ -332,6 +332,29 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal 50, order.total_price
   end
 
+  test "assign voucher restricted to a product" do
+    order = create(:boutique_order, line_items_count: 1)
+    ordered_product = order.line_items.first.product_variant.product
+
+    # a voucher restricted to a different product must be rejected
+    other_product = create(:boutique_product)
+    voucher = create(:boutique_voucher, code: "TEST", discount: 50, products: [other_product])
+
+    order.assign_voucher_by_code("TEST")
+
+    assert_not_empty order.errors[:voucher_code]
+    assert_nil order.voucher
+
+    # a voucher restricted to the ordered product must be accepted
+    # (regression: relevant_for? must be given the product, not the product_variant)
+    voucher.update!(products: [ordered_product])
+    order.errors.clear
+    order.assign_voucher_by_code("TEST")
+
+    assert_empty order.errors[:voucher_code]
+    assert_equal voucher, order.voucher
+  end
+
   test "confirm with voucher discount" do
     order = create(:boutique_order, :ready_to_be_confirmed)
     voucher = create(:boutique_voucher, code: "TEST", number_of_allowed_uses: 1)
