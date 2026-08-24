@@ -34,15 +34,6 @@
               ]
                 = line_item_tag_label(line_item)
 
-          - if f.present? && line_item.product.variants.size > 1
-            .col-12.b-orders-summary__col
-              .b-orders-summary__inputs
-                = fields_for_line_item(line_item) do |g|
-                  = product_variant_input(g)
-
-                  .b-orders-summary__quantity
-                    = g.input :amount, label: false
-
   - unless model.digital_only?
     .b-orders-summary__price-row
       .row

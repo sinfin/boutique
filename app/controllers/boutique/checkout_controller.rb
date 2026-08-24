@@ -52,18 +52,23 @@ class Boutique::CheckoutController < Boutique::ApplicationController
 
     subscription_period = params[:subscription_period] || nil
     subscription_recurring = params[:subscription_recurring] == "true"
+    product_variant = refreshed_cart_product_variant
 
     current_order.line_items.each do |line_item|
+      line_item.product_variant = product_variant if product_variant.present? && line_item.subscription?
       line_item.subscription_period = subscription_period
       line_item.subscription_recurring = subscription_recurring
     end
 
-    render json: {
-      data: {
-        summary: cell("boutique/orders/summary", current_order).show,
-        price: cell("boutique/orders/payment_methods/price", current_order.total_price, recurrent: current_order.recurrent_payment?).show,
-      }
+    data = {
+      summary: cell("boutique/orders/summary", current_order).show,
+      price: cell("boutique/orders/payment_methods/price", current_order.total_price, recurrent: current_order.recurrent_payment?).show,
     }
+
+    extra = Boutique.config.refreshed_cart_fragments_proc.call(context: self,
+                                                              order: current_order)
+
+    render json: { data: data.merge(extra) }
   end
 
   def apply_voucher
@@ -129,6 +134,18 @@ class Boutique::CheckoutController < Boutique::ApplicationController
   end
 
   private
+    # Only variants of the product already in the cart are accepted, so the
+    # param cannot be used to swap the order to an arbitrary product.
+    def refreshed_cart_product_variant
+      id = params[:boutique_product_variant_id].presence
+      return nil if id.nil?
+
+      line_item = current_order.subscription_line_item
+      return nil if line_item.nil?
+
+      line_item.product_variant.product.variants.find_by(id:)
+    end
+
     def order_params
       params.require(:order).permit(:email,
                                     :first_name,

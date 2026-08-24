@@ -21,12 +21,6 @@ class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
     end
   end
 
-  def fields_for_line_item(f, line_item, &block)
-    f.simple_fields_for :line_items, line_item do |subfields|
-      (yield subfields).html_safe
-    end
-  end
-
   def line_item_tag_additional_class(line_item)
     if line_item.subscription_recurring? || line_item.subscription_period.nil?
       "b-orders-summary__tag--recurring"
@@ -42,15 +36,6 @@ class Boutique::Orders::SummaryCell < Boutique::ApplicationCell
     else
       t(".single_payment", months: duration_to_human(line_item.subscription_period))
     end
-  end
-
-  def product_variant_input(f)
-    f.association(:product_variant,
-                  collection: f.object.product.variants,
-                  include_blank: false,
-                  label: false,
-                  wrapper_html: { class: "b-orders-cart-summary__product-variants-wrap" },
-                  input_html: { class: "b-orders-cart-summary__product-variants-select" })
   end
 
   def subscription_period(line_item)
