@@ -22,7 +22,8 @@ module Boutique
                   :orders_cart_terms_agreement_proc,
                   :payment_gateways,
                   :email_template_data_defaults_proc,
-                  :order_refund_voucher_validity_in_days
+                  :order_refund_voucher_validity_in_days,
+                  :default_subscription_recurring
 
     def initialize
       # set defaults here
@@ -57,6 +58,7 @@ module Boutique
       }
       @email_template_data_defaults_proc = -> (model) { {} }
       @order_refund_voucher_validity_in_days = 90
+      @default_subscription_recurring = false
     end
   end
 
