@@ -1003,7 +1003,15 @@ class Boutique::Order < Boutique::ApplicationRecord
       line_items.each do |li|
         next unless li.product_variant.product.subscription?
 
-        subs = user.subscriptions.recurring.where(product_variant: li.product_variant)
+        # Scoped to the product, not the variant: one subscription product can
+        # offer both a monthly and a yearly variant, and a user must not end up
+        # holding two active recurring subscriptions of the same title.
+        subs = user.subscriptions
+                   .recurring
+                   .joins(:product_variant)
+                   .where(boutique_product_variants: {
+                            boutique_product_id: li.product_variant.boutique_product_id,
+                          })
         if subs.where(active_until: nil)
                .or(subs.where("active_until > ?", Time.current))
                .exists?
