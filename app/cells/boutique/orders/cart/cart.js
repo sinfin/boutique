@@ -19,7 +19,7 @@
         country_code: $wrap.find('.f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input').val(),
         subscription_recurring: isRecurring,
         subscription_period: isRecurring ? null : $wrap.find('.b-orders-cart-recurrency-fields__nonrecurring-payment-option-input:checked:not(:disabled)').val(),
-        boutique_product_variant_id: $wrap.find('[data-boutique-product-variant-input]:checked').val(),
+        boutique_product_variant_id: $wrap.find('[data-boutique-product-variant-input]').val(),
       },
       success: (res) => {
         if (res && res.data) {
