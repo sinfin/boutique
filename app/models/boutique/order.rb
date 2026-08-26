@@ -376,7 +376,11 @@ class Boutique::Order < Boutique::ApplicationRecord
       after do
         if subsequent?
           subscription.payment = paid_payment if renewed_subscription.present?
-          subscription.payment_expiration_date = paid_payment&.card_valid_until_as_date
+
+          if payment_expiration_date = paid_payment&.card_valid_until_as_date.presence
+            subscription.payment_expiration_date = payment_expiration_date
+          end
+
           subscription.extend!
         else
           invite_user!

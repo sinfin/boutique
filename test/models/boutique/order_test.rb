@@ -259,6 +259,39 @@ class Boutique::OrderTest < ActiveSupport::TestCase
     assert_equal (sub_active_until + subscription.period.months).to_date, subscription.reload.active_until.to_date
   end
 
+  test "pay (subscription) on a subsequent order keeps the expiration captured with the mandate" do
+    known_expiration = 2.months.from_now.to_date
+    subscription = create(:boutique_subscription, recurrent: true,
+                                                  period: 1,
+                                                  active_until: 1.day.from_now,
+                                                  payment_expiration_date: known_expiration)
+
+    order = create_confirmed_order_from_subscription(subscription)
+
+    # the gateway does not report the card expiration for a background charge
+    assert_nil order.paid_payment.card_valid_until
+
+    order.pay!
+
+    assert_equal known_expiration, subscription.reload.payment_expiration_date
+  end
+
+  test "pay (subscription) on a subsequent order stores the expiration when the gateway reports one" do
+    subscription = create(:boutique_subscription, recurrent: true,
+                                                  period: 1,
+                                                  active_until: 1.day.from_now,
+                                                  payment_expiration_date: 2.months.from_now.to_date)
+
+    order = create_confirmed_order_from_subscription(subscription)
+
+    # a recovery re-payment enters a new card, so this charge does report an expiration
+    order.paid_payment.update!(card_valid_until: "12/34")
+
+    order.pay!
+
+    assert_equal Date.new(2035, 1, 1), subscription.reload.payment_expiration_date
+  end
+
   test "pay (subscription) with previous active subscription - new user order for fixed period" do
     skip "should extend current subscription?"
   end
