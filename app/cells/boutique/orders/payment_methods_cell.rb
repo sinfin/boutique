@@ -44,11 +44,19 @@ class Boutique::Orders::PaymentMethodsCell < Boutique::ApplicationCell
 
   def payment_button(f, method, i)
     f.button :submit,
-             method[:title],
+             payment_button_label(f.object, method),
              class: "btn btn-#{i.zero? ? "primary-yellow" : "secondary"} btn-xs-block b-orders-payment-methods__submit-btn",
              data: { payment_method: method[:value], enabled_for_recurrent: method[:enabled_for_recurrent].to_s  },
              style: ("display:none;" if method[:value] == "APPLE_PAY"),
              disabled: method[:disabled]
+  end
+
+  # Hosts that must state the amount and the recurring commitment in the button
+  # itself replace this label through the config proc.
+  def payment_button_label(order, method)
+    Boutique.config.payment_button_label_proc.call(context: self,
+                                                   order:,
+                                                   method:)
   end
 
   def recurrence_required?

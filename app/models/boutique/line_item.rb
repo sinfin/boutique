@@ -20,7 +20,7 @@ class Boutique::LineItem < Boutique::ApplicationRecord
            :subscription?,
            to: :product
 
-  after_initialize :set_default_subscription_recurring
+  before_validation :set_default_subscription_recurring
   before_validation :unset_unwanted_subscription_starts_at
 
   def title
@@ -150,8 +150,15 @@ class Boutique::LineItem < Boutique::ApplicationRecord
       "#{I18n.t('boutique.issue').capitalize} #{number} / #{date.year}"
     end
 
+    # Runs in before_validation rather than after_initialize: Order#add_line_item!
+    # explicitly nulls subscription_recurring right after building the record, so
+    # an after_initialize default never survived. The nil guard keeps an explicit
+    # false (set by the voucher flow) from being overwritten.
     def set_default_subscription_recurring
-      self.subscription_recurring ||= false
+      return unless subscription_recurring.nil?
+
+      self.subscription_recurring = Boutique.config.default_subscription_recurring &&
+                                    requires_subscription_recurring?
     end
 
     def unset_unwanted_subscription_starts_at

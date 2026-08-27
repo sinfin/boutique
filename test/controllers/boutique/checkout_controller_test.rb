@@ -70,6 +70,45 @@ class Boutique::CheckoutControllerTest < Boutique::ControllerTest
     assert_not_empty response.parsed_body
   end
 
+  test "refreshed_cart switches the line item variant" do
+    product = create(:boutique_product_subscription)
+    monthly = product.master_variant
+    monthly.update!(subscription_period: 1, regular_price: 148)
+    yearly = create(:boutique_product_variant, product:,
+                                               subscription_period: 12,
+                                               regular_price: 1480)
+
+    post add_item_checkout_url(product), params: { product_variant_slug: monthly.slug }
+
+    get refreshed_cart_checkout_url(subscription_recurring: "true")
+    assert_response :success
+    monthly_price = response.parsed_body["data"]["price"]
+
+    get refreshed_cart_checkout_url(boutique_product_variant_id: yearly.id,
+                                    subscription_recurring: "true")
+    assert_response :success
+
+    assert_includes response.parsed_body["data"].keys, "summary"
+    assert_includes response.parsed_body["data"].keys, "price"
+    assert_not_equal monthly_price, response.parsed_body["data"]["price"]
+  end
+
+  test "refreshed_cart merges host fragments" do
+    original = Boutique.config.refreshed_cart_fragments_proc
+    Boutique.config.refreshed_cart_fragments_proc = -> (context:, order:) do
+      { disclosure: "<p>host fragment</p>" }
+    end
+
+    create_order_with_current_session_id
+
+    get refreshed_cart_checkout_url
+    assert_response :success
+
+    assert_equal "<p>host fragment</p>", response.parsed_body["data"]["disclosure"]
+  ensure
+    Boutique.config.refreshed_cart_fragments_proc = original
+  end
+
   test "apply_voucher" do
     post apply_voucher_checkout_url
     assert_redirected_to main_app.root_url

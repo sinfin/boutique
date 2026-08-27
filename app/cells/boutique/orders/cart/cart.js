@@ -9,21 +9,43 @@
 
     $wrap.addClass('b-orders-cart--refreshing')
 
-    const isRecurring = $wrap.find('.b-orders-cart-recurrency-fields__option-input').prop('checked')
+    // A host that replaces the recurrency fields cell with its own UI marks the
+    // inputs holding the current choice, and those win. Without a marked input
+    // we fall back to the cell's own radios.
+    const $recurringInput = $wrap.find('[data-boutique-subscription-recurring-input]')
+    const $periodInput = $wrap.find('[data-boutique-subscription-period-input]')
+
+    const isRecurring = $recurringInput.length
+      ? $recurringInput.val() === 'true'
+      : $wrap.find('.b-orders-cart-recurrency-fields__option-input').prop('checked')
+
+    const subscriptionPeriod = $periodInput.length
+      ? $periodInput.val()
+      : (isRecurring ? null : $wrap.find('.b-orders-cart-recurrency-fields__nonrecurring-payment-option-input:checked:not(:disabled)').val())
 
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: $wrap.data('refreshedUrl'),
       data: {
         shipping_method_id: $wrap.find('.b-checkout-cart-shipping-methods__option-input:checked').val(),
         country_code: $wrap.find('.f-addresses-fields__fields-wrap--primary-address .f-addresses-fields__country-code-input').val(),
         subscription_recurring: isRecurring,
-        subscription_period: isRecurring ? null : $wrap.find('.b-orders-cart-recurrency-fields__nonrecurring-payment-option-input:checked:not(:disabled)').val(),
+        subscription_period: subscriptionPeriod,
+        boutique_product_variant_id: $wrap.find('[data-boutique-product-variant-input]').val()
       },
       success: (res) => {
         if (res && res.data) {
           $wrap.find('.b-orders-summary').replaceWith(res.data.summary)
           $wrap.find('.b-orders-payment-methods-price').replaceWith(res.data.price)
+
+          // Hosts that add their own fragments through
+          // refreshed_cart_fragments_proc swap them in from here. Native
+          // CustomEvent rather than a jQuery trigger, so Stimulus controllers
+          // can bind it with a plain data-action.
+          $wrap[0].dispatchEvent(new CustomEvent('boutique:cart-refreshed', {
+            bubbles: true,
+            detail: res.data
+          }))
         }
         const $res = $(res)
         $wrap.removeClass('b-orders-cart--refreshing')
